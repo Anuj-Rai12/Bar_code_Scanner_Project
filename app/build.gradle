@@ -45,4 +45,10 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    //Machinery Learning
+    implementation 'com.google.mlkit:pose-detection:17.0.1-beta6'
+    implementation 'com.google.mlkit:pose-detection-accurate:17.0.1-beta6'
+    //Easy Permission
+    implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
 }
