@@ -3,6 +3,7 @@ package com.example.mltesting
 import android.Manifest
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -21,17 +22,30 @@ import com.vmadalin.easypermissions.dialogs.SettingsDialog
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding: ActivityMainBinding
     private var bitmap: Bitmap? = null
+    private var uri: Uri? = null
     private var poseDetector: PoseDetector? = null
-    private val optionPoseAccurate by lazy {
+
+    private val singleModeGesture by lazy {
         AccuratePoseDetectorOptions.Builder()
             .setDetectorMode(AccuratePoseDetectorOptions.SINGLE_IMAGE_MODE)
             .build()
     }
 
-    private val videoPoseAccurate by lazy {
+    /*private val streamModeGesture by lazy {
         AccuratePoseDetectorOptions.Builder()
             .setDetectorMode(AccuratePoseDetectorOptions.STREAM_MODE)
             .build()
+    }*/
+
+
+    private val getImageFile = registerForActivityResult(GetUriFile()) {
+        if (it.requestCode) {
+            it.uri?.let { uri ->
+                this.uri = uri
+                binding.myImage.setImageURI(this.uri)
+                getPoseByUsingFileUri()
+            }
+        }
     }
 
     private val requestCamera =
@@ -39,7 +53,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             it?.let {
                 bitmap = getCameraImage(it)
                 binding.myImage.setImageBitmap(bitmap)
-                getPose()
+                getPoseViaBitmap()
             }
         }
 
@@ -48,40 +62,63 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getPermission()
-        poseDetector = PoseDetection.getClient(optionPoseAccurate)
-        getPose()
+        poseDetector = PoseDetection.getClient(singleModeGesture)
+
         binding.btnClick.setOnClickListener {
-            sendCamera()
+            callCamera()
+        }
+        binding.exploreBtn.setOnClickListener {
+            getImageFile.launch(InputData(intent = getIntent("image/*")))
         }
     }
 
-    private fun getPose() {
+
+    private fun getPoseByUsingFileUri() {
+        uri?.let {
+            poseDetector?.process(InputImage.fromFilePath(this, it))
+                ?.addOnSuccessListener { pose ->
+                    getThePoseAngle(PoseOption(pose))
+                }?.addOnFailureListener { exception ->
+                    Log.i(TAG, "getPose: ${exception.localizedMessage}")
+                }
+        }
+    }
+
+    private fun getPoseViaBitmap() {
         bitmap?.let {
             poseDetector?.process(InputImage.fromBitmap(it, 0))?.addOnSuccessListener { pose ->
-                poseOptionDetection(PoseOption(pose))
+                getThePoseAngle(PoseOption(pose))
             }?.addOnFailureListener { exception ->
                 Log.i(TAG, "getPose: ${exception.localizedMessage}")
             }
         }
     }
 
-    private fun poseOptionDetection(poseOption: PoseOption) {
-        Log.i(TAG, "poseOptionDetection: $poseOption")
+    private fun getThePoseAngle(poseOption: PoseOption) {
+        val angle = getAngle(
+            firstPoint = poseOption.rightShoulder!!,
+            midPoint = poseOption.rightHip!!,
+            lastPoint = poseOption.rightKnee!!
+        )
+        Log.i(
+            TAG,
+            "poseOptionDetection: Angle Between RightShoulder RightHip and Right Knee is -> $angle"
+        )
     }
 
-    private fun sendCamera() {
+    private fun callCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         requestCamera.launch(intent)
     }
 
     private fun getPermission() {
         if (!this.checkCameraPermission()) {
-            request()
+            requestPermission()
         }
     }
 
 
-    private fun request(
+    private fun requestPermission(
         manifest: String = Manifest.permission.CAMERA,
         code: Int = CAMERA_INT,
         name: String = "Camera"
@@ -114,13 +151,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
         Log.i(TAG, "onPermissionsGranted: $requestCode is given $perms")
-        sendCamera()
+        callCamera()
     }
 
-    /*override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        bitmap?.let {
-            outState.putString(FileUtils.img_file, it.toString())
-        }
-    }*/
+
 }
