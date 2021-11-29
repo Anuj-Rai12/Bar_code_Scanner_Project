@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
 import com.google.mlkit.vision.pose.Pose
@@ -25,6 +26,11 @@ fun getIntent(string: String): Intent {
     return intent
 }
 
+fun Context.msg(string: String) {
+    Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
+}
+
+/*
 
 data class PoseOption(val pose: Pose) {
     val leftShoulder: PoseLandmark? = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
@@ -61,6 +67,7 @@ data class PoseOption(val pose: Pose) {
     val leftMouth: PoseLandmark? = pose.getPoseLandmark(PoseLandmark.LEFT_MOUTH)
     val rightMouth: PoseLandmark? = pose.getPoseLandmark(PoseLandmark.RIGHT_MOUTH)
 }
+*/
 
 
 fun Activity.checkCameraPermission() =

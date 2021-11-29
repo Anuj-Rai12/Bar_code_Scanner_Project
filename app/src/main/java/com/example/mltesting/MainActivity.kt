@@ -1,6 +1,7 @@
 package com.example.mltesting
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.mltesting.databinding.ActivityMainBinding
 import com.example.mltesting.utils.*
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
@@ -64,9 +66,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         getPermission()
         poseDetector = PoseDetection.getClient(singleModeGesture)
 
-        binding.btnClick.setOnClickListener {
-            callCamera()
+        binding.btnCamera.setOnClickListener {
+            if (this.checkCameraPermission())
+                callCamera()
         }
+
         binding.exploreBtn.setOnClickListener {
             getImageFile.launch(InputData(intent = getIntent("image/*")))
         }
@@ -77,7 +81,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         uri?.let {
             poseDetector?.process(InputImage.fromFilePath(this, it))
                 ?.addOnSuccessListener { pose ->
-                    getThePoseAngle(PoseOption(pose))
+                    setUpLandMarkPoints(pose)
                 }?.addOnFailureListener { exception ->
                     Log.i(TAG, "getPose: ${exception.localizedMessage}")
                 }
@@ -87,23 +91,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun getPoseViaBitmap() {
         bitmap?.let {
             poseDetector?.process(InputImage.fromBitmap(it, 0))?.addOnSuccessListener { pose ->
-                getThePoseAngle(PoseOption(pose))
+                setUpLandMarkPoints(pose)
             }?.addOnFailureListener { exception ->
                 Log.i(TAG, "getPose: ${exception.localizedMessage}")
             }
         }
     }
 
-    private fun getThePoseAngle(poseOption: PoseOption) {
-        val angle = getAngle(
-            firstPoint = poseOption.rightShoulder!!,
-            midPoint = poseOption.rightHip!!,
-            lastPoint = poseOption.rightKnee!!
-        )
-        Log.i(
-            TAG,
-            "poseOptionDetection: Angle Between RightShoulder RightHip and Right Knee is -> $angle"
-        )
+    @SuppressLint("SetTextI18n")
+    private fun setUpLandMarkPoints(pose: Pose) {
+        binding.displayDataText.text = "Pose LandMark-Type :-\n\n"
+        pose.allPoseLandmarks.forEachIndexed { index, poseLandmark ->
+            binding.displayDataText.append("Point ${index + 1} -> ${poseLandmark.landmarkType}\n")
+        }
+        this.msg("All LandMark type has Been displayed")
     }
 
     private fun callCamera() {
