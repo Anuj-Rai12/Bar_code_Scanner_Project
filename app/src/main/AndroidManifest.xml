@@ -3,6 +3,8 @@
     package="com.example.mltesting">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.any" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -13,6 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MLTesting">
+        <activity
+            android:name=".CameraXLib"
+            android:exported="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

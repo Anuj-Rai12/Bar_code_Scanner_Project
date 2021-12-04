@@ -9,7 +9,6 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
-import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.vmadalin.easypermissions.EasyPermissions
 import kotlin.math.atan2
@@ -17,7 +16,7 @@ import kotlin.math.atan2
 
 const val CAMERA_INT = 11
 const val TAG = "ANUJ"
-
+const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
 
 fun getIntent(string: String): Intent {
     val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)

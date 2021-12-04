@@ -67,8 +67,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         poseDetector = PoseDetection.getClient(singleModeGesture)
 
         binding.btnCamera.setOnClickListener {
-            if (this.checkCameraPermission())
-                callCamera()
+
+            val intent = Intent(this, CameraXLib::class.java)
+            startActivity(intent)
+
+            /*if (this.checkCameraPermission())
+                callCamera()*/
         }
 
         binding.exploreBtn.setOnClickListener {
