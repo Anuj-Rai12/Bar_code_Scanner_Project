@@ -6,16 +6,22 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.vmadalin.easypermissions.EasyPermissions
+import java.io.File
+import java.io.File.separator
 import kotlin.math.atan2
 
 
 const val CAMERA_INT = 11
+const val Write_External_Storage = 12
+const val Read_External_Storage = 13
 const val TAG = "ANUJ"
 
 
@@ -26,11 +32,10 @@ fun getIntent(string: String): Intent {
     return intent
 }
 
-fun Context.msg(string: String) {
-    Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
+fun Context.msg(string: String, long: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, string, long).show()
 }
 
-/*
 
 data class PoseOption(val pose: Pose) {
     val leftShoulder: PoseLandmark? = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
@@ -67,11 +72,32 @@ data class PoseOption(val pose: Pose) {
     val leftMouth: PoseLandmark? = pose.getPoseLandmark(PoseLandmark.LEFT_MOUTH)
     val rightMouth: PoseLandmark? = pose.getPoseLandmark(PoseLandmark.RIGHT_MOUTH)
 }
-*/
 
 
 fun Activity.checkCameraPermission() =
     EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)
+
+fun Activity.checkReadStoragePermission() =
+    EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+fun Activity.checkWriteStoragePermission() =
+    EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+
+fun Context.getFileDir(fileName: String): File {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        File(
+            "${getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)}${separator}Pose Land Mark",
+            fileName
+        )
+    else
+        File(
+            "${
+                Environment.getExternalStoragePublicDirectory
+                    (Environment.DIRECTORY_DOWNLOADS)
+            }${separator}Pose Lank Mark", fileName
+        )
+}
 
 
 fun getAngle(
