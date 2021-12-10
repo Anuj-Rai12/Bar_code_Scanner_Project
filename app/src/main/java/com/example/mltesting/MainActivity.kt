@@ -111,7 +111,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             return
         }
         pose.allPoseLandmarks.forEachIndexed { index, poseLandmark ->
-            binding.displayDataText.append("Point ${index + 1} -> ${poseLandmark.landmarkType}\n")
+            /*binding.displayDataText.append(
+                "Point ${index + 1} :- \n" +
+                        "Land Mark Type ---> ${poseLandmark.landmarkType}\n" +
+                        "Position --->  ${poseLandmark.position}\n" +
+                        "InFrameLikeHood ----> ${poseLandmark.inFrameLikelihood}\n" +
+                        "Position 3D -----> ${poseLandmark.position3D}\n"
+            )*/
+            binding.displayDataText.append(
+                "Point ${index + 1} :- \n" +
+                        "(X,Y) = (x=${poseLandmark.position3D.x},y=${poseLandmark.position3D.y})\n\n"
+            )
+
             if (pose.allPoseLandmarks.last() == poseLandmark) {
                 createTextFile()
             }
@@ -212,14 +223,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             manifest,
         )
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-    }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         perms.forEach {
