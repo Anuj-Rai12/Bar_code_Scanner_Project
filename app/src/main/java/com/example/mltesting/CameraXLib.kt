@@ -74,7 +74,6 @@ class CameraXLib : AppCompatActivity() {
                     val savedUri = Uri.fromFile(photoFile)
 
 
-
                     val msg = "Photo capture succeeded: $savedUri"
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
@@ -104,7 +103,7 @@ class CameraXLib : AppCompatActivity() {
                 .build()
                 .also {
                     it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
-                        Log.d(TAG, "Average luminosity: $luma")
+                        //Log.d(TAG, "Average luminosity: $luma")
                     })
                 }
 

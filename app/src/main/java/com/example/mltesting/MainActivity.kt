@@ -27,6 +27,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var uri: Uri? = null
     private var poseDetector: PoseDetector? = null
 
+    companion object {
+        var poseDetectorCom: PoseDetector? = null
+    }
+
     private val singleModeGesture by lazy {
         AccuratePoseDetectorOptions.Builder()
             .setDetectorMode(AccuratePoseDetectorOptions.SINGLE_IMAGE_MODE)
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         setContentView(binding.root)
         getPermission()
         poseDetector = PoseDetection.getClient(singleModeGesture)
-
+        poseDetectorCom = poseDetector
         binding.btnCamera.setOnClickListener {
 
             val intent = Intent(this, CameraXLib::class.java)

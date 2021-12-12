@@ -1,18 +1,14 @@
 package com.example.mltesting.utils
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context.CAMERA_SERVICE
-import android.hardware.camera2.CameraAccessException
-import android.hardware.camera2.CameraCharacteristics
-import android.hardware.camera2.CameraManager
-import android.os.Build
-import android.util.SparseIntArray
-import android.view.Surface
-import androidx.annotation.RequiresApi
+import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.example.mltesting.LumaListener
+import com.example.mltesting.MainActivity
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.pose.Pose
+import com.google.mlkit.vision.pose.PoseDetector
 import java.nio.ByteBuffer
 
 class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Analyzer {
@@ -27,11 +23,13 @@ class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Ana
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(imageProxy: ImageProxy) {
 
-        /*val mediaImage = imageProxy.image
+        val mediaImage = imageProxy.image
         if (mediaImage != null) {
             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-
-        }*/
+            MainActivity.poseDetectorCom?.let { poseDetector ->
+                getPoseByUsingFileUri(poseDetector, image)
+            }
+        }
 
 
         val buffer = imageProxy.planes[0].buffer
@@ -46,7 +44,33 @@ class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Ana
     }
 
 
-    private val ORIENTATIONS = SparseIntArray()
+    private fun getPoseByUsingFileUri(poseDetector: PoseDetector, image: InputImage) {
+        poseDetector.process(image).addOnSuccessListener { pose ->
+            setUpLandMarkPoints(pose)
+        }.addOnFailureListener { exception ->
+            Log.i(TAG, "getPose: ${exception.localizedMessage}")
+        }
+    }
+
+
+    private fun setUpLandMarkPoints(pose: Pose) {
+        //binding.displayDataText.text = "Pose LandMark-Type :-\n\n"
+        Log.i(TAG, "setUpLandMarkPoints: Pose LandMark-Type :-\n\n")
+        if (pose.allPoseLandmarks.isEmpty()) {
+            Log.i(TAG, "setUpLandMarkPoints: Pose is Empty ")
+            return
+        }
+        pose.allPoseLandmarks.forEachIndexed { index, poseLandmark ->
+            //  binding.displayDataText.append("Point ${index + 1} -> ${poseLandmark.landmarkType}\n")
+            Log.i(TAG, "setUpLandMarkPoints:  Point ${index + 1} -> ${poseLandmark.landmarkType}\n")
+        }
+        //this.msg("All LandMark type has Been displayed")
+        Log.i(TAG, "\n\nsetUpLandMarkPoints: All LandMark Type hase Been Displayed")
+
+    }
+
+
+    /*private val ORIENTATIONS = SparseIntArray()
 
     init {
         ORIENTATIONS.append(Surface.ROTATION_0, 0)
@@ -54,8 +78,8 @@ class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Ana
         ORIENTATIONS.append(Surface.ROTATION_180, 180)
         ORIENTATIONS.append(Surface.ROTATION_270, 270)
     }
-
-
+*/
+/*
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Throws(CameraAccessException::class)
     private fun getRotationCompensation(
@@ -81,7 +105,7 @@ class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Ana
             rotationCompensation = (sensorOrientation - rotationCompensation + 360) % 360
         }
         return rotationCompensation
-    }
+    }*/
 
 
 }
