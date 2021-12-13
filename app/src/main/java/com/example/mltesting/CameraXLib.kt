@@ -1,5 +1,6 @@
 package com.example.mltesting
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -12,29 +13,56 @@ import com.example.mltesting.databinding.ActvityCamLayoutBinding
 import com.example.mltesting.utils.FILENAME_FORMAT
 import com.example.mltesting.utils.LuminosityAnalyzer
 import com.example.mltesting.utils.TAG
+import com.example.mltesting.utils.msg
+import com.google.mlkit.vision.barcode.Barcode
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-typealias LumaListener = (luma: Double) -> Unit
 
 class CameraXLib : AppCompatActivity() {
     private lateinit var binding: ActvityCamLayoutBinding
 
     private var imageCapture: ImageCapture? = null
-
+    private var flagList: Boolean = false
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
 
+    companion object {
+        var barCodeCom: Barcode? = null
+    }
+
+    private val option = BarcodeScannerOptions.Builder()
+        .setBarcodeFormats(
+            Barcode.FORMAT_QR_CODE,
+            Barcode.FORMAT_AZTEC,
+            Barcode.FORMAT_CODE_93,
+            Barcode.FORMAT_CODABAR,
+            Barcode.FORMAT_CODE_128,
+            Barcode.FORMAT_CODE_39,
+            Barcode.FORMAT_EAN_8,
+            Barcode.FORMAT_EAN_13,
+            Barcode.FORMAT_PDF417,
+            Barcode.FORMAT_UPC_A,
+            Barcode.FORMAT_UPC_E,
+        )
+        .build()
+
+
+    private val scanner by lazy {
+        BarcodeScanning.getClient(option)
+        //  BarcodeScanning.getClient()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActvityCamLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         startCamera()
-
         binding.cameraCaptureButton.setOnClickListener {
             takePhoto()
         }
@@ -72,8 +100,6 @@ class CameraXLib : AppCompatActivity() {
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
-
-
                     val msg = "Photo capture succeeded: $savedUri"
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
@@ -102,9 +128,26 @@ class CameraXLib : AppCompatActivity() {
             val imageAnalyzer = ImageAnalysis.Builder()
                 .build()
                 .also {
-                    it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
-                        //Log.d(TAG, "Average luminosity: $luma")
-                    })
+                    it.setAnalyzer(
+                        cameraExecutor, LuminosityAnalyzer({ luma ->
+                            Log.d("TAG", "Average luminosity: $luma")
+                        }, { imageInput->
+                            scanner.process(imageInput).addOnSuccessListener { list ->
+                                if (!list.isNullOrEmpty() && !flagList) {
+                                    barCodeCom = list.last()
+                                    flagList = true
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                    return@addOnSuccessListener
+                                }
+
+                            }.addOnFailureListener { e ->
+                                Log.i(TAG, "startCamera: Error is $e")
+                                flagList = false
+                            }
+                        })
+                    )
                 }
 
             // Select back camera as a default
@@ -124,6 +167,42 @@ class CameraXLib : AppCompatActivity() {
             }
 
         }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun getBarCode(barCodeList: List<Barcode>, success: (Barcode) -> Unit) {
+        if (barCodeList.isEmpty())
+            return
+        val barcode = barCodeList.first()
+        barcode.let { barCode ->
+            when (barCode.valueType) {
+                Barcode.TYPE_URL -> {
+                    this.msg("Url is Found")
+                    val title = barCode.url?.title
+                    val url = barCode.url?.url
+                    Log.i(TAG, "getBarCode: $title\n")
+                    Log.i(TAG, "getBarCode: $url\n")
+                    success(barCode)
+                    return
+                }
+                Barcode.TYPE_WIFI -> {
+                    this.msg("WIFI is Found....")
+                    val ssid = barCode.wifi?.ssid
+                    val password = barCode.wifi?.password
+                    val type = barCode.wifi?.encryptionType
+                    Log.i(TAG, "getBarCode: $type\n")
+                    Log.i(TAG, "getBarCode: $ssid\n")
+                    Log.i(TAG, "getBarCode: $password\n")
+                    success(barCode)
+                    return
+                }
+                else -> {
+                    Log.i(TAG, "getBarCode  Success  : ${barCode.rawValue}\n\n")
+                    success(barCode)
+                    return
+                }
+            }
+        }
+
     }
 
 

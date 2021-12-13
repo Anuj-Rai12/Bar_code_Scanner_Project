@@ -16,11 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MLTesting">
         <activity
-            android:name=".CameraXLib"
+            android:name=".MainActivity"
             android:exported="true" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".CameraXLib"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,6 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode" />
+        <!-- To use multiple models: android:value="barcode,model2,model3" -->
+
     </application>
 
 </manifest>

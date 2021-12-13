@@ -46,9 +46,14 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    //Machinery Learning
+    //Machinery Learning pose Detection
     implementation 'com.google.mlkit:pose-detection:17.0.1-beta6'
     implementation 'com.google.mlkit:pose-detection-accurate:17.0.1-beta6'
+
+    //Machine Learning BarCode
+    implementation 'com.google.mlkit:barcode-scanning:17.0.0'
+    implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:16.2.1'
+
     //Easy Permission
     implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
     implementation "com.google.android.odml:image:1.0.0-beta1"

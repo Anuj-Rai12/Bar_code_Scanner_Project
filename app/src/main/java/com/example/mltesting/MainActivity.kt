@@ -2,123 +2,36 @@ package com.example.mltesting
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mltesting.databinding.ActivityMainBinding
-import com.example.mltesting.utils.*
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.pose.Pose
-import com.google.mlkit.vision.pose.PoseDetection
-import com.google.mlkit.vision.pose.PoseDetector
-import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
+import com.example.mltesting.utils.CAMERA_INT
+import com.example.mltesting.utils.TAG
+import com.example.mltesting.utils.checkCameraPermission
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding: ActivityMainBinding
-    private var bitmap: Bitmap? = null
-    private var uri: Uri? = null
-    private var poseDetector: PoseDetector? = null
 
-    companion object {
-        var poseDetectorCom: PoseDetector? = null
+    private val barCode by lazy {
+        CameraXLib.barCodeCom
     }
 
-    private val singleModeGesture by lazy {
-        AccuratePoseDetectorOptions.Builder()
-            .setDetectorMode(AccuratePoseDetectorOptions.SINGLE_IMAGE_MODE)
-            .build()
-    }
-
-    /*private val streamModeGesture by lazy {
-        AccuratePoseDetectorOptions.Builder()
-            .setDetectorMode(AccuratePoseDetectorOptions.STREAM_MODE)
-            .build()
-    }*/
-
-
-    private val getImageFile = registerForActivityResult(GetUriFile()) {
-        if (it.requestCode) {
-            it.uri?.let { uri ->
-                this.uri = uri
-                binding.myImage.setImageURI(this.uri)
-                getPoseByUsingFileUri()
-            }
-        }
-    }
-
-    private val requestCamera =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            it?.let {
-                bitmap = getCameraImage(it)
-                binding.myImage.setImageBitmap(bitmap)
-                getPoseViaBitmap()
-            }
-        }
-
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getPermission()
-        poseDetector = PoseDetection.getClient(singleModeGesture)
-        poseDetectorCom = poseDetector
-        binding.btnCamera.setOnClickListener {
-
-            val intent = Intent(this, CameraXLib::class.java)
-            startActivity(intent)
-
-            /*if (this.checkCameraPermission())
-                callCamera()*/
-        }
-
-        binding.exploreBtn.setOnClickListener {
-            getImageFile.launch(InputData(intent = getIntent("image/*")))
+        barCode?.let {
+            binding.displayDataText.text = "The BarCode Decoded values -\n"
+            binding.displayDataText.append(it.rawValue)
         }
     }
 
-
-    private fun getPoseByUsingFileUri() {
-        uri?.let {
-            poseDetector?.process(InputImage.fromFilePath(this, it))
-                ?.addOnSuccessListener { pose ->
-                    setUpLandMarkPoints(pose)
-                }?.addOnFailureListener { exception ->
-                    Log.i(TAG, "getPose: ${exception.localizedMessage}")
-                }
-        }
-    }
-
-    private fun getPoseViaBitmap() {
-        bitmap?.let {
-            poseDetector?.process(InputImage.fromBitmap(it, 0))?.addOnSuccessListener { pose ->
-                setUpLandMarkPoints(pose)
-            }?.addOnFailureListener { exception ->
-                Log.i(TAG, "getPose: ${exception.localizedMessage}")
-            }
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun setUpLandMarkPoints(pose: Pose) {
-        binding.displayDataText.text = "Pose LandMark-Type :-\n\n"
-        pose.allPoseLandmarks.forEachIndexed { index, poseLandmark ->
-            binding.displayDataText.append("Point ${index + 1} -> ${poseLandmark.landmarkType}\n")
-        }
-        this.msg("All LandMark type has Been displayed")
-    }
-
-    private fun callCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        requestCamera.launch(intent)
-    }
 
     private fun getPermission() {
         if (!this.checkCameraPermission()) {
@@ -160,7 +73,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
         Log.i(TAG, "onPermissionsGranted: $requestCode is given $perms")
-        callCamera()
     }
 
 
