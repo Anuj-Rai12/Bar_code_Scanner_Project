@@ -5,4 +5,8 @@
     <string name="user_name">Username</string>
     <string name="user_pass">Password</string>
     <string name="btn_test_con">Test Connection</string>
+    <string name="btn_login">Login</string>
+    <string name="msg_fail">Failed</string>
+    <string name="msg_success">Successful!</string>
+    <string name="btn_setting">Settings</string>
 </resources>

@@ -7,7 +7,16 @@
 
     <fragment
         android:id="@+id/testingConnectionFragment"
-        android:name="com.example.offiqlresturantapp.ui.TestingConnectionFragment"
+        android:name="com.example.offiqlresturantapp.ui.testingconnection.TestingConnectionFragment"
         android:label="testing_connection_fragment"
-        tools:layout="@layout/testing_connection_fragment" />
+        tools:layout="@layout/testing_connection_fragment" >
+        <action
+            android:id="@+id/action_testingConnectionFragment_to_loginScreenFragment"
+            app:destination="@id/loginScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginScreenFragment"
+        android:name="com.example.offiqlresturantapp.ui.login.LoginScreenFragment"
+        android:label="login_screen_fragment"
+        tools:layout="@layout/login_screen_fragment" />
 </navigation>
