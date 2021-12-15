@@ -11,6 +11,10 @@
 
     <!-- Project color-->
     <color name="light_blue_bg">#E0EDFF</color>
+    <color name="dark_blue_bg">#019DE2</color>
+    <color name="blue_bg">#017AE2</color>
     <color name="light_grey_color">#707070</color>
+    <color name="light_golden_color">#FCB837</color>
+    <color name="dark_golden_color">#E28B01</color>
 
 </resources>
