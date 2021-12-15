@@ -2,6 +2,7 @@
 buildscript {
     ext.nav_version = "2.3.5"
     ext.lifecycle_version = "2.4.0"
+    ext.jetpack_data_store = "1.0.0"
             repositories {
                 google()
                 mavenCentral()

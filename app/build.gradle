@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id("kotlin-parcelize")
     id 'androidx.navigation.safeargs'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
@@ -69,5 +70,13 @@ dependencies {
     //Kotlin Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-RC2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-RC2'
+    // Retrofit
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    //Inspector
+    implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2"
+    //JetPack DataStore
+    implementation("androidx.datastore:datastore-preferences:$jetpack_data_store")
 
 }
