@@ -12,4 +12,20 @@
     <string name="item_table">Table Management</string>
     <string name="item_cost">Cost Estimate</string>
     <string name="open_table">Open</string>
+
+    <string name="oder_desc">Description</string>
+    <string name="oder_qty">Qty</string>
+    <string name="oder_rate">Rate</string>
+    <string name="oder_amt">Amount</string>
+    <string name="oder_hint">Search or scan to add items</string>
+
+    <string name="oder_confirm_btn">Confirm Oder</string>
+    <string name="oder_reset">Reset All</string>
+    <string name="oder_del">Delete item</string>
+    <string name="oder_view">View Deals</string>
+    <string name="total_sum">Grand Total</string>
+    <!-- Delete it-->
+    <string name="sample_total_amt">150</string>
+    <string name="sample_tbl_num">Table 1:4P</string>
+    <string name="sample_tbl_time">Booking Time :4:00PM</string>
 </resources>

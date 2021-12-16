@@ -36,5 +36,14 @@
         android:id="@+id/tableManagementFragment"
         android:name="com.example.offiqlresturantapp.ui.tablemange.TableManagementFragment"
         android:label="table_mangment_layout"
-        tools:layout="@layout/table_mangment_layout" />
+        tools:layout="@layout/table_mangment_layout" >
+        <action
+            android:id="@+id/action_tableManagementFragment_to_confirmOderFragment"
+            app:destination="@id/confirmOderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/confirmOderFragment"
+        android:name="com.example.offiqlresturantapp.ui.oderconfirm.ConfirmOderFragment"
+        android:label="confirm_order_layout"
+        tools:layout="@layout/confirm_order_layout" />
 </navigation>

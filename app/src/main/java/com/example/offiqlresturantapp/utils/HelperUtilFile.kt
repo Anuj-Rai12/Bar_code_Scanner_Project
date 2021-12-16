@@ -1,8 +1,10 @@
 package com.example.offiqlresturantapp.utils
 
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -27,6 +29,11 @@ fun View.show() {
 }
 
 const val TAG = "ANUJ"
+
+fun Context.msg(string: String, time: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, string, time).show()
+}
+
 
 @RequiresApi(Build.VERSION_CODES.M)
 fun Activity.changeStatusBarColor(color: Int = R.color.light_blue_bg) {

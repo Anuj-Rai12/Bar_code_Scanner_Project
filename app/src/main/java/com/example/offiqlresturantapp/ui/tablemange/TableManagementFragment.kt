@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.TableMangmentLayoutBinding
@@ -101,6 +102,8 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             tableManagementAdaptor = TableManagementAdaptor {
                 Log.i(TAG, "setRecycleView: $it")
+                val action=TableManagementFragmentDirections.actionTableManagementFragmentToConfirmOderFragment()
+                findNavController().navigate(action)
             }
             adapter = tableManagementAdaptor
         }
