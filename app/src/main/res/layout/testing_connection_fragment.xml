@@ -26,10 +26,10 @@
         android:layout_height="34dp"
         android:layout_marginTop="11sp"
         android:layout_marginEnd="12sp"
+        android:contentDescription="@string/app_title"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logofile"
-        android:contentDescription="@string/app_title" />
+        app:srcCompat="@drawable/logofile" />
 
 
     <androidx.appcompat.widget.AppCompatButton
@@ -58,12 +58,12 @@
         android:id="@+id/user_name_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
         android:layout_marginTop="103dp"
         android:fontFamily="@font/roboto_medium"
         android:text="@string/user_name"
         android:textColor="@color/light_grey_color"
         android:textSize="16sp"
-        android:layout_marginStart="38dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scan_or_code_id" />
 
@@ -73,8 +73,8 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:padding="10dp"
         android:background="@drawable/black_underline_border"
+        android:padding="10dp"
         app:layout_constraintLeft_toLeftOf="@id/user_name_id"
         app:layout_constraintRight_toLeftOf="@id/logo_file_id"
         app:layout_constraintTop_toBottomOf="@id/user_name_id" />
@@ -96,10 +96,10 @@
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/user_pass_ed"
         android:layout_width="0dp"
-        android:padding="10dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/black_underline_border"
+        android:padding="10dp"
         app:layout_constraintLeft_toLeftOf="@id/user_name_id"
         app:layout_constraintRight_toLeftOf="@id/logo_file_id"
         app:layout_constraintTop_toBottomOf="@id/user_pass_id" />
@@ -111,25 +111,18 @@
         android:layout_height="wrap_content"
         android:background="@drawable/golden_underline_border"
         android:fontFamily="@font/roboto_medium"
+        android:paddingStart="36dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="38dp"
+        android:paddingBottom="17dp"
         android:text="@string/btn_test_con"
         android:textAllCaps="false"
-        android:paddingTop="16dp"
-        android:paddingBottom="17dp"
-        android:paddingStart="36dp"
-        android:paddingEnd="38dp"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/user_pass_ed"
         app:layout_constraintRight_toRightOf="@id/user_pass_ed"
         app:layout_constraintTop_toBottomOf="@id/user_pass_ed" />
-
-
-
-
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_blue_bg"
+    tools:context="com.example.offiqlresturantapp.ui.tableorcost.TableManagementOrCostEstimate">
+
+
+    <TextView
+        android:id="@+id/mpos_id3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="12sp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/app_title"
+        android:textColor="@color/light_grey_color"
+        android:textSize="22sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/logo_file_id3"
+        android:layout_width="31dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="11sp"
+        android:layout_marginEnd="12sp"
+        android:contentDescription="@string/app_title"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logofile" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/choose_table_or_cost_recycle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="131dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@id/setting_btn_ic2"
+        app:layout_constraintLeft_toLeftOf="@id/mpos_id3"
+        app:layout_constraintRight_toRightOf="@id/logo_file_id3"
+        app:layout_constraintTop_toBottomOf="@id/mpos_id3"
+        tools:listitem="@layout/table_item_layout" />
+
+
+    <ImageView
+        android:id="@+id/setting_btn_ic2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:contentDescription="@string/btn_setting"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:srcCompat="@drawable/setting_icon" />
+
+
+    <TextView
+        android:id="@+id/setting_txt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/btn_setting"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/setting_btn_ic2"
+        app:layout_constraintLeft_toRightOf="@id/setting_btn_ic2"
+        app:layout_constraintTop_toTopOf="@id/setting_btn_ic2" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

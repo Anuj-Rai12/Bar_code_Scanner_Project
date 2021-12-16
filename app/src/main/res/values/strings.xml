@@ -9,4 +9,6 @@
     <string name="msg_fail">Failed</string>
     <string name="msg_success">Successful!</string>
     <string name="btn_setting">Settings</string>
+    <string name="item_table">Table Management</string>
+    <string name="item_cost">Cost Estimate</string>
 </resources>

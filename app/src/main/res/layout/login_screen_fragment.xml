@@ -8,7 +8,7 @@
     tools:context="com.example.offiqlresturantapp.ui.login.LoginScreenFragment">
 
     <TextView
-        android:id="@+id/mpos_id"
+        android:id="@+id/mpos_id2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="19dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/logo_file_id"
+        android:id="@+id/logo_file_id2"
         android:layout_width="31dp"
         android:layout_height="34dp"
         android:layout_marginTop="11sp"
@@ -47,9 +47,9 @@
         android:textAllCaps="false"
         android:textColor="@color/dark_green_color"
         android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@id/mpos_id"
-        app:layout_constraintRight_toRightOf="@id/logo_file_id"
-        app:layout_constraintTop_toBottomOf="@id/mpos_id" />
+        app:layout_constraintLeft_toLeftOf="@id/mpos_id2"
+        app:layout_constraintRight_toRightOf="@id/logo_file_id2"
+        app:layout_constraintTop_toBottomOf="@id/mpos_id2" />
 
 
     <TextView
@@ -74,7 +74,7 @@
         android:background="@drawable/black_underline_border"
         android:padding="10dp"
         app:layout_constraintLeft_toLeftOf="@id/user_name_id2"
-        app:layout_constraintRight_toLeftOf="@id/logo_file_id"
+        app:layout_constraintRight_toLeftOf="@id/logo_file_id2"
         app:layout_constraintTop_toBottomOf="@id/user_name_id2" />
 
 
@@ -99,7 +99,7 @@
         android:background="@drawable/black_underline_border"
         android:padding="10dp"
         app:layout_constraintLeft_toLeftOf="@id/user_name_id2"
-        app:layout_constraintRight_toLeftOf="@id/logo_file_id"
+        app:layout_constraintRight_toLeftOf="@id/logo_file_id2"
         app:layout_constraintTop_toBottomOf="@id/user_pass_id2" />
 
 
@@ -128,6 +128,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:contentDescription="@string/btn_setting"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:srcCompat="@drawable/setting_icon" />
@@ -140,7 +141,8 @@
         android:text="@string/btn_setting"
         android:textSize="14sp"
         android:layout_marginStart="12dp"
-        android:fontFamily="@font/roboto_medium"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/light_grey_color"
         app:layout_constraintBottom_toBottomOf="@id/setting_btn_ic"
         app:layout_constraintLeft_toRightOf="@id/setting_btn_ic"
         app:layout_constraintTop_toTopOf="@id/setting_btn_ic" />

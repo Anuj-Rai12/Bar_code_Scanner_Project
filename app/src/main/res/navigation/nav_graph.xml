@@ -18,5 +18,14 @@
         android:id="@+id/loginScreenFragment"
         android:name="com.example.offiqlresturantapp.ui.login.LoginScreenFragment"
         android:label="login_screen_fragment"
-        tools:layout="@layout/login_screen_fragment" />
+        tools:layout="@layout/login_screen_fragment" >
+        <action
+            android:id="@+id/action_loginScreenFragment_to_tableManagementOrCostEstimate"
+            app:destination="@id/tableManagementOrCostEstimate" />
+    </fragment>
+    <fragment
+        android:id="@+id/tableManagementOrCostEstimate"
+        android:name="com.example.offiqlresturantapp.ui.tableorcost.TableManagementOrCostEstimate"
+        android:label="table_or_cost_layout"
+        tools:layout="@layout/table_or_cost_layout" />
 </navigation>
