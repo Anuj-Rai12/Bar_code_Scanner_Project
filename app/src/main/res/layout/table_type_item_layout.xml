@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="100dp"
+    android:layout_marginStart="19dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="20dp"
+    android:background="@drawable/white_underline_boder">
+
+
+    <TextView
+        android:id="@+id/table_number_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:maxLines="1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:paddingStart="26dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="21dp"
+        android:textColor="@color/light_grey_color"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="TBL-1" />
+
+    <!--  Empty Site-->
+
+    <TextView
+        android:id="@+id/tbl_empty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/table_available_border"
+
+        android:fontFamily="@font/roboto_medium"
+        android:minHeight="64dp"
+
+        android:paddingTop="23dp"
+        android:paddingBottom="22dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/table_number_txt"
+        tools:text="@string/open_table" />
+
+
+    <!-- Occupied Site-->
+
+    <LinearLayout
+        android:id="@+id/tbl_occupied_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/table_occupied_border"
+        android:gravity="center"
+        android:minHeight="64dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/table_number_txt"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/occupied_tbl_many"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawablePadding="3dp"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center|end"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:drawableEndCompat="@drawable/ic_person"
+            app:drawableTint="@color/black"
+            tools:text="6" />
+
+        <TextView
+            android:id="@+id/occupied_tbl_time"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            tools:text=">6h" />
+    </LinearLayout>
+
+
+    <!-- Reserved Site-->
+    <TextView
+        android:id="@+id/tbl_reserved"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/table_reserved_boder"
+        android:fontFamily="@font/roboto_medium"
+        android:minHeight="64dp"
+        android:paddingTop="11dp"
+        android:paddingBottom="15dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/table_number_txt"
+        tools:text="Reserved\n3:00 PM"
+        tools:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

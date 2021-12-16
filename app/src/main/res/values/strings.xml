@@ -11,4 +11,5 @@
     <string name="btn_setting">Settings</string>
     <string name="item_table">Table Management</string>
     <string name="item_cost">Cost Estimate</string>
+    <string name="open_table">Open</string>
 </resources>

@@ -27,5 +27,14 @@
         android:id="@+id/tableManagementOrCostEstimate"
         android:name="com.example.offiqlresturantapp.ui.tableorcost.TableManagementOrCostEstimate"
         android:label="table_or_cost_layout"
-        tools:layout="@layout/table_or_cost_layout" />
+        tools:layout="@layout/table_or_cost_layout" >
+        <action
+            android:id="@+id/action_tableManagementOrCostEstimate_to_tableManagementFragment"
+            app:destination="@id/tableManagementFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tableManagementFragment"
+        android:name="com.example.offiqlresturantapp.ui.tablemange.TableManagementFragment"
+        android:label="table_mangment_layout"
+        tools:layout="@layout/table_mangment_layout" />
 </navigation>
