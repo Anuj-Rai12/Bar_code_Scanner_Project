@@ -16,6 +16,7 @@
     <color name="light_grey_color">#707070</color>
     <color name="light_golden_color">#FCB837</color>
     <color name="dark_golden_color">#E28B01</color>
+    <color name="light_sky_blue">#F0FAFF</color>
 
     <color name="light_grey_black_color">#E3E3E3</color>
     <color name="semi_white_color">#FBFFF5</color>
@@ -29,6 +30,11 @@
     <color name="light_green_color">#A8FFB2</color>
     <color name="green_color">#01E21B</color>
     <color name="dark_green_color">#248E3D</color>
+
+    <color name="dark_leaf_green_color">#189F2D</color>
+
+    <color name="light_skin_color">#EF9262</color>
+    <color name="light_golden_color_border">#E0A82B</color>
 
     <color name="confirm_order_btn_green_color">#119B11</color>
     <color name="confirm_order_btn_green_border_color">#3EBC06</color>

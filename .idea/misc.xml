@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.18055555555555555" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/add_offer_btn_border_layout.xml" value="0.20925925925925926" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/add_with_out_offer_btn_layout.xml" value="0.20925925925925926" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/barcode.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/barcodefile.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/black_border_box.xml" value="0.20925925925925926" />
@@ -31,7 +33,9 @@
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/whitebox.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/activity_main.xml" value="0.2234375" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/confirm_order_layout.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/food_item_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/login_screen_fragment.xml" value="0.2" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/search_food_item_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/table_item_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/table_mangment_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/table_or_cost_layout.xml" value="0.264" />

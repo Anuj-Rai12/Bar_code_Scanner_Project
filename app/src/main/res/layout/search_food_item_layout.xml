@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/semi_white_color"
+    tools:context="com.example.offiqlresturantapp.ui.searchfood.SearchFoodFragment">
+
+    <View
+        android:id="@+id/border_top"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="26dp"
+        android:background="@color/light_grey_color"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/back_arrow_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:contentDescription="@string/arr_bck"
+        android:src="@drawable/ic_arrow_back_24"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/border_top" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/search_box_ed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:background="@null"
+        android:ellipsize="end"
+        android:fontFamily="@font/roboto_medium"
+        android:hint="@string/src_hint"
+        android:maxLines="3"
+        android:textColor="@color/light_grey_color"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/border_bottom"
+        app:layout_constraintLeft_toRightOf="@id/back_arrow_img"
+        app:layout_constraintRight_toLeftOf="@id/cross_btn_img"
+        app:layout_constraintTop_toBottomOf="@id/border_top" />
+
+    <ImageView
+        android:id="@+id/cross_btn_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:contentDescription="@string/clos_btn"
+        android:src="@drawable/ic_close_24"
+        android:visibility="invisible"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/border_top" />
+
+    <View
+        android:id="@+id/border_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/light_grey_color"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cross_btn_img" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_of_food_item"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:overScrollMode="never"
+        tools:listitem="@layout/food_item_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/border_bottom" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

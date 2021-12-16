@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.ConfirmOrderLayoutBinding
 import com.example.offiqlresturantapp.utils.changeStatusBarColor
 import com.example.offiqlresturantapp.utils.msg
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private lateinit var binding: ConfirmOrderLayoutBinding
 
@@ -25,6 +28,9 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         }
         binding.searchBoxTxt.setOnClickListener {
             //New Fragment
+            val action =
+                ConfirmOderFragmentDirections.actionConfirmOderFragmentToSearchFoodFragment()
+            findNavController().navigate(action)
         }
     }
 }

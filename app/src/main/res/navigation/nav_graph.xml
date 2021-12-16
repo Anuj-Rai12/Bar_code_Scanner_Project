@@ -45,5 +45,14 @@
         android:id="@+id/confirmOderFragment"
         android:name="com.example.offiqlresturantapp.ui.oderconfirm.ConfirmOderFragment"
         android:label="confirm_order_layout"
-        tools:layout="@layout/confirm_order_layout" />
+        tools:layout="@layout/confirm_order_layout" >
+        <action
+            android:id="@+id/action_confirmOderFragment_to_searchFoodFragment"
+            app:destination="@id/searchFoodFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFoodFragment"
+        android:name="com.example.offiqlresturantapp.ui.searchfood.SearchFoodFragment"
+        android:label="search_food_item_layout"
+        tools:layout="@layout/search_food_item_layout" />
 </navigation>

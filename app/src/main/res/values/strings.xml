@@ -24,7 +24,17 @@
     <string name="oder_del">Delete item</string>
     <string name="oder_view">View Deals</string>
     <string name="total_sum">Grand Total</string>
-    <!-- Delete it-->
+
+    <string name="arr_bck">back Arrow</string>
+    <string name="clos_btn">clear</string>
+    <string name="off_txt">Offer</string>
+    <string name="src_hint">Search..</string>
+    <string name="hint_btn_add">Add</string>
+    <string name="hint_btn_minus">Minus</string>
+
+    <string name="btn_without_offer">Add without offer</string>
+    <string name="btn_with_offer">Add with offer</string>
+    <!-- Delete it Just A Sample String Value -->
     <string name="sample_total_amt">150</string>
     <string name="sample_tbl_num">Table 1:4P</string>
     <string name="sample_tbl_time">Booking Time :4:00PM</string>

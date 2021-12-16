@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.offiqlresturantapp.R
+import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
 import com.example.offiqlresturantapp.ui.tablemange.model.TableData
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
 
@@ -28,8 +29,16 @@ fun View.show() {
     this.isVisible = true
 }
 
-const val TAG = "ANUJ"
+fun View.invisible() {
+    this.visibility = View.INVISIBLE
+}
 
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}
+
+const val TAG = "ANUJ"
+const val Rs_Symbol = "₹"
 fun Context.msg(string: String, time: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, string, time).show()
 }
@@ -42,3 +51,4 @@ fun Activity.changeStatusBarColor(color: Int = R.color.light_blue_bg) {
 typealias ItemClickListerForTableOrCost = (selection: SelectionDataClass) -> Unit
 
 typealias ItemClickListerForTableData = (tableData: TableData) -> Unit
+typealias ItemClickListerForListOfFood = (foodItem: FoodItem) -> Unit
