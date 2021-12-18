@@ -14,11 +14,17 @@
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/blue_underline_boder_color.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/confirm_btn_boder.xml" value="0.20925925925925926" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/confirm_order_hint_border.xml" value="0.20925925925925926" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/food_item_one_selcetion_layout.xml" value="0.19722222222222222" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/food_item_two_selection_layout.xml" value="0.19722222222222222" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/golden_underline_border.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/goldenbox.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/green_color_box_boder.xml" value="0.18055555555555555" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_add.xml" value="0.19722222222222222" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_arrow_back_24.xml" value="0.19722222222222222" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_close_24.xml" value="0.19722222222222222" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_person.xml" value="0.24375" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_remove_icon.xml" value="0.19722222222222222" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_search_24.xml" value="0.20925925925925926" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/image2vector.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/modify_order_btn_border.xml" value="0.20925925925925926" />
@@ -34,8 +40,9 @@
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/activity_main.xml" value="0.2234375" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/confirm_order_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/food_item_layout.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/list_of_food_item_selected.xml" value="0.37115839243498816" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/login_screen_fragment.xml" value="0.2" />
-        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/search_food_item_layout.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/search_food_item_layout.xml" value="0.2" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/table_item_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/table_mangment_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/table_or_cost_layout.xml" value="0.264" />

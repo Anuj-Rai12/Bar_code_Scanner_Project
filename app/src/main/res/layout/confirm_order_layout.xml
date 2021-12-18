@@ -126,10 +126,9 @@
             android:fontFamily="@font/roboto_medium"
             android:maxLines="1"
             android:text="@string/oder_qty"
-            android:textAlignment="textEnd"
+            android:textAlignment="center"
             android:textColor="@color/light_grey_color"
             android:textSize="14sp" />
-
 
         <TextView
             android:layout_width="match_parent"
@@ -139,7 +138,7 @@
             android:fontFamily="@font/roboto_medium"
             android:maxLines="1"
             android:text="@string/oder_rate"
-            android:textAlignment="textEnd"
+            android:textAlignment="center"
             android:textColor="@color/light_grey_color"
             android:textSize="14sp" />
 
@@ -151,7 +150,7 @@
             android:fontFamily="@font/roboto_medium"
             android:maxLines="1"
             android:text="@string/oder_amt"
-            android:textAlignment="textEnd"
+            android:textAlignment="center"
             android:textColor="@color/light_grey_color"
             android:textSize="14sp" />
 
@@ -169,12 +168,13 @@
         android:paddingStart="15dp"
         android:paddingTop="8dp"
         android:paddingBottom="9dp"
+        android:visibility="visible"
         android:text="@string/oder_hint"
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@id/dsc_item_layout"
         app:layout_constraintRight_toRightOf="@id/dsc_item_layout"
         app:layout_constraintTop_toBottomOf="@id/dsc_item_layout"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
 
     <!-- Here will be recycle view for Search-->
@@ -186,6 +186,9 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:visibility="gone"
+        android:layout_marginBottom="7dp"
+        tools:visibility="visible"
+        tools:listitem="@layout/list_of_food_item_selected"
         app:layout_constraintBottom_toTopOf="@id/total_order_amt"
         app:layout_constraintLeft_toLeftOf="@id/dsc_item_layout"
         app:layout_constraintRight_toRightOf="@id/dsc_item_layout"
@@ -209,7 +212,7 @@
         android:id="@+id/total_order_amt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="27dp"
+        android:layout_marginBottom="7dp"
         android:background="@drawable/black_underline_border"
         android:fontFamily="@font/roboto_medium"
         android:paddingStart="41dp"

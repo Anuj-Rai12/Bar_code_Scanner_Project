@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="4dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/food_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/food_item_one_selcetion_layout"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingStart="3dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="3dp"
+            android:paddingBottom="10dp"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="11sp"
+            tools:text="Chloe samosa" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/qty_of_food"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/food_item_one_selcetion_layout"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingTop="8dp"
+            android:paddingBottom="10dp"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="11sp"
+            tools:text="1343567" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/rate_of_food"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/food_item_one_selcetion_layout"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingTop="8dp"
+            android:paddingBottom="10dp"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="11sp"
+            tools:text="156 gfh hdhj" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/amt_of_food_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/food_item_one_selcetion_layout"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingTop="8dp"
+            android:paddingBottom="10dp"
+            android:textAlignment="center"
+            android:textSize="11sp"
+            tools:text="156 hkl;fd kl;j " />
+
+        <!--<TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_desc"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_qty"
+            android:textAlignment="textEnd"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_rate"
+            android:textAlignment="textEnd"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_amt"
+            android:textAlignment="textEnd"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />-->
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

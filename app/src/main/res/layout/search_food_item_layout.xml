@@ -55,6 +55,7 @@
         android:contentDescription="@string/clos_btn"
         android:src="@drawable/ic_close_24"
         android:visibility="invisible"
+        tools:visibility="visible"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/border_top" />
 
