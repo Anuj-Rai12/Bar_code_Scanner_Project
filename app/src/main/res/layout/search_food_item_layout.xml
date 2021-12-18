@@ -39,6 +39,7 @@
         android:fontFamily="@font/roboto_medium"
         android:hint="@string/src_hint"
         android:maxLines="3"
+        android:textColorHint="@color/light_grey_color"
         android:textColor="@color/light_grey_color"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/border_bottom"
