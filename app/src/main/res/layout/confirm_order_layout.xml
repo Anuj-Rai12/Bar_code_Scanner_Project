@@ -87,7 +87,7 @@
         android:id="@+id/qr_code_scan"
         android:layout_width="33dp"
         android:layout_height="33dp"
-        android:background="@null"
+        android:background="@color/semi_white_color"
         android:contentDescription="@string/scan_btn"
         android:scaleType="fitXY"
         android:src="@drawable/qr_code"
@@ -168,9 +168,9 @@
         android:paddingStart="15dp"
         android:paddingTop="8dp"
         android:paddingBottom="9dp"
-        android:visibility="visible"
         android:text="@string/oder_hint"
         android:textSize="12sp"
+        android:visibility="visible"
         app:layout_constraintLeft_toLeftOf="@id/dsc_item_layout"
         app:layout_constraintRight_toRightOf="@id/dsc_item_layout"
         app:layout_constraintTop_toBottomOf="@id/dsc_item_layout"
@@ -184,15 +184,15 @@
         android:id="@+id/list_of_item_recycle_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="7dp"
         android:overScrollMode="never"
         android:visibility="gone"
-        android:layout_marginBottom="7dp"
-        tools:visibility="visible"
-        tools:listitem="@layout/list_of_food_item_selected"
         app:layout_constraintBottom_toTopOf="@id/total_order_amt"
         app:layout_constraintLeft_toLeftOf="@id/dsc_item_layout"
         app:layout_constraintRight_toRightOf="@id/dsc_item_layout"
-        app:layout_constraintTop_toBottomOf="@id/dsc_item_layout" />
+        app:layout_constraintTop_toBottomOf="@id/dsc_item_layout"
+        tools:listitem="@layout/list_of_food_item_selected"
+        tools:visibility="visible" />
 
 
     <TextView
