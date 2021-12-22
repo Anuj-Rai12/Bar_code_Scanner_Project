@@ -21,7 +21,6 @@ class ListOfOfferAdaptor(
         private var flag: Boolean = false
 
         fun setData(string: String, oderOfferListCallBack: OderOfferListCallBack) {
-            binding.btnClickCheckBox.hide()
             binding.orderFoodItemDescTv.text = string
             binding.root.setOnClickListener {
                 if (string == "No offer")

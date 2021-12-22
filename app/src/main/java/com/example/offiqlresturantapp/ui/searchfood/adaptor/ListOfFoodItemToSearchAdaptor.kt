@@ -68,8 +68,9 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
 
             binding.btnWithOffer.setOnClickListener {
                 foodItem.addWithOffer = true
-                foodItem.offerDesc =
-                    if (listOfOfferString.isNullOrEmpty()) null else listOfOfferString
+                if (!listOfOfferString.isNullOrEmpty()) {
+                    foodItem.offerDesc = listOfOfferString
+                }
                 itemClickListerForListOfFood(foodItem)
             }
 
