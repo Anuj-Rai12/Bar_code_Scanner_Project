@@ -2,6 +2,7 @@ package com.example.offiqlresturantapp.ui.searchfood.adaptor
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +12,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.FoodItemLayoutBinding
+import com.example.offiqlresturantapp.ui.searchfood.adaptor.offeradaptor.ListOfOfferAdaptor
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
-import com.example.offiqlresturantapp.utils.ItemClickListerForListOfFood
-import com.example.offiqlresturantapp.utils.Rs_Symbol
-import com.example.offiqlresturantapp.utils.hide
-import com.example.offiqlresturantapp.utils.show
+import com.example.offiqlresturantapp.utils.*
 
 class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: ItemClickListerForListOfFood) :
     ListAdapter<FoodItem, ListOfFoodItemToSearchAdaptor.ListOfFoodItemViewHolder>(diffUtil) {
@@ -34,11 +33,11 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
 
     inner class ListOfFoodItemViewHolder(private val binding: FoodItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-        private var flag: Boolean = false
+        private lateinit var listOfOfferAdaptor: ListOfOfferAdaptor
+        private var listOfOfferString = mutableListOf<String>()
 
         @RequiresApi(Build.VERSION_CODES.M)
-        @SuppressLint("SetTextI18n")
+        @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
         fun setData(
             foodItem: FoodItem,
             itemClickListerForListOfFood: ItemClickListerForListOfFood
@@ -47,40 +46,64 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             binding.foodItemTv.text = foodItem.foodName
             binding.foodPriceTv.text = "$Rs_Symbol ${foodItem.foodPrice}"
             binding.offerDetailTv.text = setOffer(foodOffer = foodItem.foodOffer)
-            binding.orderFoodItemDescTv.text = setOffer(foodOffer = foodItem.offerDesc)
             binding.totalFoodItemQtyTv.text = foodItem.foodQTY.toString()
+            setUpRecycleView()
+            if (foodItem.offerDesc != null)
+                listOfOfferAdaptor.setMyData(foodItem.offerDesc!!)
+            else
+                listOfOfferAdaptor.setMyData(listOf("No offer"))
+
+            listOfOfferAdaptor.notifyDataSetChanged()
             binding.btnAddCount.setOnClickListener {
                 foodItem.foodQTY++
                 binding.totalFoodItemQtyTv.text = foodItem.foodQTY.toString()
             }
+
             binding.btnMinusCount.setOnClickListener {
                 if (foodItem.foodQTY > 0) {
                     foodItem.foodQTY--
                     binding.totalFoodItemQtyTv.text = foodItem.foodQTY.toString()
                 }
             }
+
             binding.btnWithOffer.setOnClickListener {
-                foodItem.addWithOffer = false
+                foodItem.addWithOffer = true
+                foodItem.offerDesc =
+                    if (listOfOfferString.isNullOrEmpty()) null else listOfOfferString
                 itemClickListerForListOfFood(foodItem)
             }
+
             binding.btnWithoutOffer.setOnClickListener {
                 foodItem.addWithOffer = false
+                foodItem.offerDesc = null
                 itemClickListerForListOfFood(foodItem)
             }
 
             binding.root.setOnClickListener {
-                flag = if (!flag) {
-                    changeViewColor(view = it)
-                    setVisible()
-                    true
-                } else {
-                    changeViewColor(view = it, color = R.color.semi_white_color)
-                    setInVisible()
-                    false
-                }
+                changeViewColor(view = it)
+                setVisible()
             }
 
+            binding.btnCloseId.setOnClickListener {
+                changeViewColor(view = binding.root, color = R.color.semi_white_color)
+                setInVisible()
+            }
 
+        }
+
+        private fun setUpRecycleView() {
+            binding.orderOfferListView.apply {
+                setHasFixedSize(false)
+                listOfOfferAdaptor = ListOfOfferAdaptor {
+                    if (!listOfOfferString.contains(it)) {
+                        listOfOfferString.add(it)
+                    } else {
+                        listOfOfferString.remove(it)
+                    }
+                    Log.i(TAG, "setData: $listOfOfferString")
+                }
+                adapter = listOfOfferAdaptor
+            }
         }
 
         private fun setOffer(foodOffer: String?): String {
@@ -97,7 +120,8 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             binding.apply {
                 linearLayoutForItemCount.show()
                 borderBottomFood.show()
-                orderFoodItemDescTv.show()
+                btnCloseId.show()
+                orderOfferListView.show()
                 btnWithOffer.show()
                 btnWithoutOffer.show()
             }
@@ -107,8 +131,9 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             binding.apply {
                 linearLayoutForItemCount.hide()
                 borderBottomFood.hide()
-                orderFoodItemDescTv.hide()
+                btnCloseId.hide()
                 btnWithOffer.hide()
+                orderOfferListView.hide()
                 btnWithoutOffer.hide()
             }
         }

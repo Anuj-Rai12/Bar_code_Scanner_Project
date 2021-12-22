@@ -6,6 +6,6 @@ data class FoodItem(
     val foodPrice: Int,
     val foodOffer: String?,
     var foodQTY: Int = 0,
-    val offerDesc: String?,
+    var offerDesc: List<String>?,
     var addWithOffer: Boolean = true
 )

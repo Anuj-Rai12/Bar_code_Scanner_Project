@@ -13,10 +13,7 @@ import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.SearchFoodItemLayoutBinding
 import com.example.offiqlresturantapp.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
-import com.example.offiqlresturantapp.utils.TAG
-import com.example.offiqlresturantapp.utils.changeStatusBarColor
-import com.example.offiqlresturantapp.utils.invisible
-import com.example.offiqlresturantapp.utils.visible
+import com.example.offiqlresturantapp.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,17 +53,20 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
                 foodName = "Chloe Bhature",
                 foodPrice = 135,
                 foodOffer = "+1 Pepsi Can @15/-",
-                offerDesc = "Add  a 200 ml Pepsi Can for 15/-"
+                offerDesc = listOf(
+                    "Add  a 200 ml Pepsi Can for 15/-",
+                    "Add a 10 ml Sugar for 10/-"
+                )
             ), FoodItem(
                 foodName = "Chloe Samosa Chart",
                 foodPrice = 135,
                 foodOffer = "By One Get 2 Free",
-                offerDesc = "By One Plate get 2 Plate Free"
+                offerDesc = listOf("By One Plate get 2 Plate Free")
             ), FoodItem(
                 foodName = "Chloe Kulcha",
                 foodPrice = 135,
                 foodOffer = "Combo Offer",
-                offerDesc = "By One Plate get 2 Pepsi Can Free"
+                offerDesc = listOf("By One Plate get 2 Pepsi Can Free")
             ), FoodItem(
                 foodName = "Chloe (Bowl)",
                 foodPrice = 135,
@@ -84,6 +84,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
             layoutManager = LinearLayoutManager(requireContext())
             listOfFoodItemToSearchAdaptor = ListOfFoodItemToSearchAdaptor {
                 Log.i(TAG, "setRecycleView: $it")
+                activity?.msg("$it")
             }
             adapter = listOfFoodItemToSearchAdaptor
         }
