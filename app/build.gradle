@@ -78,5 +78,6 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2"
     //JetPack DataStore
     implementation("androidx.datastore:datastore-preferences:$jetpack_data_store")
-
+    // Recyclerview Swap Detector
+    implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.3'
 }
