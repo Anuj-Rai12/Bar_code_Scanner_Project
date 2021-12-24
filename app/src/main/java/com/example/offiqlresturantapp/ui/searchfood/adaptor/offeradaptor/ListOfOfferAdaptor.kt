@@ -57,7 +57,13 @@ class ListOfOfferAdaptor(
                     offer.selected = true
                     true
                 } else {
-                    binding.btnClickCheckBox.hide()
+                    binding.btnClickCheckBox.backgroundTintList =
+                        ColorStateList.valueOf(
+                            binding.btnClickCheckBox.resources.getColor(
+                                R.color.white,
+                                null
+                            )
+                        )
                     offer.selected = false
                     false
                 }

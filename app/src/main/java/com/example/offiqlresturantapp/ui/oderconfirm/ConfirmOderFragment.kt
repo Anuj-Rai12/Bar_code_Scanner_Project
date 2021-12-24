@@ -55,7 +55,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             }
             if (!list.isNullOrEmpty()) {
                 confirmOderFragmentAdaptor.submitList(list)
-                binding.totalOrderAmt.text = getotal.toString()
+                binding.totalOrderAmt.text = "$Rs_Symbol $getotal"
             }
         }
         binding.viewOfferBtn.setOnClickListener {
@@ -69,7 +69,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             binding.orderRecycleViewHint.show()
             binding.listOfItemRecycleView.hide()
             list.clear()
-            binding.totalOrderAmt.text = "000"
+            binding.totalOrderAmt.text = "$Rs_Symbol 000"
         }
 
         binding.searchBoxTxt.setOnClickListener {

@@ -61,6 +61,7 @@
         <action
             android:id="@+id/action_searchFoodFragment_to_confirmOderFragment"
             app:destination="@id/confirmOderFragment"
-            app:popUpTo="@id/searchFoodFragment" />
+            app:popUpTo="@id/confirmOderFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
