@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.ConfirmOrderLayoutBinding
 import com.example.offiqlresturantapp.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
-import com.example.offiqlresturantapp.ui.oderconfirm.model.FoodItemSelected
+import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
 import com.example.offiqlresturantapp.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -27,15 +27,9 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private lateinit var binding: ConfirmOrderLayoutBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
-    private var list = mutableListOf<FoodItemSelected>()
+    private var list = mutableListOf<FoodItem>()
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ConfirmOderFragmentArgs by navArgs()
-    private val listOfBg by lazy {
-        arrayOf(
-            R.drawable.food_item_one_selcetion_layout,
-            R.drawable.food_item_two_selection_layout
-        )
-    }
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.M)
@@ -54,23 +48,14 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         if (args.list == null || args.list?.foodList.isNullOrEmpty()) {
             setData()
         } else {
-            var gtot = 0
+            var getotal = 0
             args.list?.foodList?.forEach { it ->
-                gtot += it.foodAmt
-                list.add(
-                    FoodItemSelected(
-                        foodName = it.foodName,
-                        foodQty = it.foodQTY,
-                        foodAmt = it.foodAmt,
-                        foodRate = it.foodPrice,
-                        offerDesc = it.offerDesc,
-                        bg = listOfBg[rand()]
-                    )
-                )
+                getotal += it.foodAmt
+                list.add(it)
             }
             if (!list.isNullOrEmpty()) {
                 confirmOderFragmentAdaptor.submitList(list)
-                binding.totalOrderAmt.text=gtot.toString()
+                binding.totalOrderAmt.text = getotal.toString()
             }
         }
         binding.viewOfferBtn.setOnClickListener {
@@ -84,6 +69,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             binding.orderRecycleViewHint.show()
             binding.listOfItemRecycleView.hide()
             list.clear()
+            binding.totalOrderAmt.text = "000"
         }
 
         binding.searchBoxTxt.setOnClickListener {
@@ -96,35 +82,38 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
     private fun setData() {
         list = mutableListOf(
-            FoodItemSelected(
+            FoodItem(
                 foodName = "Chloe Bhature",
                 foodAmt = 125,
-                foodRate = 125,
-                foodQty = 1,
-                bg = listOfBg[rand()]
+                foodPrice = 125,
+                foodQTY = 1,
+                offerDesc = null,
+                foodOffer = null,
             ),
-            FoodItemSelected(
+            FoodItem(
                 foodName = "Chloe Samosa Chart",
                 foodAmt = 13,
-                foodRate = 13,
-                foodQty = 2,
-                bg = listOfBg[rand()]
+                foodPrice = 13,
+                foodQTY = 2,
+                offerDesc = null,
+                foodOffer = null,
             ),
-            FoodItemSelected(
+            FoodItem(
                 foodName = "Chloe Kulcha",
                 foodAmt = 15,
-                foodRate = 15,
-                foodQty = 3,
-                bg = listOfBg[rand()]
+                foodPrice = 15,
+                foodQTY = 3,
+                offerDesc = null,
+                foodOffer = null,
             ),
-            FoodItemSelected(
+            FoodItem(
                 foodName = "Chloe (Bowl)",
                 foodAmt = 135,
-                foodRate = 135,
-                foodQty = 4,
-                bg = listOfBg[rand()]
+                foodPrice = 135,
+                foodQTY = 4,
+                offerDesc = null,
+                foodOffer = null,
             )
-
         )
 
         confirmOderFragmentAdaptor.submitList(list)

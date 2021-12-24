@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.offiqlresturantapp.R
-import com.example.offiqlresturantapp.ui.oderconfirm.model.FoodItemSelected
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
 import com.example.offiqlresturantapp.ui.tablemange.model.TableData
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
@@ -53,8 +52,24 @@ fun rand(from: Int = 0, to: Int = 2): Int {
 fun Activity.changeStatusBarColor(color: Int = R.color.light_blue_bg) {
     this.window?.statusBarColor = resources.getColor(color, null)
 }
-typealias ItemClickListerForTableOrCost = (selection: SelectionDataClass) -> Unit
 
+@RequiresApi(Build.VERSION_CODES.M)
+fun View.changeViewColor(color: Int) {
+    this.setBackgroundColor(
+        this.context.resources.getColor(
+            color,
+            null
+        )
+    )
+}
+val listOfBg by lazy {
+    arrayOf(
+        R.drawable.food_item_one_selcetion_layout,
+        R.drawable.food_item_two_selection_layout
+    )
+}
+
+typealias ItemClickListerForTableOrCost = (selection: SelectionDataClass) -> Unit
 typealias ItemClickListerForTableData = (tableData: TableData) -> Unit
 typealias ItemClickListerForListOfFood = (foodItem: FoodItem) -> Unit
-typealias ItemClickListerForFoodSelected = (foodItemSelected: FoodItemSelected) -> Unit
+//typealias ItemClickListerForFoodSelected = (foodItemSelected: FoodItemSelected) -> Unit

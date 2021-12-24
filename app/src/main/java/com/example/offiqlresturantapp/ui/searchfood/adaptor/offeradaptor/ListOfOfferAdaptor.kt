@@ -1,9 +1,9 @@
 package com.example.offiqlresturantapp.ui.searchfood.adaptor.offeradaptor
 
 
+import android.content.res.ColorStateList
 import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
@@ -46,29 +46,24 @@ class ListOfOfferAdaptor(
                 flag = if (!flag) {
                     binding.btnClickCheckBox.apply {
                         show()
-                        changeViewColor(binding.btnClickCheckBox, R.color.dark_green_color)
+                        binding.btnClickCheckBox.backgroundTintList =
+                            ColorStateList.valueOf(
+                                binding.btnClickCheckBox.resources.getColor(
+                                    R.color.dark_green_color,
+                                    null
+                                )
+                            )
                     }
                     offer.selected = true
                     true
                 } else {
                     binding.btnClickCheckBox.hide()
-                    changeViewColor(binding.btnClickCheckBox,R.color.white)
                     offer.selected = false
                     false
                 }
                 oderOfferListCallBack(offer)
             }
 
-        }
-
-        @RequiresApi(Build.VERSION_CODES.M)
-        private fun changeViewColor(view: View, color: Int) {
-            view.setBackgroundColor(
-                view.context.resources.getColor(
-                    color,
-                    null
-                )
-            )
         }
     }
 

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
@@ -96,12 +95,12 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             }
 
             binding.root.setOnClickListener {
-                changeViewColor(view = it)
+                it.changeViewColor(R.color.light_blue_bg)
                 setVisible()
             }
 
             binding.btnCloseId.setOnClickListener {
-                changeViewColor(view = binding.root, color = R.color.semi_white_color)
+                binding.root.changeViewColor(color = R.color.semi_white_color)
                 setInVisible()
             }
 
@@ -156,15 +155,6 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             }
         }
 
-        @RequiresApi(Build.VERSION_CODES.M)
-        private fun changeViewColor(view: View, color: Int = R.color.light_blue_bg) {
-            view.setBackgroundColor(
-                view.context.resources.getColor(
-                    color,
-                    null
-                )
-            )
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListOfFoodItemViewHolder {

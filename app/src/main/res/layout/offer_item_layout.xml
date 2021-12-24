@@ -27,7 +27,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@drawable/ic_check_box"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/white"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

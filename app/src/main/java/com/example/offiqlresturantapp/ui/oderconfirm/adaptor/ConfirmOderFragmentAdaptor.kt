@@ -8,25 +8,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offiqlresturantapp.databinding.ListOfFoodItemSelectedBinding
-import com.example.offiqlresturantapp.ui.oderconfirm.model.FoodItemSelected
-import com.example.offiqlresturantapp.utils.ItemClickListerForFoodSelected
+import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
+import com.example.offiqlresturantapp.utils.ItemClickListerForListOfFood
 import com.example.offiqlresturantapp.utils.Rs_Symbol
 
-class ConfirmOderFragmentAdaptor(private val itemClickListerForFoodSelected: ItemClickListerForFoodSelected) :
-    ListAdapter<FoodItemSelected, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
+class ConfirmOderFragmentAdaptor(private val itemClickListerForFoodSelected: ItemClickListerForListOfFood) :
+    ListAdapter<FoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<FoodItemSelected>() {
-            override fun areItemsTheSame(
-                oldItem: FoodItemSelected,
-                newItem: FoodItemSelected
-            ): Boolean {
-                return oldItem.foodName == newItem.foodName
+        val diffUtil = object : DiffUtil.ItemCallback<FoodItem>() {
+            override fun areItemsTheSame(oldItem: FoodItem, newItem: FoodItem): Boolean {
+                return oldItem.foodName == oldItem.foodName
             }
 
-            override fun areContentsTheSame(
-                oldItem: FoodItemSelected,
-                newItem: FoodItemSelected
-            ): Boolean {
+            override fun areContentsTheSame(oldItem: FoodItem, newItem: FoodItem): Boolean {
                 return oldItem == newItem
             }
         }
@@ -38,28 +32,28 @@ class ConfirmOderFragmentAdaptor(private val itemClickListerForFoodSelected: Ite
 
         @SuppressLint("SetTextI18n")
         fun setData(
-            foodItemSelected: FoodItemSelected,
-            itemClickListerForFoodSelected: ItemClickListerForFoodSelected
+            foodItem: FoodItem,
+            itemClickListerForFoodSelected: ItemClickListerForListOfFood
         ) {
             binding.apply {
                 foodItemName.apply {
-                    setBg(foodItemSelected.bg)
-                    text = foodItemSelected.foodName
+                    setBg(foodItem.bg)
+                    text = foodItem.foodName
                 }
                 qtyOfFood.apply {
-                    setBg(foodItemSelected.bg)
-                    text = foodItemSelected.foodQty.toString()
+                    setBg(foodItem.bg)
+                    text = foodItem.foodQTY.toString()
                 }
                 rateOfFood.apply {
-                    setBg(foodItemSelected.bg)
-                    text = "$Rs_Symbol ${foodItemSelected.foodRate}"
+                    setBg(foodItem.bg)
+                    text = "$Rs_Symbol ${foodItem.foodPrice}"
                 }
                 amtOfFoodTv.apply {
-                    setBg(foodItemSelected.bg)
-                    text = "$Rs_Symbol ${foodItemSelected.foodAmt}"
+                    setBg(foodItem.bg)
+                    text = "$Rs_Symbol ${foodItem.foodAmt}"
                 }
                 root.setOnClickListener {
-                    itemClickListerForFoodSelected(foodItemSelected)
+                    itemClickListerForFoodSelected(foodItem)
                 }
             }
         }
