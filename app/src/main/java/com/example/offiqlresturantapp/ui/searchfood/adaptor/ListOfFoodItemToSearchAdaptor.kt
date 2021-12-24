@@ -14,6 +14,7 @@ import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.FoodItemLayoutBinding
 import com.example.offiqlresturantapp.ui.searchfood.adaptor.offeradaptor.ListOfOfferAdaptor
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
+import com.example.offiqlresturantapp.ui.searchfood.model.OfferDesc
 import com.example.offiqlresturantapp.utils.*
 
 class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: ItemClickListerForListOfFood) :
@@ -34,10 +35,10 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
     inner class ListOfFoodItemViewHolder(private val binding: FoodItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private lateinit var listOfOfferAdaptor: ListOfOfferAdaptor
-        private var listOfOfferString = mutableListOf<String>()
+        private var listOfOfferString = mutableListOf<OfferDesc>()
 
         @RequiresApi(Build.VERSION_CODES.M)
-        @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
+        @SuppressLint("SetTextI18n")
         fun setData(
             foodItem: FoodItem,
             itemClickListerForListOfFood: ItemClickListerForListOfFood
@@ -47,36 +48,50 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             binding.foodPriceTv.text = "$Rs_Symbol ${foodItem.foodPrice}"
             binding.offerDetailTv.text = setOffer(foodOffer = foodItem.foodOffer)
             binding.totalFoodItemQtyTv.text = foodItem.foodQTY.toString()
-            setUpRecycleView()
+            setUpRecycleView(foodItem)
             if (foodItem.offerDesc != null)
-                listOfOfferAdaptor.setMyData(foodItem.offerDesc!!)
+                listOfOfferAdaptor.submitList(foodItem.offerDesc)
             else
-                listOfOfferAdaptor.setMyData(listOf("No offer"))
+                listOfOfferAdaptor.submitList(
+                    listOf(
+                        OfferDesc(
+                            title = "No offer",
+                            price = 0,
+                            selected = false
+                        )
+                    )
+                )
 
-            listOfOfferAdaptor.notifyDataSetChanged()
+
             binding.btnAddCount.setOnClickListener {
                 foodItem.foodQTY++
                 binding.totalFoodItemQtyTv.text = foodItem.foodQTY.toString()
             }
 
             binding.btnMinusCount.setOnClickListener {
-                if (foodItem.foodQTY > 0) {
+                if (foodItem.foodQTY > 1) {
                     foodItem.foodQTY--
                     binding.totalFoodItemQtyTv.text = foodItem.foodQTY.toString()
                 }
             }
 
             binding.btnWithOffer.setOnClickListener {
-                foodItem.addWithOffer = true
-                if (!listOfOfferString.isNullOrEmpty()) {
+                //foodItem.addWithOffer = true
+                if (foodItem.offerDesc != null && !listOfOfferString.isNullOrEmpty()) {
                     foodItem.offerDesc = listOfOfferString
+                } else if (foodItem.offerDesc != null && listOfOfferString.isNullOrEmpty()) {
+                    foodItem.offerDesc?.forEach {
+                        foodItem.foodAmt += it.price
+                    }
                 }
+                foodItem.foodAmt *= foodItem.foodQTY
                 itemClickListerForListOfFood(foodItem)
             }
 
             binding.btnWithoutOffer.setOnClickListener {
-                foodItem.addWithOffer = false
+                //foodItem.addWithOffer = false
                 foodItem.offerDesc = null
+                foodItem.foodAmt = foodItem.foodPrice * foodItem.foodQTY
                 itemClickListerForListOfFood(foodItem)
             }
 
@@ -92,13 +107,15 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
 
         }
 
-        private fun setUpRecycleView() {
+        private fun setUpRecycleView(foodItem: FoodItem) {
             binding.orderOfferListView.apply {
                 setHasFixedSize(false)
                 listOfOfferAdaptor = ListOfOfferAdaptor {
-                    if (!listOfOfferString.contains(it)) {
+                    if (!listOfOfferString.contains(it) && it.selected) {
+                        foodItem.foodAmt += it.price
                         listOfOfferString.add(it)
-                    } else {
+                    } else if (listOfOfferString.contains(it) && !it.selected) {
+                        foodItem.foodAmt -= it.price
                         listOfOfferString.remove(it)
                     }
                     Log.i(TAG, "setData: $listOfOfferString")

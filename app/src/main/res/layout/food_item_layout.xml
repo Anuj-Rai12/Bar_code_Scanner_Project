@@ -106,8 +106,8 @@
             android:layout_height="25dp"
             android:layout_gravity="center"
             android:background="@null"
-            android:scaleType="fitXY"
             android:contentDescription="@string/hint_btn_minus"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_remove_icon" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -130,8 +130,8 @@
             android:layout_height="25dp"
             android:layout_gravity="center"
             android:background="@null"
-            android:scaleType="fitXY"
             android:contentDescription="@string/hint_btn_add"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_add" />
 
     </LinearLayout>

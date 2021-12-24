@@ -75,6 +75,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/black_underline_border"
         android:padding="10dp"
+        android:textColor="@color/black"
         app:layout_constraintLeft_toLeftOf="@id/user_name_id"
         app:layout_constraintRight_toLeftOf="@id/logo_file_id"
         app:layout_constraintTop_toBottomOf="@id/user_name_id" />
@@ -100,6 +101,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/black_underline_border"
         android:padding="10dp"
+        android:textColor="@color/black"
         app:layout_constraintLeft_toLeftOf="@id/user_name_id"
         app:layout_constraintRight_toLeftOf="@id/logo_file_id"
         app:layout_constraintTop_toBottomOf="@id/user_pass_id" />

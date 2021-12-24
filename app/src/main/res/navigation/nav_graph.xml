@@ -49,10 +49,18 @@
         <action
             android:id="@+id/action_confirmOderFragment_to_searchFoodFragment"
             app:destination="@id/searchFoodFragment" />
+        <argument android:name="list"
+            app:argType="com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/searchFoodFragment"
         android:name="com.example.offiqlresturantapp.ui.searchfood.SearchFoodFragment"
         android:label="search_food_item_layout"
-        tools:layout="@layout/search_food_item_layout" />
+        tools:layout="@layout/search_food_item_layout" >
+        <action
+            android:id="@+id/action_searchFoodFragment_to_confirmOderFragment"
+            app:destination="@id/confirmOderFragment"
+            app:popUpTo="@id/searchFoodFragment" />
+    </fragment>
 </navigation>

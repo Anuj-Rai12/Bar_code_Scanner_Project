@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,8 +27,15 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private lateinit var binding: ConfirmOrderLayoutBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
-    private lateinit var list: MutableList<FoodItemSelected>
+    private var list = mutableListOf<FoodItemSelected>()
     private lateinit var callback: ItemTouchHelper.SimpleCallback
+    private val args: ConfirmOderFragmentArgs by navArgs()
+    private val listOfBg by lazy {
+        arrayOf(
+            R.drawable.food_item_one_selcetion_layout,
+            R.drawable.food_item_two_selection_layout
+        )
+    }
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.M)
@@ -39,16 +47,43 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             requireActivity().msg(getString(R.string.scan_btn))
         }
         setRecycle()
-        setData()
         setCallBack()
+        //Temporal Showing Data
+        binding.listOfItemRecycleView.show()
+        binding.orderRecycleViewHint.hide()
+        if (args.list == null || args.list?.foodList.isNullOrEmpty()) {
+            setData()
+        } else {
+            var gtot = 0
+            args.list?.foodList?.forEach { it ->
+                gtot += it.foodAmt
+                list.add(
+                    FoodItemSelected(
+                        foodName = it.foodName,
+                        foodQty = it.foodQTY,
+                        foodAmt = it.foodAmt,
+                        foodRate = it.foodPrice,
+                        offerDesc = it.offerDesc,
+                        bg = listOfBg[rand()]
+                    )
+                )
+            }
+            if (!list.isNullOrEmpty()) {
+                confirmOderFragmentAdaptor.submitList(list)
+                binding.totalOrderAmt.text=gtot.toString()
+            }
+        }
         binding.viewOfferBtn.setOnClickListener {
-            binding.orderRecycleViewHint.hide()
-            binding.listOfItemRecycleView.show()
+            if (!list.isNullOrEmpty()) {
+                binding.orderRecycleViewHint.hide()
+                binding.listOfItemRecycleView.show()
+            }
         }
 
         binding.restItemBtn.setOnClickListener {
             binding.orderRecycleViewHint.show()
             binding.listOfItemRecycleView.hide()
+            list.clear()
         }
 
         binding.searchBoxTxt.setOnClickListener {
@@ -66,28 +101,28 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 foodAmt = 125,
                 foodRate = 125,
                 foodQty = 1,
-                bg = R.drawable.food_item_one_selcetion_layout
+                bg = listOfBg[rand()]
             ),
             FoodItemSelected(
                 foodName = "Chloe Samosa Chart",
                 foodAmt = 13,
                 foodRate = 13,
                 foodQty = 2,
-                bg = R.drawable.food_item_two_selection_layout
+                bg = listOfBg[rand()]
             ),
             FoodItemSelected(
                 foodName = "Chloe Kulcha",
                 foodAmt = 15,
                 foodRate = 15,
                 foodQty = 3,
-                bg = R.drawable.food_item_one_selcetion_layout
+                bg = listOfBg[rand()]
             ),
             FoodItemSelected(
                 foodName = "Chloe (Bowl)",
                 foodAmt = 135,
                 foodRate = 135,
                 foodQty = 4,
-                bg = R.drawable.food_item_two_selection_layout
+                bg = listOfBg[rand()]
             )
 
         )
@@ -186,6 +221,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor = ConfirmOderFragmentAdaptor {
                 Log.i(TAG, "setRecycle: $it")
+                Log.i(TAG, "setRecycle:Random Number  ${rand()}")
             }
             adapter = confirmOderFragmentAdaptor
         }

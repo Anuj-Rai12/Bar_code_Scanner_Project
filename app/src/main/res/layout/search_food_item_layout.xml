@@ -39,8 +39,8 @@
         android:fontFamily="@font/roboto_medium"
         android:hint="@string/src_hint"
         android:maxLines="3"
-        android:textColorHint="@color/light_grey_color"
         android:textColor="@color/light_grey_color"
+        android:textColorHint="@color/light_grey_color"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/border_bottom"
         app:layout_constraintLeft_toRightOf="@id/back_arrow_img"
@@ -56,9 +56,9 @@
         android:contentDescription="@string/clos_btn"
         android:src="@drawable/ic_close_24"
         android:visibility="invisible"
-        tools:visibility="visible"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/border_top" />
+        app:layout_constraintTop_toBottomOf="@id/border_top"
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/border_bottom"
@@ -77,11 +77,11 @@
         android:layout_height="0dp"
         android:layout_marginTop="15dp"
         android:overScrollMode="never"
-        tools:listitem="@layout/food_item_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/border_bottom" />
+        app:layout_constraintTop_toBottomOf="@id/border_bottom"
+        tools:listitem="@layout/food_item_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

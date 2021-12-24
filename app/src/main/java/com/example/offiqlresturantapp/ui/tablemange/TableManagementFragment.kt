@@ -102,7 +102,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             tableManagementAdaptor = TableManagementAdaptor {
                 Log.i(TAG, "setRecycleView: $it")
-                val action=TableManagementFragmentDirections.actionTableManagementFragmentToConfirmOderFragment()
+                val action=TableManagementFragmentDirections.actionTableManagementFragmentToConfirmOderFragment(null)
                 findNavController().navigate(action)
             }
             adapter = tableManagementAdaptor

@@ -45,7 +45,7 @@ fun Context.msg(string: String, time: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, string, time).show()
 }
 
-fun rand(from: Int = 0, to: Int = 1): Int {
+fun rand(from: Int = 0, to: Int = 2): Int {
     return Random.nextInt(to - from) + from
 }
 
