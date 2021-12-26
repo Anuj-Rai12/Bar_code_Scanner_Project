@@ -70,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/scanQrCodeFragment"
-        android:name="com.example.offiqlresturantapp.ui.camera.ScanQrCodeFragment"
+        android:name="com.example.offiqlresturantapp.ui.scan.ScanQrCodeFragment"
         android:label="scan_qr_layout"
         tools:layout="@layout/scan_qr_layout" >
         <argument

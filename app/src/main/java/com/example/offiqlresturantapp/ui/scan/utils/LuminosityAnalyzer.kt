@@ -1,4 +1,4 @@
-package com.example.offiqlresturantapp.ui.camera.utils
+package com.example.offiqlresturantapp.ui.scan.utils
 
 import android.annotation.SuppressLint
 import androidx.camera.core.ImageAnalysis
