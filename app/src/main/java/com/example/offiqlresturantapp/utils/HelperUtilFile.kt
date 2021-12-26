@@ -1,5 +1,6 @@
 package com.example.offiqlresturantapp.utils
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.os.Build
@@ -12,8 +13,13 @@ import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
 import com.example.offiqlresturantapp.ui.tablemange.model.TableData
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.common.InputImage
+import com.vmadalin.easypermissions.EasyPermissions
 import kotlin.random.Random
 
+const val CAMERA_INT = 11
+const val Url_barcode = Barcode.TYPE_URL
 fun AppCompatActivity.hide() {
     this.supportActionBar!!.hide()
 }
@@ -62,6 +68,7 @@ fun View.changeViewColor(color: Int) {
         )
     )
 }
+
 val listOfBg by lazy {
     arrayOf(
         R.drawable.food_item_one_selcetion_layout,
@@ -69,7 +76,13 @@ val listOfBg by lazy {
     )
 }
 
+fun Activity.checkCameraPermission() =
+    EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)
+
+
 typealias ItemClickListerForTableOrCost = (selection: SelectionDataClass) -> Unit
 typealias ItemClickListerForTableData = (tableData: TableData) -> Unit
 typealias ItemClickListerForListOfFood = (foodItem: FoodItem) -> Unit
+typealias LumaListener = (luma: Double) -> Unit
+typealias ImageListener = (imageInput: InputImage) -> Unit
 //typealias ItemClickListerForFoodSelected = (foodItemSelected: FoodItemSelected) -> Unit

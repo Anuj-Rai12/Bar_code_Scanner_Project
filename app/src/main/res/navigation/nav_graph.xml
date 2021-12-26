@@ -13,6 +13,10 @@
         <action
             android:id="@+id/action_testingConnectionFragment_to_loginScreenFragment"
             app:destination="@id/loginScreenFragment" />
+        <argument
+            android:name="bar"
+            app:argType="com.example.offiqlresturantapp.ui.testingconnection.model.TestingBarcodeConnection"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/loginScreenFragment"
@@ -64,4 +68,22 @@
             app:popUpTo="@id/confirmOderFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/scanQrCodeFragment"
+        android:name="com.example.offiqlresturantapp.ui.camera.ScanQrCodeFragment"
+        android:label="scan_qr_layout"
+        tools:layout="@layout/scan_qr_layout" >
+        <argument
+            android:name="item"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_scanQrCodeFragment_to_testingConnectionFragment"
+            app:destination="@id/testingConnectionFragment"
+            app:popUpTo="@id/scanQrCodeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_scanQrCodeFragment_to_confirmOderFragment"
+            app:destination="@id/confirmOderFragment" />
+    </fragment>
+    <action android:id="@+id/action_global_scanQrCodeFragment" app:destination="@id/scanQrCodeFragment" />
 </navigation>
