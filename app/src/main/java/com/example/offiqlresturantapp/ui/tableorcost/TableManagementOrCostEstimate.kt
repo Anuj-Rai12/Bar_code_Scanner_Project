@@ -36,8 +36,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
             setHasFixedSize(true)
             tableManagementOrCostRecyclerAdaptor = TableManagementOrCostRecyclerAdaptor {
                 Log.i(TAG, "setRecycleView: $it")
-                val action =
+                val action = if (it.title == getString(R.string.item_table)) {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToTableManagementFragment()
+                } else {
+                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToCostDashBoardFragment()
+                }
                 findNavController().navigate(action)
             }
             adapter = tableManagementOrCostRecyclerAdaptor

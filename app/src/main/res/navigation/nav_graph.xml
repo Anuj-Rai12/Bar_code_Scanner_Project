@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_tableManagementOrCostEstimate_to_tableManagementFragment"
             app:destination="@id/tableManagementFragment" />
+        <action
+            android:id="@+id/action_tableManagementOrCostEstimate_to_costDashBoardFragment"
+            app:destination="@id/costDashBoardFragment" />
     </fragment>
     <fragment
         android:id="@+id/tableManagementFragment"
@@ -86,4 +89,9 @@
             app:destination="@id/confirmOderFragment" />
     </fragment>
     <action android:id="@+id/action_global_scanQrCodeFragment" app:destination="@id/scanQrCodeFragment" />
+    <fragment
+        android:id="@+id/costDashBoardFragment"
+        android:name="com.example.offiqlresturantapp.ui.cost.CostDashBoardFragment"
+        android:label="cost_cal_dashbord_layout"
+        tools:layout="@layout/cost_cal_dashbord_layout" />
 </navigation>
