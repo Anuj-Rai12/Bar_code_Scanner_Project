@@ -4,16 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingEnd="12dp"
     android:paddingStart="12dp"
+    android:paddingEnd="12dp"
     android:paddingBottom="4dp">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_click_view_detail"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_check_box"
+        android:backgroundTint="@color/light_grey_black_color"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/btn_click_view_detail"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -74,9 +84,9 @@
             android:id="@+id/amt_of_food_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:layout_gravity="center"
             android:background="@drawable/food_item_one_selcetion_layout"
             android:fontFamily="@font/roboto_medium"
             android:paddingTop="8dp"

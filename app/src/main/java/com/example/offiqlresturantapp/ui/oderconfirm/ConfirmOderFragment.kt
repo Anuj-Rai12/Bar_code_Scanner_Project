@@ -28,6 +28,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private lateinit var binding: ConfirmOrderLayoutBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
     private var list = mutableListOf<FoodItem>()
+    private var flagForViewDeals: Boolean = false
+    private var listOfSelectedFoodItemForViewDeals = mutableListOf<FoodItem>()
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ConfirmOderFragmentArgs by navArgs()
 
@@ -59,9 +61,16 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             }
         }
         binding.viewOfferBtn.setOnClickListener {
-            if (!list.isNullOrEmpty()) {
-                binding.orderRecycleViewHint.hide()
-                binding.listOfItemRecycleView.show()
+            if (!list.isNullOrEmpty() && listOfSelectedFoodItemForViewDeals.isNullOrEmpty() && !flagForViewDeals) {
+                setRecycle(true)
+                flagForViewDeals = true
+                setData()
+            } else if (!listOfSelectedFoodItemForViewDeals.isNullOrEmpty()) {
+                Log.i(TAG, "onViewCreated: $listOfSelectedFoodItemForViewDeals")
+            } else {
+                setRecycle()
+                setData()
+                flagForViewDeals=false
             }
         }
 
@@ -204,14 +213,20 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     }
 
 
-    private fun setRecycle() {
+    private fun setRecycle(flag: Boolean = false) {
         binding.listOfItemRecycleView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireActivity())
-            confirmOderFragmentAdaptor = ConfirmOderFragmentAdaptor {
-                Log.i(TAG, "setRecycle: $it")
-                Log.i(TAG, "setRecycle:Random Number  ${rand()}")
-            }
+            confirmOderFragmentAdaptor = ConfirmOderFragmentAdaptor({
+                if (listOfSelectedFoodItemForViewDeals.contains(it)) {
+                    listOfSelectedFoodItemForViewDeals.remove(it)
+                } else {
+                    listOfSelectedFoodItemForViewDeals.add(it)
+                }
+                Log.i(TAG, "setRecycle: $listOfSelectedFoodItemForViewDeals")
+            }, {
+                return@ConfirmOderFragmentAdaptor flag
+            })
             adapter = confirmOderFragmentAdaptor
         }
     }
