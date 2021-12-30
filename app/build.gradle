@@ -78,5 +78,17 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2"
     //JetPack DataStore
     implementation("androidx.datastore:datastore-preferences:$jetpack_data_store")
-
+    //def camerax_version = "1.0.0-alpha01"
+    //noinspection GradleDependency
+    //implementation "androidx.camera:camera-core:${camerax_version}"
+    //noinspection GradleDependency
+    //implementation "androidx.camera:camera-camera2:${camerax_version}"
+    // CameraX
+    def camerax_version = "1.0.2"
+    // The following line is optional, as the core library is included indirectly by camera-camera2
+    implementation "androidx.camera:camera-core:${camerax_version}"
+    implementation "androidx.camera:camera-camera2:${camerax_version}"
+    implementation "androidx.camera:camera-lifecycle:${camerax_version}"
+    // If you want to additionally use the CameraX View class
+    implementation "androidx.camera:camera-view:1.0.0-alpha32"
 }
