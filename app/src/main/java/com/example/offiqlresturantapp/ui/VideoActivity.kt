@@ -1,11 +1,11 @@
 package com.example.offiqlresturantapp.ui
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ContentValues
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
@@ -18,7 +18,11 @@ import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.TAG
+import com.example.offiqlresturantapp.changeStatusBarColor
+import com.example.offiqlresturantapp.hide
+import com.example.offiqlresturantapp.show
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
 
@@ -30,10 +34,28 @@ class VideoActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
     private var flagForRecording = false
     private var videoCapture: VideoCapture? = null
 
+    private val timer = object : CountDownTimer(30000, 1000) {
+        @SuppressLint("SetTextI18n")
+        override fun onTick(millisUntilFinished: Long) {
+            binding.timerTxt.show()
+            binding.timerTxt.text = "${millisUntilFinished / 1000} sec"
+        }
+
+        @SuppressLint("RestrictedApi")
+        override fun onFinish() {
+            binding.captureButton.setBackgroundColor(Color.RED)
+            videoCapture?.stopRecording()
+            binding.timerTxt.hide()
+        }
+    }
+
+
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("ClickableViewAccessibility", "RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.hide()
+        this.changeStatusBarColor(R.color.black)
         binding = ViedoActivityLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -53,10 +75,12 @@ class VideoActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
         binding.captureButton.setOnClickListener {
             if (!flagForRecording) {
                 flagForRecording = true
+                timer.start()
                 it.setBackgroundColor(Color.GREEN)
                 recordVideo()
             } else {
                 flagForRecording = false
+                timer.cancel()
                 it.setBackgroundColor(Color.RED)
                 videoCapture?.stopRecording()
             }

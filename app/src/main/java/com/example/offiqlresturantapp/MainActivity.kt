@@ -1,8 +1,10 @@
 package com.example.offiqlresturantapp
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.offiqlresturantapp.databinding.ActivityMainBinding
 import com.example.offiqlresturantapp.ui.CameraActivity
@@ -13,10 +15,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        this.hide()
+        this.changeStatusBarColor()
         if (!this.allPermissionsGranted()) {
             this.getRuntimePermissions()
         }
