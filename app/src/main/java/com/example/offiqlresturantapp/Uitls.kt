@@ -16,6 +16,8 @@ import java.util.ArrayList
 
 const val PERMISSION_REQUESTS = 1
 const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+const val VIDEO = "video"
+const val CAMERA = "camera"
 fun Activity.allPermissionsGranted(): Boolean {
     for (permission in this.getRequiredPermission()!!) {
         if (permission == Manifest.permission.WRITE_SETTINGS) continue
@@ -76,10 +78,11 @@ fun Activity.changeStatusBarColor(color: Int = R.color.white) {
 fun AppCompatActivity.hide() {
     this.supportActionBar!!.hide()
 }
-fun View.hide(){
-    this.isVisible=false
+
+fun View.hide() {
+    this.isVisible = false
 }
 
-fun View.show(){
-    this.isVisible=true
+fun View.show() {
+    this.isVisible = true
 }

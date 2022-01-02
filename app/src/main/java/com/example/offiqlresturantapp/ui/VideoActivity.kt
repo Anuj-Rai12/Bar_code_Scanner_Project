@@ -8,23 +8,23 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import com.example.offiqlresturantapp.*
+import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.ViedoActivityLayoutBinding
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
-import com.example.offiqlresturantapp.R
-import com.example.offiqlresturantapp.TAG
-import com.example.offiqlresturantapp.changeStatusBarColor
-import com.example.offiqlresturantapp.hide
-import com.example.offiqlresturantapp.show
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY
 
 
 @AndroidEntryPoint
@@ -33,7 +33,8 @@ class VideoActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private var flagForRecording = false
     private var videoCapture: VideoCapture? = null
-
+    private var imageCapture: ImageCapture? = null
+    private var flagForArgs: String? = null
     private val timer = object : CountDownTimer(30000, 1000) {
         @SuppressLint("SetTextI18n")
         override fun onTick(millisUntilFinished: Long) {
@@ -58,6 +59,7 @@ class VideoActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
         this.changeStatusBarColor(R.color.black)
         binding = ViedoActivityLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        flagForArgs = intent.getStringExtra("Type")
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
             try {
@@ -73,30 +75,75 @@ class VideoActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
         }, getExecutor())
 
         binding.captureButton.setOnClickListener {
-            if (!flagForRecording) {
-                flagForRecording = true
-                timer.start()
-                it.setBackgroundColor(Color.GREEN)
-                recordVideo()
+            if (flagForArgs == VIDEO)
+                it.setUpVideoRecording()
+            else
+                it.setUpCamera()
+        }
+    }
+
+    private fun View.setUpCamera() {
+        captureImage {
+            if (it) {
+                setBackgroundColor(Color.GREEN)
             } else {
-                flagForRecording = false
-                timer.cancel()
-                it.setBackgroundColor(Color.RED)
-                videoCapture?.stopRecording()
+                setBackgroundColor(Color.BLACK)
             }
         }
     }
 
     @SuppressLint("RestrictedApi")
+    private fun View.setUpVideoRecording() {
+        if (!flagForRecording) {
+            flagForRecording = true
+            timer.start()
+            setBackgroundColor(Color.GREEN)
+            recordVideo()
+        } else {
+            flagForRecording = false
+            timer.cancel()
+            setBackgroundColor(Color.RED)
+            videoCapture?.stopRecording()
+        }
+    }
+
+
+    private fun captureImage(listener: (Boolean) -> Unit) {
+        imageCapture?.let { imageCapture ->
+
+            val contentValues = createFile("image/jpeg")
+            imageCapture.takePicture(
+                ImageCapture.OutputFileOptions.Builder(
+                    contentResolver,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    contentValues
+                ).build(),
+                getExecutor(),
+                object : ImageCapture.OnImageSavedCallback {
+                    override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                        Toast.makeText(
+                            this@VideoActivity,
+                            "Image is Capture successfully \n " +
+                                    "${outputFileResults.savedUri}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        listener(true)
+                    }
+
+                    override fun onError(exception: ImageCaptureException) {
+                        Log.i(TAG, "onError: ${exception.localizedMessage}")
+                        listener(false)
+                    }
+                },
+            )
+        }
+    }
+
+
+    @SuppressLint("RestrictedApi")
     private fun recordVideo() {
         videoCapture?.let { videoCapture ->
-
-
-            val timeStamp = System.currentTimeMillis()
-            val contentValue = ContentValues()
-            contentValue.put(MediaStore.MediaColumns.DISPLAY_NAME, timeStamp)
-            contentValue.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
-
+            val contentValue = createFile("video/mp4")
             try {
 
                 videoCapture.startRecording(
@@ -144,9 +191,12 @@ class VideoActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
             val cameraSelectorPor =
                 CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK)
                     .build()
+
             val preview = Preview.Builder().build()
             preview.setSurfaceProvider(binding.viewFinder.surfaceProvider)
-
+            imageCapture =
+                ImageCapture.Builder().setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
+                    .build()
             videoCapture = VideoCapture.Builder().setVideoFrameRate(30).build()
 
             val imageAnalysis = ImageAnalysis.Builder()
@@ -159,7 +209,8 @@ class VideoActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
                 (this as LifecycleOwner),
                 cameraSelectorPor,
                 preview,
-                videoCapture
+                videoCapture,
+                imageCapture
             )
 
         }
@@ -174,5 +225,13 @@ class VideoActivity : AppCompatActivity(), ImageAnalysis.Analyzer {
         image.close()
     }
 
+
+    private fun createFile(type: String): ContentValues {
+        val timeStamp = System.currentTimeMillis()
+        val contentValue = ContentValues()
+        contentValue.put(MediaStore.MediaColumns.DISPLAY_NAME, timeStamp)
+        contentValue.put(MediaStore.MediaColumns.MIME_TYPE, type)
+        return contentValue
+    }
 
 }

@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.offiqlresturantapp.databinding.ActivityMainBinding
-import com.example.offiqlresturantapp.ui.CameraActivity
 import com.example.offiqlresturantapp.ui.VideoActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,16 +26,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.cameraRecorder.setOnClickListener {
-            gotoNextScreen<CameraActivity>()
+            gotoNextScreen<VideoActivity>(CAMERA)
         }
         binding.videoRecorder.setOnClickListener {
-            gotoNextScreen<VideoActivity>()
+            gotoNextScreen<VideoActivity>(VIDEO)
         }
     }
 
-    private inline fun <reified T> gotoNextScreen() {
+    private inline fun <reified T> gotoNextScreen(type: String) {
         if (allPermissionsGranted()) {
             val intend = Intent(this, T::class.java)
+            intend.putExtra("Type", type)
             startActivity(intend)
             finish()
         } else

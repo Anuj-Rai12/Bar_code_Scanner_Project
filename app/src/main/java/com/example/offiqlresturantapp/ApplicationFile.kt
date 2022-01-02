@@ -9,4 +9,4 @@ class ApplicationFile : Application() {
         super.onCreate()
     }
 }
-val TAG="ANUJ"
+const val TAG="ANUJ"
