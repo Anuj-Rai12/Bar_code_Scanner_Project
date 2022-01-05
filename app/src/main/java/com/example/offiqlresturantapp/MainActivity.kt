@@ -26,9 +26,12 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        viewModel.getResult(itemPost).observe(this) {
+        /*viewModel.getResult(itemPost).observe(this) {
             Log.i(TAG, "onCreate: $it")
             binding.tvId.text = "$it"
+        }*/
+        viewModel.getMyApiForRss().observe(this) {
+            Log.i(TAG, "onCreate: $it")
         }
     }
 }

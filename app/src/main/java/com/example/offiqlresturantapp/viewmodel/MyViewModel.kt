@@ -12,5 +12,11 @@ import javax.inject.Inject
 class MyViewModel @Inject constructor(private val apiRepository: ApiRepository) : ViewModel() {
 
     fun getResult(post: EnvelopePostItem)=apiRepository.getResponse(post).asLiveData()
+
+    fun getMyApi()=apiRepository.getMyApiResponse().asLiveData()
+
     fun getItemResult()=apiRepository.getItemResponse().asLiveData()
+
+
+    fun getMyApiForRss()=apiRepository.getMyRssApiResponse().asLiveData()
 }

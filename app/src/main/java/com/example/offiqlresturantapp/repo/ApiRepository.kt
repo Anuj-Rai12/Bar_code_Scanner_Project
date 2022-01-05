@@ -5,23 +5,75 @@ import android.util.Log
 import com.example.offiqlresturantapp.TAG
 import com.example.offiqlresturantapp.api.ApiInterface
 import com.example.offiqlresturantapp.model.test.apklogin.EnvelopePostItem
+import com.example.offiqlresturantapp.othermodel.MyApiInterface
+import com.example.offiqlresturantapp.othermodel.RssApiInterface
 import com.example.offiqlresturantapp.utils.ApiPostResponseObj
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class ApiRepository @Inject constructor(private val apiInterface: ApiInterface) {
+class ApiRepository @Inject constructor(
+    private val apiInterface: ApiInterface,
+    private val myApiInterface: MyApiInterface,
+    private val rssApiInterface: RssApiInterface
+) {
+
+    fun getMyRssApiResponse() = flow {
+        emit("Loading Data")
+        val data = try {
+
+            val response = rssApiInterface.getRssFeed()
+            if (response.isSuccessful) {
+                Log.i(TAG, "getMyApiResponse: ${response.body()?.channel?.item?.last()}")
+                response.body().toString()
+            } else {
+                Log.i(TAG, "getMyApiResponse Error: ${response.errorBody()}")
+                response.code().toString()
+            }
+        } catch (e: Exception) {
+            e.localizedMessage
+        } catch (e: HttpException) {
+            e.localizedMessage
+        }
+        emit(data)
+    }
+
+
+
+
+    fun getMyApiResponse() = flow {
+        emit("Loading Data")
+        val data = try {
+
+            val response = myApiInterface.sendApiInterface()
+            if (response.isSuccessful) {
+                Log.i(TAG, "getMyApiResponse: ${response.body()}")
+                response.body().toString()
+            } else {
+                Log.i(TAG, "getMyApiResponse Error: ${response.errorBody()}")
+                response.code().toString()
+            }
+
+        } catch (e: Exception) {
+            e.localizedMessage
+        } catch (e: HttpException) {
+            e.localizedMessage
+        }
+        emit(data)
+    }
+
 
     fun getResponse(post: EnvelopePostItem) = flow {
         emit("Loading Data")
         val data = try {
             val hashMap = hashMapOf<String, String>()
             hashMap["Authorization"] = ApiPostResponseObj.authHeader
-            hashMap["SOAPAction"] = "urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI:APKlogin"
+            hashMap["SOAPAction"] =
+                "urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI:APKlogin"
             hashMap["Content-Type"] = "application/xml"
-            hashMap["Accept"]="*/*"
+            hashMap["Accept"] = "*/*"
             Log.i(TAG, "getResponse HAS_MAP: $hashMap")
-            val request = apiInterface.sendApiPostRequest(hashMap,post)
+            val request = apiInterface.sendApiPostRequest(hashMap, post)
             if (request.isSuccessful) {
                 Log.i(TAG, "getResponse Body: ${request.body()}")
                 request.body()
