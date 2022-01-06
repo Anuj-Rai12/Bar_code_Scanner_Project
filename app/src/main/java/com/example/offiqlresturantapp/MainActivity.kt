@@ -1,12 +1,12 @@
 package com.example.offiqlresturantapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.example.offiqlresturantapp.databinding.ActivityMainBinding
-import com.example.offiqlresturantapp.model.test.apklogin.APKLogin
-import com.example.offiqlresturantapp.model.test.apklogin.EnvelopePostItem
+import com.example.offiqlresturantapp.model.test.apkJanLogin.APKLoginCls
+import com.example.offiqlresturantapp.model.test.apkJanLogin.EnvelopeOption
 import com.example.offiqlresturantapp.viewmodel.MyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,20 +18,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val itemPost = EnvelopePostItem(
-            apk = APKLogin(
+        val itemPost = EnvelopeOption(
+            APKLoginCls(
                 "RO404",
                 "Test",
                 "123"
             )
         )
 
-        /*viewModel.getResult(itemPost).observe(this) {
+        viewModel.getResult(itemPost).observe(this) {
             Log.i(TAG, "onCreate: $it")
             binding.tvId.text = "$it"
-        }*/
-        viewModel.getMyApiForRss().observe(this) {
-            Log.i(TAG, "onCreate: $it")
         }
     }
 }

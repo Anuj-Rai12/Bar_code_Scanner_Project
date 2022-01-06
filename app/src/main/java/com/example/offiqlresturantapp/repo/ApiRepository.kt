@@ -4,7 +4,7 @@ package com.example.offiqlresturantapp.repo
 import android.util.Log
 import com.example.offiqlresturantapp.TAG
 import com.example.offiqlresturantapp.api.ApiInterface
-import com.example.offiqlresturantapp.model.test.apklogin.EnvelopePostItem
+import com.example.offiqlresturantapp.model.test.apkJanLogin.EnvelopeOption
 import com.example.offiqlresturantapp.othermodel.MyApiInterface
 import com.example.offiqlresturantapp.othermodel.RssApiInterface
 import com.example.offiqlresturantapp.utils.ApiPostResponseObj
@@ -63,7 +63,7 @@ class ApiRepository @Inject constructor(
     }
 
 
-    fun getResponse(post: EnvelopePostItem) = flow {
+    fun getResponse(post: EnvelopeOption) = flow {
         emit("Loading Data")
         val data = try {
             val hashMap = hashMapOf<String, String>()
@@ -71,7 +71,8 @@ class ApiRepository @Inject constructor(
             hashMap["SOAPAction"] =
                 "urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI:APKlogin"
             hashMap["Content-Type"] = "application/xml"
-            hashMap["Accept"] = "*/*"
+
+            //hashMap["Accept"] = "*/*"
             Log.i(TAG, "getResponse HAS_MAP: $hashMap")
             val request = apiInterface.sendApiPostRequest(hashMap, post)
             if (request.isSuccessful) {

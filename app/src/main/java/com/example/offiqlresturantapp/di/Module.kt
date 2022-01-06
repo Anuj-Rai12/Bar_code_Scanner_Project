@@ -45,7 +45,7 @@ object Module {
     @Provides
     fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://www.news18.com/")
+            .baseUrl("http://223.31.53.229:28360/NAVUSER/WS/HLDGRP/Codeunit/")
             .client(client)
             .addConverterFactory(SimpleXmlConverterFactory.create())
             .build()
