@@ -7,5 +7,5 @@ import javax.inject.Inject
 @HiltViewModel
 class MyViewModel @Inject constructor() : ViewModel() {
 
-    val fileFile = "fuck"
+    val fileFile = "fileFile"
 }
