@@ -26,14 +26,14 @@ class MainActivity : AppCompatActivity() {
             )
         )
         Log.i(TAG, "onCreate: $itemPost")
-        /*viewModel.getResult(itemPost).observe(this) {
-            Log.i(TAG, "onCreate: $it")
-            binding.tvId.text = "$it"
-        }*/
-
-        viewModel.getItemResult().observe(this){
+        viewModel.getResult(itemPost).observe(this) {
             Log.i(TAG, "onCreate: $it")
             binding.tvId.text = "$it"
         }
+
+        /*viewModel.getItemResult().observe(this){
+            Log.i(TAG, "onCreate: $it")
+            binding.tvId.text = "$it"
+        }*/
     }
 }

@@ -1,4 +1,4 @@
-package com.example.offiqlresturantapp.model.test
+package com.example.offiqlresturantapp.model.test.apkjanitemmastersync
 
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Path
@@ -10,7 +10,7 @@ data class EnvelopeItemSyncResponse @JvmOverloads constructor(
     @param:Element(name = "ItemMasterSync_Result", required = false)
     @field:Path("Soap:Body")
     @param:Path("Soap:Body")
-    val apkLoginResult:ItemMasterSyncResult ? = null
+    val apkLoginResult: ItemMasterSyncResult? = null
 )
 
 @Root(name = "ItemMasterSync_Result", strict = false)

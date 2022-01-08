@@ -1,4 +1,4 @@
-package com.example.offiqlresturantapp.model.test
+package com.example.offiqlresturantapp.model.test.apkjanitemmastersync
 
 import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Element
