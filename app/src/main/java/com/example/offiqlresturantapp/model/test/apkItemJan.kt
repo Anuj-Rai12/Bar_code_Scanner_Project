@@ -1,5 +1,6 @@
 package com.example.offiqlresturantapp.model.test
 
+import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Path
 import org.simpleframework.xml.Root
@@ -11,22 +12,16 @@ data class EnvelopeItemSync @JvmOverloads constructor(
     @param:Element(name = "ItemMasterSync")
     @field:Path(value = "Body")
     @param:Path(value = "Body")
-    val itemMasterSyncJan: ItemMasterSyncJan?=null
+    val itemMasterSyncJan: ItemMasterSyncJan?=null,
 
-    /*@Json(name = "Body")
-    val body: Body,
-
-    @Json(name = "_xmlns")
-    val xmlns: String*/
+    @field:Attribute(name = "xmlns")
+    @param:Attribute(name = "xmlns")
+    val xml: String = "http://schemas.xmlsoap.org/soap/envelope/"
 )
-
-/*data class Body (
-    @Json(name = "ItemMasterSync")
-    val itemMasterSync: ItemMasterSync
-)*/
 
 @Root(name = "ItemMasterSync",strict = false)
 data class ItemMasterSyncJan(
-
-    val xmlns: String?=null
+    @field:Attribute(name = "xmlns")
+    @param:Attribute(name = "xmlns")
+    val xmlns: String = "urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI"
 )

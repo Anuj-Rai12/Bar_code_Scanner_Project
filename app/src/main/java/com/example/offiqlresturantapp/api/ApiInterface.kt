@@ -5,6 +5,8 @@ import com.example.offiqlresturantapp.model.item.BodyPostItem
 import com.example.offiqlresturantapp.model.item.EnvelopeItemPost
 import com.example.offiqlresturantapp.model.item.ItemEnvelope
 import com.example.offiqlresturantapp.model.item.ItemMasterSyncPost
+import com.example.offiqlresturantapp.model.test.EnvelopeItemSync
+import com.example.offiqlresturantapp.model.test.EnvelopeItemSyncResponse
 import com.example.offiqlresturantapp.model.test.apkJanLogin.EnvelopeOption
 import com.example.offiqlresturantapp.model.test.apkJanLogin.EnvelopePostApiResponse
 import retrofit2.Response
@@ -23,8 +25,7 @@ interface ApiInterface {
     @POST("LoginAndGetMasterAPI")
     suspend fun getApiPostRequest(
         @HeaderMap hashMap: HashMap<String, String>,
-        @Body post: EnvelopeItemPost = EnvelopeItemPost(body = BodyPostItem(ItemMasterSyncPost()))
-    ): Response<ItemEnvelope>
+        @Body request: EnvelopeItemSync//post: EnvelopeItemPost = EnvelopeItemPost(body = BodyPostItem(ItemMasterSyncPost()))
+    ): Response<EnvelopeItemSyncResponse>
 
-    //@Body post: EnvelopeItemPost = EnvelopeItemPost(body = BodyPostItem(itemMasterSync = ItemMasterSyncPost()))
 }

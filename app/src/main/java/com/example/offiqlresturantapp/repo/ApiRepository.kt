@@ -4,6 +4,8 @@ package com.example.offiqlresturantapp.repo
 import android.util.Log
 import com.example.offiqlresturantapp.TAG
 import com.example.offiqlresturantapp.api.ApiInterface
+import com.example.offiqlresturantapp.model.test.EnvelopeItemSync
+import com.example.offiqlresturantapp.model.test.ItemMasterSyncJan
 import com.example.offiqlresturantapp.model.test.apkJanLogin.EnvelopeOption
 import com.example.offiqlresturantapp.othermodel.MyApiInterface
 import com.example.offiqlresturantapp.othermodel.RssApiInterface
@@ -85,9 +87,8 @@ class ApiRepository @Inject constructor(
             }
 
         } catch (e: Exception) {
-            e.localizedMessage
-        } catch (e: HttpException) {
-            e.localizedMessage
+            Log.i(TAG, "getResponse: $e.message")
+            e.message
         }
         emit(data)
     }
@@ -104,7 +105,7 @@ class ApiRepository @Inject constructor(
             hashMap["Content-Type"] = "application/xml"
 
             Log.i(TAG, "getResponse HAS_MAP: $hashMap")
-            val request = apiInterface.getApiPostRequest(hashMap)
+            val request = apiInterface.getApiPostRequest(hashMap, EnvelopeItemSync(ItemMasterSyncJan()))
 
             if (request.isSuccessful) {
                 Log.i(TAG, "getResponse Body: ${request.body()}")
