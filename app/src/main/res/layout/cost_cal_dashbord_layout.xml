@@ -226,41 +226,52 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/rest_item_btn" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/save_ic_click"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="14dp"
-        tools:visibility="invisible"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/black_underline_border"
+        android:background="@drawable/blue_underline_boder_color"
         android:drawablePadding="30dp"
         android:minHeight="56dp"
-        app:drawableEndCompat="@drawable/ic_save"
+        android:text="@string/sv_btn"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        android:fontFamily="@font/roboto_medium"
+        android:textAlignment="textStart"
+        app:drawableStartCompat="@drawable/ic_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/printer_ic_click"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/printer_ic_click"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/black_underline_border"
+        android:background="@drawable/blue_underline_boder_color"
         android:drawablePadding="30dp"
-        tools:visibility="invisible"
         android:minHeight="56dp"
-        app:drawableEndCompat="@drawable/ic_printer_icon"
+        android:text="@string/pr_btn"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        android:fontFamily="@font/roboto_medium"
+        android:textAlignment="textStart"
+        app:drawableStartCompat="@drawable/ic_printer_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/save_ic_click" />
-
+        app:layout_constraintStart_toEndOf="@+id/save_ic_click"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

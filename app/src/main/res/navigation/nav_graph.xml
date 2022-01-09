@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_tableManagementOrCostEstimate_to_costDashBoardFragment"
             app:destination="@id/costDashBoardFragment" />
+        <argument
+            android:name="store_name"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/tableManagementFragment"
@@ -45,6 +48,9 @@
         <action
             android:id="@+id/action_tableManagementFragment_to_confirmOderFragment"
             app:destination="@id/confirmOderFragment" />
+        <argument
+            android:name="store_name"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/confirmOderFragment"

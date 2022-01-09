@@ -89,9 +89,9 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         }
     }
 
-    private fun nextFrag() {
+    private fun nextFrag(string: String) {
         val action =
-            TestingConnectionFragmentDirections.actionTestingConnectionFragmentToTableManagementOrCostEstimate()
+            TestingConnectionFragmentDirections.actionTestingConnectionFragmentToTableManagementOrCostEstimate(string)
         findNavController().navigate(action)
     }
 
@@ -115,11 +115,11 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                         val json = type as ApkLoginJsonResponse
                         if (json.status && flag) {
                             requireActivity().msg(json.message)
-                            nextFrag()
+                            nextFrag(json.storeName)
                         } else if (!json.status)
                             requireActivity().msg(json.message, Toast.LENGTH_LONG)
                         else if (json.status)
-                            nextFrag()
+                            nextFrag(json.storeName)
                     }
                 }
             }

@@ -1,6 +1,5 @@
 package com.example.offiqlresturantapp.ui.tablemange
 
-import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +7,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.TableMangmentLayoutBinding
@@ -21,14 +21,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
     private lateinit var binding: TableMangmentLayoutBinding
     private lateinit var tableManagementAdaptor: TableManagementAdaptor
-
+    private val args:TableManagementFragmentArgs by navArgs()
     @RequiresApi(Build.VERSION_CODES.M)
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.semi_white_color)
         binding = TableMangmentLayoutBinding.bind(view)
-        binding.tableInfoDetail.text = "Area Code: A102 - Outdoor"
+        binding.tableInfoDetail.text = args.storeName
         setRecycleView()
         setUpData()
     }

@@ -21,6 +21,19 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/store_nm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/light_grey_color"
+        android:fontFamily="@font/roboto_medium"
+        tools:text="Sahara mall shopping Complex"
+        android:textSize="15sp"
+        app:layout_constraintRight_toLeftOf="@id/logo_file_id3"
+        app:layout_constraintLeft_toLeftOf="@id/mpos_id3"
+        app:layout_constraintTop_toBottomOf="@id/mpos_id3"
+        />
+
     <ImageView
         android:id="@+id/logo_file_id3"
         android:layout_width="31dp"
@@ -42,7 +55,7 @@
         app:layout_constraintBottom_toTopOf="@id/setting_btn_ic2"
         app:layout_constraintLeft_toLeftOf="@id/mpos_id3"
         app:layout_constraintRight_toRightOf="@id/logo_file_id3"
-        app:layout_constraintTop_toBottomOf="@id/mpos_id3"
+        app:layout_constraintTop_toBottomOf="@id/store_nm"
         tools:listitem="@layout/table_item_layout" />
 
 

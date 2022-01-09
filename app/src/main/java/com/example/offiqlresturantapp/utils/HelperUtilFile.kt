@@ -44,6 +44,11 @@ object AllStringConst {
 private fun genToken(): String =
     Base64.encodeToString(AllStringConst.base.toByteArray(), Base64.NO_WRAP)
 
+fun <T> serializeToJson(bmp: T): String? {
+    val gson = Gson()
+    return gson.toJson(bmp)
+}
+
 inline fun <reified T> deserializeFromJson(jsonFile: String?): T? {
     val gson = Gson()
     return gson.fromJson(jsonFile, T::class.java)

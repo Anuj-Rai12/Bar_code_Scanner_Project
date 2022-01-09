@@ -7,6 +7,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.TableOrCostLayoutBinding
@@ -21,11 +22,14 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
 
     private lateinit var binding: TableOrCostLayoutBinding
     private lateinit var tableManagementOrCostRecyclerAdaptor: TableManagementOrCostRecyclerAdaptor
+    private val args: TableManagementOrCostEstimateArgs by navArgs()
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor()
         binding = TableOrCostLayoutBinding.bind(view)
+        binding.storeNm.text = args.storeName
         setRecycleView()
         setData()
     }
@@ -37,7 +41,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
             tableManagementOrCostRecyclerAdaptor = TableManagementOrCostRecyclerAdaptor {
                 Log.i(TAG, "setRecycleView: $it")
                 val action = if (it.title == getString(R.string.item_table)) {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToTableManagementFragment()
+                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToTableManagementFragment(args.storeName)
                 } else {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToCostDashBoardFragment()
                 }
