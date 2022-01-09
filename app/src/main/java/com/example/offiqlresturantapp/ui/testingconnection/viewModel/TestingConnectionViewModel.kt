@@ -11,6 +11,6 @@ import javax.inject.Inject
 class TestingConnectionViewModel @Inject constructor(private val repository: ApiRepository) :
     ViewModel() {
 
-    fun getApkLoginResponse(requestBody: ApKLoginPost) =
-        repository.getApkLoginResponse(requestBody).asLiveData()
+    fun getApkLoginResponse(requestBody: ApKLoginPost,flag:Boolean) =
+        repository.getApkLoginResponse(requestBody,flag).asLiveData()
 }

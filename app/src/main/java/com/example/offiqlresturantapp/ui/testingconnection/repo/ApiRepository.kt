@@ -2,6 +2,7 @@ package com.example.offiqlresturantapp.ui.testingconnection.repo
 
 import android.util.Log
 import com.example.offiqlresturantapp.api.apkLogin.LoginApi
+import com.example.offiqlresturantapp.dataStore.UserSoredData
 import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApKLoginPost
 import com.example.offiqlresturantapp.ui.testingconnection.model.api.json.ApkLoginJsonResponse
 import com.example.offiqlresturantapp.utils.ApisResponse
@@ -14,16 +15,28 @@ import kotlinx.coroutines.flow.flowOn
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-class ApiRepository @Inject constructor(retrofit: Retrofit) {
+class ApiRepository @Inject constructor(
+    retrofit: Retrofit,
+    private val userSoredData: UserSoredData
+) {
 
     private val apkLoginApi = buildApi<LoginApi>(retrofit)
 
-    fun getApkLoginResponse(requestBody: ApKLoginPost) = flow {
+    fun getApkLoginResponse(requestBody: ApKLoginPost,flag:Boolean) = flow {
         emit(ApisResponse.Loading("Loading.."))
         val data = try {
             val response = apkLoginApi.sendApiPostRequest(requestBody)
             val info = if (response.isSuccessful) {
-                deserializeFromJson<ApkLoginJsonResponse>(response.body()?.apkLoginResult?.value)
+                deserializeFromJson<ApkLoginJsonResponse>(response.body()?.apkLoginResult?.value)?.let {
+                    if (it.status && flag) {
+                        userSoredData.updateInfo(
+                            userId = requestBody.apK?.userID!!,
+                            password = requestBody.apK.password!!,
+                            storeId = requestBody.apK.storeNo!!
+                        )
+                    }
+                    return@let it
+                }
             } else {
                 Log.i(TAG, "getApkLoginResponse: ${response.errorBody()}")
                 null

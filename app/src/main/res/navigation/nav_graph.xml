@@ -16,7 +16,9 @@
             app:nullable="true" />
         <action
             android:id="@+id/action_testingConnectionFragment_to_tableManagementOrCostEstimate"
-            app:destination="@id/tableManagementOrCostEstimate" />
+            app:destination="@id/tableManagementOrCostEstimate"
+            app:popUpTo="@id/testingConnectionFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/loginScreenFragment"

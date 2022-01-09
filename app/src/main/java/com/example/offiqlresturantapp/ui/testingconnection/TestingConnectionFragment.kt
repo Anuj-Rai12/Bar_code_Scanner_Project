@@ -3,14 +3,16 @@ package com.example.offiqlresturantapp.ui.testingconnection
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.offiqlresturantapp.R
+import com.example.offiqlresturantapp.dataStore.UserSoredData
 import com.example.offiqlresturantapp.databinding.TestingConnectionFragmentBinding
 import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApKLoginPost
 import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApkBody
@@ -20,11 +22,16 @@ import com.example.offiqlresturantapp.utils.*
 import com.github.razir.progressbutton.bindProgressButton
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.reflect.InvocationTargetException
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment) {
     private lateinit var binding: TestingConnectionFragmentBinding
     private val viewModel: TestingConnectionViewModel by viewModels()
+
+    @Inject
+    lateinit var userSoredData: UserSoredData
+
     private val args by lazy {
         try {
             navArgs<TestingConnectionFragmentArgs>().value
@@ -33,6 +40,18 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         } catch (e: InvocationTargetException) {
             null
         }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onStart() {
+        userSoredData.read.asLiveData().observe(viewLifecycleOwner) {
+            if (it != null && !checkFieldValue(it.userID!!)) {
+                val data = ApKLoginPost(apK = it)
+                checkApiResponse(data, false)
+            }
+        }
+        super.onStart()
     }
 
     @SuppressLint("ResourceType")
@@ -53,15 +72,15 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
             findNavController().navigate(action)
         }
         binding.testConnectionId.setOnClickListener {
-            val userName = binding.userNameEd.text.toString()
+            val userID = binding.userNameEd.text.toString()
             val password = binding.userPassEd.text.toString()
-            if (checkFieldValue(userName) || checkFieldValue(password)) {
+            if (checkFieldValue(userID) || checkFieldValue(password)) {
                 requireActivity().msg("Please Enter the Correct Info")
             } else {
                 val data = ApKLoginPost(
                     apK = ApkBody(
                         storeNo = "RO404",
-                        userID = userName,
+                        userID = userID,
                         password = password
                     )
                 )
@@ -77,8 +96,8 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun checkApiResponse(data: ApKLoginPost) {
-        viewModel.getApkLoginResponse(data).observe(viewLifecycleOwner) {
+    private fun checkApiResponse(data: ApKLoginPost, flag: Boolean = true) {
+        viewModel.getApkLoginResponse(data, flag).observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
                     hideProgress()
@@ -94,10 +113,14 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                     hideProgress()
                     it.data?.let { type ->
                         val json = type as ApkLoginJsonResponse
-                        requireActivity().msg("Success Login")
-                        Log.i(TAG, "checkApiResponse: $json")
+                        if (json.status && flag) {
+                            requireActivity().msg(json.message)
+                            nextFrag()
+                        } else if (!json.status)
+                            requireActivity().msg(json.message, Toast.LENGTH_LONG)
+                        else if (json.status)
+                            nextFrag()
                     }
-                    //Log.i(TAG, "checkApiResponse: ${it.data}")
                 }
             }
         }

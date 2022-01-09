@@ -36,6 +36,7 @@ object AllStringConst {
     const val _xmls = "urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI"
     private const val userName = "Test"
     private const val PASSWORD = "Test@123"
+    const val PREFERENCES_USER = "User_INFO"
     const val base = "$userName:$PASSWORD"
     var authHeader = "Basic ${genToken()}"
 }
