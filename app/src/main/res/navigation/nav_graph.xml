@@ -10,23 +10,19 @@
         android:name="com.example.offiqlresturantapp.ui.testingconnection.TestingConnectionFragment"
         android:label="testing_connection_fragment"
         tools:layout="@layout/testing_connection_fragment" >
-        <action
-            android:id="@+id/action_testingConnectionFragment_to_loginScreenFragment"
-            app:destination="@id/loginScreenFragment" />
         <argument
             android:name="bar"
             app:argType="com.example.offiqlresturantapp.ui.testingconnection.model.TestingBarcodeConnection"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_testingConnectionFragment_to_tableManagementOrCostEstimate"
+            app:destination="@id/tableManagementOrCostEstimate" />
     </fragment>
     <fragment
         android:id="@+id/loginScreenFragment"
         android:name="com.example.offiqlresturantapp.ui.login.LoginScreenFragment"
         android:label="login_screen_fragment"
-        tools:layout="@layout/login_screen_fragment" >
-        <action
-            android:id="@+id/action_loginScreenFragment_to_tableManagementOrCostEstimate"
-            app:destination="@id/tableManagementOrCostEstimate" />
-    </fragment>
+        tools:layout="@layout/login_screen_fragment" />
     <fragment
         android:id="@+id/tableManagementOrCostEstimate"
         android:name="com.example.offiqlresturantapp.ui.tableorcost.TableManagementOrCostEstimate"

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.LoginScreenFragmentBinding
 import com.example.offiqlresturantapp.utils.changeStatusBarColor
@@ -20,9 +19,9 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
         requireActivity().changeStatusBarColor()
         binding = LoginScreenFragmentBinding.bind(view)
         binding.loginBtnId.setOnClickListener {
-            val action =
+            /*val action =
                 LoginScreenFragmentDirections.actionLoginScreenFragmentToTableManagementOrCostEstimate()
-            findNavController().navigate(action)
+            findNavController().navigate(action)*/
         }
     }
 }
