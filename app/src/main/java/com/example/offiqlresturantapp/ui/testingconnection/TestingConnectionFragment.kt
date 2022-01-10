@@ -74,12 +74,13 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         binding.testConnectionId.setOnClickListener {
             val userID = binding.userNameEd.text.toString()
             val password = binding.userPassEd.text.toString()
-            if (checkFieldValue(userID) || checkFieldValue(password)) {
+            val storeNo=binding.storeNoEd.text.toString()
+            if (checkFieldValue(userID) || checkFieldValue(password)|| checkFieldValue(storeNo)) {
                 requireActivity().msg("Please Enter the Correct Info")
             } else {
                 val data = ApKLoginPost(
                     apK = ApkBody(
-                        storeNo = "RO404",
+                        storeNo = storeNo,
                         userID = userID,
                         password = password
                     )

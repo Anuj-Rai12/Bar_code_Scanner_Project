@@ -36,7 +36,7 @@
         android:id="@+id/scan_or_code_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="117dp"
+        android:layout_marginTop="70dp"
         android:background="@drawable/white_underline_boder"
         android:drawableEnd="@drawable/qr_code"
         android:drawablePadding="15dp"
@@ -53,19 +53,44 @@
         app:layout_constraintRight_toRightOf="@id/logo_file_id"
         app:layout_constraintTop_toBottomOf="@id/mpos_id" />
 
+    <TextView
+        android:id="@+id/store_no_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="70dp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/store_no"
+        android:textColor="@color/light_grey_color"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scan_or_code_id" />
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/store_no_ed"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/black_underline_border"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toLeftOf="@id/store_no_txt"
+        app:layout_constraintRight_toRightOf="@id/user_name_ed"
+        app:layout_constraintTop_toBottomOf="@id/store_no_txt" />
+
 
     <TextView
         android:id="@+id/user_name_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
-        android:layout_marginTop="103dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/roboto_medium"
         android:text="@string/user_name"
         android:textColor="@color/light_grey_color"
         android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scan_or_code_id" />
+        app:layout_constraintLeft_toLeftOf="@id/store_no_ed"
+        app:layout_constraintTop_toBottomOf="@id/store_no_ed" />
 
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -99,8 +124,8 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:inputType="numberPassword"
         android:background="@drawable/black_underline_border"
+        android:inputType="numberPassword"
         android:padding="10dp"
         android:textColor="@color/black"
         app:layout_constraintLeft_toLeftOf="@id/user_name_id"
