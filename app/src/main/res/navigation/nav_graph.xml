@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/testingConnectionFragment">
+    app:startDestination="@id/splashScreenFragment">
 
     <fragment
         android:id="@+id/testingConnectionFragment"
@@ -98,4 +98,20 @@
         android:name="com.example.offiqlresturantapp.ui.cost.CostDashBoardFragment"
         android:label="cost_cal_dashbord_layout"
         tools:layout="@layout/cost_cal_dashbord_layout" />
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.example.offiqlresturantapp.ui.splash.SplashScreenFragment"
+        android:label="splash_src_layout"
+        tools:layout="@layout/splash_src_layout" >
+        <action
+            android:id="@+id/action_splashScreenFragment_to_testingConnectionFragment"
+            app:destination="@id/testingConnectionFragment"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_tableManagementOrCostEstimate"
+            app:destination="@id/tableManagementOrCostEstimate"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
