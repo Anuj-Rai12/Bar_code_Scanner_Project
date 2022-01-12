@@ -21,11 +21,6 @@
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/loginScreenFragment"
-        android:name="com.example.offiqlresturantapp.ui.login.LoginScreenFragment"
-        android:label="login_screen_fragment"
-        tools:layout="@layout/login_screen_fragment" />
-    <fragment
         android:id="@+id/tableManagementOrCostEstimate"
         android:name="com.example.offiqlresturantapp.ui.tableorcost.TableManagementOrCostEstimate"
         android:label="table_or_cost_layout"
