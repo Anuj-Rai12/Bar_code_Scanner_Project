@@ -91,7 +91,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
 
     private fun nextFrag(string: String?) {
         lifecycleScope.launchWhenStarted {
-            delay(3000)
+            delay(1000)
             val action = if (string == null) {
                 SplashScreenFragmentDirections.actionSplashScreenFragmentToTestingConnectionFragment(null)
             } else {
