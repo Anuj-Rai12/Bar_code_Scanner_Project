@@ -55,6 +55,14 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 getotal += it.foodAmt
                 list.add(it)
             }
+/*                        val data=OrderCollection(
+                                foodItem = args.list?.foodList!!,
+                                tableId = 1,
+                                totalPeople = 4,
+                                bookingTime = "3:00PM",
+                                grandTotal = getotal
+                        )
+            Log.i(TAG, "onViewCreated: ${serializeToJson(data)}")*/
             if (!list.isNullOrEmpty()) {
                 confirmOderFragmentAdaptor.submitList(list)
                 binding.totalOrderAmt.text = "$Rs_Symbol $getotal"
@@ -78,7 +86,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             binding.orderRecycleViewHint.show()
             binding.listOfItemRecycleView.hide()
             list.clear()
-            binding.totalOrderAmt.text = "$Rs_Symbol 000"
+            binding.totalOrderAmt.text = "$Rs_Symbol 0"
         }
 
         binding.searchBoxTxt.setOnClickListener {

@@ -244,9 +244,9 @@
         android:id="@+id/rest_item_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="9dp"
+        android:layout_marginStart="9dp"
         android:layout_marginBottom="22dp"
+        android:layout_weight="1"
         android:background="@drawable/modify_order_btn_border"
         android:fontFamily="@font/roboto_medium"
         android:text="@string/oder_reset"
@@ -254,19 +254,18 @@
         android:textColor="@color/white"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/confirm_order_btn"
-        app:layout_constraintEnd_toStartOf="@+id/view_offer_btn"
+        app:layout_constraintEnd_toStartOf="@+id/delete_food_item"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent" />
 
-
-    <!--<androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/delete_all_btn"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/delete_food_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="9dp"
-        android:layout_marginEnd="9dp"
         android:layout_marginBottom="22dp"
+        android:layout_weight="1"
         android:background="@drawable/modify_order_btn_border"
         android:fontFamily="@font/roboto_medium"
         android:text="@string/oder_del"
@@ -277,15 +276,14 @@
         app:layout_constraintEnd_toStartOf="@+id/view_offer_btn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/rest_item_btn" />-->
-
+        app:layout_constraintStart_toEndOf="@+id/rest_item_btn" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/view_offer_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="9dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginEnd="9dp"
         android:layout_marginBottom="22dp"
         android:layout_weight="1"
         android:background="@drawable/modify_order_btn_border"
@@ -298,7 +296,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/rest_item_btn" />
+        app:layout_constraintStart_toEndOf="@+id/delete_food_item" />
 
 
     <androidx.appcompat.widget.AppCompatButton

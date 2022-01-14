@@ -49,6 +49,14 @@ fun <T> serializeToJson(bmp: T): String? {
     return gson.toJson(bmp)
 }
 
+/*data class OrderCollection(
+    val foodItem: List<FoodItem>,
+    val tableId:Int,
+    val totalPeople:Int,
+    val bookingTime:String,
+    val grandTotal:Int,
+)*/
+
 inline fun <reified T> deserializeFromJson(jsonFile: String?): T? {
     val gson = Gson()
     return gson.fromJson(jsonFile, T::class.java)
