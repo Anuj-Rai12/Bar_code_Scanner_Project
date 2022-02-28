@@ -103,4 +103,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:17.0.0'
     //Button Progress
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
+
+    //Lottie
+    implementation 'com.airbnb.android:lottie:5.0.1'
 }
