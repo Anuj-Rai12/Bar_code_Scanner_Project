@@ -14,7 +14,6 @@ import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.dataStore.UserSoredData
 import com.example.offiqlresturantapp.databinding.TestingConnectionFragmentBinding
 import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApKLoginPost
-import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApkBody
 import com.example.offiqlresturantapp.ui.testingconnection.model.api.json.ApkLoginJsonResponse
 import com.example.offiqlresturantapp.ui.testingconnection.viewModel.TestingConnectionViewModel
 import com.example.offiqlresturantapp.utils.*
@@ -53,17 +52,15 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
             val userID = binding.userNameEd.text.toString()
             val password = binding.userPassEd.text.toString()
             val storeNo = binding.storeNoEd.text.toString()
-            if (checkFieldValue(userID) || checkFieldValue(password) || checkFieldValue(storeNo)) {
-                requireActivity().msg("Please Enter the Correct Info")
-            } else {
-                val data = ApKLoginPost(
-                    apK = ApkBody(
-                        storeNo = storeNo,
-                        userID = userID,
-                        password = password
-                    )
-                )
-                checkApiResponse(data)
+            viewModel.checkLoginTraditional(userID, password, storeNo).observe(viewLifecycleOwner) {
+                if (it is ApisResponse.Loading) {
+                    requireActivity().msg(it.data.toString())
+                } else if (it is ApisResponse.Success) {
+                    it.data?.let { item ->
+                        val data = item as ApKLoginPost
+                        checkApiResponse(data)
+                    }
+                }
             }
         }
     }

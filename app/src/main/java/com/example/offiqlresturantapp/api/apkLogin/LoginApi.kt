@@ -9,7 +9,7 @@ import retrofit2.http.POST
 
 interface LoginApi {
 
-    @Headers("SOAPAction: urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI:APKlogin")
+    @Headers("SOAPAction: urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI:Login")
     @POST("LoginAndGetMasterAPI")
     suspend fun sendApiPostRequest(
         @Body request: ApKLoginPost

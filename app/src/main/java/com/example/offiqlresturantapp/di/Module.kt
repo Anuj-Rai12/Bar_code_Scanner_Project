@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Module
 object Module {
 
-    //.addHeader("SOAPAction","urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI:APKlogin")
+    //.addHeader("SOAPAction","urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI:Login")
 
     private val httpInterceptor = HttpLoggingInterceptor().apply {
         setLevel(HttpLoggingInterceptor.Level.BODY)

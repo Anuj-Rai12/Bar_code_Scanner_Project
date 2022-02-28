@@ -8,18 +8,18 @@ import org.simpleframework.xml.Root
 
 @Root(name = "Envelope", strict = false)
 data class ApKLoginPost @JvmOverloads constructor(
-    @field:Element(name = "APKlogin", required = false)
-    @param:Element(name = "APKlogin", required = false)
+    @field:Element(name = "Login", required = false)
+    @param:Element(name = "Login", required = false)
     @field:Path("Body")
     @param:Path("Body")
     val apK: ApkBody? = null,
 
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
-    val xmlAttr: String = AllStringConst._xmlns //"http://schemas.xmlsoap.org/soap/envelope/"
+    val xmlAttr: String = AllStringConst._xmlns //http://schemas.xmlsoap.org/soap/envelope/
 )
 
-@Root(name = "APKlogin", strict = false)
+@Root(name = "Login", strict = false)
 data class ApkBody @JvmOverloads constructor(
     @field:Element(name = "storeNo")
     @param:Element(name = "storeNo")
@@ -35,5 +35,5 @@ data class ApkBody @JvmOverloads constructor(
 
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
-    val xmlns: String = AllStringConst._xmls //"urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI"
+    val xmlns: String = AllStringConst._xmls //urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI
 )
