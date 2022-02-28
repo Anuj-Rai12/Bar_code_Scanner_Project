@@ -1,4 +1,4 @@
-package com.example.offiqlresturantapp.ui.testingconnection.model
+package com.example.offiqlresturantapp.data.login.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

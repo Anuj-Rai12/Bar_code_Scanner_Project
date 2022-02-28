@@ -12,7 +12,7 @@
         tools:layout="@layout/testing_connection_fragment" >
         <argument
             android:name="bar"
-            app:argType="com.example.offiqlresturantapp.ui.testingconnection.model.TestingBarcodeConnection"
+            app:argType="com.example.offiqlresturantapp.data.login.model.TestingBarcodeConnection"
             app:nullable="true" />
         <action
             android:id="@+id/action_testingConnectionFragment_to_tableManagementOrCostEstimate"

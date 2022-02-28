@@ -1,4 +1,4 @@
-package com.example.offiqlresturantapp.ui.testingconnection.model.api
+package com.example.offiqlresturantapp.data.login.model.api
 
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Path

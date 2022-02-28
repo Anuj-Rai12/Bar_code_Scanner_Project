@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApkBody
+import com.example.offiqlresturantapp.data.login.model.api.ApkBody
 import com.example.offiqlresturantapp.utils.AllStringConst
 import com.example.offiqlresturantapp.utils.TAG
 import dagger.hilt.android.qualifiers.ApplicationContext

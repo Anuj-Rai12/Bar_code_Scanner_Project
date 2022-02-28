@@ -1,4 +1,4 @@
-package com.example.offiqlresturantapp.ui.testingconnection.model.api
+package com.example.offiqlresturantapp.data.login.model.api
 
 import com.example.offiqlresturantapp.utils.AllStringConst
 import org.simpleframework.xml.Attribute

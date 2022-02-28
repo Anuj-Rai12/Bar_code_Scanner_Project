@@ -1,7 +1,7 @@
 package com.example.offiqlresturantapp.use_case
 
-import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApKLoginPost
-import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApkBody
+import com.example.offiqlresturantapp.data.login.model.api.ApKLoginPost
+import com.example.offiqlresturantapp.data.login.model.api.ApkBody
 import com.example.offiqlresturantapp.utils.ApisResponse
 import com.example.offiqlresturantapp.utils.checkFieldValue
 import kotlinx.coroutines.flow.flow

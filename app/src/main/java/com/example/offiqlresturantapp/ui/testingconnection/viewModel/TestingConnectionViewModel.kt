@@ -2,7 +2,7 @@ package com.example.offiqlresturantapp.ui.testingconnection.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApKLoginPost
+import com.example.offiqlresturantapp.data.login.model.api.ApKLoginPost
 import com.example.offiqlresturantapp.ui.testingconnection.repo.ApiRepository
 import com.example.offiqlresturantapp.use_case.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

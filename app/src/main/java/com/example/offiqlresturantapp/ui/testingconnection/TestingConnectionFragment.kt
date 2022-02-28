@@ -13,8 +13,8 @@ import androidx.navigation.fragment.navArgs
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.dataStore.UserSoredData
 import com.example.offiqlresturantapp.databinding.TestingConnectionFragmentBinding
-import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApKLoginPost
-import com.example.offiqlresturantapp.ui.testingconnection.model.api.json.ApkLoginJsonResponse
+import com.example.offiqlresturantapp.data.login.model.api.ApKLoginPost
+import com.example.offiqlresturantapp.data.login.model.api.json.ApkLoginJsonResponse
 import com.example.offiqlresturantapp.ui.testingconnection.viewModel.TestingConnectionViewModel
 import com.example.offiqlresturantapp.utils.*
 import com.github.razir.progressbutton.bindProgressButton

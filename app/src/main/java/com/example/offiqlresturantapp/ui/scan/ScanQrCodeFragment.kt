@@ -17,7 +17,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.ScanQrLayoutBinding
 import com.example.offiqlresturantapp.ui.scan.utils.LuminosityAnalyzer
-import com.example.offiqlresturantapp.ui.testingconnection.model.TestingBarcodeConnection
+import com.example.offiqlresturantapp.data.login.model.TestingBarcodeConnection
 import com.example.offiqlresturantapp.utils.TAG
 import com.example.offiqlresturantapp.utils.changeStatusBarColor
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions

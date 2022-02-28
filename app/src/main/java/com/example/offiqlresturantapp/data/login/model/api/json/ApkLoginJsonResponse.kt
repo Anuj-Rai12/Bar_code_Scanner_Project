@@ -1,4 +1,4 @@
-package com.example.offiqlresturantapp.ui.testingconnection.model.api.json
+package com.example.offiqlresturantapp.data.login.model.api.json
 
 import com.google.gson.annotations.SerializedName
 

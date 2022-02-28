@@ -1,7 +1,7 @@
 package com.example.offiqlresturantapp.api.apkLogin
 
-import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApKLoginPost
-import com.example.offiqlresturantapp.ui.testingconnection.model.api.ApkLoginResponse
+import com.example.offiqlresturantapp.data.login.model.api.ApKLoginPost
+import com.example.offiqlresturantapp.data.login.model.api.ApkLoginResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
