@@ -6,56 +6,47 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.offiqlresturantapp.R
+import com.example.offiqlresturantapp.data.table_info.model.json.TableDetail
+import com.example.offiqlresturantapp.data.table_info.model.json.TblStatus
 import com.example.offiqlresturantapp.databinding.TableTypeItemLayoutBinding
-import com.example.offiqlresturantapp.ui.tablemange.model.TableData
-import com.example.offiqlresturantapp.utils.ItemClickListerForTableData
 import com.example.offiqlresturantapp.utils.hide
 import com.example.offiqlresturantapp.utils.show
 
-class TableManagementAdaptor(private val itemClickListerForTableData: ItemClickListerForTableData) :
-    ListAdapter<TableData, TableManagementAdaptor.ViewHolderForTableData>(diffUtil) {
-    companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<TableData>() {
-            override fun areItemsTheSame(oldItem: TableData, newItem: TableData): Boolean {
-                return oldItem.tbl == newItem.tbl
-            }
+typealias ItemTableClick = (data: TableDetail) -> Unit
 
-            override fun areContentsTheSame(oldItem: TableData, newItem: TableData): Boolean {
-                return oldItem == newItem
-            }
-        }
-    }
-
-    inner class ViewHolderForTableData(private val binding: TableTypeItemLayoutBinding) :
+class TableManagementAdaptor(private val itemClicked: ItemTableClick) :
+    ListAdapter<TableDetail, TableManagementAdaptor.TableItemViewHolder>(diffUtil) {
+    inner class TableItemViewHolder(private val binding: TableTypeItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         @SuppressLint("SetTextI18n")
         fun setData(
-            tableData: TableData,
-            itemClickListerForTableData: ItemClickListerForTableData
+            tableData: TableDetail,
+            itemClickListerForTableData: ItemTableClick
         ) {
             binding.apply {
-                tableNumberTxt.text = tableData.tbl
+                tableNumberTxt.text =
+                    tableNumberTxt.context.getString(R.string.tbl_title_id, tableData.tableNo)
 
-                when {
-                    tableData.isOpen -> {
+                when (TblStatus.valueOf(tableData.status)) {
+                    TblStatus.Free -> {
                         tblEmpty.show()
                         tblReserved.hide()
                         tblOccupiedLayout.hide()
-                        tblEmpty.text = tableData.msg
+                        tblEmpty.text = tblEmpty.context.getString(R.string.open_table)
                     }
-                    tableData.isBooked -> {
+                    TblStatus.Reserved -> {
                         tblReserved.show()
                         tblEmpty.hide()
                         tblOccupiedLayout.hide()
-                        tblReserved.text = tableData.msg
+                        tblReserved.text = TblStatus.Reserved.name
                     }
-                    tableData.isOccupied -> {
+                    TblStatus.Occupied -> {
                         tblEmpty.hide()
                         tblReserved.hide()
                         tblOccupiedLayout.show()
-                        occupiedTblMany.text = tableData.totalPeople.toString()
-                        occupiedTblTime.text = ">${tableData.totalTime}h"
+                        occupiedTblMany.text = tableData.guestNumber
+                        occupiedTblTime.text = ">${tableData.guestNumber}h"
                     }
                 }
                 root.setOnClickListener {
@@ -66,16 +57,30 @@ class TableManagementAdaptor(private val itemClickListerForTableData: ItemClickL
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderForTableData {
-        val binding =
-            TableTypeItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolderForTableData(binding)
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<TableDetail>() {
+            override fun areItemsTheSame(
+                oldItem: TableDetail,
+                newItem: TableDetail
+            ) = oldItem.status == newItem.status
+
+            override fun areContentsTheSame(
+                oldItem: TableDetail,
+                newItem: TableDetail
+            ) = oldItem == newItem
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolderForTableData, position: Int) {
-        val currData = getItem(position)
-        currData?.let {
-            holder.setData(it, itemClickListerForTableData)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TableItemViewHolder {
+        val binding =
+            TableTypeItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return TableItemViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: TableItemViewHolder, position: Int) {
+        val currItem = getItem(position)
+        currItem?.let {
+            holder.setData(it, itemClicked)
         }
     }
 

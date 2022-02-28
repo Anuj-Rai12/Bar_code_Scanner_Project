@@ -42,4 +42,7 @@
 
     <string name="pr_btn">Print</string>
     <string name="sv_btn">Save</string>
+
+
+    <string name="tbl_title_id">TBL-%s</string>
 </resources>

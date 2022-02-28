@@ -24,7 +24,7 @@
         android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="TBL-1" />
+        tools:text="@string/tbl_title_id" />
 
     <!--  Empty Site-->
 

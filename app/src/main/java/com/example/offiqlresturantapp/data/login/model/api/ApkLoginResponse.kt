@@ -1,10 +1,11 @@
 package com.example.offiqlresturantapp.data.login.model.api
 
+import com.example.offiqlresturantapp.utils.AllStringConst
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Path
 import org.simpleframework.xml.Root
 
-@Root(name = "Soap:Envelope", strict = false)
+@Root(name = AllStringConst.Soap_Envelope, strict = false)
 data class ApkLoginResponse @JvmOverloads constructor(
     @field:Element(name = "Login_Result", required = false)
     @param:Element(name = "Login_Result", required = false)

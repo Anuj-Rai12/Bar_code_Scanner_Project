@@ -13,10 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
-import com.example.offiqlresturantapp.ui.tablemange.model.TableData
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
@@ -32,6 +32,7 @@ fun AppCompatActivity.hide() {
 
 object AllStringConst {
     const val BASE_URL = "http://20.204.153.37:7051/User1/WS/CKLifeStyle/Codeunit/"
+
     //http://223.31.53.229:28360/NAVUSER/WS/HLDGRP/Codeunit/
     const val _xmlns = "http://schemas.xmlsoap.org/soap/envelope/"
     const val _xmls = "urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI"
@@ -39,8 +40,26 @@ object AllStringConst {
     private const val PASSWORD = "Test@123"
     const val PREFERENCES_USER = "User_INFO"
     const val base = "$userName:$PASSWORD"
+    const val End_point = "LoginAndGetMasterAPI"
+    const val Envelope = "Envelope"
+    const val Soap_Envelope = "Soap:Envelope"
     var authHeader = "Basic ${genToken()}"
+
+    enum class API {
+        RESTAURANT
+    }
 }
+
+fun View.showSandbar(msg: String, length: Int = Snackbar.LENGTH_SHORT, color: Int? = null) {
+    val snackBar = Snackbar.make(this, msg, length)
+    color?.let {
+        snackBar.view.setBackgroundColor(it)
+    }
+    snackBar.show()
+}
+
+
+
 
 private fun genToken(): String =
     Base64.encodeToString(AllStringConst.base.toByteArray(), Base64.NO_WRAP)
@@ -142,8 +161,7 @@ fun Activity.checkCameraPermission() =
 
 
 typealias ItemClickListerForTableOrCost = (selection: SelectionDataClass) -> Unit
-typealias ItemClickListerForTableData = (tableData: TableData) -> Unit
 typealias ItemClickListerForListOfFood = (foodItem: FoodItem) -> Unit
-typealias LumaListener = (luma: Double) -> Unit
+typealias LumaListener = (lum: Double) -> Unit
 typealias ImageListener = (imageInput: InputImage) -> Unit
 //typealias ItemClickListerForFoodSelected = (foodItemSelected: FoodItemSelected) -> Unit

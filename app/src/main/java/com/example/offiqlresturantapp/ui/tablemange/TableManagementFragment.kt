@@ -1,98 +1,73 @@
 package com.example.offiqlresturantapp.ui.tablemange
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.offiqlresturantapp.R
+import com.example.offiqlresturantapp.data.table_info.model.json.TableInformationJsonResponse
 import com.example.offiqlresturantapp.databinding.TableMangmentLayoutBinding
 import com.example.offiqlresturantapp.ui.tablemange.adaptor.TableManagementAdaptor
-import com.example.offiqlresturantapp.ui.tablemange.model.TableData
-import com.example.offiqlresturantapp.utils.TAG
-import com.example.offiqlresturantapp.utils.changeStatusBarColor
+import com.example.offiqlresturantapp.ui.tablemange.view_model.TableManagementViewModel
+import com.example.offiqlresturantapp.utils.*
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
     private lateinit var binding: TableMangmentLayoutBinding
     private lateinit var tableManagementAdaptor: TableManagementAdaptor
-    private val args:TableManagementFragmentArgs by navArgs()
+    private val args: TableManagementFragmentArgs by navArgs()
+    private val viewModel: TableManagementViewModel by viewModels()
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.semi_white_color)
         binding = TableMangmentLayoutBinding.bind(view)
         binding.tableInfoDetail.text = args.storeName
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { str ->
+                binding.root.showSandbar(
+                    str,
+                    Snackbar.LENGTH_INDEFINITE,
+                    requireActivity().getColorInt(R.color.color_red)
+                )
+            }
+        }
         setRecycleView()
         setUpData()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun setUpData() {
-        val list = listOf(
-            TableData(
-                msg = getString(R.string.open_table),
-                tbl = "TBL - 1"
-            ),
-            TableData(
-                isOpen = false,
-                isOccupied = true,
-                totalPeople = 4,
-                totalTime = 1,
-                msg = null,
-                tbl = "TBL - 2"
-            ),
-            TableData(
-                isOpen = false,
-                msg = "Reserved\n3:00PM",
-                tbl = "TBL - 3",
-                isBooked = true
-            ),
-            TableData(
-                msg = getString(R.string.open_table),
-                tbl = "TBL - 4"
-            ),
-            TableData(
-                isOpen = false,
-                isOccupied = true,
-                totalPeople = 3,
-                totalTime = 2,
-                msg = null,
-                tbl = "TBL - 5"
-            ),
-            TableData(
-                isOpen = false,
-                msg = "Reserved\n6:00PM",
-                tbl = "TBL - 6",
-                isBooked = true
-            ),
-            TableData(
-                msg = getString(R.string.open_table),
-                tbl = "TBL - 7"
-            ),
-            TableData(
-                isOccupied = true,
-                totalPeople = 1,
-                totalTime = 3,
-                msg = null,
-                isOpen = false,
-                tbl = "TBL - 8"
-
-            ),
-            TableData(
-                msg = "Reserved\n9:00PM",
-                tbl = "TBL - 9",
-                isOpen = false,
-                isBooked = true
-            ),
-        )
-
-        tableManagementAdaptor.submitList(list)
-
+        viewModel.tblInfo.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> Log.i(TAG, "setUpData: ${it.exception?.localizedMessage}")
+                is ApisResponse.Loading -> Log.i(TAG, "setUpData: ${it.data.toString()}")
+                is ApisResponse.Success -> {
+                    it.data?.let {cls->
+                        (cls as TableInformationJsonResponse?)?.let { res ->
+                            binding.tableInfoDetail.append("\nTotal Table Count ${res.totalTableCount},")
+                            tableManagementAdaptor.notifyDataSetChanged()
+                            tableManagementAdaptor.submitList(res.tableDetails)
+                        } ?: binding.root.showSandbar(
+                            "Error the Get Data",
+                            Snackbar.LENGTH_LONG,
+                            requireActivity().getColorInt(R.color.color_red)
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun setRecycleView() {
@@ -101,7 +76,10 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             tableManagementAdaptor = TableManagementAdaptor {
                 Log.i(TAG, "setRecycleView: $it")
-                val action=TableManagementFragmentDirections.actionTableManagementFragmentToConfirmOderFragment(null)
+                val action =
+                    TableManagementFragmentDirections.actionTableManagementFragmentToConfirmOderFragment(
+                        null
+                    )
                 findNavController().navigate(action)
             }
             adapter = tableManagementAdaptor

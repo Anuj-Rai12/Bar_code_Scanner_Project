@@ -6,7 +6,7 @@ import org.simpleframework.xml.Element
 import org.simpleframework.xml.Path
 import org.simpleframework.xml.Root
 
-@Root(name = "Envelope", strict = false)
+@Root(name = AllStringConst.Envelope, strict = false)
 data class ApKLoginPost @JvmOverloads constructor(
     @field:Element(name = "Login", required = false)
     @param:Element(name = "Login", required = false)
