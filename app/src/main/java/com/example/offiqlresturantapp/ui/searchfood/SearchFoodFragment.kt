@@ -59,6 +59,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         binding.searchBoxEd.doOnTextChanged { text, _, _, _ ->
             Log.i(TAG, "onViewCreated: $text \n ${text?.length}")
             if (text != null && text.isNotEmpty()) {
+                viewModel.searchQuery("%$text%")
                 binding.crossBtnImg.visible()
             } else {
                 binding.crossBtnImg.invisible()
@@ -132,7 +133,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
                             listOfFoodItemToSearchAdaptor.submitList(res)
                         }
                     } ?: showSnackBar(
-                        "UnKnow Error Found!!",
+                        "No Data Found!!",
                         R.color.color_red,
                         Snackbar.LENGTH_LONG
                     )

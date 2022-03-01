@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ItemMasterDao {
 
-    @Query("Select * from ItemMaster_tbl")
+    @Query("Select * from ItemMaster_tbl order by salePrice asc")
     fun getAllItem(): Flow<List<ItemMaster>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllItem(articles: List<ItemMaster>)
 
 
-    @Query("Select *From ItemMaster_tbl where itemName Like:searchQuery or itemDescription Like:searchQuery or itemCategory Like :searchQuery")
+    @Query("Select *From ItemMaster_tbl where itemName Like:searchQuery or itemDescription Like:searchQuery or itemCategory Like :searchQuery order by salePrice desc")
     fun searchResult(searchQuery: String): Flow<List<ItemMaster>>
 
 

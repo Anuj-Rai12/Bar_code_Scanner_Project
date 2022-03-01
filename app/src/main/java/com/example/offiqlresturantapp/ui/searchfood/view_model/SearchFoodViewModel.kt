@@ -51,6 +51,19 @@ class SearchFoodViewModel @Inject constructor(
 
     }
 
+
+    fun searchQuery(src: String) {
+        viewModelScope.launch {
+            repository.getSearchFoodItem(src).collectLatest { res ->
+                if (res.data?.isNullOrEmpty()==true) {
+                    _fdInfo.postValue(ApisResponse.Success(null))
+                } else {
+                    _fdInfo.postValue(res)
+                }
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()

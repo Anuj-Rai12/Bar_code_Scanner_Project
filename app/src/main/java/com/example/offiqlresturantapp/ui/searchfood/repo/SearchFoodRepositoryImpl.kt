@@ -1,17 +1,17 @@
 package com.example.offiqlresturantapp.ui.searchfood.repo
 
 import android.app.Application
+import android.util.Log
 import androidx.room.withTransaction
 import com.example.offiqlresturantapp.api.master_sync.ItemMasterSyncApi
 import com.example.offiqlresturantapp.data.item_master_sync.ItemMasterSyncRequest
 import com.example.offiqlresturantapp.data.item_master_sync.TableInformation
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMethodSyncJsonResponse
 import com.example.offiqlresturantapp.db.RoomDataBaseInstance
-import com.example.offiqlresturantapp.utils.buildApi
-import com.example.offiqlresturantapp.utils.deserializeFromJson
-import com.example.offiqlresturantapp.utils.isNetworkAvailable
-import com.example.offiqlresturantapp.utils.networkBoundResource
+import com.example.offiqlresturantapp.utils.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -45,6 +45,13 @@ class SearchFoodRepositoryImpl @Inject constructor(
             application.isNetworkAvailable()
         }
     )
+
+    override fun getSearchFoodItem(query: String) = channelFlow {
+        dao.searchResult(query).collectLatest {
+            Log.i(TAG, "getSearchFoodItem: $it")
+            send(ApisResponse.Success(it))
+        }
+    }
 
 
 /*emit(ApisResponse.Loading("Please Wait.."))
