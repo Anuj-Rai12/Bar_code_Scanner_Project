@@ -20,6 +20,7 @@ class TblRepositoryImpl @Inject constructor(retrofit: Retrofit) : TableRepositor
 
     override fun getTblInformation(storeId: String, type: String) = flow {
         emit(ApisResponse.Loading("Please Wait.."))
+        kotlinx.coroutines.delay(1000)
         val data = try {
             val info =
                 api.getTblInformation(TableInformationRequest(TableInformation(storeId, type)))

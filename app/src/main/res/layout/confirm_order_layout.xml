@@ -266,6 +266,7 @@
         android:layout_marginStart="9dp"
         android:layout_marginBottom="22dp"
         android:layout_weight="1"
+        android:visibility="gone"
         android:background="@drawable/modify_order_btn_border"
         android:fontFamily="@font/roboto_medium"
         android:text="@string/oder_del"

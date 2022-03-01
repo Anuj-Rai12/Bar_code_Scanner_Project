@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.ConfirmOrderLayoutBinding
 import com.example.offiqlresturantapp.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
-import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
+import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -27,9 +27,10 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private lateinit var binding: ConfirmOrderLayoutBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
-    private var list = mutableListOf<FoodItem>()
-    private var flagForViewDeals: Boolean = false
-    private var listOfSelectedFoodItemForViewDeals = mutableListOf<FoodItem>()
+    private var list = mutableListOf<ItemMasterFoodItem>()
+
+    //private var flagForViewDeals: Boolean = false
+    private var listOfSelectedFoodItemForViewDeals = mutableListOf<ItemMasterFoodItem>()
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ConfirmOderFragmentArgs by navArgs()
 
@@ -44,97 +45,99 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         }
         setRecycle()
         setCallBack()
-        //Temporal Showing Data
-        binding.listOfItemRecycleView.show()
-        binding.orderRecycleViewHint.hide()
-        if (args.list == null || args.list?.foodList.isNullOrEmpty()) {
-            setData()
-        } else {
-            var getotal = 0
+
+        if (args.list != null && !args.list?.foodList.isNullOrEmpty()) {
+            var grandTotal = 0
             args.list?.foodList?.forEach { it ->
-                getotal += it.foodAmt
+                grandTotal += it.foodAmt
                 list.add(it)
             }
-/*                        val data=OrderCollection(
-                                foodItem = args.list?.foodList!!,
-                                tableId = 1,
-                                totalPeople = 4,
-                                bookingTime = "3:00PM",
-                                grandTotal = getotal
-                        )
-            Log.i(TAG, "onViewCreated: ${serializeToJson(data)}")*/
+
             if (!list.isNullOrEmpty()) {
+                binding.orderRecycleViewHint.hide()
+                binding.listOfItemRecycleView.show()
                 confirmOderFragmentAdaptor.submitList(list)
-                binding.totalOrderAmt.text = "$Rs_Symbol $getotal"
+                binding.totalOrderAmt.text = "$Rs_Symbol $grandTotal"
             }
+        } else {
+            initial()
         }
         binding.viewOfferBtn.setOnClickListener {
-            if (!list.isNullOrEmpty() && listOfSelectedFoodItemForViewDeals.isNullOrEmpty() && !flagForViewDeals) {
-                setRecycle(true)
+            /*if (!list.isNullOrEmpty() && listOfSelectedFoodItemForViewDeals.isNullOrEmpty() && !flagForViewDeals) {
+                initial()
+                //setRecycle(true)
                 flagForViewDeals = true
-                setData()
+                //setData()
             } else if (!listOfSelectedFoodItemForViewDeals.isNullOrEmpty()) {
                 Log.i(TAG, "onViewCreated: $listOfSelectedFoodItemForViewDeals")
             } else {
-                setRecycle()
-                setData()
-                flagForViewDeals=false
-            }
+                /*setRecycle()
+                setData()*/
+                initial()
+                flagForViewDeals = false
+            }*/
+            
         }
 
         binding.restItemBtn.setOnClickListener {
-            binding.orderRecycleViewHint.show()
-            binding.listOfItemRecycleView.hide()
-            list.clear()
-            binding.totalOrderAmt.text = "$Rs_Symbol 0"
+            initial()
         }
 
         binding.searchBoxTxt.setOnClickListener {
             //New Fragment
             val action =
-                ConfirmOderFragmentDirections.actionConfirmOderFragmentToSearchFoodFragment()
+                ConfirmOderFragmentDirections.actionConfirmOderFragmentToSearchFoodFragment(args.tbl)
             findNavController().navigate(action)
         }
     }
 
-    private fun setData() {
-        list = mutableListOf(
-            FoodItem(
-                foodName = "Chloe Bhature",
-                foodAmt = 125,
-                foodPrice = 125,
-                foodQTY = 1,
-                offerDesc = null,
-                foodOffer = null,
-            ),
-            FoodItem(
-                foodName = "Chloe Samosa Chart",
-                foodAmt = 13,
-                foodPrice = 13,
-                foodQTY = 2,
-                offerDesc = null,
-                foodOffer = null,
-            ),
-            FoodItem(
-                foodName = "Chloe Kulcha",
-                foodAmt = 15,
-                foodPrice = 15,
-                foodQTY = 3,
-                offerDesc = null,
-                foodOffer = null,
-            ),
-            FoodItem(
-                foodName = "Chloe (Bowl)",
-                foodAmt = 135,
-                foodPrice = 135,
-                foodQTY = 4,
-                offerDesc = null,
-                foodOffer = null,
-            )
-        )
+    @SuppressLint("SetTextI18n")
+    private fun initial() {
+        binding.orderRecycleViewHint.show()
+        binding.listOfItemRecycleView.hide()
+        list.clear()
+        binding.totalOrderAmt.text = "$Rs_Symbol 0"
+    }
+
+    /*private fun setData() {
+          list = mutableListOf(
+              FoodItem(
+                  foodName = "Chloe Bhature",
+                  foodAmt = 125,
+                  foodPrice = 125,
+                  foodQTY = 1,
+                  offerDesc = null,
+                  foodOffer = null,
+              ),
+              FoodItem(
+                  foodName = "Chloe Samosa Chart",
+                  foodAmt = 13,
+                  foodPrice = 13,
+                  foodQTY = 2,
+                  offerDesc = null,
+                  foodOffer = null,
+              ),
+              FoodItem(
+                  foodName = "Chloe Kulcha",
+                  foodAmt = 15,
+                  foodPrice = 15,
+                  foodQTY = 3,
+                  offerDesc = null,
+                  foodOffer = null,
+              ),
+              FoodItem(
+                  foodName = "Chloe (Bowl)",
+                  foodAmt = 135,
+                  foodPrice = 135,
+                  foodQTY = 4,
+                  offerDesc = null,
+                  foodOffer = null,
+              )
+          )
 
         confirmOderFragmentAdaptor.submitList(list)
     }
+*/
 
     private fun setCallBack() {
         callback = object :

@@ -29,7 +29,7 @@ class SearchFoodRepositoryImpl @Inject constructor(
             dao.getAllItem()
         },
         fetch = {
-            delay(2000)
+            delay(500)
             val info = api.getItemMasterSync(ItemMasterSyncRequest(TableInformation(stateNo)))
             info.body()?.apkLoginResult?.value?.let {
                 return@let deserializeFromJson<ItemMethodSyncJsonResponse>(it)

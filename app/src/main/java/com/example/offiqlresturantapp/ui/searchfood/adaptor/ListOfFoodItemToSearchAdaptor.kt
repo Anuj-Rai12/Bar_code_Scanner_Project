@@ -83,15 +83,23 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                         foodItem.foodAmt += it.price
                     }
                 }*/
-                foodItem.foodAmt = foodItem.foodQty
-                itemClickListerForListOfFood(foodItem)
+                if (foodItem.foodQty > 0) {
+                    foodItem.foodAmt *= foodItem.foodQty
+                    itemClickListerForListOfFood(foodItem)
+                } else {
+                    it.context.msg("Select Food Qty")
+                }
             }
 
             binding.btnWithoutOffer.setOnClickListener {
                 //foodItem.addWithOffer = false
                 //foodItem.offerDesc = null
-                foodItem.foodAmt = foodItem.salePrice.toInt() * foodItem.foodQty
-                itemClickListerForListOfFood(foodItem)
+                if (foodItem.foodQty > 0) {
+                    foodItem.foodAmt = foodItem.salePrice.toInt() * foodItem.foodQty
+                    itemClickListerForListOfFood(foodItem)
+                } else {
+                    it.context.msg("Select Food Qty")
+                }
             }
 
             binding.root.setOnClickListener {

@@ -12,24 +12,30 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.ListOfFoodItemSelectedBinding
-import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
-import com.example.offiqlresturantapp.utils.ItemClickListerForListOfFood
+import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.utils.Rs_Symbol
+import com.example.offiqlresturantapp.utils.checkFieldValue
 import com.example.offiqlresturantapp.utils.hide
 import com.example.offiqlresturantapp.utils.show
 
 class ConfirmOderFragmentAdaptor(
-    private val itemClickListerForFoodSelected: (foodItem:FoodItem)->Unit,
+    private val itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
     private val viewDeals: () -> Boolean
 ) :
-    ListAdapter<FoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
+    ListAdapter<ItemMasterFoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<FoodItem>() {
-            override fun areItemsTheSame(oldItem: FoodItem, newItem: FoodItem): Boolean {
-                return oldItem.foodName == oldItem.foodName
+        val diffUtil = object : DiffUtil.ItemCallback<ItemMasterFoodItem>() {
+            override fun areItemsTheSame(
+                oldItem: ItemMasterFoodItem,
+                newItem: ItemMasterFoodItem
+            ): Boolean {
+                return oldItem.itemMaster.id == oldItem.itemMaster.id
             }
 
-            override fun areContentsTheSame(oldItem: FoodItem, newItem: FoodItem): Boolean {
+            override fun areContentsTheSame(
+                oldItem: ItemMasterFoodItem,
+                newItem: ItemMasterFoodItem
+            ): Boolean {
                 return oldItem == newItem
             }
         }
@@ -43,14 +49,16 @@ class ConfirmOderFragmentAdaptor(
         @RequiresApi(Build.VERSION_CODES.M)
         @SuppressLint("SetTextI18n")
         fun setData(
-            foodItem: FoodItem,
-            itemClickListerForFoodSelected: (foodItem:FoodItem)->Unit,
+            foodItem: ItemMasterFoodItem,
+            itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
             viewDeals: () -> Boolean
         ) {
             binding.apply {
                 foodItemName.apply {
                     setBg(foodItem.bg)
-                    text = foodItem.foodName
+                    text =
+                        if (!checkFieldValue(foodItem.itemMaster.itemName)) foodItem.itemMaster.itemName
+                        else foodItem.itemMaster.itemDescription
                 }
                 if (viewDeals()) {
                     btnClickViewDetail.show()
@@ -71,11 +79,11 @@ class ConfirmOderFragmentAdaptor(
 
                 qtyOfFood.apply {
                     setBg(foodItem.bg)
-                    text = foodItem.foodQTY.toString()
+                    text = foodItem.foodQty.toString()
                 }
                 rateOfFood.apply {
                     setBg(foodItem.bg)
-                    text = "$Rs_Symbol ${foodItem.foodPrice}"
+                    text = "$Rs_Symbol ${foodItem.itemMaster.salePrice}"
                 }
                 amtOfFoodTv.apply {
                     setBg(foodItem.bg)

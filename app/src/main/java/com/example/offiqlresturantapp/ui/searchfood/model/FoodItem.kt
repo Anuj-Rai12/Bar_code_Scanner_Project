@@ -1,6 +1,7 @@
 package com.example.offiqlresturantapp.ui.searchfood.model
 
 import android.os.Parcelable
+import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
 import com.example.offiqlresturantapp.utils.listOfBg
 import com.example.offiqlresturantapp.utils.rand
 import kotlinx.parcelize.Parcelize
@@ -14,13 +15,22 @@ data class FoodItem(
     var foodQTY: Int = 1,
     var foodAmt: Int,
     var offerDesc: List<OfferDesc>?,
-    val bg:Int= listOfBg[rand()],
+    val bg: Int = listOfBg[rand()],
     //var addWithOffer: Boolean = true
 ) : Parcelable
 
 @Parcelize
+data class ItemMasterFoodItem(
+    val itemMaster: ItemMaster,
+    var foodQty: Int,
+    var foodAmt: Int,
+    val bg: Int = listOfBg.random(),
+) : Parcelable
+
+
+@Parcelize
 data class FoodItemList(
-    val foodList: List<FoodItem>
+    val foodList: List<ItemMasterFoodItem>
 ) : Parcelable
 
 

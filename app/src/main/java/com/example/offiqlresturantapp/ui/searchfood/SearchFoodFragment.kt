@@ -11,12 +11,14 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
 import com.example.offiqlresturantapp.databinding.SearchFoodItemLayoutBinding
 import com.example.offiqlresturantapp.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
+import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.offiqlresturantapp.utils.*
 import com.google.android.material.snackbar.Snackbar
@@ -26,9 +28,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
     private lateinit var binding: SearchFoodItemLayoutBinding
     private lateinit var listOfFoodItemToSearchAdaptor: ListOfFoodItemToSearchAdaptor
-    private var listOfFoodItem = mutableListOf<ItemMaster>()
+    private var listOfFoodItem = mutableListOf<ItemMasterFoodItem>()
     private var flag: Boolean = false
     private val viewModel: SearchFoodViewModel by viewModels()
+    private val args: SearchFoodFragmentArgs by navArgs()
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -66,7 +69,6 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
             }
         }
 
-
         setRecycleView()
         setData()
 
@@ -103,7 +105,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         Log.i(TAG, "chooseOptionBackScreenOption: $listOfFoodItem\n\n And Flag Value is -> $flag")
         if (flag && !listOfFoodItem.isNullOrEmpty()) {
             val action = SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
-                FoodItemList(listOf())
+                FoodItemList(listOfFoodItem), args.tbl
             )
             findNavController().navigate(action)
         } else if (flag) {
@@ -143,18 +145,30 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun setRecycleView() {
         binding.listOfFoodItem.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
             listOfFoodItemToSearchAdaptor = ListOfFoodItemToSearchAdaptor {
                 Log.i(TAG, "setRecycleView: $it")
-                activity?.msg("$it")
-                if (listOfFoodItem.contains(it)) {
+
+                val obj = ItemMasterFoodItem(it, it.foodQty, it.foodAmt)
+                val msg = if (!checkFieldValue(it.itemName)) it.itemName else it.itemDescription
+                showSnackBar(msg, R.color.green_color, Snackbar.LENGTH_SHORT)
+
+                val item = listOfFoodItem.find { res -> res.itemMaster.id == obj.itemMaster.id }
+                if (item == null) {
+                    listOfFoodItem.add(obj)
+                } else {
+                    listOfFoodItem.remove(item)
+                    listOfFoodItem.add(obj)
+                }
+                /*if (listOfFoodItem.contains(it)) {
                     listOfFoodItem.remove(it)
                     listOfFoodItem.add(it)
                 } else
-                    listOfFoodItem.add(it)
+                    listOfFoodItem.add(it)*/
             }
             flag = true
             adapter = listOfFoodItemToSearchAdaptor
