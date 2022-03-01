@@ -19,7 +19,7 @@ import com.example.offiqlresturantapp.utils.hide
 import com.example.offiqlresturantapp.utils.show
 
 class ConfirmOderFragmentAdaptor(
-    private val itemClickListerForFoodSelected: ItemClickListerForListOfFood,
+    private val itemClickListerForFoodSelected: (foodItem:FoodItem)->Unit,
     private val viewDeals: () -> Boolean
 ) :
     ListAdapter<FoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
@@ -44,7 +44,7 @@ class ConfirmOderFragmentAdaptor(
         @SuppressLint("SetTextI18n")
         fun setData(
             foodItem: FoodItem,
-            itemClickListerForFoodSelected: ItemClickListerForListOfFood,
+            itemClickListerForFoodSelected: (foodItem:FoodItem)->Unit,
             viewDeals: () -> Boolean
         ) {
             binding.apply {

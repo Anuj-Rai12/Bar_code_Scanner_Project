@@ -1,5 +1,6 @@
 package com.example.offiqlresturantapp.ui.searchfood
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -8,23 +9,27 @@ import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.offiqlresturantapp.R
+import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
+import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMethodSyncJsonResponse
 import com.example.offiqlresturantapp.databinding.SearchFoodItemLayoutBinding
 import com.example.offiqlresturantapp.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
-import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
-import com.example.offiqlresturantapp.ui.searchfood.model.OfferDesc
+import com.example.offiqlresturantapp.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.offiqlresturantapp.utils.*
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
     private lateinit var binding: SearchFoodItemLayoutBinding
     private lateinit var listOfFoodItemToSearchAdaptor: ListOfFoodItemToSearchAdaptor
-    private var listOfFoodItem = mutableListOf<FoodItem>()
+    private var listOfFoodItem = mutableListOf<ItemMaster>()
     private var flag: Boolean = false
+    private val viewModel: SearchFoodViewModel by viewModels()
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -37,6 +42,14 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         savedInstanceState?.let { flag = it.getBoolean("flag") }
         requireActivity().changeStatusBarColor(R.color.semi_white_color)
         binding = SearchFoodItemLayoutBinding.bind(view)
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { str ->
+                showSnackBar(str, color = R.color.color_red)
+            }
+        }
+
+
         onBackPress()
         binding.backArrowImg.setOnClickListener {
             chooseOptionBackScreenOption()
@@ -65,11 +78,32 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         }.handleOnBackPressed()
     }
 
+
+    private fun hideOrShow(msg: String?) {
+        msg?.let {
+            binding.pbLayout.root.show()
+            binding.pbLayout.titleTxt.text = it
+        } ?: binding.pbLayout.root.hide()
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_LONG) {
+        binding.root.showSandbar(
+            msg,
+            length,
+            requireActivity().getColorInt(color)
+        ) {
+            return@showSandbar "OK"
+        }
+    }
+
+
     private fun chooseOptionBackScreenOption() {
         Log.i(TAG, "chooseOptionBackScreenOption: $listOfFoodItem\n\n And Flag Value is -> $flag")
         if (flag && !listOfFoodItem.isNullOrEmpty()) {
             val action = SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
-                FoodItemList(listOfFoodItem)
+                FoodItemList(listOf())
             )
             findNavController().navigate(action)
         } else if (flag) {
@@ -77,8 +111,38 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun setData() {
-        val list = listOf(
+
+        viewModel.fdInfo.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    hideOrShow(null)
+                    it.exception?.localizedMessage?.let { e ->
+                        showSnackBar(e, R.color.color_red, Snackbar.LENGTH_INDEFINITE)
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    hideOrShow(it.data?.toString())
+                }
+                is ApisResponse.Success -> {
+                    hideOrShow(null)
+                    it.data?.let { item ->
+                        (item as ItemMethodSyncJsonResponse).let { res ->
+                            listOfFoodItemToSearchAdaptor.notifyDataSetChanged()
+                            listOfFoodItemToSearchAdaptor.submitList(res.itemMaster)
+                        }
+                    } ?: showSnackBar(
+                        "UnKnow Error Found!!",
+                        R.color.color_red,
+                        Snackbar.LENGTH_INDEFINITE
+                    )
+                }
+            }
+        }
+
+        /*val list = listOf(
             FoodItem(
                 foodName = "Chloe Bhature",
                 foodPrice = 135,
@@ -123,9 +187,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
                 foodOffer = null,
                 offerDesc = null
             )
-        )
-
-        listOfFoodItemToSearchAdaptor.submitList(list)
+        )*/
     }
 
     private fun setRecycleView() {
