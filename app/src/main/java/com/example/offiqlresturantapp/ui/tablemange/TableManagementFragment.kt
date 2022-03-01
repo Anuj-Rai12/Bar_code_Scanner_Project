@@ -39,7 +39,9 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
                     str,
                     Snackbar.LENGTH_INDEFINITE,
                     requireActivity().getColorInt(R.color.color_red)
-                )
+                ) {
+                    return@showSandbar "OK"
+                }
             }
         }
         setRecycleView()
@@ -51,10 +53,22 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
     private fun setUpData() {
         viewModel.tblInfo.observe(viewLifecycleOwner) {
             when (it) {
-                is ApisResponse.Error -> Log.i(TAG, "setUpData: ${it.exception?.localizedMessage}")
-                is ApisResponse.Loading -> Log.i(TAG, "setUpData: ${it.data.toString()}")
+                is ApisResponse.Error -> {
+                    hideOrShowProgress(null)
+                    val exp = it.exception?.localizedMessage
+                    binding.root.showSandbar(
+                        exp ?: "UnKnown Error",
+                        Snackbar.LENGTH_INDEFINITE,
+                        requireActivity().getColorInt(R.color.color_red)
+                    ) {
+                        return@showSandbar "OK"
+                    }
+                    Log.i(TAG, "setUpData: $exp")
+                }
+                is ApisResponse.Loading -> hideOrShowProgress(it.data?.toString())
                 is ApisResponse.Success -> {
-                    it.data?.let {cls->
+                    hideOrShowProgress(null)
+                    it.data?.let { cls ->
                         (cls as TableInformationJsonResponse?)?.let { res ->
                             binding.tableInfoDetail.append("\nTotal Table Count ${res.totalTableCount},")
                             tableManagementAdaptor.notifyDataSetChanged()
@@ -69,6 +83,15 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
             }
         }
     }
+
+    private fun hideOrShowProgress(msg: String?) {
+        msg?.let {
+            binding.pbLayout.root.show()
+            binding.pbLayout.titleTxt.text = it
+            return@let
+        } ?: binding.pbLayout.root.hide()
+    }
+
 
     private fun setRecycleView() {
         binding.totalTableRecycler.apply {

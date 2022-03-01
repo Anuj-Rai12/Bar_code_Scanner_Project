@@ -3,6 +3,7 @@ package com.example.offiqlresturantapp.utils
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.util.Base64
 import android.view.View
@@ -50,15 +51,26 @@ object AllStringConst {
     }
 }
 
-fun View.showSandbar(msg: String, length: Int = Snackbar.LENGTH_SHORT, color: Int? = null) {
+fun View.showSandbar(
+    msg: String,
+    length: Int = Snackbar.LENGTH_SHORT,
+    color: Int? = null,
+    snackBarList: SnackBarListener? = null
+) {
     val snackBar = Snackbar.make(this, msg, length)
+
+    snackBarList?.let {
+        snackBar.setAction(it(null)) {
+            it(null)
+            snackBar.dismiss()
+        }
+        snackBar.setActionTextColor(Color.WHITE)
+    }
     color?.let {
         snackBar.view.setBackgroundColor(it)
     }
     snackBar.show()
 }
-
-
 
 
 private fun genToken(): String =
@@ -164,4 +176,5 @@ typealias ItemClickListerForTableOrCost = (selection: SelectionDataClass) -> Uni
 typealias ItemClickListerForListOfFood = (foodItem: FoodItem) -> Unit
 typealias LumaListener = (lum: Double) -> Unit
 typealias ImageListener = (imageInput: InputImage) -> Unit
+typealias SnackBarListener = (msg: String?) -> String?
 //typealias ItemClickListerForFoodSelected = (foodItemSelected: FoodItemSelected) -> Unit

@@ -1,29 +1,25 @@
 package com.example.offiqlresturantapp.ui.splash
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.offiqlresturantapp.R
-import com.example.offiqlresturantapp.dataStore.UserSoredData
-import com.example.offiqlresturantapp.databinding.SplashSrcLayoutBinding
-import com.example.offiqlresturantapp.data.login.model.api.ApKLoginPost
 import com.example.offiqlresturantapp.data.login.model.api.json.ApkLoginJsonResponse
+import com.example.offiqlresturantapp.databinding.SplashSrcLayoutBinding
 import com.example.offiqlresturantapp.ui.testingconnection.viewModel.TestingConnectionViewModel
-import com.example.offiqlresturantapp.utils.ApisResponse
-import com.example.offiqlresturantapp.utils.TAG
-import com.example.offiqlresturantapp.utils.checkFieldValue
-import com.example.offiqlresturantapp.utils.msg
+import com.example.offiqlresturantapp.utils.*
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import javax.inject.Inject
 
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
@@ -34,15 +30,32 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
         AnimationUtils.loadAnimation(requireActivity(), R.anim.bounc_animation)
     }
 
-    @Inject
-    lateinit var userSoredData: UserSoredData
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = SplashSrcLayoutBinding.bind(view)
         binding.logoFileId3.animation = animation
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            var count=0
+            it.getContentIfNotHandled()?.let { str ->
+                binding.root.showSandbar(
+                    str,
+                    Snackbar.LENGTH_INDEFINITE,
+                    requireActivity().getColorInt(R.color.color_red)
+                ) {
+                    if (count>0){
+                        nextFrag(null)
+                    }
+                    count++
+                    return@showSandbar "OK"
+                }
+            }
+        }
         animation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
-                Log.i(TAG, "onAnimationStart: strart")
+                Log.i(TAG, "onAnimationStart: Start")
             }
 
             override fun onAnimationEnd(animation: Animation?) {
@@ -50,7 +63,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
-                Log.i(TAG, "onAnimationStart: strart")
+                Log.i(TAG, "onAnimationStart: Repeat")
             }
 
         })
@@ -58,21 +71,13 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
     }
 
     private fun doAuthTask() {
-        userSoredData.read.asLiveData().observe(viewLifecycleOwner) {
-            if (it != null && !checkFieldValue(it.userID!!)) {
-                val data = ApKLoginPost(apK = it)
-                checkApiResponse(data)
-            } else {
-                nextFrag(null)
-            }
-        }
-    }
-
-    private fun checkApiResponse(data: ApKLoginPost) {
-        viewModel.getApkLoginResponse(data, true).observe(viewLifecycleOwner) {
+        viewModel.apk.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
-                    requireActivity().msg("${it.exception?.localizedMessage}")
+                    it.exception?.localizedMessage?.let { exp ->
+                        if (!checkFieldValue(exp))
+                        requireActivity().msg(exp)
+                    }
                     nextFrag(null)
                 }
                 is ApisResponse.Loading -> {
@@ -89,11 +94,14 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
         }
     }
 
+
     private fun nextFrag(string: String?) {
         lifecycleScope.launchWhenStarted {
             delay(1000)
             val action = if (string == null) {
-                SplashScreenFragmentDirections.actionSplashScreenFragmentToTestingConnectionFragment(null)
+                SplashScreenFragmentDirections.actionSplashScreenFragmentToTestingConnectionFragment(
+                    null
+                )
             } else {
                 SplashScreenFragmentDirections.actionSplashScreenFragmentToTableManagementOrCostEstimate(
                     string

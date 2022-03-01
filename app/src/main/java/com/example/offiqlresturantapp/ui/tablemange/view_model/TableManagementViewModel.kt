@@ -34,7 +34,7 @@ class TableManagementViewModel @Inject constructor(
             viewModelScope.launch {
                 userSoredData.read.collectLatest {
                     if (checkFieldValue(it.storeNo.toString())) {
-                        _event.postValue(Events("Internal Error Login Again ${it.storeNo}"))
+                        _event.postValue(Events("Internal Error \nTry Login Again ${it.storeNo}"))
                     } else {
                         repository.getTblInformation(it.storeNo!!).collectLatest { res ->
                             _tblInfo.postValue(res)

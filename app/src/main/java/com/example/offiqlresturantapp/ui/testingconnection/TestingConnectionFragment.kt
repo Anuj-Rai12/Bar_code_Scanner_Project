@@ -11,23 +11,19 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.offiqlresturantapp.R
-import com.example.offiqlresturantapp.dataStore.UserSoredData
-import com.example.offiqlresturantapp.databinding.TestingConnectionFragmentBinding
-import com.example.offiqlresturantapp.data.login.model.api.ApKLoginPost
 import com.example.offiqlresturantapp.data.login.model.api.json.ApkLoginJsonResponse
+import com.example.offiqlresturantapp.databinding.TestingConnectionFragmentBinding
 import com.example.offiqlresturantapp.ui.testingconnection.viewModel.TestingConnectionViewModel
 import com.example.offiqlresturantapp.utils.*
 import com.github.razir.progressbutton.bindProgressButton
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment) {
     private lateinit var binding: TestingConnectionFragmentBinding
     private val viewModel: TestingConnectionViewModel by viewModels()
 
-    @Inject
-    lateinit var userSoredData: UserSoredData
 
     private val args: TestingConnectionFragmentArgs by navArgs()
 
@@ -37,9 +33,16 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor()
         binding = TestingConnectionFragmentBinding.bind(view)
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { str -> showSnackBar(str) }
+        }
+
         args.bar?.let {
             requireActivity().msg("$it")
         }
+
+        checkApiResponse()
 
         bindProgressButton(binding.testConnectionId)
 
@@ -52,16 +55,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
             val userID = binding.userNameEd.text.toString()
             val password = binding.userPassEd.text.toString()
             val storeNo = binding.storeNoEd.text.toString()
-            viewModel.checkLoginTraditional(userID, password, storeNo).observe(viewLifecycleOwner) {
-                if (it is ApisResponse.Loading) {
-                    requireActivity().msg(it.data.toString())
-                } else if (it is ApisResponse.Success) {
-                    it.data?.let { item ->
-                        val data = item as ApKLoginPost
-                        checkApiResponse(data)
-                    }
-                }
-            }
+            viewModel.checkLoginTraditional(userID, password, storeNo)
         }
     }
 
@@ -74,8 +68,8 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun checkApiResponse(data: ApKLoginPost) {
-        viewModel.getApkLoginResponse(data, true).observe(viewLifecycleOwner) {
+    private fun checkApiResponse() {
+        viewModel.apk.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
                     hideProgress()
@@ -96,9 +90,21 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                             nextFrag(json.storeName)
                         } else
                             requireActivity().msg(json.message, Toast.LENGTH_LONG)
-                    }
+                        return@let
+                    } ?: showSnackBar("Unable to Login \nCheck Login Credentials")
                 }
             }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun showSnackBar(msg: String, length: Int = Snackbar.LENGTH_INDEFINITE) {
+        binding.root.showSandbar(
+            msg,
+            length,
+            requireActivity().getColorInt(R.color.color_red)
+        ) {
+            return@showSandbar "OK"
         }
     }
 
