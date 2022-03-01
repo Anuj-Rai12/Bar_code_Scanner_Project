@@ -1,5 +1,8 @@
 package com.example.offiqlresturantapp.di
 
+import android.app.Application
+import androidx.room.Room
+import com.example.offiqlresturantapp.db.RoomDataBaseInstance
 import com.example.offiqlresturantapp.utils.AllStringConst
 import dagger.Module
 import dagger.Provides
@@ -48,6 +51,15 @@ object Module {
             .baseUrl(AllStringConst.BASE_URL)
             .build()
     }
+
+
+    @Provides
+    @Singleton
+    fun getDataBaseInstance(app: Application) = Room.databaseBuilder(
+        app,
+        RoomDataBaseInstance::class.java,
+        RoomDataBaseInstance.DatabaseName
+    ).fallbackToDestructiveMigration().build()
 
 
     @Singleton

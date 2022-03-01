@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
-import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMethodSyncJsonResponse
 import com.example.offiqlresturantapp.databinding.SearchFoodItemLayoutBinding
 import com.example.offiqlresturantapp.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
@@ -45,7 +44,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
 
         viewModel.events.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { str ->
-                showSnackBar(str, color = R.color.color_red)
+                showSnackBar(str, color = R.color.color_red, length = Snackbar.LENGTH_INDEFINITE)
             }
         }
 
@@ -88,7 +87,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
 
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_LONG) {
+    private fun showSnackBar(msg: String, color: Int, length: Int) {
         binding.root.showSandbar(
             msg,
             length,
@@ -114,7 +113,6 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
     @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setData() {
-
         viewModel.fdInfo.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
@@ -129,65 +127,19 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
                 is ApisResponse.Success -> {
                     hideOrShow(null)
                     it.data?.let { item ->
-                        (item as ItemMethodSyncJsonResponse).let { res ->
+                        (item as List<ItemMaster>).let { res ->
                             listOfFoodItemToSearchAdaptor.notifyDataSetChanged()
-                            listOfFoodItemToSearchAdaptor.submitList(res.itemMaster)
+                            listOfFoodItemToSearchAdaptor.submitList(res)
                         }
                     } ?: showSnackBar(
                         "UnKnow Error Found!!",
                         R.color.color_red,
-                        Snackbar.LENGTH_INDEFINITE
+                        Snackbar.LENGTH_LONG
                     )
                 }
             }
         }
 
-        /*val list = listOf(
-            FoodItem(
-                foodName = "Chloe Bhature",
-                foodPrice = 135,
-                foodAmt = 135,
-                foodOffer = "+1 Pepsi Can @15/-",
-                offerDesc = listOf(
-                    OfferDesc(
-                        price = 15,
-                        "Add  a 200 ml Pepsi Can for 15/-",
-                    ),
-                    OfferDesc(
-                        price = 10,
-                        "Add a 10 ml Sugar for 10/-",
-                    )
-                )
-            ), FoodItem(
-                foodName = "Chloe Samosa Chart",
-                foodPrice = 135,
-                foodAmt = 135,
-                foodOffer = "By One Get 2 Free",
-                offerDesc = listOf(
-                    OfferDesc(
-                        price = 20,
-                        "By One Plate get 2 Plate Free"
-                    )
-                )
-            ), FoodItem(
-                foodName = "Chloe Kulcha",
-                foodPrice = 135,
-                foodAmt = 135,
-                foodOffer = "Combo Offer",
-                offerDesc = listOf(
-                    OfferDesc(
-                        price = 12,
-                        "By One Plate get 2 Pepsi Can Free"
-                    )
-                )
-            ), FoodItem(
-                foodName = "Chloe (Bowl)",
-                foodPrice = 135,
-                foodAmt = 135,
-                foodOffer = null,
-                offerDesc = null
-            )
-        )*/
     }
 
     private fun setRecycleView() {

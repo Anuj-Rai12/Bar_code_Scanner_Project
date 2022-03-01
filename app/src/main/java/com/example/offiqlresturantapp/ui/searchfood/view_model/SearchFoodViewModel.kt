@@ -1,7 +1,10 @@
 package com.example.offiqlresturantapp.ui.searchfood.view_model
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.offiqlresturantapp.dataStore.UserSoredData
 import com.example.offiqlresturantapp.ui.searchfood.repo.SearchFoodRepositoryImpl
 import com.example.offiqlresturantapp.utils.ApisResponse
@@ -31,21 +34,21 @@ class SearchFoodViewModel @Inject constructor(
         get() = _event
 
     init {
-        if (application.isNetworkAvailable()) {
-            viewModelScope.launch {
-                userSoredData.read.collectLatest {
-                    if (checkFieldValue(it.storeNo.toString())) {
-                        _event.postValue(Events("Internal Error \nTry Login Again"))
-                    } else {
-                        repository.getItemMasterSync(it.storeNo!!).collectLatest { res ->
-                            _fdInfo.postValue(res)
-                        }
+        if (!application.isNetworkAvailable()) {
+            _event.postValue(Events("No Internet Connection"))
+        }
+        viewModelScope.launch {
+            userSoredData.read.collectLatest {
+                if (checkFieldValue(it.storeNo.toString())) {
+                    _event.postValue(Events("Internal Error \nTry Login Again"))
+                } else {
+                    repository.getItemMasterSync(it.storeNo!!).collectLatest { res ->
+                        _fdInfo.postValue(res)
                     }
                 }
             }
-        } else {
-            _event.postValue(Events("No Internet Connection"))
         }
+
     }
 
     override fun onCleared() {

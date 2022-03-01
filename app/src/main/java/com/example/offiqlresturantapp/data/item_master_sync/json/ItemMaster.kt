@@ -1,9 +1,19 @@
 package com.example.offiqlresturantapp.data.item_master_sync.json
 
 
+import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
+
+@Parcelize
+@Entity(tableName = "ItemMaster_tbl")
 data class ItemMaster(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
     @SerializedName("Barcode") val barcode: String,
     @SerializedName("ItemCategory") val itemCategory: String,
     @SerializedName("ItemCode") val itemCode: String,
@@ -12,7 +22,14 @@ data class ItemMaster(
     @SerializedName("SalePrice") val salePrice: String,
     @SerializedName("UOM") val uOM: String,
 
-    ) {
+    ) : Parcelable {
+    @IgnoredOnParcel
     var foodQty: Int = 1
-    var foodAmt = salePrice.toInt()
+
+    @IgnoredOnParcel
+    var foodAmt = try {
+        salePrice.toInt()
+    } catch (e: Exception) {
+        0
+    }
 }

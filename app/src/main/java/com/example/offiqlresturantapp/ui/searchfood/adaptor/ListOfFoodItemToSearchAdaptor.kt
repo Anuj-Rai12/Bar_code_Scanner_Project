@@ -21,7 +21,7 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<ItemMaster>() {
             override fun areItemsTheSame(oldItem: ItemMaster, newItem: ItemMaster): Boolean {
-                return oldItem.itemCode == newItem.itemCode
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: ItemMaster, newItem: ItemMaster): Boolean {

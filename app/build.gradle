@@ -104,6 +104,13 @@ dependencies {
     //Button Progress
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
+
+    //room dependency
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+
     //Lottie
     implementation 'com.airbnb.android:lottie:5.0.1'
 }
