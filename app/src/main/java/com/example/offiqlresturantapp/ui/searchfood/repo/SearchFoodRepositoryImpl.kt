@@ -9,7 +9,6 @@ import com.example.offiqlresturantapp.data.item_master_sync.TableInformation
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMethodSyncJsonResponse
 import com.example.offiqlresturantapp.db.RoomDataBaseInstance
 import com.example.offiqlresturantapp.utils.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import retrofit2.Retrofit
@@ -29,7 +28,6 @@ class SearchFoodRepositoryImpl @Inject constructor(
             dao.getAllItem()
         },
         fetch = {
-            delay(500)
             val info = api.getItemMasterSync(ItemMasterSyncRequest(TableInformation(stateNo)))
             info.body()?.apkLoginResult?.value?.let {
                 return@let deserializeFromJson<ItemMethodSyncJsonResponse>(it)

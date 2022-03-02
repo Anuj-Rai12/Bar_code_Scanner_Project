@@ -30,20 +30,19 @@ class TableManagementViewModel @Inject constructor(
         get() = _event
 
     init {
-        if (application.isNetworkAvailable()) {
-            viewModelScope.launch {
-                userSoredData.read.collectLatest {
-                    if (checkFieldValue(it.storeNo.toString())) {
-                        _event.postValue(Events("Internal Error \nTry Login Again"))
-                    } else {
-                        repository.getTblInformation(it.storeNo!!).collectLatest { res ->
-                            _tblInfo.postValue(res)
-                        }
+        if (!application.isNetworkAvailable()) {
+            _event.postValue(Events("No Internet Connection"))
+        }
+        viewModelScope.launch {
+            userSoredData.read.collectLatest {
+                if (checkFieldValue(it.storeNo.toString())) {
+                    _event.postValue(Events("Internal Error \nTry Login Again"))
+                } else {
+                    repository.getTblInformation(it.storeNo!!).collectLatest { res ->
+                        _tblInfo.postValue(res)
                     }
                 }
             }
-        } else {
-            _event.postValue(Events("No Internet Connection"))
         }
     }
 

@@ -24,7 +24,6 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
     private lateinit var binding: TestingConnectionFragmentBinding
     private val viewModel: TestingConnectionViewModel by viewModels()
 
-
     private val args: TestingConnectionFragmentArgs by navArgs()
 
     @SuppressLint("ResourceType")
@@ -39,6 +38,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         }
 
         args.bar?.let {
+            if (it.title!=null || it.uri!=null)
             requireActivity().msg("$it")
         }
 

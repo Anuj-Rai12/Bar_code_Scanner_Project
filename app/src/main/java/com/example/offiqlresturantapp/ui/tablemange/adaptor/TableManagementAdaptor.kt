@@ -62,7 +62,7 @@ class TableManagementAdaptor(private val itemClicked: ItemTableClick) :
             override fun areItemsTheSame(
                 oldItem: TableDetail,
                 newItem: TableDetail
-            ) = oldItem.status == newItem.status
+            ) = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
                 oldItem: TableDetail,

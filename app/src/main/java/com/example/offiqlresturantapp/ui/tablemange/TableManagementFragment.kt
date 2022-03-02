@@ -12,7 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.offiqlresturantapp.R
-import com.example.offiqlresturantapp.data.table_info.model.json.TableInformationJsonResponse
+import com.example.offiqlresturantapp.data.table_info.model.json.TableDetail
 import com.example.offiqlresturantapp.databinding.TableMangmentLayoutBinding
 import com.example.offiqlresturantapp.ui.tablemange.adaptor.TableManagementAdaptor
 import com.example.offiqlresturantapp.ui.tablemange.view_model.TableManagementViewModel
@@ -69,15 +69,19 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
                 is ApisResponse.Success -> {
                     hideOrShowProgress(null)
                     it.data?.let { cls ->
-                        (cls as TableInformationJsonResponse?)?.let { res ->
-                            binding.tableInfoDetail.append("\nTotal Table Count ${res.totalTableCount},")
-                            tableManagementAdaptor.notifyDataSetChanged()
-                            tableManagementAdaptor.submitList(res.tableDetails)
-                        } ?: binding.root.showSandbar(
-                            "Error the Get Data",
-                            Snackbar.LENGTH_LONG,
-                            requireActivity().getColorInt(R.color.color_red)
-                        )
+                        (cls as List<TableDetail>).let { res ->
+                            if (res.isNotEmpty()) {
+                                binding.tableInfoDetail.append("\nTotal Table Count ${res.size},")
+                                tableManagementAdaptor.notifyDataSetChanged()
+                                tableManagementAdaptor.submitList(res)
+                            } else {
+                                binding.root.showSandbar(
+                                    "Error the Get Data",
+                                    Snackbar.LENGTH_LONG,
+                                    requireActivity().getColorInt(R.color.color_red)
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -100,7 +104,10 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
             tableManagementAdaptor = TableManagementAdaptor {
                 Log.i(TAG, "setRecycleView: $it")
                 val action =
-                    TableManagementFragmentDirections.actionTableManagementFragmentToConfirmOderFragment(null, it)
+                    TableManagementFragmentDirections.actionTableManagementFragmentToConfirmOderFragment(
+                        null,
+                        it
+                    )
                 findNavController().navigate(action)
             }
             adapter = tableManagementAdaptor
