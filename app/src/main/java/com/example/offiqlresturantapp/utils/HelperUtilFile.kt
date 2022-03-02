@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
+import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -174,7 +175,7 @@ fun Activity.checkCameraPermission() =
 
 
 typealias ItemClickListerForTableOrCost = (selection: SelectionDataClass) -> Unit
-typealias ItemClickListerForListOfFood = (foodItem: ItemMaster) -> Unit
+typealias ItemClickListerForListOfFood = (foodItem: ItemMasterFoodItem) -> Unit
 typealias LumaListener = (lum: Double) -> Unit
 typealias ImageListener = (imageInput: InputImage) -> Unit
 typealias SnackBarListener = (msg: String?) -> String?

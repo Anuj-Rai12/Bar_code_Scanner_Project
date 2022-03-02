@@ -12,10 +12,10 @@ class ConfirmOrderUseCase @Inject constructor() {
 
 
     fun calGrandTotal(item: List<ItemMasterFoodItem>?): Int {
-        val grandTotal = 0
+        var grandTotal = 0
         item?.let {
-            return@let it.forEach { food ->
-                food.foodAmt += grandTotal
+            it.forEach { food ->
+                grandTotal += food.foodAmt
             }
         }
         return grandTotal
@@ -30,11 +30,17 @@ class ConfirmOrderUseCase @Inject constructor() {
             val hrs = dateTime.first().toInt()
             Log.i(TAG, "getCurrentDate: $dateInString")
             val item = when {
+                hrs == 12 -> {
+                    "\n$hrs:${dateTime.last()}PM"
+                }
+                (hrs - 12) == 12 -> {
+                    "\n00:${dateTime.last()}AM"
+                }
                 hrs > 12 -> {
-                    "$hrs:${dateTime.last()}PM"
+                    "\n${hrs-12}:${dateTime.last()}PM"
                 }
                 else -> {
-                    "${hrs}:${dateTime.last()}AM"
+                    "\n${hrs}:${dateTime.last()}AM"
                 }
             }
             emit(item)

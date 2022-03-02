@@ -12,6 +12,7 @@ import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
 import com.example.offiqlresturantapp.databinding.FoodItemLayoutBinding
 import com.example.offiqlresturantapp.ui.searchfood.adaptor.offeradaptor.ListOfOfferAdaptor
+import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.ui.searchfood.model.OfferDesc
 import com.example.offiqlresturantapp.utils.*
 
@@ -75,8 +76,8 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             }
 
             binding.btnWithOffer.setOnClickListener {
-                //foodItem.addWithOffer = true
-                /*if (foodItem.foodQty != null && !listOfOfferString.isNullOrEmpty()) {
+                /*foodItem.addWithOffer = true
+                if (foodItem.foodQty != null && !listOfOfferString.isNullOrEmpty()) {
                     foodItem.offerDesc = listOfOfferString
                 } else if (foodItem.offerDesc != null && listOfOfferString.isNullOrEmpty()) {
                     foodItem.offerDesc?.forEach {
@@ -84,8 +85,14 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                     }
                 }*/
                 foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1
-                foodItem.foodAmt *= foodItem.foodQty
-                itemClickListerForListOfFood(foodItem)
+                foodItem.foodAmt = foodItem.foodQty * foodItem.salePrice.toInt()
+                itemClickListerForListOfFood(
+                    ItemMasterFoodItem(
+                        foodItem,
+                        foodAmt = foodItem.foodAmt,
+                        foodQty = foodItem.foodQty
+                    )
+                )
 
             }
 
@@ -94,7 +101,13 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 //foodItem.offerDesc = null
                 foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1
                 foodItem.foodAmt = foodItem.salePrice.toInt() * foodItem.foodQty
-                itemClickListerForListOfFood(foodItem)
+                itemClickListerForListOfFood(
+                    ItemMasterFoodItem(
+                        foodItem,
+                        foodAmt = foodItem.foodAmt,
+                        foodQty = foodItem.foodQty
+                    )
+                )
             }
 
             binding.root.setOnClickListener {

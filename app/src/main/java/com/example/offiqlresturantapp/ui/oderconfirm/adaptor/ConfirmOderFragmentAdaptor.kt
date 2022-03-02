@@ -19,10 +19,12 @@ import com.example.offiqlresturantapp.utils.hide
 import com.example.offiqlresturantapp.utils.show
 
 class ConfirmOderFragmentAdaptor(
-    private val itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
-    private val viewDeals: () -> Boolean
+    private val itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit
 ) :
     ListAdapter<ItemMasterFoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
+
+    private var showCheckBox: Boolean = false
+
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<ItemMasterFoodItem>() {
             override fun areItemsTheSame(
@@ -45,13 +47,13 @@ class ConfirmOderFragmentAdaptor(
     inner class SelectedFoodItemViewHolder(private val binding: ListOfFoodItemSelectedBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private var flagSelection: Boolean = false
+        val checkBoxView = binding.btnClickViewDetail
 
         @RequiresApi(Build.VERSION_CODES.M)
         @SuppressLint("SetTextI18n")
         fun setData(
             foodItem: ItemMasterFoodItem,
-            itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
-            viewDeals: () -> Boolean
+            itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit
         ) {
             binding.apply {
                 foodItemName.apply {
@@ -60,12 +62,6 @@ class ConfirmOderFragmentAdaptor(
                         if (!checkFieldValue(foodItem.itemMaster.itemName)) foodItem.itemMaster.itemName
                         else foodItem.itemMaster.itemDescription
                 }
-                if (viewDeals()) {
-                    btnClickViewDetail.show()
-                } else {
-                    btnClickViewDetail.hide()
-                }
-
                 btnClickViewDetail.setOnClickListener {
                     it.backgroundTintList = if (!flagSelection) {
                         flagSelection = true
@@ -119,11 +115,22 @@ class ConfirmOderFragmentAdaptor(
         return SelectedFoodItemViewHolder(binding)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun setCheckBoxType(flag: Boolean) {
+        notifyDataSetChanged()
+        showCheckBox = flag
+    }
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: SelectedFoodItemViewHolder, position: Int) {
         val curr = getItem(position)
         curr?.let {
-            holder.setData(it, itemClickListerForFoodSelected, viewDeals)
+            if (showCheckBox) {
+                holder.checkBoxView.show()
+            } else {
+                holder.checkBoxView.hide()
+            }
+            holder.setData(it, itemClickListerForFoodSelected)
         }
     }
 }

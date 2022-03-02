@@ -43,11 +43,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             requireActivity().msg(getString(R.string.scan_btn))
         }
         viewModel.event.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { str ->
-                if (str == "No Internet Connection") {
-                    showSnackBar(str, R.color.color_red, Snackbar.LENGTH_INDEFINITE)
+            it.getContentIfNotHandled()?.let { map ->
+                if (!map.values.first()) {
+                    showSnackBar(map.keys.first(), R.color.color_red)
                 } else {
-                    showSnackBar(str, R.color.green_color, Snackbar.LENGTH_SHORT)
+                    showSnackBar(map.keys.first(), R.color.green_color)
                 }
             }
         }
@@ -59,16 +59,17 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             binding.orderBookingTimeTxt.text = getString(R.string.sample_tbl_time, it)
         }
         viewModel.getOrderList(args.list)
+        binding.totalOrderAmt.text = viewModel.getGrandTotal(args.list)
         getData()
 
         binding.viewOfferBtn.setOnClickListener {
             if (!flagForViewDeals) {
                 flagForViewDeals = true
-                setRecycle(true)
                 getViewDeals()
+                confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
             } else {
                 flagForViewDeals = false
-                setRecycle()
+                confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
             }
         }
 
@@ -93,6 +94,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun getData() {
         viewModel.listOfOrder.observe(viewLifecycleOwner) {
             when (it) {
@@ -102,6 +104,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                     it.data?.let { data ->
                         binding.orderRecycleViewHint.hide()
                         binding.listOfItemRecycleView.show()
+                        confirmOderFragmentAdaptor.notifyDataSetChanged()
                         confirmOderFragmentAdaptor.submitList(data)
                     }
                 }
@@ -113,7 +116,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private fun initial() {
         binding.orderRecycleViewHint.show()
         binding.listOfItemRecycleView.hide()
-        binding.totalOrderAmt.text = viewModel.getGrandTotal(args.list)
     }
 
     private fun setCallBack() {
@@ -199,22 +201,20 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     }
 
 
-    private fun setRecycle(flag: Boolean = false) {
+    private fun setRecycle() {
         binding.listOfItemRecycleView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireActivity())
-            confirmOderFragmentAdaptor = ConfirmOderFragmentAdaptor({
-                if (flag)
+            confirmOderFragmentAdaptor = ConfirmOderFragmentAdaptor {
+                if (flagForViewDeals)
                     viewModel.getOrderItem(it)
-            }, {
-                return@ConfirmOderFragmentAdaptor flag
-            })
+            }
             adapter = confirmOderFragmentAdaptor
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun showSnackBar(msg: String, color: Int, length: Int) {
+    private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
         binding.root.showSandbar(
             msg,
             length,

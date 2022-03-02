@@ -151,19 +151,18 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
             listOfFoodItemToSearchAdaptor = ListOfFoodItemToSearchAdaptor {
-                Log.i(TAG, "setRecycleView: $it")
+                val msg = if (!checkFieldValue(it.itemMaster.itemName)) it.itemMaster.itemName
+                else it.itemMaster.itemDescription
 
-                val obj = ItemMasterFoodItem(it, it.foodQty, it.foodAmt)
-                val msg = if (!checkFieldValue(it.itemName)) it.itemName else it.itemDescription
                 showSnackBar(msg, R.color.green_color, Snackbar.LENGTH_SHORT)
-
-                val item = listOfFoodItem.find { res -> res.itemMaster.id == obj.itemMaster.id }
+                val item = listOfFoodItem.find { res -> res.itemMaster.id == it.itemMaster.id }
                 if (item == null) {
-                    listOfFoodItem.add(obj)
+                    listOfFoodItem.add(it)
                 } else {
                     listOfFoodItem.remove(item)
-                    listOfFoodItem.add(obj)
+                    listOfFoodItem.add(it)
                 }
+                Log.i(TAG, "setRecycleView: $listOfFoodItem")
                 /*if (listOfFoodItem.contains(it)) {
                     listOfFoodItem.remove(it)
                     listOfFoodItem.add(it)

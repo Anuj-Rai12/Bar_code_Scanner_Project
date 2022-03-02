@@ -1,16 +1,16 @@
 package com.example.offiqlresturantapp.ui.oderconfirm.view_model
 
 import android.app.Application
-import androidx.lifecycle.*
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.offiqlresturantapp.data.table_info.model.json.TableDetail
-import com.example.offiqlresturantapp.data.table_info.model.json.TblStatus
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.use_case.ConfirmOrderUseCase
-import com.example.offiqlresturantapp.utils.ApisResponse
-import com.example.offiqlresturantapp.utils.Events
-import com.example.offiqlresturantapp.utils.Rs_Symbol
-import com.example.offiqlresturantapp.utils.isNetworkAvailable
+import com.example.offiqlresturantapp.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
@@ -23,8 +23,8 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
     application: Application
 ) : ViewModel() {
 
-    private val _event = MutableLiveData<Events<String>>()
-    val event: LiveData<Events<String>>
+    private val _event = MutableLiveData<Events<Map<String, Boolean>>>()
+    val event: LiveData<Events<Map<String, Boolean>>>
         get() = _event
 
     private val _viewDealsList = MutableLiveData<MutableList<ItemMasterFoodItem>>()
@@ -43,7 +43,7 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
 
     init {
         if (!application.isNetworkAvailable()) {
-            _event.postValue(Events("No Internet Connection"))
+            _event.postValue(Events(mapOf("No Internet Connection" to false)))
         }
         getTime()
     }
@@ -57,38 +57,55 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
     }
 
 
-    fun deleteSwipe(item: ItemMasterFoodItem) {
-        _viewDealsList.value?.let {
-            it.remove(item)
-            _listOfOrder.postValue(ApisResponse.Success(it))
+    fun deleteSwipe(food: ItemMasterFoodItem) {
+        _listOfOrder.value?.let {
+            Log.i(TAG, "deleteSwipe: $food")
+            if (it is ApisResponse.Success) {
+                it.data?.let { list ->
+                    getOrderItem(food, true)
+                    val item = mutableListOf<ItemMasterFoodItem>()
+                    item.addAll(list)
+                    item.remove(food)
+                    if (!item.isNullOrEmpty()) {
+                        _listOfOrder.postValue(ApisResponse.Success(item))
+                    } else {
+                        _listOfOrder.postValue(ApisResponse.Loading(null))
+                    }
+                }
+            }
         }
     }
 
 
-    fun getTbl(tbl: TableDetail)= "${tbl.tableNo}:${tbl.guestNumber}P"
+    fun getTbl(tbl: TableDetail) = "${tbl.tableNo}:${tbl.guestNumber}P"
 
 
-
-    fun getOrderItem(foodItem: ItemMasterFoodItem) {
+    fun getOrderItem(foodItem: ItemMasterFoodItem, flag: Boolean = false) {
         _viewDealsList.value?.let { myList ->
-            if (myList.contains(foodItem)) {
+            val item = myList.find { res -> res.itemMaster.id == foodItem.itemMaster.id }
+            if (item != null) {
                 myList.remove(foodItem)
+                _event.postValue(Events(mapOf(("Item Removed" to false))))
             } else {
-                myList.add(foodItem)
+                if (!flag) {
+                    myList.add(foodItem)
+                    _event.postValue(Events(mapOf(("Item Selected" to true))))
+                }
             }
-            _event.postValue(Events("Item Selected"))
             _viewDealsList.postValue(myList)
             return@let
-        } ?: _viewDealsList.postValue(mutableListOf(foodItem))
+        } ?: if (!flag) {
+            _viewDealsList.postValue(mutableListOf(foodItem))
+        }
     }
 
 
     fun getGrandTotal(list: FoodItemList?): String {
-        val tol = list?.let {
-            return@let useCase.calGrandTotal(it.foodList)
-        } ?: 0
-
-        return "$Rs_Symbol $tol"
+        var total = 0
+        list?.let {
+            total = useCase.calGrandTotal(it.foodList)
+        }
+        return "$Rs_Symbol $total"
     }
 
     private fun getTime(time: String = "HH:mm") {
