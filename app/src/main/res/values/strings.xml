@@ -37,8 +37,8 @@
     <string name="btn_with_offer">Add with offer</string>
     <!-- Delete it Just A Sample String Value -->
     <string name="sample_total_amt">150</string>
-    <string name="sample_tbl_num">Table 1:4P</string>
-    <string name="sample_tbl_time">Booking Time :4:00PM</string>
+    <string name="sample_tbl_num">Table %s</string>
+    <string name="sample_tbl_time">Booking Time :%s</string>
 
     <string name="pr_btn">Print</string>
     <string name="sv_btn">Save</string>

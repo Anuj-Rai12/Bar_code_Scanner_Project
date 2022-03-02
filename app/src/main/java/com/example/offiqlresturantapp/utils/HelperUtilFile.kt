@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
-import com.example.offiqlresturantapp.ui.searchfood.model.FoodItem
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -66,6 +65,7 @@ fun View.showSandbar(
             snackBar.dismiss()
         }
         snackBar.setActionTextColor(Color.WHITE)
+        snackBar.setTextColor(Color.WHITE)
     }
     color?.let {
         snackBar.view.setBackgroundColor(it)

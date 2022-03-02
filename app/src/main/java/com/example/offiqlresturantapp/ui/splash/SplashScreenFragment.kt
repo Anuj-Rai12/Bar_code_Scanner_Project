@@ -19,7 +19,6 @@ import com.example.offiqlresturantapp.ui.testingconnection.viewModel.TestingConn
 import com.example.offiqlresturantapp.utils.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
@@ -97,7 +96,6 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
 
     private fun nextFrag(string: String?) {
         lifecycleScope.launchWhenStarted {
-            delay(1000)
             val action = if (string == null) {
                 SplashScreenFragmentDirections.actionSplashScreenFragmentToTestingConnectionFragment(
                     null

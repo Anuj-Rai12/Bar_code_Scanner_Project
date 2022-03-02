@@ -10,6 +10,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,8 +19,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.ConfirmOrderLayoutBinding
 import com.example.offiqlresturantapp.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
-import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
+import com.example.offiqlresturantapp.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
 import com.example.offiqlresturantapp.utils.*
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
@@ -27,14 +29,11 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private lateinit var binding: ConfirmOrderLayoutBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
-    private var list = mutableListOf<ItemMasterFoodItem>()
-
-    //private var flagForViewDeals: Boolean = false
-    private var listOfSelectedFoodItemForViewDeals = mutableListOf<ItemMasterFoodItem>()
+    private val viewModel: ConfirmOrderFragmentViewModel by viewModels()
+    private var flagForViewDeals: Boolean = false
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ConfirmOderFragmentArgs by navArgs()
 
-    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,40 +42,34 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         binding.qrCodeScan.setOnClickListener {
             requireActivity().msg(getString(R.string.scan_btn))
         }
+        viewModel.event.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { str ->
+                if (str == "No Internet Connection") {
+                    showSnackBar(str, R.color.color_red, Snackbar.LENGTH_INDEFINITE)
+                } else {
+                    showSnackBar(str, R.color.green_color, Snackbar.LENGTH_SHORT)
+                }
+            }
+        }
+
         setRecycle()
         setCallBack()
-
-        if (args.list != null && !args.list?.foodList.isNullOrEmpty()) {
-            var grandTotal = 0
-            args.list?.foodList?.forEach { it ->
-                grandTotal += it.foodAmt
-                list.add(it)
-            }
-
-            if (!list.isNullOrEmpty()) {
-                binding.orderRecycleViewHint.hide()
-                binding.listOfItemRecycleView.show()
-                confirmOderFragmentAdaptor.submitList(list)
-                binding.totalOrderAmt.text = "$Rs_Symbol $grandTotal"
-            }
-        } else {
-            initial()
+        binding.tblNumTxt.text = getString(R.string.sample_tbl_num, viewModel.getTbl(args.tbl))
+        viewModel.time.observe(viewLifecycleOwner) {
+            binding.orderBookingTimeTxt.text = getString(R.string.sample_tbl_time, it)
         }
+        viewModel.getOrderList(args.list)
+        getData()
+
         binding.viewOfferBtn.setOnClickListener {
-            /*if (!list.isNullOrEmpty() && listOfSelectedFoodItemForViewDeals.isNullOrEmpty() && !flagForViewDeals) {
-                initial()
-                //setRecycle(true)
+            if (!flagForViewDeals) {
                 flagForViewDeals = true
-                //setData()
-            } else if (!listOfSelectedFoodItemForViewDeals.isNullOrEmpty()) {
-                Log.i(TAG, "onViewCreated: $listOfSelectedFoodItemForViewDeals")
+                setRecycle(true)
+                getViewDeals()
             } else {
-                /*setRecycle()
-                setData()*/
-                initial()
                 flagForViewDeals = false
-            }*/
-            
+                setRecycle()
+            }
         }
 
         binding.restItemBtn.setOnClickListener {
@@ -91,53 +84,37 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         }
     }
 
+    private fun getViewDeals() {
+        viewModel.viewDeals.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                // Go To View Deals Fragments
+                Log.i(TAG, "getViewDeals: ${it.size}")
+            }
+        }
+    }
+
+    private fun getData() {
+        viewModel.listOfOrder.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> Log.i(TAG, "getData: Error")
+                is ApisResponse.Loading -> if (it.data == null) initial()
+                is ApisResponse.Success -> {
+                    it.data?.let { data ->
+                        binding.orderRecycleViewHint.hide()
+                        binding.listOfItemRecycleView.show()
+                        confirmOderFragmentAdaptor.submitList(data)
+                    }
+                }
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun initial() {
         binding.orderRecycleViewHint.show()
         binding.listOfItemRecycleView.hide()
-        list.clear()
-        binding.totalOrderAmt.text = "$Rs_Symbol 0"
+        binding.totalOrderAmt.text = viewModel.getGrandTotal(args.list)
     }
-
-    /*private fun setData() {
-          list = mutableListOf(
-              FoodItem(
-                  foodName = "Chloe Bhature",
-                  foodAmt = 125,
-                  foodPrice = 125,
-                  foodQTY = 1,
-                  offerDesc = null,
-                  foodOffer = null,
-              ),
-              FoodItem(
-                  foodName = "Chloe Samosa Chart",
-                  foodAmt = 13,
-                  foodPrice = 13,
-                  foodQTY = 2,
-                  offerDesc = null,
-                  foodOffer = null,
-              ),
-              FoodItem(
-                  foodName = "Chloe Kulcha",
-                  foodAmt = 15,
-                  foodPrice = 15,
-                  foodQTY = 3,
-                  offerDesc = null,
-                  foodOffer = null,
-              ),
-              FoodItem(
-                  foodName = "Chloe (Bowl)",
-                  foodAmt = 135,
-                  foodPrice = 135,
-                  foodQTY = 4,
-                  offerDesc = null,
-                  foodOffer = null,
-              )
-          )
-
-        confirmOderFragmentAdaptor.submitList(list)
-    }
-*/
 
     private fun setCallBack() {
         callback = object :
@@ -154,9 +131,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 val getItem =
                     confirmOderFragmentAdaptor.currentList[viewHolder.absoluteAdapterPosition]
                 getItem?.let {
-                    list.remove(it)
-                    confirmOderFragmentAdaptor.submitList(list)
-                    confirmOderFragmentAdaptor.notifyDataSetChanged()
+                    viewModel.deleteSwipe(it)
                 }
             }
 
@@ -229,16 +204,23 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor = ConfirmOderFragmentAdaptor({
-                if (listOfSelectedFoodItemForViewDeals.contains(it)) {
-                    listOfSelectedFoodItemForViewDeals.remove(it)
-                } else {
-                    listOfSelectedFoodItemForViewDeals.add(it)
-                }
-                Log.i(TAG, "setRecycle: $listOfSelectedFoodItemForViewDeals")
+                if (flag)
+                    viewModel.getOrderItem(it)
             }, {
                 return@ConfirmOderFragmentAdaptor flag
             })
             adapter = confirmOderFragmentAdaptor
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun showSnackBar(msg: String, color: Int, length: Int) {
+        binding.root.showSandbar(
+            msg,
+            length,
+            requireActivity().getColorInt(color)
+        ) {
+            return@showSandbar "OK"
         }
     }
 }
