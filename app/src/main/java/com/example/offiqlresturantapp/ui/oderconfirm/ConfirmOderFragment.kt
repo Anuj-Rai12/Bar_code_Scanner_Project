@@ -59,7 +59,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             binding.orderBookingTimeTxt.text = getString(R.string.sample_tbl_time, it)
         }
         viewModel.getOrderList(args.list)
-        binding.totalOrderAmt.text = viewModel.getGrandTotal(args.list)
         getData()
 
         binding.viewOfferBtn.setOnClickListener {
@@ -97,6 +96,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     @SuppressLint("NotifyDataSetChanged")
     private fun getData() {
         viewModel.listOfOrder.observe(viewLifecycleOwner) {
+            binding.totalOrderAmt.text = viewModel.getGrandTotal(it.data)
             when (it) {
                 is ApisResponse.Error -> Log.i(TAG, "getData: Error")
                 is ApisResponse.Loading -> if (it.data == null) initial()

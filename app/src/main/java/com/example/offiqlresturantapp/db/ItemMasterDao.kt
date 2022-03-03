@@ -18,7 +18,7 @@ interface ItemMasterDao {
     suspend fun insertAllItem(articles: List<ItemMaster>)
 
 
-    @Query("Select *From ItemMaster_tbl where itemName Like:searchQuery or itemDescription Like:searchQuery or itemCategory Like :searchQuery order by salePrice desc")
+    @Query("Select *From ItemMaster_tbl where itemName Like:searchQuery or itemDescription Like:searchQuery or itemCategory Like :searchQuery or salePrice Like :searchQuery order by salePrice desc")
     fun searchResult(searchQuery: String): Flow<List<ItemMaster>>
 
 

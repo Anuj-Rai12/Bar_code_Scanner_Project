@@ -100,10 +100,10 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
     }
 
 
-    fun getGrandTotal(list: FoodItemList?): String {
+    fun getGrandTotal(list: List<ItemMasterFoodItem>?): String {
         var total = 0
         list?.let {
-            total = useCase.calGrandTotal(it.foodList)
+            total = useCase.calGrandTotal(it)
         }
         return "$Rs_Symbol $total"
     }

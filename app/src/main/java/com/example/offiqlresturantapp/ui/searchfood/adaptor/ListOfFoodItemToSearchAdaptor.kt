@@ -85,7 +85,7 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                     }
                 }*/
                 foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1
-                foodItem.foodAmt = foodItem.foodQty * foodItem.salePrice.toInt()
+                foodItem.foodAmt = foodItem.foodQty * setPrice(foodItem.salePrice)
                 itemClickListerForListOfFood(
                     ItemMasterFoodItem(
                         foodItem,
@@ -100,7 +100,7 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 //foodItem.addWithOffer = false
                 //foodItem.offerDesc = null
                 foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1
-                foodItem.foodAmt = foodItem.salePrice.toInt() * foodItem.foodQty
+                foodItem.foodAmt = setPrice(foodItem.salePrice) * foodItem.foodQty
                 itemClickListerForListOfFood(
                     ItemMasterFoodItem(
                         foodItem,
@@ -120,6 +120,15 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 setInVisible()
             }
 
+        }
+
+        private fun setPrice(salePrice: String): Int {
+            val data = salePrice.split(',')
+            val str = StringBuilder()
+            data.forEach {
+                str.append(it)
+            }
+            return str.toString().toInt()
         }
 
         private fun setUpRecycleView() {
