@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MotionScene 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
         motion:duration="1000">
-       <KeyFrameSet>
-           <KeyAttribute
-               motion:motionTarget="@+id/close_btn"
-               motion:framePosition="90"
-               android:alpha="0" />
-           <KeyAttribute
-               motion:motionTarget="@+id/pause_btn"
-               motion:framePosition="90"
-               android:alpha="0" />
-           <KeyAttribute
-               motion:motionTarget="@+id/title_thumbnail"
-               motion:framePosition="90"
-               android:alpha="0" />
-       </KeyFrameSet>
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="90"
+                motion:motionTarget="@+id/close_btn" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="90"
+                motion:motionTarget="@+id/pause_btn" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="90"
+                motion:motionTarget="@+id/title_thumbnail" />
+        </KeyFrameSet>
         <OnSwipe
-            motion:touchAnchorId="@+id/back_bg_constraint_layout"
             motion:dragDirection="dragDown"
+            motion:touchAnchorId="@+id/back_bg_constraint_layout"
             motion:touchAnchorSide="bottom" />
+        <OnClick
+            motion:clickAction="transitionToStart"
+            motion:targetId="@+id/title_thumbnail" />
     </Transition>
 
-    <ConstraintSet android:id="@+id/start">
-    </ConstraintSet>
+    <ConstraintSet android:id="@+id/start"></ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
             android:id="@+id/mnu_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            motion:layout_constraintBottom_toBottomOf="parent"
             android:alpha="1"
+            motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintLeft_toLeftOf="parent"
             motion:layout_constraintRight_toRightOf="parent" />
         <Constraint
@@ -50,9 +51,9 @@
             android:id="@+id/back_bg_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="55dp"
+            motion:layout_constraintBottom_toTopOf="@id/mnu_id"
             motion:layout_constraintLeft_toLeftOf="parent"
-            motion:layout_constraintRight_toRightOf="parent"
-            motion:layout_constraintBottom_toTopOf="@id/mnu_id" />
+            motion:layout_constraintRight_toRightOf="parent" />
         <Constraint
             android:id="@+id/thumbnail_img"
             android:layout_width="wrap_content"
@@ -64,24 +65,24 @@
             android:id="@+id/close_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            motion:layout_constraintBottom_toBottomOf="@id/back_bg_constraint_layout"
             android:alpha="1"
+            motion:layout_constraintBottom_toBottomOf="@id/back_bg_constraint_layout"
             motion:layout_constraintRight_toRightOf="@id/back_bg_constraint_layout"
             motion:layout_constraintTop_toTopOf="@id/back_bg_constraint_layout" />
         <Constraint
             android:id="@+id/pause_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            motion:layout_constraintBottom_toBottomOf="@id/close_btn"
             android:alpha="1"
+            motion:layout_constraintBottom_toBottomOf="@id/close_btn"
             motion:layout_constraintRight_toLeftOf="@id/close_btn"
             motion:layout_constraintTop_toTopOf="@id/close_btn" />
         <Constraint
             android:id="@+id/title_thumbnail"
-            motion:layout_constraintLeft_toRightOf="@id/thumbnail_img"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:alpha="1"
+            motion:layout_constraintLeft_toRightOf="@id/thumbnail_img"
             motion:layout_constraintRight_toLeftOf="@id/pause_btn"
             motion:layout_constraintTop_toTopOf="@id/pause_btn" />
     </ConstraintSet>
