@@ -13,7 +13,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.offiqlresturantapp.R
-import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
 import com.github.razir.progressbutton.hideProgress
@@ -38,8 +37,8 @@ object AllStringConst {
     //http://223.31.53.229:28360/NAVUSER/WS/HLDGRP/Codeunit/
     const val _xmlns = "http://schemas.xmlsoap.org/soap/envelope/"
     const val _xmls = "urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI"
-    private const val userName = "Test"
-    private const val PASSWORD = "Test@123"
+    private const val userName = "Online"
+    private const val PASSWORD = "Pass@1234"
     const val PREFERENCES_USER = "User_INFO"
     const val base = "$userName:$PASSWORD"
     const val End_point = "LoginAndGetMasterAPI"
