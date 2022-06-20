@@ -34,6 +34,9 @@ fun AppCompatActivity.hide() {
 object AllStringConst {
     const val BASE_URL = "http://20.204.153.37:7051/User1/WS/CKLifeStyle/Codeunit/"
 
+
+    const val BASE_URL_2="http://20.204.153.37:7051/Navuser/WS/CKLifeStyle/Codeunit/"
+
     //http://223.31.53.229:28360/NAVUSER/WS/HLDGRP/Codeunit/
     const val _xmlns = "http://schemas.xmlsoap.org/soap/envelope/"
     const val _xmls = "urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI"

@@ -15,6 +15,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -53,6 +54,18 @@ object Module {
     }
 
 
+    @NewRetrofitInstance
+    @Singleton
+    @Provides
+    fun getRetrofit2(): Retrofit {
+        return Retrofit.Builder()
+            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .client(client)
+            .baseUrl(AllStringConst.BASE_URL_2)
+            .build()
+    }
+
+
     @Provides
     @Singleton
     fun getDataBaseInstance(app: Application) = Room.databaseBuilder(
@@ -66,3 +79,8 @@ object Module {
     @Provides
     fun providesCoroutines() = CoroutineScope(SupervisorJob())
 }
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class NewRetrofitInstance

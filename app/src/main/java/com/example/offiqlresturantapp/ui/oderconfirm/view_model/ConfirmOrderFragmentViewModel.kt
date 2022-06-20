@@ -6,7 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest
+import com.example.offiqlresturantapp.data.confirmOrder.ConfirmOrderRequest
 import com.example.offiqlresturantapp.data.table_info.model.json.TableDetail
+import com.example.offiqlresturantapp.ui.oderconfirm.repo.confirmdining.ConfirmDiningRepositoryImpl
+import com.example.offiqlresturantapp.ui.oderconfirm.repo.confirmorder.ConfirmOrderRepositoryImpl
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.use_case.ConfirmOrderUseCase
@@ -20,7 +24,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ConfirmOrderFragmentViewModel @Inject constructor(
     private val useCase: ConfirmOrderUseCase,
-    application: Application
+    private val application: Application,
+    private val confirmOrderRepository: ConfirmOrderRepositoryImpl,
+    private val confirmDiningRepository: ConfirmDiningRepositoryImpl
 ) : ViewModel() {
 
     private val _event = MutableLiveData<Events<Map<String, Boolean>>>()
@@ -30,6 +36,15 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
     private val _viewDealsList = MutableLiveData<MutableList<ItemMasterFoodItem>>()
     val viewDeals: LiveData<MutableList<ItemMasterFoodItem>>
         get() = _viewDealsList
+
+
+    private val _orderDining = MutableLiveData<ApisResponse<out Any?>>()
+    val orderDining: LiveData<ApisResponse<out Any?>>
+        get() = _orderDining
+
+    private val _orderConfirm = MutableLiveData<ApisResponse<out Any?>>()
+    val orderConfirm: LiveData<ApisResponse<out Any?>>
+        get() = _orderConfirm
 
 
     private val _listOfOrder = MutableLiveData<ApisResponse<out List<ItemMasterFoodItem>>>()
@@ -66,7 +81,7 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
                     val item = mutableListOf<ItemMasterFoodItem>()
                     item.addAll(list)
                     item.remove(food)
-                    if (!item.isNullOrEmpty()) {
+                    if (item.isNotEmpty()) {
                         _listOfOrder.postValue(ApisResponse.Success(item))
                     } else {
                         _listOfOrder.postValue(ApisResponse.Loading(null))
@@ -115,6 +130,32 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
             }
         }
     }
+
+
+    fun updateAndLockTbl(confirmDiningRequest: ConfirmDiningRequest) {
+        viewModelScope.launch {
+            if (application.isNetworkAvailable()) {
+                confirmDiningRepository.updateAndLockTbl(confirmDiningRequest).collectLatest {
+                    _orderDining.postValue(it)
+                }
+            } else {
+                _event.postValue(Events(mapOf("No Internet Connection" to false)))
+            }
+        }
+    }
+
+    fun saveUserOrderItem(confirmOrderRequest: ConfirmOrderRequest){
+        viewModelScope.launch {
+            if (application.isNetworkAvailable()) {
+                confirmOrderRepository.saveUserOrderItem(confirmOrderRequest).collectLatest {
+                    _orderConfirm.postValue(it)
+                }
+            } else {
+                _event.postValue(Events(mapOf("No Internet Connection" to false)))
+            }
+        }
+    }
+
 
     override fun onCleared() {
         super.onCleared()
