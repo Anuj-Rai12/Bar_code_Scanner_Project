@@ -49,9 +49,9 @@
             android:ellipsize="end"
             android:fontFamily="@font/roboto_medium"
             android:maxLines="2"
-            tools:text="@string/sample_tbl_num"
             android:textColor="@color/light_grey_color"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="@string/sample_tbl_num" />
 
 
         <TextView
@@ -60,12 +60,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ellipsize="end"
-            android:gravity="center"
             android:fontFamily="@font/roboto_medium"
+            android:gravity="center"
             android:maxLines="2"
-            tools:text="@string/sample_tbl_time"
             android:textColor="@color/light_grey_color"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="@string/sample_tbl_time" />
 
     </LinearLayout>
 
@@ -267,13 +267,13 @@
         android:layout_marginStart="9dp"
         android:layout_marginBottom="22dp"
         android:layout_weight="1"
-        android:visibility="gone"
         android:background="@drawable/modify_order_btn_border"
         android:fontFamily="@font/roboto_medium"
         android:text="@string/oder_del"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="12sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/confirm_order_btn"
         app:layout_constraintEnd_toStartOf="@+id/view_offer_btn"
         app:layout_constraintHorizontal_bias="0.5"
@@ -319,5 +319,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+
+    <include
+        android:id="@+id/pb_layout"
+        layout="@layout/progress_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

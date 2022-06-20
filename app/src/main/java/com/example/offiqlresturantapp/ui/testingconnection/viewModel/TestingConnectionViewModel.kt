@@ -10,10 +10,7 @@ import com.example.offiqlresturantapp.data.login.model.api.ApkBody
 import com.example.offiqlresturantapp.dataStore.UserSoredData
 import com.example.offiqlresturantapp.ui.testingconnection.repo.ApiRepository
 import com.example.offiqlresturantapp.use_case.LoginUseCase
-import com.example.offiqlresturantapp.utils.ApisResponse
-import com.example.offiqlresturantapp.utils.Events
-import com.example.offiqlresturantapp.utils.checkFieldValue
-import com.example.offiqlresturantapp.utils.isNetworkAvailable
+import com.example.offiqlresturantapp.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
@@ -48,6 +45,8 @@ class TestingConnectionViewModel @Inject constructor(
                     ) {
                         _apkLogin.postValue(ApisResponse.Error(null, null))
                     } else {
+                        RestaurantSingletonCls.getInstance().setUserID(it.userID ?: "")
+                        RestaurantSingletonCls.getInstance().setStoreId(it.storeNo?:"")
                         repository.getApkLoginResponse(
                             ApKLoginPost(
                                 ApkBody(

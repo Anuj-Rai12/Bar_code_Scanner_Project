@@ -13,16 +13,24 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.offiqlresturantapp.R
+import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningBody
+import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest
+import com.example.offiqlresturantapp.databinding.ConfirmOrderDialogLayoutBinding
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.vmadalin.easypermissions.EasyPermissions
 import retrofit2.Retrofit
+import java.text.Normalizer
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.regex.Pattern
 import kotlin.random.Random
 
 const val CAMERA_INT = 11
@@ -35,7 +43,7 @@ object AllStringConst {
     const val BASE_URL = "http://20.204.153.37:7051/User1/WS/CKLifeStyle/Codeunit/"
 
 
-    const val BASE_URL_2="http://20.204.153.37:7051/Navuser/WS/CKLifeStyle/Codeunit/"
+    const val BASE_URL_2 = "http://20.204.153.37:7051/Navuser/WS/CKLifeStyle/Codeunit/"
 
     //http://223.31.53.229:28360/NAVUSER/WS/HLDGRP/Codeunit/
     const val _xmlns = "http://schemas.xmlsoap.org/soap/envelope/"
@@ -175,10 +183,108 @@ val listOfBg by lazy {
 fun Activity.checkCameraPermission() =
     EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)
 
+fun makeStringAlphaNumericForm(name: String): String {
+    //val name = "12434adfjks%^&$" //"I>télé"; //example
+    val normalized: String = Normalizer.normalize(name, Normalizer.Form.NFD)
+    return normalized.replace("[^A-Za-z0-9]".toRegex(), "")
+}
+
+fun randomNumber(value: Long): Long = kotlin.math.floor((Math.random() * value)).toLong()
+fun isValidPhone(phone: String): Boolean {
+    val phonetic = "^[+]?[0-9]{10,13}\$"
+    val pattern = Pattern.compile(phonetic)
+    return pattern.matcher(phone).matches()
+}
+
+
+fun Activity.addDialogMaterial(
+    title: String,
+    time: String,
+    tableNo: String,
+    receiptNo: Long,
+    storeVar: String,
+    staffID: String,
+    listener: CustomerDining
+) {
+    val binding = ConfirmOrderDialogLayoutBinding.inflate(layoutInflater)
+
+
+    val material = MaterialAlertDialogBuilder(
+        this,
+        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+    )
+
+    material
+        .setView(binding.root)
+        .setTitle(title)
+        .setPositiveButton("Done") { dialog, _ ->
+            val customerName = binding.customerNameEd.text.toString()
+            val customerNumber = binding.customerNumberEd.text.toString()
+            val terminalNumber = binding.terminalNumEd.text.toString()
+            if (checkFieldValue(customerName) || checkFieldValue(customerNumber) || checkFieldValue(
+                    terminalNumber
+                )
+                || !isValidPhone(customerNumber)
+            ) {
+                msg("Please Enter Current Info \n Try Again.")
+                return@setPositiveButton
+            }
+            val confirmDiningRequest = ConfirmDiningRequest(
+                body = ConfirmDiningBody(
+                    rcptNo = "$receiptNo",
+                    customerPhone = customerNumber,
+                    customerName = customerName,
+                    covers = binding.coverValue.text.toString(),
+                    storeVar = storeVar,
+                    tableNo = tableNo,
+                    terminalNo = makeStringAlphaNumericForm(terminalNumber),
+                    errorFound = false.toString(),
+                    salesType = "RESTAURANT",
+                    staffID = staffID,
+                    transDate = getDate() ?: "2022-06-18",
+                    transTime = time,
+                    waiterName = "",
+                    waiterID = "",
+                    errorText = "",
+                    contactNo = ""
+                )
+            )
+            listener.invoke(confirmDiningRequest)
+            dialog.dismiss()
+        }.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+        .create().show()
+
+    binding.incrementBtn.setOnClickListener {
+        binding.coverValue.apply {
+            val value = this.text.toString().toInt()
+            this.text = (value + 1).toString()
+        }
+    }
+
+    binding.decrementBtn.setOnClickListener {
+        binding.coverValue.apply {
+            val value = this.text.toString().toInt()
+            if (value > 1) {
+                this.text = (value - 1).toString()
+            }
+        }
+    }
+}
+
+
+fun getDate(): String? {
+    val current = LocalDateTime.now()
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    return current.format(formatter)
+}
+
 
 typealias ItemClickListerForTableOrCost = (selection: SelectionDataClass) -> Unit
 typealias ItemClickListerForListOfFood = (foodItem: ItemMasterFoodItem) -> Unit
 typealias LumaListener = (lum: Double) -> Unit
+typealias CustomerDining = (customer: ConfirmDiningRequest) -> Unit
 typealias ImageListener = (imageInput: InputImage) -> Unit
 typealias SnackBarListener = (msg: String?) -> String?
 //typealias ItemClickListerForFoodSelected = (foodItemSelected: FoodItemSelected) -> Unit

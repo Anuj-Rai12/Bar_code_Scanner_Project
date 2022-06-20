@@ -31,9 +31,9 @@ data class ConfirmDiningSuccessBody @JvmOverloads constructor(
     @param:Element(name = "errorText")
     val errorText: String? = "",*/
 
-    @field:Element(name = "contactNo")
+/*    @field:Element(name = "contactNo")
     @param:Element(name = "contactNo")
-    val contactNo: String? = null,
+    val contactNo: String? = null,*/
 
 
 )
