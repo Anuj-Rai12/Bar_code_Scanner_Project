@@ -2,6 +2,7 @@ package com.example.offiqlresturantapp.data.item_master_sync.json
 
 
 import android.os.Parcelable
+import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -30,6 +31,7 @@ data class ItemMaster(
     var foodAmt = try {
         salePrice.toInt()
     } catch (e: Exception) {
+        Log.i("ItemMaster", "error: ${e.localizedMessage}")
         0
     }
 }

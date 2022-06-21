@@ -19,7 +19,7 @@ import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
 import com.example.offiqlresturantapp.databinding.ScanQrLayoutBinding
 import com.example.offiqlresturantapp.ui.scan.utils.LuminosityAnalyzer
 import com.example.offiqlresturantapp.data.login.model.TestingBarcodeConnection
-import com.example.offiqlresturantapp.data.table_info.model.json.TableDetail
+import com.example.offiqlresturantapp.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.utils.TAG
@@ -149,7 +149,10 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                 args.food?.let {item->
                     arr.addAll(item.foodList)
                 }
-                arr.add(ItemMasterFoodItem(it, it.foodQty, it.foodAmt))
+                it.foodAmt=ListOfFoodItemToSearchAdaptor.setPrice(it.salePrice)
+                val item=ItemMasterFoodItem(it, foodQty = 1, foodAmt = it.foodAmt)
+                Log.i("QR", "sendData: $item")
+                arr.add(item)
                 val action =
                     ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
                         FoodItemList(arr),

@@ -25,6 +25,8 @@ import com.example.offiqlresturantapp.data.confirmOrder.response.ConfirmOrderSuc
 import com.example.offiqlresturantapp.databinding.ConfirmOrderLayoutBinding
 import com.example.offiqlresturantapp.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
 import com.example.offiqlresturantapp.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
+import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
+import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.utils.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +40,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private var flagForViewDeals: Boolean = false
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ConfirmOderFragmentArgs by navArgs()
+    private val arrItem = mutableListOf<ItemMasterFoodItem>()
     private var receiptNo: Long = 0
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -47,7 +50,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         binding = ConfirmOrderLayoutBinding.bind(view)
         binding.qrCodeScan.setOnClickListener {
             val action = ConfirmOderFragmentDirections
-                .actionGlobalScanQrCodeFragment(Url_Text, args.tbl, args.list)
+                .actionGlobalScanQrCodeFragment(Url_Text, args.tbl, FoodItemList(arrItem))
             findNavController().navigate(action)
         }
         viewModel.event.observe(viewLifecycleOwner) {
@@ -126,9 +129,14 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             binding.totalOrderAmt.text = viewModel.getGrandTotal(it.data)
             when (it) {
                 is ApisResponse.Error -> Log.i(TAG, "getData: Error")
-                is ApisResponse.Loading -> if (it.data == null) initial()
+                is ApisResponse.Loading -> if (it.data == null) {
+                    arrItem.clear()
+                    initial()
+                }
                 is ApisResponse.Success -> {
                     it.data?.let { data ->
+                        arrItem.clear()
+                        arrItem.addAll(data)
                         binding.orderRecycleViewHint.hide()
                         binding.listOfItemRecycleView.show()
                         confirmOderFragmentAdaptor.notifyDataSetChanged()

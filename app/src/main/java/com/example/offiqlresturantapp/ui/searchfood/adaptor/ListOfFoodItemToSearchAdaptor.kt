@@ -29,6 +29,15 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 return oldItem == newItem
             }
         }
+
+        fun setPrice(salePrice: String): Int {
+            val data = salePrice.split(',')
+            val str = StringBuilder()
+            data.forEach {
+                str.append(it)
+            }
+            return str.toString().toInt()
+        }
     }
 
     inner class ListOfFoodItemViewHolder(private val binding: FoodItemLayoutBinding) :
@@ -120,15 +129,6 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 setInVisible()
             }
 
-        }
-
-        private fun setPrice(salePrice: String): Int {
-            val data = salePrice.split(',')
-            val str = StringBuilder()
-            data.forEach {
-                str.append(it)
-            }
-            return str.toString().toInt()
         }
 
         private fun setUpRecycleView() {
