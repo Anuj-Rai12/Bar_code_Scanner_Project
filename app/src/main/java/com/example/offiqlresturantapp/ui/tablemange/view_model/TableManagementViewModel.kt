@@ -18,7 +18,7 @@ import javax.inject.Inject
 class TableManagementViewModel @Inject constructor(
     private val repository: TblRepositoryImpl,
     private val userSoredData: UserSoredData,
-    application: Application
+    private val application: Application
 ) : ViewModel() {
 
     private val _tblInfo = MutableLiveData<ApisResponse<out Any?>>()
@@ -29,7 +29,7 @@ class TableManagementViewModel @Inject constructor(
     val events: LiveData<Events<String>>
         get() = _event
 
-    init {
+    fun fetchTbl(){
         if (!application.isNetworkAvailable()) {
             _event.postValue(Events("No Internet Connection"))
         }

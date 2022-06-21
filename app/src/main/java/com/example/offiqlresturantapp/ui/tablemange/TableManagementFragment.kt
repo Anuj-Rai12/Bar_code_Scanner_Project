@@ -96,7 +96,10 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
         } ?: binding.pbLayout.root.hide()
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchTbl()
+    }
     private fun setRecycleView() {
         binding.totalTableRecycler.apply {
             setHasFixedSize(true)
