@@ -17,7 +17,7 @@ class ConfirmDiningRepositoryImpl @Inject constructor(
 
 
     override fun updateAndLockTbl(confirmDiningRequest: ConfirmDiningRequest) = flow {
-        emit(ApisResponse.Loading("Please Updating the Information"))
+        emit(ApisResponse.Loading("Updating Table.."))
         val res = try {
             val res = api.setPostRequestApi(confirmDiningRequest)
             if (res.isSuccessful) {

@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningBody
 import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest
@@ -271,6 +272,22 @@ fun Activity.addDialogMaterial(
             }
         }
     }
+}
+
+
+fun Fragment.showDialogBox(title: String, desc: String,btn:String="ok got it") {
+    val material = MaterialAlertDialogBuilder(
+        requireActivity(),
+        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog_simple
+    )
+
+    material.setTitle(title)
+        .setMessage(desc)
+        .setPositiveButton(btn) { dialog, _ ->
+            dialog.dismiss()
+        }
+        .show()
+
 }
 
 

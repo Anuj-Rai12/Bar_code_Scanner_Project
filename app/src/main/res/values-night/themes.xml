@@ -18,7 +18,7 @@
     <style name="MyThemeOverlay.MaterialComponents.MaterialAlertDialog.simple" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
         <item name="buttonBarNegativeButtonStyle">@style/NegButtonStyle</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/light_grey_color</item>
         <item name="materialAlertDialogTitleTextStyle">
             @style/MyTitle_MaterialAlertDialog.MaterialComponents.Title.Text
         </item>
@@ -43,6 +43,7 @@
         <item name="android:textColor">@color/dark_blue_bg</item>
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
         <item name="backgroundTint">@android:color/transparent</item>
     </style>
 
@@ -54,13 +55,13 @@
     </style>
 
     <style name="MyTitle_MaterialAlertDialog.MaterialComponents.Title.Text" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/light_grey_color</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/roboto</item>
     </style>
 
     <style name="BodyTextAppearance.MaterialComponents.Body2" parent="@style/MaterialAlertDialog.MaterialComponents.Body.Text">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/light_grey_color</item>
         <item name="fontFamily">@font/roboto</item>
     </style>
 

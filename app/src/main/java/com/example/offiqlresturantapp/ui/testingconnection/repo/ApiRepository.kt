@@ -5,10 +5,7 @@ import com.example.offiqlresturantapp.api.apkLogin.LoginApi
 import com.example.offiqlresturantapp.dataStore.UserSoredData
 import com.example.offiqlresturantapp.data.login.model.api.ApKLoginPost
 import com.example.offiqlresturantapp.data.login.model.api.json.ApkLoginJsonResponse
-import com.example.offiqlresturantapp.utils.ApisResponse
-import com.example.offiqlresturantapp.utils.TAG
-import com.example.offiqlresturantapp.utils.buildApi
-import com.example.offiqlresturantapp.utils.deserializeFromJson
+import com.example.offiqlresturantapp.utils.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -22,7 +19,7 @@ class ApiRepository @Inject constructor(
 
     private val apkLoginApi = buildApi<LoginApi>(retrofit)
 
-    fun getApkLoginResponse(requestBody: ApKLoginPost,flag:Boolean) = flow {
+    fun getApkLoginResponse(requestBody: ApKLoginPost, flag: Boolean) = flow {
         emit(ApisResponse.Loading("Loading.."))
         val data = try {
             val response = apkLoginApi.sendApiPostRequest(requestBody)
@@ -34,6 +31,8 @@ class ApiRepository @Inject constructor(
                             password = requestBody.apK.password!!,
                             storeId = requestBody.apK.storeNo!!
                         )
+                        RestaurantSingletonCls.getInstance().setStoreId(requestBody.apK.storeNo)
+                        RestaurantSingletonCls.getInstance().setUserID(requestBody.apK.userID)
                     }
                     return@let it
                 }

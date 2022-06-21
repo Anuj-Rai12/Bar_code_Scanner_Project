@@ -105,29 +105,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             ) { res ->
                 confirmDinningOrder(res)
             }
-            /*val confirmDiningRequest = ConfirmDiningRequest(
-                body = ConfirmDiningBody(
-                    rcptNo = "212",
-                    customerPhone = "1234567891",
-                    customerName = "Anuj",
-                    covers = "3",
-                    storeVar = "PER002",
-                    tableNo = "3",
-                    terminalNo = "PC012",
-                    errorFound = false.toString(),
-                    salesType = "RESTAURANT",
-                    staffID = "0000",
-                    transDate = "2022-06-18",
-                    transTime = "05:22 AM",
-                    waiterName = "",
-                    waiterID = "",
-                    errorText = "",
-                    contactNo = ""
-                )
-            )
-            val confirmOrderRequest =
-                ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = "212"))
-            confirmOrder(confirmOrderRequest)*/
         }
 
     }
@@ -165,29 +142,31 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             when (it) {
                 is ApisResponse.Error -> {
                     Log.i("getConfirmDinningResponse", " Error ${it.exception}")
-                    showSnackBar(msg = "Oops Something Went Wrong..", color = R.color.color_red)
+                    oopsSomeThingWentWrong()
                     binding.pbLayout.root.hide()
                 }
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmDinningResponse", " Loading ${it.data}")
                     binding.pbLayout.root.show()
-                    binding.pbLayout.titleTxt.text=it.data.toString()
+                    binding.pbLayout.titleTxt.text = it.data.toString()
                 }
                 is ApisResponse.Success -> {
                     Log.i("getConfirmDinningResponse", " Success ${it.data}")
-                    (it.data as ConfirmDiningSuccessResponse?)?.let {
-                        activity?.msg("create Receipt $receiptNo")
-                        val confirmOrderRequest = ConfirmOrderRequest(
-                            body =
-                            ConfirmOrderBody(receiptNo = receiptNo.toString())
-                        )
-
-                        confirmOrder(confirmOrderRequest)
+                    (it.data as ConfirmDiningSuccessResponse?)?.let { res ->
+                        val error = res.body?.errorFound?.toBoolean()
+                        if (error == true) {
+                            val result =
+                                Pair("Failed to Update Table!!", "Cannot Update the Table!!")
+                            showDialogBox(result.first, result.second)
+                            binding.pbLayout.root.hide()
+                        } else {
+                            activity?.msg("create Receipt $receiptNo")
+                            val confirmOrderRequest =
+                                ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = receiptNo.toString()))
+                            confirmOrder(confirmOrderRequest)
+                        }
                     } ?: run {
-                        showSnackBar(
-                            msg = "Oops Something Went Wrong..",
-                            color = R.color.color_red
-                        )
+                        oopsSomeThingWentWrong()
                         binding.pbLayout.root.hide()
                     }
                 }
@@ -201,7 +180,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             when (it) {
                 is ApisResponse.Error -> {
                     Log.i("getConfirmOrderResponse", " Error ${it.exception}")
-                    showSnackBar(msg = "Oops Something Went Wrong..", color = R.color.color_red)
+                    oopsSomeThingWentWrong()
                     binding.pbLayout.root.hide()
                 }
                 is ApisResponse.Loading -> {
@@ -210,13 +189,25 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 }
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
-                    showSnackBar(
-                        "${(it.data as ConfirmOrderSuccessResponse?)?.body?.returnValue}",
-                        R.color.green_color
-                    )
+                    (it.data as ConfirmOrderSuccessResponse?)?.let { res ->
+                        val result = if (res.body?.returnValue == "01") {
+                            Pair("Failed to Insert!!", "Order is Not Inserted in Navision at All.")
+                        } else {
+                            Pair("Successfully Inserted", "Order is Inserted in Navision at All.")
+                        }
+                        showDialogBox(result.first, result.second)
+                    } ?: run {
+                        val res =
+                            Pair("Failed to Insert!!", "Order is Not Inserted in Navision at All.")
+                        showDialogBox(res.first, res.second)
+                    }
                 }
             }
         }
+    }
+
+    private fun oopsSomeThingWentWrong() {
+        showSnackBar(msg = "Oops Something Went Wrong..", color = R.color.color_red)
     }
 
     private fun confirmDinningOrder(confirmDiningRequest: ConfirmDiningRequest) {

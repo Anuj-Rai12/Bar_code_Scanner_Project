@@ -14,7 +14,7 @@ data class ConfirmDiningSuccessResponse @JvmOverloads constructor(
     @param:Path("Soap:Body")
     val body: ConfirmDiningSuccessBody? = null,
 
-    )
+)
 
 @Root(name = "CustomerDining_Result", strict = false)
 data class ConfirmDiningSuccessBody @JvmOverloads constructor(
@@ -27,9 +27,9 @@ data class ConfirmDiningSuccessBody @JvmOverloads constructor(
     @param:Element(name = "errorFound")
     val errorFound: String? = null,
 
- /*   @field:Element(name = "errorText")
+    /*@field:Element(name = "errorText")
     @param:Element(name = "errorText")
-    val errorText: String? = "",*/
+        val errorText: Any? = null,*/
 
 /*    @field:Element(name = "contactNo")
     @param:Element(name = "contactNo")
