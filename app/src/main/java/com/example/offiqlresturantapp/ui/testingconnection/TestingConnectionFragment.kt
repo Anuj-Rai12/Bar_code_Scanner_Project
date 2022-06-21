@@ -38,8 +38,8 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         }
 
         args.bar?.let {
-            if (it.title!=null || it.uri!=null)
-            requireActivity().msg("$it")
+            if (it.title != null || it.uri != null)
+                requireActivity().msg("$it")
         }
 
         checkApiResponse()
@@ -48,7 +48,11 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
 
         binding.scanOrCodeId.setOnClickListener {
             val action =
-                TestingConnectionFragmentDirections.actionGlobalScanQrCodeFragment(Url_barcode)
+                TestingConnectionFragmentDirections.actionGlobalScanQrCodeFragment(
+                    Url_barcode,
+                    null,
+                    null
+                )
             findNavController().navigate(action)
         }
         binding.testConnectionId.setOnClickListener {

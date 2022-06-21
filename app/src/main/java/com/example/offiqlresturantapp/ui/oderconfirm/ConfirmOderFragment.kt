@@ -46,7 +46,9 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         requireActivity().changeStatusBarColor(R.color.semi_white_color)
         binding = ConfirmOrderLayoutBinding.bind(view)
         binding.qrCodeScan.setOnClickListener {
-            requireActivity().msg(getString(R.string.scan_btn))
+            val action = ConfirmOderFragmentDirections
+                .actionGlobalScanQrCodeFragment(Url_Text, args.tbl, args.list)
+            findNavController().navigate(action)
         }
         viewModel.event.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { map ->

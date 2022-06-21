@@ -15,11 +15,17 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.offiqlresturantapp.R
+import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
 import com.example.offiqlresturantapp.databinding.ScanQrLayoutBinding
 import com.example.offiqlresturantapp.ui.scan.utils.LuminosityAnalyzer
 import com.example.offiqlresturantapp.data.login.model.TestingBarcodeConnection
+import com.example.offiqlresturantapp.data.table_info.model.json.TableDetail
+import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
+import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.utils.TAG
 import com.example.offiqlresturantapp.utils.changeStatusBarColor
+import com.example.offiqlresturantapp.utils.deserializeFromJson
+import com.example.offiqlresturantapp.utils.msg
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -137,12 +143,29 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     }
 
     private fun sendData(first: Barcode) {
-        val barcodeValue = TestingBarcodeConnection(title = first.url?.title, uri = first.url?.url)
-        val action =
-            ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToTestingConnectionFragment(
-                barcodeValue
-            )
-        findNavController().navigate(action)
+        if (args.tbl != null) {
+            deserializeFromJson<ItemMaster>(first.rawValue)?.also {
+                val arr=ArrayList<ItemMasterFoodItem>()
+                args.food?.let {item->
+                    arr.addAll(item.foodList)
+                }
+                arr.add(ItemMasterFoodItem(it, it.foodQty, it.foodAmt))
+                val action =
+                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
+                        FoodItemList(arr),
+                        args.tbl!!
+                    )
+                findNavController().navigate(action)
+            } ?: activity?.msg("Oops Something Went Wrong?")
+        } else {
+            val barcodeValue =
+                TestingBarcodeConnection(title = first.url?.title, uri = first.url?.url)
+            val action =
+                ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToTestingConnectionFragment(
+                    barcodeValue
+                )
+            findNavController().navigate(action)
+        }
     }
 
 

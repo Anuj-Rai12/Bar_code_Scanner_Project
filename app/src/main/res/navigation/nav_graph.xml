@@ -89,9 +89,21 @@
             app:destination="@id/testingConnectionFragment"
             app:popUpTo="@id/scanQrCodeFragment"
             app:popUpToInclusive="true" />
+
         <action
             android:id="@+id/action_scanQrCodeFragment_to_confirmOderFragment"
-            app:destination="@id/confirmOderFragment" />
+            app:destination="@id/confirmOderFragment"
+            app:popUpTo="@id/confirmOderFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="tbl"
+            app:argType="com.example.offiqlresturantapp.data.table_info.model.json.TableDetail"
+            app:nullable="true"
+            />
+        <argument
+            android:name="food"
+            app:argType="com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList"
+            app:nullable="true" />
     </fragment>
     <action android:id="@+id/action_global_scanQrCodeFragment" app:destination="@id/scanQrCodeFragment" />
     <fragment

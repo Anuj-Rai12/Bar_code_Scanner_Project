@@ -36,6 +36,7 @@ import kotlin.random.Random
 
 const val CAMERA_INT = 11
 const val Url_barcode = Barcode.TYPE_URL
+const val Url_Text = Barcode.TYPE_TEXT
 fun AppCompatActivity.hide() {
     this.supportActionBar!!.hide()
 }
