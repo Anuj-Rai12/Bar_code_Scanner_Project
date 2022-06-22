@@ -54,11 +54,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
     private fun setData() {
         val list = listOf(
             SelectionDataClass(
-                image = R.drawable.tablewaiter,
+                image = R.drawable.ic_waiter,
                 title = getString(R.string.item_table)
             ),
             SelectionDataClass(
-                image = R.drawable.costestimiation,
+                image = R.drawable.ic_cost_estimation,
                 title = getString(R.string.item_cost)
             )
         )
