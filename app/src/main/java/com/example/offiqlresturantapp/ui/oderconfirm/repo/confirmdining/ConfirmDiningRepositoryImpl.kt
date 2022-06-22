@@ -27,7 +27,7 @@ class ConfirmDiningRepositoryImpl @Inject constructor(
                 ApisResponse.Success(null)
             }
         } catch (e: Exception) {
-            Log.i("updateAndLockTbl", e.localizedMessage.toString())
+            Log.i("updateAndLockTbl"," ${e.localizedMessage}")
             ApisResponse.Error(null, e)
         }
         emit(res)
