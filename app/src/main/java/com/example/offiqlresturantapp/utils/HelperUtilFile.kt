@@ -59,6 +59,7 @@ object AllStringConst {
     const val base = "$userName:$PASSWORD"
     const val End_point = "LoginAndGetMasterAPI"
     const val Envelope = "Envelope"
+    //const val No_Error = "No Error"
     const val Soap_Envelope = "Soap:Envelope"
     var authHeader = "Basic ${genToken()}"
 
@@ -251,7 +252,7 @@ fun Activity.addDialogMaterial(
                     waiterName = "",
                     waiterID = "",
                     errorText = "",
-                    contactNo = ""
+                    contactNo = "0000000000"
                 )
             )
             listener.invoke(confirmDiningRequest)
@@ -279,7 +280,12 @@ fun Activity.addDialogMaterial(
 }
 
 
-fun Fragment.showDialogBox(title: String, desc: String, btn: String = "ok got it") {
+fun Fragment.showDialogBox(
+    title: String,
+    desc: String,
+    btn: String = "ok,got it",
+    icon: Int = R.drawable.ic_info
+) {
     val material = MaterialAlertDialogBuilder(
         requireActivity(),
         R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog_simple
@@ -287,6 +293,7 @@ fun Fragment.showDialogBox(title: String, desc: String, btn: String = "ok got it
 
     material.setTitle(title)
         .setMessage(desc)
+        .setIcon(icon)
         .setPositiveButton(btn) { dialog, _ ->
             dialog.dismiss()
         }
