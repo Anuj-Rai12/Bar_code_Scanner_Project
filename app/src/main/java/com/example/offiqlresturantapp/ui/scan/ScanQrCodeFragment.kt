@@ -12,6 +12,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.offiqlresturantapp.MainActivity
@@ -169,12 +170,14 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                 }
                 Log.i("QR", "sendData: $res")
                 arr.add(ItemMasterFoodItem(res, res.foodQty, res.foodAmt))
-                val action =
-                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
-                        FoodItemList(arr),
-                        args.tbl!!
-                    )
-                findNavController().navigate(action)
+                lifecycleScope.launchWhenResumed {
+                    val action =
+                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
+                            FoodItemList(arr),
+                            args.tbl!!
+                        )
+                    findNavController().navigate(action)
+                }
             })
         } ?: activity?.msg("Oops Something Went Wrong?")
     }

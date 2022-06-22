@@ -81,6 +81,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
             } else {
                 flagForViewDeals = false
+                activity?.msg("No Offer Available")
                 confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
             }
         }

@@ -153,7 +153,7 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
         }
 
         private fun setOffer(): String {
-            binding.offerTv.hide()
+            //binding.offerTv.hide()
             return "No offer"
             //foodOffer: String?
             /*return if (foodOffer != null) {

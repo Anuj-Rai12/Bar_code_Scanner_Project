@@ -28,7 +28,7 @@
 
     <string name="arr_bck">back Arrow</string>
     <string name="clos_btn">clear</string>
-    <string name="off_txt">Offer</string>
+    <string name="off_txt">No Offer</string>
     <string name="src_hint">Search..</string>
     <string name="hint_btn_add">Add</string>
     <string name="hint_btn_minus">Minus</string>
