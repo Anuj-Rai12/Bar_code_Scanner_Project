@@ -16,7 +16,10 @@ import androidx.fragment.app.Fragment
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningBody
 import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest
+import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
 import com.example.offiqlresturantapp.databinding.ConfirmOrderDialogLayoutBinding
+import com.example.offiqlresturantapp.databinding.QtyIncrementLayoutBinding
+import com.example.offiqlresturantapp.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
 import com.github.razir.progressbutton.hideProgress
@@ -276,7 +279,7 @@ fun Activity.addDialogMaterial(
 }
 
 
-fun Fragment.showDialogBox(title: String, desc: String,btn:String="ok got it") {
+fun Fragment.showDialogBox(title: String, desc: String, btn: String = "ok got it") {
     val material = MaterialAlertDialogBuilder(
         requireActivity(),
         R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog_simple
@@ -288,6 +291,52 @@ fun Fragment.showDialogBox(title: String, desc: String,btn:String="ok got it") {
             dialog.dismiss()
         }
         .show()
+
+}
+
+
+fun Fragment.showQtyDialog(
+    title: String,
+    isCancelable: Boolean = false,
+    itemMaster: ItemMaster,
+    cancel: (Boolean) -> Unit,
+    res: (ItemMaster) -> Unit
+) {
+    val materialDialogs = MaterialAlertDialogBuilder(
+        requireActivity(),
+        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+    )
+
+    val binding = QtyIncrementLayoutBinding.inflate(layoutInflater)
+    materialDialogs.setView(binding.root)
+        .setTitle(title)
+        .setCancelable(isCancelable)
+        .setPositiveButton("Done") { dialog, _ ->
+            val qty = binding.coverValue.text.toString().toInt()
+            itemMaster.foodQty = qty
+            itemMaster.foodAmt = ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * qty
+            res.invoke(itemMaster)
+            dialog.dismiss()
+        }.setNegativeButton("Cancel") { dialog, _ ->
+            cancel.invoke(false)
+            dialog.dismiss()
+        }.show()
+
+    binding.incrementBtn.setOnClickListener {
+        binding.coverValue.apply {
+            val value = this.text.toString().toInt()
+            this.text = (value + 1).toString()
+        }
+    }
+
+    binding.decrementBtn.setOnClickListener {
+        binding.coverValue.apply {
+            val value = this.text.toString().toInt()
+            if (value > 1) {
+                this.text = (value - 1).toString()
+            }
+        }
+    }
 
 }
 

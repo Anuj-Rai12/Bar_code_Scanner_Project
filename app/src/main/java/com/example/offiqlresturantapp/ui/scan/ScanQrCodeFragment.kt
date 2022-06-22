@@ -16,16 +16,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
+import com.example.offiqlresturantapp.data.login.model.TestingBarcodeConnection
 import com.example.offiqlresturantapp.databinding.ScanQrLayoutBinding
 import com.example.offiqlresturantapp.ui.scan.utils.LuminosityAnalyzer
-import com.example.offiqlresturantapp.data.login.model.TestingBarcodeConnection
-import com.example.offiqlresturantapp.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
-import com.example.offiqlresturantapp.utils.TAG
-import com.example.offiqlresturantapp.utils.changeStatusBarColor
-import com.example.offiqlresturantapp.utils.deserializeFromJson
-import com.example.offiqlresturantapp.utils.msg
+import com.example.offiqlresturantapp.utils.*
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -144,21 +140,23 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
 
     private fun sendData(first: Barcode) {
         if (args.tbl != null) {
-            deserializeFromJson<ItemMaster>(first.rawValue)?.also {
-                val arr=ArrayList<ItemMasterFoodItem>()
-                args.food?.let {item->
-                    arr.addAll(item.foodList)
-                }
-                it.foodAmt=ListOfFoodItemToSearchAdaptor.setPrice(it.salePrice)
-                val item=ItemMasterFoodItem(it, foodQty = 1, foodAmt = it.foodAmt)
-                Log.i("QR", "sendData: $item")
-                arr.add(item)
-                val action =
-                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
-                        FoodItemList(arr),
-                        args.tbl!!
-                    )
-                findNavController().navigate(action)
+            deserializeFromJson<ItemMaster>(first.rawValue)?.also { value ->
+                showQtyDialog("Select Quantity", itemMaster = value, cancel = {
+                    flagList=it
+                }, res = { res ->
+                    val arr = ArrayList<ItemMasterFoodItem>()
+                    args.food?.let { item ->
+                        arr.addAll(item.foodList)
+                    }
+                    Log.i("QR", "sendData: $res")
+                    arr.add(ItemMasterFoodItem(res, res.foodQty, res.foodAmt))
+                    val action =
+                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
+                            FoodItemList(arr),
+                            args.tbl!!
+                        )
+                    findNavController().navigate(action)
+                })
             } ?: activity?.msg("Oops Something Went Wrong?")
         } else {
             val barcodeValue =
