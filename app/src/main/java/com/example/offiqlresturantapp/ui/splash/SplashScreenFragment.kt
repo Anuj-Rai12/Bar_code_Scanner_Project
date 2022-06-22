@@ -37,14 +37,14 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
         binding.logoFileId3.animation = animation
 
         viewModel.events.observe(viewLifecycleOwner) {
-            var count=0
+            var count = 0
             it.getContentIfNotHandled()?.let { str ->
                 binding.root.showSandbar(
                     str,
                     Snackbar.LENGTH_INDEFINITE,
                     requireActivity().getColorInt(R.color.color_red)
                 ) {
-                    if (count>0){
+                    if (count > 0) {
                         nextFrag(null)
                     }
                     count++
@@ -75,7 +75,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                 is ApisResponse.Error -> {
                     it.exception?.localizedMessage?.let { exp ->
                         if (!checkFieldValue(exp))
-                        requireActivity().msg(exp)
+                            requireActivity().msg(exp)
                     }
                     nextFrag(null)
                 }

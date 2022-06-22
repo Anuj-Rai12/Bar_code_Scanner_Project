@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.offiqlresturantapp.MainActivity
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
 import com.example.offiqlresturantapp.data.login.model.TestingBarcodeConnection
@@ -67,6 +68,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
         requireActivity().changeStatusBarColor(R.color.black)
         binding = ScanQrLayoutBinding.bind(view)
         cameraExecutor = Executors.newSingleThreadExecutor()
+        (activity as MainActivity?)?.getPermission()
         startCamera()
     }
 
@@ -142,7 +144,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
         if (args.tbl != null) {
             deserializeFromJson<ItemMaster>(first.rawValue)?.also { value ->
                 showQtyDialog("Select Quantity", itemMaster = value, cancel = {
-                    flagList=it
+                    flagList = it
                 }, res = { res ->
                     val arr = ArrayList<ItemMasterFoodItem>()
                     args.food?.let { item ->

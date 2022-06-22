@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         getPermission()
     }
 
-    private fun getPermission() {
+    fun getPermission() {
         if (!this.checkCameraPermission()) {
             requestPermission()
         }
