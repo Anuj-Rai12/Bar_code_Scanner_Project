@@ -100,7 +100,6 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
             val item = myList.find { res -> res.itemMaster.id == foodItem.itemMaster.id }
             if (item != null) {
                 myList.remove(foodItem)
-                _event.postValue(Events(mapOf(("Item Removed" to false))))
             } else {
                 if (!flag) {
                     myList.add(foodItem)
@@ -144,7 +143,7 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
         }
     }
 
-    fun saveUserOrderItem(confirmOrderRequest: ConfirmOrderRequest){
+    fun saveUserOrderItem(confirmOrderRequest: ConfirmOrderRequest) {
         viewModelScope.launch {
             if (application.isNetworkAvailable()) {
                 confirmOrderRepository.saveUserOrderItem(confirmOrderRequest).collectLatest {

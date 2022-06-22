@@ -168,7 +168,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                         if (error == true) {
                             val result =
                                 Pair("Failed to Update Table", R.drawable.ic_error)
-                            showDialogBox(result.first, errorBdy, icon = result.second)
+                            showDialogBox(result.first, errorBdy, icon = result.second) {}
                             binding.pbLayout.root.hide()
                         } else {
                             activity?.msg("create Receipt $receiptNo")
@@ -201,16 +201,37 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
                     (it.data as ConfirmOrderSuccessResponse?)?.let { res ->
-                        val result = if (res.body?.returnValue == "01") {
-                            Pair(R.drawable.ic_error,Pair("Failed to Insert!!", "Order is Not Inserted in Navision at All."))
+                        val str = res.body?.returnValue
+                        val result = if (str == "01") {
+                            Pair(
+                                R.drawable.ic_error,
+                                Pair(
+                                    "Failed to Insert!!",
+                                    "Order is Not Inserted in Navision at All."
+                                )
+                            )
                         } else {
-                            Pair(R.drawable.ic_success,Pair("Successfully Inserted", "Order is Inserted in Navision at All."))
+                            Pair(
+                                R.drawable.ic_success,
+                                Pair(
+                                    "Successfully Inserted",
+                                    "Order is Inserted in Navision at All."
+                                )
+                            )
                         }
-                        showDialogBox(result.second.first, result.second.second, icon = result.first)
+                        showDialogBox(
+                            result.second.first,
+                            result.second.second,
+                            icon = result.first
+                        ) {
+                            if (str != "01") {
+                                findNavController().popBackStack()
+                            }
+                        }
                     } ?: run {
                         val res =
                             Pair("Failed to Insert!!", "Order is Not Inserted in Navision at All.")
-                        showDialogBox(res.first, res.second, icon = R.drawable.ic_error)
+                        showDialogBox(res.first, res.second, icon = R.drawable.ic_error) {}
                     }
                 }
             }

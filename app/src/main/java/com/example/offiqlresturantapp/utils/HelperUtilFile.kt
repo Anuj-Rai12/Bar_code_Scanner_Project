@@ -59,6 +59,7 @@ object AllStringConst {
     const val base = "$userName:$PASSWORD"
     const val End_point = "LoginAndGetMasterAPI"
     const val Envelope = "Envelope"
+
     //const val No_Error = "No Error"
     const val Soap_Envelope = "Soap:Envelope"
     var authHeader = "Basic ${genToken()}"
@@ -284,7 +285,8 @@ fun Fragment.showDialogBox(
     title: String,
     desc: String,
     btn: String = "Ok",
-    icon: Int = R.drawable.ic_info
+    icon: Int = R.drawable.ic_info,
+    listener: () -> Unit
 ) {
     val material = MaterialAlertDialogBuilder(
         requireActivity(),
@@ -295,6 +297,7 @@ fun Fragment.showDialogBox(
         .setMessage(desc)
         .setIcon(icon)
         .setPositiveButton(btn) { dialog, _ ->
+            listener.invoke()
             dialog.dismiss()
         }
         .show()
