@@ -36,7 +36,7 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             data.forEach {
                 str.append(it)
             }
-            return str.toString().toInt()
+            return str.toString().toFloat().toInt()
         }
     }
 
