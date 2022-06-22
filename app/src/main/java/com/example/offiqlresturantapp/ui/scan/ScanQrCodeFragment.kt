@@ -142,24 +142,11 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
 
     private fun sendData(first: Barcode) {
         if (args.tbl != null) {
-            deserializeFromJson<ItemMaster>(first.rawValue)?.also { value ->
-                showQtyDialog("Select Quantity", itemMaster = value, cancel = {
-                    flagList = it
-                }, res = { res ->
-                    val arr = ArrayList<ItemMasterFoodItem>()
-                    args.food?.let { item ->
-                        arr.addAll(item.foodList)
-                    }
-                    Log.i("QR", "sendData: $res")
-                    arr.add(ItemMasterFoodItem(res, res.foodQty, res.foodAmt))
-                    val action =
-                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
-                            FoodItemList(arr),
-                            args.tbl!!
-                        )
-                    findNavController().navigate(action)
-                })
-            } ?: activity?.msg("Oops Something Went Wrong?")
+            try {
+                gotConfirmScreen(barcode = first)
+            }catch (e:Exception){
+                activity?.msg("Try Some Other QR")
+            }
         } else {
             val barcodeValue =
                 TestingBarcodeConnection(title = first.url?.title, uri = first.url?.url)
@@ -169,6 +156,27 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                 )
             findNavController().navigate(action)
         }
+    }
+
+    private fun gotConfirmScreen(barcode: Barcode) {
+        deserializeFromJson<ItemMaster>(barcode.rawValue)?.also { value ->
+            showQtyDialog("Select Quantity", itemMaster = value, cancel = {
+                flagList = it
+            }, res = { res ->
+                val arr = ArrayList<ItemMasterFoodItem>()
+                args.food?.let { item ->
+                    arr.addAll(item.foodList)
+                }
+                Log.i("QR", "sendData: $res")
+                arr.add(ItemMasterFoodItem(res, res.foodQty, res.foodAmt))
+                val action =
+                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
+                        FoodItemList(arr),
+                        args.tbl!!
+                    )
+                findNavController().navigate(action)
+            })
+        } ?: activity?.msg("Oops Something Went Wrong?")
     }
 
 

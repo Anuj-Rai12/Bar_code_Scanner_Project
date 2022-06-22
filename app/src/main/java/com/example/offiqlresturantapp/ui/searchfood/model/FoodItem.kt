@@ -15,7 +15,7 @@ data class FoodItem(
     var foodQTY: Int = 1,
     var foodAmt: Int,
     var offerDesc: List<OfferDesc>?,
-    val bg: Int = listOfBg[rand()],
+    val bg: Int = listOfBg[0],
     //var addWithOffer: Boolean = true
 ) : Parcelable
 
@@ -24,7 +24,7 @@ data class ItemMasterFoodItem(
     val itemMaster: ItemMaster,
     var foodQty: Int,
     var foodAmt: Int,
-    val bg: Int = listOfBg.random(),
+    val bg: Int = listOfBg.first(),
 ) : Parcelable
 
 

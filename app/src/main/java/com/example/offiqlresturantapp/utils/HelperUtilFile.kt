@@ -283,7 +283,7 @@ fun Activity.addDialogMaterial(
 fun Fragment.showDialogBox(
     title: String,
     desc: String,
-    btn: String = "ok,got it",
+    btn: String = "Ok",
     icon: Int = R.drawable.ic_info
 ) {
     val material = MaterialAlertDialogBuilder(

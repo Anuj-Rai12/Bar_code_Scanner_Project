@@ -53,6 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:contentDescription="@string/btn_setting"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:srcCompat="@drawable/setting_icon" />
@@ -64,7 +65,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="50dp"
         android:overScrollMode="never"
-        app:layout_constraintBottom_toTopOf="@id/setting_btn_ic3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/table_info_detail"
         app:layout_constraintRight_toRightOf="@id/logo_file_id4"
         app:layout_constraintTop_toBottomOf="@id/table_info_detail"
@@ -77,7 +78,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/setting_btn_ic3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/table_info_detail"
         app:layout_constraintRight_toRightOf="@id/table_info_detail"
         app:layout_constraintTop_toBottomOf="@id/table_info_detail"
@@ -93,6 +94,7 @@
         android:text="@string/btn_setting"
         android:textColor="@color/light_grey_color"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/setting_btn_ic3"
         app:layout_constraintLeft_toRightOf="@id/setting_btn_ic3"
         app:layout_constraintTop_toTopOf="@id/setting_btn_ic3" />
