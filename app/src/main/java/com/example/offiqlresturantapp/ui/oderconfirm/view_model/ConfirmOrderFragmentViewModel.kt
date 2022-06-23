@@ -82,11 +82,30 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
                     item.addAll(list)
                     item.remove(food)
                     if (item.isNotEmpty()) {
+                        Log.i(TAG, "deleteSwipe:TEST $item")
                         _listOfOrder.postValue(ApisResponse.Success(item))
                     } else {
                         _listOfOrder.postValue(ApisResponse.Loading(null))
                     }
                 }
+            }
+        }
+    }
+
+    fun addUpdateQty(itemRemoved: ItemMasterFoodItem, food: ItemMasterFoodItem) {
+        _listOfOrder.value?.let {
+            if (it is ApisResponse.Success) {
+                it.data?.let { list ->
+                    val item = mutableListOf<ItemMasterFoodItem>()
+                    item.addAll(list)
+                    item.remove(itemRemoved)
+                    item.add(food)
+                    _listOfOrder.postValue(ApisResponse.Success(item))
+                }
+            } else {
+                val item = mutableListOf<ItemMasterFoodItem>()
+                item.add(food)
+                _listOfOrder.postValue(ApisResponse.Success(item))
             }
         }
     }

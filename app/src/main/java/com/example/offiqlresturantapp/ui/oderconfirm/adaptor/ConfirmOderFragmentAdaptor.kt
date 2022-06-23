@@ -19,7 +19,8 @@ import com.example.offiqlresturantapp.utils.hide
 import com.example.offiqlresturantapp.utils.show
 
 class ConfirmOderFragmentAdaptor(
-    private val itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit
+    private val itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
+    private val itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit
 ) :
     ListAdapter<ItemMasterFoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
 
@@ -53,7 +54,8 @@ class ConfirmOderFragmentAdaptor(
         @SuppressLint("SetTextI18n")
         fun setData(
             foodItem: ItemMasterFoodItem,
-            itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit
+            itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
+            itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit
         ) {
             binding.apply {
                 foodItemName.apply {
@@ -73,6 +75,9 @@ class ConfirmOderFragmentAdaptor(
                     itemClickListerForFoodSelected(foodItem)
                 }
 
+                qtyOfFood.setOnClickListener {
+                    itemClickListerForUpdate(foodItem)
+                }
                 qtyOfFood.apply {
                     setBg(foodItem.bg)
                     text = foodItem.foodQty.toString()
@@ -130,7 +135,7 @@ class ConfirmOderFragmentAdaptor(
             } else {
                 holder.checkBoxView.hide()
             }
-            holder.setData(it, itemClickListerForFoodSelected)
+            holder.setData(it, itemClickListerForFoodSelected, itemClickListerForUpdate)
         }
     }
 }

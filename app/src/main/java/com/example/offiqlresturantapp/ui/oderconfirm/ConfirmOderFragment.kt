@@ -366,13 +366,26 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         binding.listOfItemRecycleView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireActivity())
-            confirmOderFragmentAdaptor = ConfirmOderFragmentAdaptor {
-                if (flagForViewDeals)
-                    viewModel.getOrderItem(it)
-            }
+            confirmOderFragmentAdaptor =
+                ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {
+                    if (flagForViewDeals)
+                        viewModel.getOrderItem(it)
+                }, itemClickListerForUpdate = { res ->
+                    updateQtyDialogBox(res)
+                })
             adapter = confirmOderFragmentAdaptor
         }
     }
+
+    private fun updateQtyDialogBox(itemMasterFoodItem: ItemMasterFoodItem) {
+        showQtyDialog("Update Quantity", true, itemMasterFoodItem.itemMaster, cancel = {}, res = {
+            viewModel.addUpdateQty(
+                food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                itemRemoved = itemMasterFoodItem
+            )
+        })
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {

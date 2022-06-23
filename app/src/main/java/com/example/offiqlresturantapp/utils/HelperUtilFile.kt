@@ -321,6 +321,7 @@ fun Fragment.showQtyDialog(
     materialDialogs.setView(binding.root)
         .setTitle(title)
         .setCancelable(isCancelable)
+        .setIcon(R.drawable.ic_info)
         .setPositiveButton("Done") { dialog, _ ->
             val qty = binding.coverValue.text.toString().toInt()
             itemMaster.foodQty = qty
