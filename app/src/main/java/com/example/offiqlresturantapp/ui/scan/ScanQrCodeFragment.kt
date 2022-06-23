@@ -2,6 +2,8 @@ package com.example.offiqlresturantapp.ui.scan
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
@@ -145,17 +147,21 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
         if (args.tbl != null) {
             try {
                 gotConfirmScreen(barcode = first)
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 activity?.msg("Try Some Other QR")
             }
         } else {
-            val barcodeValue =
-                TestingBarcodeConnection(title = first.url?.title, uri = first.url?.url)
-            val action =
-                ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToTestingConnectionFragment(
-                    barcodeValue
-                )
-            findNavController().navigate(action)
+            val handler=Handler(Looper.getMainLooper())
+            handler.post {
+                val barcodeValue =
+                    TestingBarcodeConnection(title = first.url?.title, uri = first.url?.url)
+
+                val action =
+                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToTestingConnectionFragment(
+                        barcodeValue
+                    )
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -164,13 +170,14 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
             showQtyDialog("Select Quantity", itemMaster = value, cancel = {
                 flagList = it
             }, res = { res ->
-                val arr = ArrayList<ItemMasterFoodItem>()
-                args.food?.let { item ->
-                    arr.addAll(item.foodList)
-                }
-                Log.i("QR", "sendData: $res")
-                arr.add(ItemMasterFoodItem(res, res.foodQty, res.foodAmt))
-                lifecycleScope.launchWhenResumed {
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    val arr = ArrayList<ItemMasterFoodItem>()
+                    args.food?.let { item ->
+                        arr.addAll(item.foodList)
+                    }
+                    Log.i("QR", "sendData: $res")
+                    arr.add(ItemMasterFoodItem(res, res.foodQty, res.foodAmt))
                     val action =
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
                             FoodItemList(arr),
