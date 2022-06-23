@@ -103,7 +103,8 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
 
     private fun chooseOptionBackScreenOption() {
         Log.i(TAG, "chooseOptionBackScreenOption: $listOfFoodItem\n\n And Flag Value is -> $flag")
-        if (flag && !listOfFoodItem.isNullOrEmpty()) {
+        if (flag && listOfFoodItem.isNotEmpty()) {
+            listOfFoodItem.addAll(args.list.foodList)
             val action = SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
                 FoodItemList(listOfFoodItem), args.tbl
             )

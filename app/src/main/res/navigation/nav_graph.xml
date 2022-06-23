@@ -75,6 +75,10 @@
         <argument
             android:name="tbl"
             app:argType="com.example.offiqlresturantapp.data.table_info.model.json.TableDetail" />
+
+        <argument android:name="list"
+            app:argType="com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList"
+            />
     </fragment>
     <fragment
         android:id="@+id/scanQrCodeFragment"

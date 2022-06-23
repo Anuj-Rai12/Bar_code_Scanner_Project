@@ -93,7 +93,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         binding.searchBoxTxt.setOnClickListener {
             //New Fragment
             val action =
-                ConfirmOderFragmentDirections.actionConfirmOderFragmentToSearchFoodFragment(args.tbl)
+                ConfirmOderFragmentDirections.actionConfirmOderFragmentToSearchFoodFragment(
+                    args.tbl,
+                    FoodItemList(arrItem)
+                )
             findNavController().navigate(action)
         }
 
