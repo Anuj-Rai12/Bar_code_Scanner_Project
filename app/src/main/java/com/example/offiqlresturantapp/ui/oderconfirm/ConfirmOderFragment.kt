@@ -99,10 +99,18 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
 
         binding.confirmOrderBtn.setOnClickListener {
-            val tbl = RestaurantSingletonCls.getInstance().getTable()
-            if (tbl != null && tbl.first.tableNo == args.tbl.tableNo) {
+            val tbl = RestaurantSingletonCls.getInstance()
+            tbl.getTable()?.let {
+                if (it.first.tableNo != args.tbl.tableNo) {
+                    tbl.removeTblValue()
+                }
+            }
+
+            if (tbl.getTable() != null && tbl.getTable()?.first?.tableNo == args.tbl.tableNo) {
                 //Push Custom Dinging
-                confirmOrder(ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = tbl.second.toString())))
+                confirmOrder(
+                    ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = tbl.getTable()?.second.toString()))
+                )
             } else {
                 //Create Customer Dining
                 receiptNo = randomNumber(10000000)

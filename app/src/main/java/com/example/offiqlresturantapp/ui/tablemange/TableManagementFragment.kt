@@ -107,12 +107,6 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             tableManagementAdaptor = TableManagementAdaptor { res ->
                 Log.i(TAG, "setRecycleView: $res")
-                val tbl = RestaurantSingletonCls.getInstance()
-                tbl.getTable()?.let {
-                    if (it.first.tableNo != res.tableNo) {
-                        tbl.removeTblValue()
-                    }
-                }
                 val action = TableManagementFragmentDirections
                     .actionTableManagementFragmentToConfirmOderFragment(null, res)
                 findNavController().navigate(action)
