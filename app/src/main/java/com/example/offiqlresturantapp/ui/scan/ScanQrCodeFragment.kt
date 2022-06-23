@@ -14,7 +14,6 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.offiqlresturantapp.MainActivity
@@ -41,7 +40,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     private var flagList: Boolean = false
     private lateinit var cameraExecutor: ExecutorService
     private val args: ScanQrCodeFragmentArgs by navArgs()
-
+    private var showDialog = true
     private val option = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
             Barcode.FORMAT_QR_CODE,
@@ -151,43 +150,48 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                 activity?.msg("Try Some Other QR")
             }
         } else {
-            val handler=Handler(Looper.getMainLooper())
+            val handler = Handler(Looper.getMainLooper())
             handler.post {
-                val barcodeValue =
-                    TestingBarcodeConnection(title = first.url?.title, uri = first.url?.url)
-
-                val action =
-                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToTestingConnectionFragment(
-                        barcodeValue
-                    )
-                findNavController().navigate(action)
+                if (showDialog){
+                    showDialog=false
+                    val barcodeValue =
+                        TestingBarcodeConnection(title = first.url?.title, uri = first.url?.url)
+                    val action =
+                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToTestingConnectionFragment(
+                            barcodeValue
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
     }
 
     private fun gotConfirmScreen(barcode: Barcode) {
         deserializeFromJson<ItemMaster>(barcode.rawValue)?.also { value ->
-            showQtyDialog("Select Quantity", itemMaster = value, cancel = {
-                flagList = it
-            }, res = { res ->
-                val handler = Handler(Looper.getMainLooper())
-                handler.post {
-                    val arr = ArrayList<ItemMasterFoodItem>()
-                    args.food?.let { item ->
-                        arr.addAll(item.foodList)
-                    }
-                    Log.i("QR", "sendData: $res")
-                    arr.add(ItemMasterFoodItem(res, res.foodQty, res.foodAmt))
-                    val action =
-                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
-                            FoodItemList(arr),
-                            args.tbl!!
-                        )
-                    findNavController().navigate(action)
+            val handler = Handler(Looper.getMainLooper())
+            handler.post {
+                if (showDialog) {
+                    showDialog = false
+                    showQtyDialog("Select Quantity", itemMaster = value, cancel = {
+                        flagList = it
+                        showDialog = true
+                    }, res = { res ->
+                        val arr = ArrayList<ItemMasterFoodItem>()
+                        args.food?.let { item ->
+                            arr.addAll(item.foodList)
+                        }
+                        Log.i("QR", "sendData: $res")
+                        arr.add(ItemMasterFoodItem(res, res.foodQty, res.foodAmt))
+                        val action =
+                            ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
+                                FoodItemList(arr),
+                                args.tbl!!
+                            )
+                        findNavController().navigate(action)
+                    })
                 }
-            })
+            }
         } ?: activity?.msg("Oops Something Went Wrong?")
     }
-
 
 }

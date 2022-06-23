@@ -173,6 +173,9 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 orderOfferListView.show()
                 btnWithOffer.show()
                 btnWithoutOffer.show()
+                //Order-Offer
+                offerTv.hide()
+                offerDetailTv.show()
             }
         }
 
@@ -184,6 +187,9 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 btnWithOffer.hide()
                 orderOfferListView.hide()
                 btnWithoutOffer.hide()
+                //OdderOffer
+                offerTv.show()
+                offerDetailTv.hide()
             }
         }
 
