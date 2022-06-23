@@ -99,17 +99,24 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
 
         binding.confirmOrderBtn.setOnClickListener {
-            receiptNo = randomNumber(10000000)
-            val singletonCls = RestaurantSingletonCls.getInstance()
-            activity?.addDialogMaterial(
-                title = "Receipt No: $receiptNo",
-                time = viewModel.time.value ?: "04:00 PM",
-                tableNo = args.tbl.tableNo,
-                receiptNo = receiptNo,
-                storeVar = singletonCls.getStoreId()!!,
-                staffID = singletonCls.getUserId()!!
-            ) { res ->
-                confirmDinningOrder(res)
+            val tbl = RestaurantSingletonCls.getInstance().getTable()
+            if (tbl != null && tbl.first.tableNo == args.tbl.tableNo) {
+                //Push Custom Dinging
+                confirmOrder(ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = tbl.second.toString())))
+            } else {
+                //Create Customer Dining
+                receiptNo = randomNumber(10000000)
+                val singletonCls = RestaurantSingletonCls.getInstance()
+                activity?.addDialogMaterial(
+                    title = "Receipt No: $receiptNo",
+                    time = viewModel.time.value ?: "04:00 PM",
+                    tableNo = args.tbl.tableNo,
+                    receiptNo = receiptNo,
+                    storeVar = singletonCls.getStoreId()!!,
+                    staffID = singletonCls.getUserId()!!
+                ) { res ->
+                    confirmDinningOrder(res)
+                }
             }
         }
 
@@ -167,8 +174,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                         val error = res.body?.errorFound?.toBoolean()
                         val errorBdy = res.body?.errorText.toString()
                         if (error == true) {
-                            val result =
-                                Pair("Failed to Update Table", R.drawable.ic_error)
+                            val result = Pair("Failed to Update Table", R.drawable.ic_error)
                             showDialogBox(result.first, errorBdy, icon = result.second) {}
                             binding.pbLayout.root.hide()
                         } else {
@@ -197,6 +203,9 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 }
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmOrderResponse", " Loading ${it.data}")
+                    if (RestaurantSingletonCls.getInstance().getTable() != null) {
+                        binding.pbLayout.root.show()
+                    }
                     binding.pbLayout.titleTxt.text = it.data.toString()
                 }
                 is ApisResponse.Success -> {
@@ -205,16 +214,19 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                         val str = res.body?.returnValue
                         val result = if (str == "01") {
                             Pair(
-                                R.drawable.ic_error,
-                                Pair(
+                                R.drawable.ic_error, Pair(
                                     "Failed to Insert!!",
                                     "Order is Not Inserted in Navision at All."
                                 )
                             )
                         } else {
+                            RestaurantSingletonCls.getInstance().also { item ->
+                                if (item.getTable() == null) {
+                                    item.setTbl(args.tbl, receiptNo)
+                                }
+                            }
                             Pair(
-                                R.drawable.ic_success,
-                                Pair(
+                                R.drawable.ic_success, Pair(
                                     "Successfully Inserted",
                                     "Order is Inserted in Navision at All."
                                 )

@@ -100,17 +100,21 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
         super.onResume()
         viewModel.fetchTbl()
     }
+
     private fun setRecycleView() {
         binding.totalTableRecycler.apply {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(requireActivity(), 2)
-            tableManagementAdaptor = TableManagementAdaptor {
-                Log.i(TAG, "setRecycleView: $it")
-                val action =
-                    TableManagementFragmentDirections.actionTableManagementFragmentToConfirmOderFragment(
-                        null,
-                        it
-                    )
+            tableManagementAdaptor = TableManagementAdaptor { res ->
+                Log.i(TAG, "setRecycleView: $res")
+                val tbl = RestaurantSingletonCls.getInstance()
+                tbl.getTable()?.let {
+                    if (it.first.tableNo != res.tableNo) {
+                        tbl.removeTblValue()
+                    }
+                }
+                val action = TableManagementFragmentDirections
+                    .actionTableManagementFragmentToConfirmOderFragment(null, res)
                 findNavController().navigate(action)
             }
             adapter = tableManagementAdaptor

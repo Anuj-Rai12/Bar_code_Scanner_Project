@@ -1,8 +1,11 @@
 package com.example.offiqlresturantapp.utils
 
+import com.example.offiqlresturantapp.data.table_info.model.json.TableDetail
+
 class RestaurantSingletonCls {
     private var storeId: String? = null
     private var userId: String? = null
+    private var tbl: Pair<TableDetail, Long>? = null
 
     companion object {
         private var INSTANCE: RestaurantSingletonCls? = null
@@ -14,16 +17,27 @@ class RestaurantSingletonCls {
         }
     }
 
-    public fun getStoreId() = storeId
+    fun getStoreId() = storeId
 
-    public fun getUserId() = userId
+    fun getUserId() = userId
+    fun getTable() = tbl
 
 
-    public fun setStoreId(store: String) {
+    fun setStoreId(store: String) {
         storeId = store
     }
 
-    public fun setUserID(usr: String) {
+    fun setUserID(usr: String) {
         this.userId = usr
     }
+
+    fun setTbl(tableDetail: TableDetail, rand: Long) {
+        this.tbl = Pair(tableDetail, rand)
+    }
+
+    fun removeTblValue() {
+        this.tbl = null
+    }
+
+
 }
