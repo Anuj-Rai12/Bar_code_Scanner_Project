@@ -225,22 +225,23 @@ fun Activity.addDialogMaterial(
         .setView(binding.root)
         .setTitle(title)
         .setPositiveButton("Done") { dialog, _ ->
-            val customerName = binding.customerNameEd.text.toString()
-            val customerNumber = binding.customerNumberEd.text.toString()
+            val customerName = binding.customerNameEd.text?.toString()
+            val customerNumber = binding.customerNumberEd.text?.toString()
             val terminalNumber = binding.terminalNumEd.text.toString()
-            if (checkFieldValue(customerName) || checkFieldValue(customerNumber) || checkFieldValue(
-                    terminalNumber
-                )
-                || !isValidPhone(customerNumber)
-            ) {
-                msg("Please Enter Current Info \n Try Again.")
+            if (checkFieldValue(terminalNumber)) {
+                msg("Please Enter Terminal-Number\n Try Again.")
                 return@setPositiveButton
             }
+            if (!checkFieldValue(customerNumber.toString()) && !isValidPhone(customerNumber.toString())) {
+                msg("Please Enter Correct Phone Number\n Try Again.")
+                return@setPositiveButton
+            }
+
             val confirmDiningRequest = ConfirmDiningRequest(
                 body = ConfirmDiningBody(
                     rcptNo = "$receiptNo",
-                    customerPhone = customerNumber,
-                    customerName = customerName,
+                    customerPhone = customerNumber ?: "",
+                    customerName = customerName ?: "",
                     covers = binding.coverValue.text.toString(),
                     storeVar = storeVar,
                     tableNo = tableNo,

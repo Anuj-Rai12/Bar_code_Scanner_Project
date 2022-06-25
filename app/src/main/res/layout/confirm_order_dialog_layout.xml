@@ -2,7 +2,6 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:overScrollMode="never">
@@ -13,74 +12,17 @@
         android:background="#E0EDFF">
 
         <TextView
-            android:id="@+id/customer_name_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="23dp"
-            android:fontFamily="@font/roboto_medium"
-            android:text="Customer Name"
-            android:textColor="@color/light_grey_color"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/customer_name_ed"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/black_underline_border"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            app:layout_constraintLeft_toLeftOf="@id/customer_name_txt"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/customer_name_txt" />
-
-
-        <TextView
-            android:id="@+id/customer_num_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/roboto_medium"
-            android:text="Customer PhoneNo"
-            android:textColor="@color/light_grey_color"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="@id/customer_name_ed"
-            app:layout_constraintTop_toBottomOf="@id/customer_name_ed" />
-
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/customer_number_ed"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/black_underline_border"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:inputType="phone"
-            android:textColor="@color/black"
-            app:layout_constraintLeft_toLeftOf="@id/customer_num_tv"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/customer_num_tv" />
-
-
-        <TextView
             android:id="@+id/terminal_num_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/roboto_medium"
             android:text="Terminal Number"
             android:textColor="@color/light_grey_color"
             android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="@id/customer_number_ed"
-            app:layout_constraintTop_toBottomOf="@id/customer_number_ed" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -99,6 +41,63 @@
 
 
         <TextView
+            android:id="@+id/customer_num_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Customer PhoneNo (optional)"
+            android:textColor="@color/light_grey_color"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/terminal_num_ed"
+            app:layout_constraintTop_toBottomOf="@id/terminal_num_ed" />
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/customer_number_ed"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/black_underline_border"
+            android:inputType="phone"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="@id/customer_num_tv"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/customer_num_tv" />
+
+
+        <TextView
+            android:id="@+id/customer_name_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Customer Name (optional)"
+            android:textColor="@color/light_grey_color"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/customer_number_ed"
+            app:layout_constraintTop_toBottomOf="@id/customer_number_ed" />
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/customer_name_ed"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/black_underline_border"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="@id/customer_name_txt"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/customer_name_txt" />
+
+
+        <TextView
             android:id="@+id/cover_num_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -107,8 +106,8 @@
             android:text="Covers"
             android:textColor="@color/light_grey_color"
             android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="@id/terminal_num_ed"
-            app:layout_constraintTop_toBottomOf="@id/terminal_num_ed" />
+            app:layout_constraintLeft_toLeftOf="@id/customer_name_ed"
+            app:layout_constraintTop_toBottomOf="@id/customer_name_ed" />
 
 
         <LinearLayout
