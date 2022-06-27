@@ -258,6 +258,7 @@ fun Activity.addDialogMaterial(
                     contactNo = "0000000000"
                 )
             )
+            msg("Saved")
             listener.invoke(confirmDiningRequest)
             dialog.dismiss()
         }.setNegativeButton("Cancel") { dialog, _ ->
