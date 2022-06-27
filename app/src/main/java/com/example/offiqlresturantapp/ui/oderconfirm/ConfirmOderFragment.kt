@@ -102,18 +102,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
 
         binding.confirmOrderBtn.setOnClickListener {
-            val tbl = RestaurantSingletonCls.getInstance()
-            tbl.getTable()?.let {
-                if (it.first.tableNo != args.tbl.tableNo) {
-                    tbl.removeTblValue()
-                }
-            }
 
-            if (tbl.getTable() != null && tbl.getTable()?.first?.tableNo == args.tbl.tableNo) {
+            if (args.tbl.receiptNo.isNotEmpty()) {
                 //Push Custom Dinging
-                confirmOrder(
-                    ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = tbl.getTable()?.second.toString()))
-                )
+                confirmOrder(ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = args.tbl.receiptNo)))
             } else {
                 //Create Customer Dining
                 receiptNo = randomNumber(10000000)
@@ -214,7 +206,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 }
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmOrderResponse", " Loading ${it.data}")
-                    if (RestaurantSingletonCls.getInstance().getTable() != null) {
+                    if (args.tbl.receiptNo.isNotEmpty()) {
                         binding.pbLayout.root.show()
                     }
                     binding.pbLayout.titleTxt.text = it.data.toString()
@@ -226,16 +218,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                         val result = if (str == "01") {
                             Pair(
                                 R.drawable.ic_error, Pair(
-                                    "Failed to Insert!!",
+                                    "Failed!",
                                     "Order is Not Inserted in Navision at All."
                                 )
                             )
                         } else {
-                            RestaurantSingletonCls.getInstance().also { item ->
-                                if (item.getTable() == null) {
-                                    item.setTbl(args.tbl, receiptNo)
-                                }
-                            }
                             Pair(
                                 R.drawable.ic_success, Pair(
                                     "Successfully Inserted",

@@ -14,7 +14,8 @@ data class TableDetail(
     val id: Long,
     @SerializedName("GuestNumber") val guestNumber: String,
     @SerializedName("Status") val status: String,
-    @SerializedName("Table No.") val tableNo: String
+    @SerializedName("Table No.") val tableNo: String,
+    @SerializedName("MPOSDoc") val receiptNo: String
 ) : Parcelable
 
 enum class TblStatus {
