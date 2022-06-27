@@ -177,7 +177,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                         val error = res.body?.errorFound?.toBoolean()
                         val errorBdy = res.body?.errorText.toString()
                         if (error == true) {
-                            val result = Pair("Failed to Update Table", R.drawable.ic_error)
+                            val result = Pair("Failed!", R.drawable.ic_error)
                             showDialogBox(result.first, errorBdy, icon = result.second) {}
                             binding.pbLayout.root.hide()
                         } else {
@@ -241,7 +241,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                         }
                     } ?: run {
                         val res =
-                            Pair("Failed to Insert!!", "Order is Not Inserted in Navision at All.")
+                            Pair("Failed!", "Order is Not Inserted in Navision at All.")
                         showDialogBox(res.first, res.second, icon = R.drawable.ic_error) {}
                     }
                 }
