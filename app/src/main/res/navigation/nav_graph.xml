@@ -17,6 +17,10 @@
         <action
             android:id="@+id/action_testingConnectionFragment_to_tableManagementOrCostEstimate"
             app:destination="@id/tableManagementOrCostEstimate"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim"
             app:popUpTo="@id/testingConnectionFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -27,10 +31,18 @@
         tools:layout="@layout/table_or_cost_layout" >
         <action
             android:id="@+id/action_tableManagementOrCostEstimate_to_tableManagementFragment"
-            app:destination="@id/tableManagementFragment" />
+            app:destination="@id/tableManagementFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim" />
         <action
             android:id="@+id/action_tableManagementOrCostEstimate_to_costDashBoardFragment"
-            app:destination="@id/costDashBoardFragment" />
+            app:destination="@id/costDashBoardFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim" />
         <argument
             android:name="store_name"
             app:argType="string" />
@@ -42,7 +54,11 @@
         tools:layout="@layout/table_mangment_layout" >
         <action
             android:id="@+id/action_tableManagementFragment_to_confirmOderFragment"
-            app:destination="@id/confirmOderFragment" />
+            app:destination="@id/confirmOderFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim" />
         <argument
             android:name="store_name"
             app:argType="string" />
@@ -54,7 +70,11 @@
         tools:layout="@layout/confirm_order_layout" >
         <action
             android:id="@+id/action_confirmOderFragment_to_searchFoodFragment"
-            app:destination="@id/searchFoodFragment" />
+            app:destination="@id/searchFoodFragment"
+            app:enterAnim="@anim/pop_up_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim" />
         <argument android:name="list"
             app:argType="com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList"
             app:nullable="true" />
@@ -70,6 +90,10 @@
         <action
             android:id="@+id/action_searchFoodFragment_to_confirmOderFragment"
             app:destination="@id/confirmOderFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim"
             app:popUpTo="@id/confirmOderFragment"
             app:popUpToInclusive="true" />
         <argument
@@ -91,12 +115,20 @@
         <action
             android:id="@+id/action_scanQrCodeFragment_to_testingConnectionFragment"
             app:destination="@id/testingConnectionFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim"
             app:popUpTo="@id/scanQrCodeFragment"
             app:popUpToInclusive="true" />
 
         <action
             android:id="@+id/action_scanQrCodeFragment_to_confirmOderFragment"
             app:destination="@id/confirmOderFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim"
             app:popUpTo="@id/confirmOderFragment"
             app:popUpToInclusive="true" />
         <argument
@@ -109,7 +141,13 @@
             app:argType="com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList"
             app:nullable="true" />
     </fragment>
-    <action android:id="@+id/action_global_scanQrCodeFragment" app:destination="@id/scanQrCodeFragment" />
+    <action
+        android:id="@+id/action_global_scanQrCodeFragment"
+        app:destination="@id/scanQrCodeFragment"
+        app:enterAnim="@anim/enter_anim"
+        app:exitAnim="@anim/enter_anim"
+        app:popEnterAnim="@anim/pop_enter_anim"
+        app:popExitAnim="@anim/pop_exit_anim" />
     <fragment
         android:id="@+id/costDashBoardFragment"
         android:name="com.example.offiqlresturantapp.ui.cost.CostDashBoardFragment"
@@ -123,11 +161,19 @@
         <action
             android:id="@+id/action_splashScreenFragment_to_testingConnectionFragment"
             app:destination="@id/testingConnectionFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim"
             app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splashScreenFragment_to_tableManagementOrCostEstimate"
             app:destination="@id/tableManagementOrCostEstimate"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim"
             app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true" />
     </fragment>
