@@ -19,7 +19,6 @@ class ConfirmOrderRepositoryImpl @Inject constructor(
 
     override fun saveUserOrderItem(confirmOrderRequest: ConfirmOrderRequest) = flow {
         emit(ApisResponse.Loading("Adding Order.."))
-        kotlinx.coroutines.delay(2000)
         val res = try {
             val response = api.sendPostRequestApi(confirmOrderRequest)
             val info = if (response.isSuccessful) {

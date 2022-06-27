@@ -51,6 +51,13 @@ class SearchFoodRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getSearchFoodItem() = channelFlow {
+        send(ApisResponse.Loading("Please Wait"))
+        dao.getAllItem().collectLatest {
+            send(ApisResponse.Success(it))
+        }
+    }
+
 
 /*emit(ApisResponse.Loading("Please Wait.."))
         val data = try {

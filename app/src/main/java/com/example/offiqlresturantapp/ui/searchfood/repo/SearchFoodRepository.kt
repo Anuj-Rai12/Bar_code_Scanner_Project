@@ -8,4 +8,5 @@ interface SearchFoodRepository {
     fun getItemMasterSync(stateNo: String): Flow<ApisResponse<out Any?>>
 
     fun getSearchFoodItem(query: String): Flow<ApisResponse<out Any?>>
+    fun getSearchFoodItem(): Flow<ApisResponse<out Any?>>
 }

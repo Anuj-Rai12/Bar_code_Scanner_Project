@@ -57,15 +57,17 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
             chooseOptionBackScreenOption()
         }
         binding.crossBtnImg.setOnClickListener {
-            binding.searchBoxEd.text = null
+            if (!binding.searchBoxEd.text.isNullOrEmpty() && !binding.searchBoxEd.text.isNullOrBlank()) {
+                binding.searchBoxEd.text = null
+                viewModel.getInitialData()
+            }
         }
         binding.searchBoxEd.doOnTextChanged { text, _, _, _ ->
             Log.i(TAG, "onViewCreated: $text \n ${text?.length}")
             if (text != null && text.isNotEmpty()) {
                 viewModel.searchQuery("%$text%")
-                binding.crossBtnImg.visible()
             } else {
-                binding.crossBtnImg.invisible()
+                viewModel.getInitialData()
             }
         }
 
@@ -134,6 +136,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
                         (item as List<ItemMaster>).let { res ->
                             listOfFoodItemToSearchAdaptor.notifyDataSetChanged()
                             listOfFoodItemToSearchAdaptor.submitList(res)
+                            binding.listOfFoodItem.smoothScrollToPosition(0)
                         }
                     } ?: showSnackBar(
                         "No Data Found!!",

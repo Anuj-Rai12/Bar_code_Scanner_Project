@@ -12,6 +12,7 @@
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/black_underline_border.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/blue_border_for_table_mangment.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/blue_underline_boder_color.xml" value="0.18055555555555555" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/circle_shape.xml" value="0.132" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/confirm_btn_boder.xml" value="0.20925925925925926" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/confirm_order_hint_border.xml" value="0.20925925925925926" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/food_item_one_selcetion_layout.xml" value="0.19722222222222222" />
@@ -55,7 +56,7 @@
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/progress_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/qty_increment_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/scan_qr_layout.xml" value="0.2234375" />
-        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/search_food_item_layout.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/search_food_item_layout.xml" value="0.25" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/table_item_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/table_mangment_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/table_or_cost_layout.xml" value="0.264" />

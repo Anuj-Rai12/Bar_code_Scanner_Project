@@ -48,14 +48,22 @@ class SearchFoodViewModel @Inject constructor(
                 }
             }
         }
+    }
 
+
+    fun getInitialData() {
+        viewModelScope.launch {
+            repository.getSearchFoodItem().collectLatest {
+                _fdInfo.postValue(it)
+            }
+        }
     }
 
 
     fun searchQuery(src: String) {
         viewModelScope.launch {
             repository.getSearchFoodItem(src).collectLatest { res ->
-                if (res.data?.isNullOrEmpty()==true) {
+                if (res.data?.isNullOrEmpty() == true) {
                     _fdInfo.postValue(ApisResponse.Success(null))
                 } else {
                     _fdInfo.postValue(res)
