@@ -152,8 +152,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
         } else {
             val handler = Handler(Looper.getMainLooper())
             handler.post {
-                if (showDialog){
-                    showDialog=false
+                if (showDialog) {
+                    showDialog = false
                     val barcodeValue =
                         TestingBarcodeConnection(title = first.url?.title, uri = first.url?.url)
                     val action =
@@ -185,7 +185,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                         val action =
                             ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
                                 FoodItemList(arr),
-                                args.tbl!!
+                                args.tbl!!,
+                                args.confirmreq
                             )
                         findNavController().navigate(action)
                     })

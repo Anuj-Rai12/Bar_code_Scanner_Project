@@ -108,7 +108,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         if (flag && listOfFoodItem.isNotEmpty()) {
             listOfFoodItem.addAll(args.list.foodList)
             val action = SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
-                FoodItemList(listOfFoodItem), args.tbl
+                FoodItemList(listOfFoodItem), args.tbl, args.confirmreq
             )
             findNavController().navigate(action)
         } else if (flag) {

@@ -52,7 +52,12 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         binding = ConfirmOrderLayoutBinding.bind(view)
         binding.qrCodeScan.setOnClickListener {
             val action = ConfirmOderFragmentDirections
-                .actionGlobalScanQrCodeFragment(Url_Text, args.tbl, FoodItemList(arrItem))
+                .actionGlobalScanQrCodeFragment(
+                    Url_Text,
+                    args.tbl,
+                    FoodItemList(arrItem),
+                    customDiningRequest
+                )
             findNavController().navigate(action)
         }
         viewModel.event.observe(viewLifecycleOwner) {
@@ -97,7 +102,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             val action =
                 ConfirmOderFragmentDirections.actionConfirmOderFragmentToSearchFoodFragment(
                     args.tbl,
-                    FoodItemList(arrItem)
+                    FoodItemList(arrItem),
+                    customDiningRequest
                 )
             findNavController().navigate(action)
         }
@@ -110,6 +116,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 confirmOrder(ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = args.tbl.receiptNo)))
             } else {
                 //Create Customer Dining
+                args.confirmreq?.let { customDiningRequest = it }
                 customDiningRequest?.let { res ->
                     confirmDinningOrder(res)
                 } ?: requestCustomerDining()
@@ -121,7 +128,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
     private fun requestCustomerDining() {
         receiptNo = randomNumber(10000000)
-        isCustomerDiningRequestVisible=false
+        isCustomerDiningRequestVisible = false
         val singletonCls = RestaurantSingletonCls.getInstance()
         activity?.addDialogMaterial(
             title = "Receipt No: $receiptNo",
@@ -208,7 +215,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
     override fun onResume() {
         super.onResume()
-        if (customDiningRequest == null && args.tbl.receiptNo.isEmpty() && isCustomerDiningRequestVisible) {
+        receiptNo = args.confirmreq?.body?.rcptNo?.toLong() ?: 0
+        if (args.confirmreq == null && args.tbl.receiptNo.isEmpty() && isCustomerDiningRequestVisible) {
             requestCustomerDining()
         }
     }

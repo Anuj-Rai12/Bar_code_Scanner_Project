@@ -1,11 +1,14 @@
 package com.example.offiqlresturantapp.data.cofirmDining
 
+import android.os.Parcelable
 import com.example.offiqlresturantapp.utils.AllStringConst
+import kotlinx.parcelize.Parcelize
 import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Path
 import org.simpleframework.xml.Root
 
+@Parcelize
 @Root(name = AllStringConst.Envelope, strict = false)
 data class ConfirmDiningRequest @JvmOverloads constructor(
     @field:Element(name = "CustomerDining", required = false)
@@ -18,9 +21,10 @@ data class ConfirmDiningRequest @JvmOverloads constructor(
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
     val xmlAttr: String = AllStringConst._xmlns
-)
+) : Parcelable
 
 
+@Parcelize
 @Root(name = "CustomerDining", strict = false)
 data class ConfirmDiningBody(
     @field:Attribute(name = "xmlns")
@@ -91,4 +95,4 @@ data class ConfirmDiningBody(
     @param:Element(name = "staffID")
     val staffID: String? = null,//User Name Log In
 
-)
+) : Parcelable

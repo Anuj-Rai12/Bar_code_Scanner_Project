@@ -81,6 +81,10 @@
         <argument
             android:name="tbl"
             app:argType="com.example.offiqlresturantapp.data.table_info.model.json.TableDetail" />
+        <argument
+            android:name="confirmreq"
+            app:argType="com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/searchFoodFragment"
@@ -101,6 +105,10 @@
         <argument android:name="list"
             app:argType="com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList"
             />
+        <argument
+            android:name="confirmreq"
+            app:argType="com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/scanQrCodeFragment"
@@ -133,6 +141,10 @@
         <argument
             android:name="food"
             app:argType="com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList"
+            app:nullable="true" />
+        <argument
+            android:name="confirmreq"
+            app:argType="com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest"
             app:nullable="true" />
     </fragment>
     <action

@@ -51,6 +51,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                 TestingConnectionFragmentDirections.actionGlobalScanQrCodeFragment(
                     Url_barcode,
                     null,
+                    null,
                     null
                 )
             findNavController().navigate(action)
