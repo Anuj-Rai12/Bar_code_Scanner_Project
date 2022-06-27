@@ -172,7 +172,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
             handler.post {
                 if (showDialog) {
                     showDialog = false
-                    showQtyDialog("Select Quantity", itemMaster = value, cancel = {
+                    showQtyDialog(itemMaster = value, cancel = {
                         flagList = it
                         showDialog = true
                     }, res = { res ->

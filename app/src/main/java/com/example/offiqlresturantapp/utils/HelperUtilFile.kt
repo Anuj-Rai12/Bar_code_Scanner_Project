@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.offiqlresturantapp.R
@@ -307,7 +308,6 @@ fun Fragment.showDialogBox(
 
 
 fun Fragment.showQtyDialog(
-    title: String,
     isCancelable: Boolean = false,
     itemMaster: ItemMaster,
     cancel: (Boolean) -> Unit,
@@ -319,37 +319,32 @@ fun Fragment.showQtyDialog(
     )
 
     val binding = QtyIncrementLayoutBinding.inflate(layoutInflater)
-    materialDialogs.setView(binding.root)
-        .setTitle(title)
+    val dialog = materialDialogs.setView(binding.root)
         .setCancelable(isCancelable)
         .setIcon(R.drawable.ic_info)
-        .setPositiveButton("Done") { dialog, _ ->
-            val qty = binding.coverValue.text.toString().toInt()
-            itemMaster.foodQty = qty
-            itemMaster.foodAmt = ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * qty
-            res.invoke(itemMaster)
-            dialog.dismiss()
-        }.setNegativeButton("Cancel") { dialog, _ ->
-            cancel.invoke(false)
-            dialog.dismiss()
-        }.show()
+        .show()
 
-    binding.incrementBtn.setOnClickListener {
-        binding.coverValue.apply {
-            val value = this.text.toString().toInt()
-            this.text = (value + 1).toString()
+    binding.btnDone.setOnClickListener {
+        val qty = binding.qtyEd.text.toString()
+        if (checkFieldValue(qty)) {
+            activity?.msg("Please Enter Quantity")
+            return@setOnClickListener
         }
+        if (!qty.isDigitsOnly()) {
+            activity?.msg("Please Enter Correct Quantity")
+            return@setOnClickListener
+        }
+        itemMaster.foodQty = qty.toInt()
+        itemMaster.foodAmt =
+            ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * qty.toInt()
+        res.invoke(itemMaster)
+        dialog.dismiss()
     }
 
-    binding.decrementBtn.setOnClickListener {
-        binding.coverValue.apply {
-            val value = this.text.toString().toInt()
-            if (value > 1) {
-                this.text = (value - 1).toString()
-            }
-        }
+    binding.btnCancel.setOnClickListener {
+        cancel.invoke(false)
+        dialog.dismiss()
     }
-
 }
 
 

@@ -393,7 +393,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     }
 
     private fun updateQtyDialogBox(itemMasterFoodItem: ItemMasterFoodItem) {
-        showQtyDialog("Update Quantity", true, itemMasterFoodItem.itemMaster, cancel = {}, res = {
+        showQtyDialog(true, itemMasterFoodItem.itemMaster, cancel = {}, res = {
             viewModel.addUpdateQty(
                 food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
                 itemRemoved = itemMasterFoodItem
