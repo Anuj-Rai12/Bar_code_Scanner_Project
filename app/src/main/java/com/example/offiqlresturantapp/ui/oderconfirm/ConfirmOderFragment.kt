@@ -42,6 +42,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private val args: ConfirmOderFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
     private var receiptNo: Long = 0
+    private var customDiningRequest: ConfirmDiningRequest? = null
+    private var isCustomerDiningRequestVisible: Boolean = true
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -108,22 +110,31 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 confirmOrder(ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = args.tbl.receiptNo)))
             } else {
                 //Create Customer Dining
-                receiptNo = randomNumber(10000000)
-                val singletonCls = RestaurantSingletonCls.getInstance()
-                activity?.addDialogMaterial(
-                    title = "Receipt No: $receiptNo",
-                    time = viewModel.time.value ?: "04:00 PM",
-                    tableNo = args.tbl.tableNo,
-                    receiptNo = receiptNo,
-                    storeVar = singletonCls.getStoreId()!!,
-                    staffID = singletonCls.getUserId()!!
-                ) { res ->
+                customDiningRequest?.let { res ->
                     confirmDinningOrder(res)
-                }
+                } ?: requestCustomerDining()
+
             }
         }
 
     }
+
+    private fun requestCustomerDining() {
+        receiptNo = randomNumber(10000000)
+        isCustomerDiningRequestVisible=false
+        val singletonCls = RestaurantSingletonCls.getInstance()
+        activity?.addDialogMaterial(
+            title = "Receipt No: $receiptNo",
+            time = viewModel.time.value ?: "04:00 PM",
+            tableNo = args.tbl.tableNo,
+            receiptNo = receiptNo,
+            storeVar = singletonCls.getStoreId()!!,
+            staffID = singletonCls.getUserId()!!
+        ) { res ->
+            customDiningRequest = res
+        }
+    }
+
 
     private fun getViewDeals() {
         viewModel.viewDeals.observe(viewLifecycleOwner) {
@@ -195,6 +206,12 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (customDiningRequest == null && args.tbl.receiptNo.isEmpty() && isCustomerDiningRequestVisible) {
+            requestCustomerDining()
+        }
+    }
 
     private fun getConfirmOrderResponse() {
         viewModel.orderConfirm.observe(viewLifecycleOwner) {
