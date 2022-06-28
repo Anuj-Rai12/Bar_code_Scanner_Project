@@ -46,24 +46,32 @@ fun AppCompatActivity.hide() {
 }
 
 object AllStringConst {
-    const val BASE_URL = "http://20.204.153.37:7051/User1/WS/CKLifeStyle/Codeunit/"
-
-
-    const val BASE_URL_2 = "http://20.204.153.37:7051/Navuser/WS/CKLifeStyle/Codeunit/"
+    const val BASE_URL = "http://20.204.153.37:7051/Navuser/WS/CKLifeStyle/Codeunit/"
 
     //http://223.31.53.229:28360/NAVUSER/WS/HLDGRP/Codeunit/
     const val _xmlns = "http://schemas.xmlsoap.org/soap/envelope/"
-    const val _xmls = "urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI"
+    const val _xmls = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI"
     private const val userName = "Online"
     private const val PASSWORD = "Pass@1234"
     const val PREFERENCES_USER = "User_INFO"
     const val base = "$userName:$PASSWORD"
-    const val End_point = "LoginAndGetMasterAPI"
+    const val End_point = "MPOSWSAPI"
     const val Envelope = "Envelope"
 
     //const val No_Error = "No Error"
     const val Soap_Envelope = "Soap:Envelope"
     var authHeader = "Basic ${genToken()}"
+
+    object SoapAction {
+        const val ApkLogin = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:Login"
+        const val confirmOrder = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ConfirmOrder"
+        const val confirmDining = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CustomerDining"
+        const val itemMasterSync =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ItemMasterSync"
+        const val tblInformation =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:TableInformation"
+    }
+
 
     enum class API {
         RESTAURANT

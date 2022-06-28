@@ -3,7 +3,6 @@ package com.example.offiqlresturantapp.ui.oderconfirm.repo.confirmorder
 import android.util.Log
 import com.example.offiqlresturantapp.api.confirmOrder.ConfirmOrderApi
 import com.example.offiqlresturantapp.data.confirmOrder.ConfirmOrderRequest
-import com.example.offiqlresturantapp.di.NewRetrofitInstance
 import com.example.offiqlresturantapp.utils.ApisResponse
 import com.example.offiqlresturantapp.utils.buildApi
 import kotlinx.coroutines.flow.flow
@@ -11,7 +10,7 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 
 class ConfirmOrderRepositoryImpl @Inject constructor(
-    @NewRetrofitInstance retrofit: Retrofit
+    retrofit: Retrofit
 ) : ConfirmOrderRepository {
 
     val api = buildApi<ConfirmOrderApi>(retrofit)

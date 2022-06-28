@@ -54,7 +54,7 @@ object Module {
     }
 
 
-    @NewRetrofitInstance
+    /*@NewRetrofitInstance
     @Singleton
     @Provides
     fun getRetrofit2(): Retrofit {
@@ -63,7 +63,7 @@ object Module {
             .client(client)
             .baseUrl(AllStringConst.BASE_URL_2)
             .build()
-    }
+    }*/
 
 
     @Provides

@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 interface ConfirmOrderApi {
 
-    @Headers("SOAPAction: urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI:ConfirmOrder")
+    @Headers("SOAPAction: ${AllStringConst.SoapAction.confirmOrder}")
     @POST(AllStringConst.End_point)
     suspend fun sendPostRequestApi(
         @Body request: ConfirmOrderRequest

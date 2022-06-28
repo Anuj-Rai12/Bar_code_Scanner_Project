@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 interface ConfirmDiningApi {
 
-    @Headers("SOAPAction: urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI:CustomerDining")
+    @Headers("SOAPAction: ${AllStringConst.SoapAction.confirmDining}")
     @POST(AllStringConst.End_point)
     suspend fun setPostRequestApi(
         @Body request: ConfirmDiningRequest

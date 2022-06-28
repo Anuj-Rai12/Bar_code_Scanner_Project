@@ -3,7 +3,6 @@ package com.example.offiqlresturantapp.ui.oderconfirm.repo.confirmdining
 import android.util.Log
 import com.example.offiqlresturantapp.api.confirmDining.ConfirmDiningApi
 import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest
-import com.example.offiqlresturantapp.di.NewRetrofitInstance
 import com.example.offiqlresturantapp.utils.ApisResponse
 import com.example.offiqlresturantapp.utils.buildApi
 import kotlinx.coroutines.flow.flow
@@ -11,7 +10,7 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 
 class ConfirmDiningRepositoryImpl @Inject constructor(
-    @NewRetrofitInstance retrofit: Retrofit
+    retrofit: Retrofit
 ) : ConfirmDiningRepository {
     val api = buildApi<ConfirmDiningApi>(retrofit)
 
@@ -27,7 +26,7 @@ class ConfirmDiningRepositoryImpl @Inject constructor(
                 ApisResponse.Success(null)
             }
         } catch (e: Exception) {
-            Log.i("updateAndLockTbl"," ${e.localizedMessage}")
+            Log.i("updateAndLockTbl", " ${e.localizedMessage}")
             ApisResponse.Error(null, e)
         }
         emit(res)

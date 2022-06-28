@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 interface ItemMasterSyncApi {
 
-    @Headers("SOAPAction: urn:microsoft-dynamics-schemas/codeunit/LoginAndGetMasterAPI:ItemMasterSync")
+    @Headers("SOAPAction: ${AllStringConst.SoapAction.itemMasterSync}")
     @POST(AllStringConst.End_point)
     suspend fun getItemMasterSync(@Body body: ItemMasterSyncRequest)
             : Response<ItemMasterSyncResponse>
