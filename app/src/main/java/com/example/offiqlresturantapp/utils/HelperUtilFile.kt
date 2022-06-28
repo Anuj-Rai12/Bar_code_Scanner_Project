@@ -38,7 +38,6 @@ import java.text.Normalizer
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
-import kotlin.random.Random
 
 const val CAMERA_INT = 11
 const val Url_barcode = Barcode.TYPE_URL
@@ -113,13 +112,6 @@ fun <T> serializeToJson(bmp: T): String? {
     return gson.toJson(bmp)
 }
 
-/*data class OrderCollection(
-    val foodItem: List<FoodItem>,
-    val tableId:Int,
-    val totalPeople:Int,
-    val bookingTime:String,
-    val grandTotal:Int,
-)*/
 
 inline fun <reified T> deserializeFromJson(jsonFile: String?): T? {
     val gson = Gson()
@@ -174,9 +166,9 @@ fun Context.msg(string: String, time: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, string, time).show()
 }
 
-fun rand(from: Int = 0, to: Int = 2): Int {
+/*fun rand(from: Int = 0, to: Int = 2): Int {
     return Random.nextInt(to - from) + from
-}
+}*/
 
 @RequiresApi(Build.VERSION_CODES.M)
 fun Activity.changeStatusBarColor(color: Int = R.color.light_blue_bg) {
@@ -240,8 +232,8 @@ fun Activity.addDialogMaterial(
         .setPositiveButton("Done") { dialog, _ ->
             val customerName = binding.customerNameEd.text?.toString()
             val customerNumber = binding.customerNumberEd.text?.toString()
-            val terminalNumber = binding.terminalNumEd.text.toString()
-            if (checkFieldValue(terminalNumber)) {
+            val coverNumber = binding.coverNumEd.text.toString()
+            if (checkFieldValue(coverNumber) || !coverNumber.isDigitsOnly()) {
                 msg("Please Enter Terminal-Number\n Try Again.")
                 return@setPositiveButton
             }
@@ -255,10 +247,10 @@ fun Activity.addDialogMaterial(
                     rcptNo = "$receiptNo",
                     customerPhone = customerNumber ?: "",
                     customerName = customerName ?: "",
-                    covers = binding.coverValue.text.toString(),
+                    covers = coverNumber,
                     storeVar = storeVar,
                     tableNo = tableNo,
-                    terminalNo = makeStringAlphaNumericForm(terminalNumber),
+                    terminalNo = "",
                     errorFound = false.toString(),
                     salesType = "RESTAURANT",
                     staffID = staffID,
@@ -273,26 +265,11 @@ fun Activity.addDialogMaterial(
             msg("Saved")
             listener.invoke(confirmDiningRequest)
             dialog.dismiss()
-        }.setNegativeButton("Cancel") { dialog, _ ->
+        }.setCancelable(false)
+        .setNegativeButton("Cancel") { dialog, _ ->
             dialog.dismiss()
         }
         .create().show()
-
-    binding.incrementBtn.setOnClickListener {
-        binding.coverValue.apply {
-            val value = this.text.toString().toInt()
-            this.text = (value + 1).toString()
-        }
-    }
-
-    binding.decrementBtn.setOnClickListener {
-        binding.coverValue.apply {
-            val value = this.text.toString().toInt()
-            if (value > 1) {
-                this.text = (value - 1).toString()
-            }
-        }
-    }
 }
 
 
