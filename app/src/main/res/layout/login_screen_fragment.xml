@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_blue_bg"
-    tools:context="com.example.offiqlresturantapp.ui.testingconnection.TestingConnectionFragment">
+    tools:context="com.example.offiqlresturantapp.ui.login.LoginScreenFragment">
 
     <TextView
         android:id="@+id/mpos_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
+        android:layout_marginStart="19dp"
         android:layout_marginTop="12sp"
         android:fontFamily="@font/roboto_medium"
         android:text="@string/app_title"
@@ -32,127 +32,96 @@
         app:srcCompat="@drawable/logofile" />
 
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/scan_or_code_id"
+    <!--<androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/success_mgs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:background="@drawable/white_underline_boder"
-        android:drawableEnd="@drawable/qr_code"
-        android:drawablePadding="15dp"
+        android:layout_marginTop="117dp"
         android:fontFamily="@font/roboto_medium"
-        android:paddingStart="25dp"
+        android:paddingStart="102dp"
         android:paddingTop="17dp"
-        android:paddingEnd="10dp"
+        android:visibility="gone"
+        android:paddingEnd="103dp"
         android:paddingBottom="16dp"
-        android:text="@string/scan_btn"
+        android:text="@string/msg_success"
         android:textAllCaps="false"
-        android:textColor="@color/light_grey_color"
+        android:textColor="@color/dark_green_color"
         android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="@id/mpos_id"
         app:layout_constraintRight_toRightOf="@id/logo_file_id"
-        app:layout_constraintTop_toBottomOf="@id/mpos_id" />
+        app:layout_constraintTop_toBottomOf="@id/mpos_id" />-->
+
 
     <TextView
-        android:id="@+id/store_no_txt"
+        android:id="@+id/user_name_id2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="38dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="150dp"
         android:fontFamily="@font/roboto_medium"
-        android:text="@string/store_no"
+        android:text="@string/user_name_one"
         android:textColor="@color/light_grey_color"
         android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scan_or_code_id" />
+        app:layout_constraintTop_toBottomOf="@id/mpos_id" />
 
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/store_no_ed"
+        android:id="@+id/user_name_ed2"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/black_underline_border"
         android:padding="10dp"
-        android:singleLine="true"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="@id/store_no_txt"
-        app:layout_constraintRight_toRightOf="@id/user_name_ed"
-        app:layout_constraintTop_toBottomOf="@id/store_no_txt" />
+        app:layout_constraintLeft_toLeftOf="@id/user_name_id2"
+        app:layout_constraintRight_toLeftOf="@id/logo_file_id"
+        app:layout_constraintTop_toBottomOf="@id/user_name_id2" />
 
 
     <TextView
-        android:id="@+id/user_name_id"
+        android:id="@+id/user_pass_id2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/roboto_medium"
-        android:text="@string/user_name"
+        android:text="@string/user_pass_one"
         android:textColor="@color/light_grey_color"
         android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@id/store_no_ed"
-        app:layout_constraintTop_toBottomOf="@id/store_no_ed" />
+        app:layout_constraintLeft_toLeftOf="@id/user_name_ed2"
+        app:layout_constraintTop_toBottomOf="@id/user_name_ed2" />
 
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/user_name_ed"
+        android:id="@+id/user_pass_ed2"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/black_underline_border"
         android:padding="10dp"
-        android:singleLine="true"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="@id/user_name_id"
+        app:layout_constraintLeft_toLeftOf="@id/user_name_id2"
         app:layout_constraintRight_toLeftOf="@id/logo_file_id"
-        app:layout_constraintTop_toBottomOf="@id/user_name_id" />
-
-
-    <TextView
-        android:id="@+id/user_pass_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/roboto_medium"
-        android:text="@string/user_pass"
-        android:textColor="@color/light_grey_color"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@id/user_name_ed"
-        app:layout_constraintTop_toBottomOf="@id/user_name_ed" />
-
-
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/user_pass_ed"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/black_underline_border"
-        android:padding="10dp"
-        android:singleLine="true"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="@id/user_name_id"
-        app:layout_constraintRight_toLeftOf="@id/logo_file_id"
-        app:layout_constraintTop_toBottomOf="@id/user_pass_id" />
+        app:layout_constraintTop_toBottomOf="@id/user_pass_id2" />
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/test_connection_id"
+        android:id="@+id/login_btn_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/golden_underline_border"
+        android:background="@drawable/blue_underline_boder_color"
         android:fontFamily="@font/roboto_medium"
-        android:paddingStart="36dp"
+        android:paddingStart="76dp"
         android:paddingTop="16dp"
-        android:paddingEnd="38dp"
+        android:paddingEnd="76dp"
         android:paddingBottom="17dp"
-        android:text="@string/btn_test_con"
+        android:text="@string/btn_login"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/user_pass_ed"
-        app:layout_constraintRight_toRightOf="@id/user_pass_ed"
-        app:layout_constraintTop_toBottomOf="@id/user_pass_ed" />
+        app:layout_constraintLeft_toLeftOf="@id/user_pass_ed2"
+        app:layout_constraintRight_toRightOf="@id/user_pass_ed2"
+        app:layout_constraintTop_toBottomOf="@id/user_pass_ed2"
+        app:layout_constraintVertical_bias=".5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

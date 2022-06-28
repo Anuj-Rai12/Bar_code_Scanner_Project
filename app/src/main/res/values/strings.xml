@@ -4,12 +4,14 @@
     <string name="scan_btn">Scan QR code</string>
     <string name="store_no">Store ID</string>
     <string name="user_name">User ID</string>
+    <string name="user_name_one">Personal User ID</string>
     <string name="user_pass">Password</string>
+    <string name="user_pass_one">Personal Password</string>
     <string name="btn_test_con">Test Connection</string>
     <string name="btn_login">Login</string>
     <string name="msg_fail">Failed</string>
     <string name="msg_success">Successful!</string>
-    <string name="btn_setting">Settings</string>
+    <string name="btn_setting">Log Out</string>
     <string name="item_table">Table Management</string>
     <string name="item_cost">Cost Estimate</string>
     <string name="open_table">Open</string>

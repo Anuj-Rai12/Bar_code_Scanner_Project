@@ -55,8 +55,7 @@
         android:contentDescription="@string/btn_setting"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:srcCompat="@drawable/setting_icon" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 
     <androidx.recyclerview.widget.RecyclerView
