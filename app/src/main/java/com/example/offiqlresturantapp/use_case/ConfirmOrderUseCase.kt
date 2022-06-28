@@ -6,9 +6,8 @@ import com.example.offiqlresturantapp.utils.TAG
 import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-class ConfirmOrderUseCase @Inject constructor() {
+class ConfirmOrderUseCase {
 
 
     fun calGrandTotal(item: List<ItemMasterFoodItem>?): Int {

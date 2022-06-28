@@ -10,9 +10,8 @@ import com.example.offiqlresturantapp.databinding.ActivityMainBinding
 import com.example.offiqlresturantapp.utils.*
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding: ActivityMainBinding
 

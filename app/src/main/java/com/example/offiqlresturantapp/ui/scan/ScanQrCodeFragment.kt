@@ -28,12 +28,10 @@ import com.example.offiqlresturantapp.utils.*
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
-import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-@AndroidEntryPoint
 class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     private lateinit var binding: ScanQrLayoutBinding
     private var imageCapture: ImageCapture? = null

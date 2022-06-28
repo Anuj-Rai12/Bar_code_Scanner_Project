@@ -1,30 +1,27 @@
 package com.example.offiqlresturantapp.ui.searchfood.view_model
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.offiqlresturantapp.dataStore.UserSoredData
+import com.example.offiqlresturantapp.db.RoomDataBaseInstance
+import com.example.offiqlresturantapp.di.RetrofitInstance
 import com.example.offiqlresturantapp.ui.searchfood.repo.SearchFoodRepositoryImpl
-import com.example.offiqlresturantapp.utils.ApisResponse
-import com.example.offiqlresturantapp.utils.Events
-import com.example.offiqlresturantapp.utils.checkFieldValue
-import com.example.offiqlresturantapp.utils.isNetworkAvailable
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.offiqlresturantapp.utils.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SearchFoodViewModel @Inject constructor(
-    private val repository: SearchFoodRepositoryImpl,
-    private val userSoredData: UserSoredData,
+
+class SearchFoodViewModel constructor(
     application: Application
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
+    private lateinit var repository: SearchFoodRepositoryImpl
 
+    private val userSoredData = UserSoredData(application)
     private val _fdInfo = MutableLiveData<ApisResponse<out Any?>>()
     val fdInfo: LiveData<ApisResponse<out Any?>>
         get() = _fdInfo
@@ -36,6 +33,26 @@ class SearchFoodViewModel @Inject constructor(
     init {
         if (!application.isNetworkAvailable()) {
             _event.postValue(Events("No Internet Connection"))
+        }
+        viewModelScope.launch {
+            val db = RoomDataBaseInstance.getInstance(application)
+            userSoredData.readBase.collectLatest {
+                val auth = AllStringConst.getAuthHeader(genToken("${it.userId}:${it.passId}"))
+                val retrofit = RetrofitInstance.getInstance(auth = auth, baseUrl = it.baseUrl)
+                repository = SearchFoodRepositoryImpl(
+                    application = application,
+                    retrofit = retrofit.getRetrofit(),
+                    roomDataBaseInstance = db
+                )
+            }
+        }
+    }
+
+
+    fun fetchResponseApi() {
+        if (!this::repository.isInitialized) {
+            _event.postValue(Events("Unknown Error"))
+            return
         }
         viewModelScope.launch {
             userSoredData.read.collectLatest {

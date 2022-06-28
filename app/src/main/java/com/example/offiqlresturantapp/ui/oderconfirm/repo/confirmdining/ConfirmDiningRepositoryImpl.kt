@@ -7,9 +7,8 @@ import com.example.offiqlresturantapp.utils.ApisResponse
 import com.example.offiqlresturantapp.utils.buildApi
 import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
-import javax.inject.Inject
 
-class ConfirmDiningRepositoryImpl @Inject constructor(
+class ConfirmDiningRepositoryImpl(
     retrofit: Retrofit
 ) : ConfirmDiningRepository {
     val api = buildApi<ConfirmDiningApi>(retrofit)

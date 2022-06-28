@@ -22,9 +22,8 @@ import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.offiqlresturantapp.utils.*
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
 class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
     private lateinit var binding: SearchFoodItemLayoutBinding
     private lateinit var listOfFoodItemToSearchAdaptor: ListOfFoodItemToSearchAdaptor
@@ -44,7 +43,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         savedInstanceState?.let { flag = it.getBoolean("flag") }
         requireActivity().changeStatusBarColor(R.color.semi_white_color)
         binding = SearchFoodItemLayoutBinding.bind(view)
-
+        viewModel.fetchResponseApi()
         viewModel.events.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { str ->
                 showSnackBar(str, color = R.color.color_red, length = Snackbar.LENGTH_INDEFINITE)

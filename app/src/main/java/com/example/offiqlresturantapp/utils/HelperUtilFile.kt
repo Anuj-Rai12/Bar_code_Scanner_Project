@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
+import android.text.InputType
 import android.util.Base64
 import android.view.View
 import android.widget.Button
@@ -32,6 +33,7 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.vmadalin.easypermissions.EasyPermissions
 import retrofit2.Retrofit
+import java.net.URL
 import java.text.Normalizer
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -60,7 +62,9 @@ object AllStringConst {
 
     //const val No_Error = "No Error"
     const val Soap_Envelope = "Soap:Envelope"
-    var authHeader = "Basic ${genToken()}"
+    //var authHeader = "Basic ${genToken(base)}"
+
+    fun getAuthHeader(token: String) = "Basic $token"
 
     object SoapAction {
         const val ApkLogin = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:Login"
@@ -101,8 +105,8 @@ fun View.showSandbar(
 }
 
 
-private fun genToken(): String =
-    Base64.encodeToString(AllStringConst.base.toByteArray(), Base64.NO_WRAP)
+fun genToken(value: String): String =
+    Base64.encodeToString(value.toByteArray(), Base64.NO_WRAP)
 
 fun <T> serializeToJson(bmp: T): String? {
     val gson = Gson()
@@ -156,13 +160,13 @@ fun View.show() {
     this.isVisible = true
 }
 
-fun View.invisible() {
+/*fun View.invisible() {
     this.visibility = View.INVISIBLE
 }
 
 fun View.visible() {
     this.visibility = View.VISIBLE
-}
+}*/
 
 const val TAG = "ANUJ"
 const val Rs_Symbol = "₹"
@@ -330,7 +334,6 @@ fun Fragment.showQtyDialog(
     val binding = QtyIncrementLayoutBinding.inflate(layoutInflater)
     val dialog = materialDialogs.setView(binding.root)
         .setCancelable(isCancelable)
-        .setIcon(R.drawable.ic_info)
         .show()
 
     binding.btnDone.setOnClickListener {
@@ -357,10 +360,54 @@ fun Fragment.showQtyDialog(
 }
 
 
+fun Activity.showDialogBoxToGetUrl(scan: () -> Unit, done: (String) -> Unit) {
+    val materialDialogs = MaterialAlertDialogBuilder(
+        this,
+        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+    )
+
+    val binding = QtyIncrementLayoutBinding.inflate(layoutInflater)
+    val dialog = materialDialogs.setView(binding.root)
+        .setCancelable(false)
+        .show()
+
+    binding.qtyEd.hint = "Please Add Url..."
+    binding.qtyEd.inputType = InputType.TYPE_CLASS_TEXT
+    binding.btnCancel.text = "Scan"
+    binding.btnDone.setOnClickListener {
+        val url = binding.qtyEd.text.toString()
+        if (checkFieldValue(url)) {
+            msg("Please Enter the Url...")
+            return@setOnClickListener
+        }
+        if (!isValidUrl(url)) {
+            return@setOnClickListener
+        }
+        done.invoke(url.trim())
+        dialog.dismiss()
+    }
+
+    binding.btnCancel.setOnClickListener {
+        scan.invoke()
+        dialog.dismiss()
+    }
+}
+
+
 fun getDate(): String? {
     val current = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     return current.format(formatter)
+}
+
+fun Activity.isValidUrl(url: String?): Boolean {
+    return try {
+        URL(url).toURI()
+        true
+    } catch (e: java.lang.Exception) {
+        msg("Please Enter valid Url")
+        false
+    }
 }
 
 

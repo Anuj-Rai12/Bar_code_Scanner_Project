@@ -12,9 +12,9 @@ import com.example.offiqlresturantapp.utils.*
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import retrofit2.Retrofit
-import javax.inject.Inject
 
-class SearchFoodRepositoryImpl @Inject constructor(
+
+class SearchFoodRepositoryImpl constructor(
     private val roomDataBaseInstance: RoomDataBaseInstance,
     private val application: Application,
     retrofit: Retrofit

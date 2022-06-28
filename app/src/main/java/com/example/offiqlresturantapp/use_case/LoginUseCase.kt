@@ -5,9 +5,8 @@ import com.example.offiqlresturantapp.data.login.model.api.ApkBody
 import com.example.offiqlresturantapp.utils.ApisResponse
 import com.example.offiqlresturantapp.utils.checkFieldValue
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class LoginUseCase @Inject constructor() {
+class LoginUseCase {
 
     fun getLoginResponse(userID: String, password: String, storeNo: String) = flow {
         val data =

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-class ConfirmOrderRepositoryImpl @Inject constructor(
+class ConfirmOrderRepositoryImpl(
     retrofit: Retrofit
 ) : ConfirmOrderRepository {
 

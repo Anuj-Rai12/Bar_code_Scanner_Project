@@ -1,31 +1,27 @@
 package com.example.offiqlresturantapp.ui.testingconnection.viewModel
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.offiqlresturantapp.data.login.model.api.ApKLoginPost
 import com.example.offiqlresturantapp.data.login.model.api.ApkBody
+import com.example.offiqlresturantapp.data.testconnection.TestingConnection
 import com.example.offiqlresturantapp.dataStore.UserSoredData
+import com.example.offiqlresturantapp.di.RetrofitInstance
 import com.example.offiqlresturantapp.ui.testingconnection.repo.ApiRepository
-import com.example.offiqlresturantapp.use_case.LoginUseCase
 import com.example.offiqlresturantapp.utils.*
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class TestingConnectionViewModel @Inject constructor(
-    private val repository: ApiRepository,
-    private val loginUseCase: LoginUseCase,
+
+class TestingConnectionViewModel constructor(
     application: Application,
-    private val userSoredData: UserSoredData
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
-
+    private val app = application
     private val _event = MutableLiveData<Events<String>>()
     val events: LiveData<Events<String>>
         get() = _event
@@ -35,8 +31,50 @@ class TestingConnectionViewModel @Inject constructor(
         get() = _apkLogin
 
 
+    private val _testingConnection = MutableLiveData<ApisResponse<out String>>()
+    val testingConnection: LiveData<ApisResponse<out String>>
+        get() = _testingConnection
+
+    private val userSoredData = UserSoredData(app)
+
+    private lateinit var repository: ApiRepository
+
+    var scannerUrl: String? = null
+
+
     init {
-        if (application.isNetworkAvailable()) {
+        viewModelScope.launch {
+            userSoredData.readBase.collectLatest {
+                if (checkFieldValue(it.baseUrl) || checkFieldValue(it.storeId) || checkFieldValue(it.userId) ||
+                    checkFieldValue(it.passId)
+                ) {
+                    repository = ApiRepository(
+                        retrofit = RetrofitInstance(
+                            "dfkds",
+                            "https://www.google.com"
+                        ).getRetrofit(),
+                        userSoredData = userSoredData
+                    )
+                    _apkLogin.postValue(ApisResponse.Error("1", null))
+                } else {
+                    val auth = AllStringConst.getAuthHeader(genToken("${it.userId}:${it.passId}"))
+                    val retrofit = RetrofitInstance.getInstance(auth = auth, baseUrl = it.baseUrl)
+                    repository = ApiRepository(
+                        retrofit = retrofit.getRetrofit(),
+                        userSoredData = userSoredData
+                    )
+                }
+            }
+        }
+    }
+
+
+    fun doLoginProcess() {
+        if (!this::repository.isInitialized) {
+            _event.postValue(Events("Unknown Error"))
+            return
+        }
+        if (app.isNetworkAvailable()) {
             viewModelScope.launch {
                 userSoredData.read.collectLatest {
                     if (checkFieldValue(it.storeNo.toString())
@@ -46,7 +84,7 @@ class TestingConnectionViewModel @Inject constructor(
                         _apkLogin.postValue(ApisResponse.Error(null, null))
                     } else {
                         RestaurantSingletonCls.getInstance().setUserID(it.userID ?: "")
-                        RestaurantSingletonCls.getInstance().setStoreId(it.storeNo?:"")
+                        RestaurantSingletonCls.getInstance().setStoreId(it.storeNo ?: "")
                         repository.getApkLoginResponse(
                             ApKLoginPost(
                                 ApkBody(
@@ -64,24 +102,26 @@ class TestingConnectionViewModel @Inject constructor(
     }
 
 
-    fun checkLoginTraditional(
-        userID: String,
-        password: String,
-        storeNo: String,
-    ) {
-        viewModelScope.launch {
-            loginUseCase.getLoginResponse(userID, password, storeNo).collectLatest {
-                if (it is ApisResponse.Loading) {
-                    _event.postValue(Events(it.data.toString()))
-                } else if (it is ApisResponse.Success) {
-                    it.data?.let { item ->
-                        val data = item as ApKLoginPost
-                        repository.getApkLoginResponse(data, true).collectLatest { res ->
-                            _apkLogin.postValue(res)
-                        }
-                    }
+    fun testTheUrl(userId: String, passWord: String, storeID: String) {
+        if (!this::repository.isInitialized) {
+            _event.postValue(Events("Unknown Error"))
+            return
+        }
+        scannerUrl?.let { baseUrl ->
+            viewModelScope.launch {
+                repository.addTestingUrl(
+                    TestingConnection(
+                        baseUrl = baseUrl,
+                        userId = userId,
+                        passId = passWord,
+                        storeId = storeID
+                    )
+                ).collectLatest {
+                    _testingConnection.postValue(it)
                 }
             }
+        } ?: run {
+            _event.postValue(Events("Please Scan Url"))
         }
     }
 

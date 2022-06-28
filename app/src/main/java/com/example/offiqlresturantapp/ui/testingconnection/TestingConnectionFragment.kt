@@ -4,22 +4,19 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.offiqlresturantapp.R
-import com.example.offiqlresturantapp.data.login.model.api.json.ApkLoginJsonResponse
 import com.example.offiqlresturantapp.databinding.TestingConnectionFragmentBinding
 import com.example.offiqlresturantapp.ui.testingconnection.viewModel.TestingConnectionViewModel
 import com.example.offiqlresturantapp.utils.*
 import com.github.razir.progressbutton.bindProgressButton
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
 class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment) {
     private lateinit var binding: TestingConnectionFragmentBinding
     private val viewModel: TestingConnectionViewModel by viewModels()
@@ -34,12 +31,19 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         binding = TestingConnectionFragmentBinding.bind(view)
 
         viewModel.events.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { str -> showSnackBar(str) }
+            it.getContentIfNotHandled()?.let { str ->
+                if (str == "Please Scan Url") {
+                    getScannedUrl()
+                } else
+                    showSnackBar(str)
+            }
         }
 
         args.bar?.let {
-            if (it.title != null || it.uri != null)
-                requireActivity().msg("$it")
+            if (it.title != null && it.uri != null) {
+                requireActivity().msg("${it.uri}")
+                viewModel.scannerUrl = it.uri
+            }
         }
 
         checkApiResponse()
@@ -47,21 +51,37 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         bindProgressButton(binding.testConnectionId)
 
         binding.scanOrCodeId.setOnClickListener {
-            val action =
-                TestingConnectionFragmentDirections.actionGlobalScanQrCodeFragment(
-                    Url_barcode,
-                    null,
-                    null,
-                    null
-                )
-            findNavController().navigate(action)
+            getScannedUrl()
         }
         binding.testConnectionId.setOnClickListener {
             val userID = binding.userNameEd.text.toString()
             val password = binding.userPassEd.text.toString()
             val storeNo = binding.storeNoEd.text.toString()
-            viewModel.checkLoginTraditional(userID, password, storeNo)
+            if (checkFieldValue(userID) || checkFieldValue(password) || checkFieldValue(storeNo)) {
+                activity?.msg("Please Enter the Details Correctly")
+                return@setOnClickListener
+            }
+            viewModel.testTheUrl(userID.trim(), password.trim(), storeNo.trim())
         }
+    }
+
+    private fun getScannedUrl() {
+        activity?.showDialogBoxToGetUrl(scan = {
+            nextFragForScan()
+        }, done = { res ->
+            viewModel.scannerUrl = res
+        })
+    }
+
+    private fun nextFragForScan() {
+        val action =
+            TestingConnectionFragmentDirections.actionGlobalScanQrCodeFragment(
+                Url_barcode,
+                null,
+                null,
+                null
+            )
+        findNavController().navigate(action)
     }
 
     private fun nextFrag() {
@@ -72,11 +92,16 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun checkApiResponse() {
-        viewModel.apk.observe(viewLifecycleOwner) {
+        viewModel.testingConnection.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
                     hideProgress()
                     requireActivity().msg("${it.exception?.localizedMessage}")
+                    showDialogBox(
+                        "Failed!!",
+                        "Please Update the Credentials",
+                        icon = R.drawable.ic_error
+                    ) {}
                 }
                 is ApisResponse.Loading -> {
                     binding.testConnectionId.showButtonProgress(
@@ -86,15 +111,15 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                 }
                 is ApisResponse.Success -> {
                     hideProgress()
-                    it.data?.let { type ->
-                        val json = type as ApkLoginJsonResponse
-                        if (json.status) {
-                            requireActivity().msg(json.message)
-                            nextFrag()
-                        } else
-                            requireActivity().msg(json.message, Toast.LENGTH_LONG)
-                        return@let
-                    } ?: showSnackBar("Unable to Login \nCheck Login Credentials")
+                    it.data?.let {
+                        nextFrag()
+                    } ?: run {
+                        showDialogBox(
+                            "Failed!!",
+                            "Please Update the Credentials",
+                            icon = R.drawable.ic_error
+                        ) {}
+                    }
                 }
             }
         }

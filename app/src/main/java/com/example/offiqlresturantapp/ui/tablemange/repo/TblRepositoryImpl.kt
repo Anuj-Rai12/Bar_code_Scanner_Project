@@ -12,9 +12,8 @@ import com.example.offiqlresturantapp.utils.deserializeFromJson
 import com.example.offiqlresturantapp.utils.isNetworkAvailable
 import com.example.offiqlresturantapp.utils.networkBoundResource
 import retrofit2.Retrofit
-import javax.inject.Inject
 
-class TblRepositoryImpl @Inject constructor(
+class TblRepositoryImpl  constructor(
     private val roomDataBaseInstance: RoomDataBaseInstance,
     private val application: Application,
     retrofit: Retrofit

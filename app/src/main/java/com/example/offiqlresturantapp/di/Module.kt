@@ -1,5 +1,5 @@
 package com.example.offiqlresturantapp.di
-
+/*
 import android.app.Application
 import androidx.room.Room
 import com.example.offiqlresturantapp.db.RoomDataBaseInstance
@@ -54,7 +54,7 @@ object Module {
     }
 
 
-    /*@NewRetrofitInstance
+    *//*@NewRetrofitInstance
     @Singleton
     @Provides
     fun getRetrofit2(): Retrofit {
@@ -63,7 +63,7 @@ object Module {
             .client(client)
             .baseUrl(AllStringConst.BASE_URL_2)
             .build()
-    }*/
+    }*//*
 
 
     @Provides
@@ -78,9 +78,10 @@ object Module {
     @Singleton
     @Provides
     fun providesCoroutines() = CoroutineScope(SupervisorJob())
-}
+}*/
 
 
+/*
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class NewRetrofitInstance
+annotation class NewRetrofitInstance*/

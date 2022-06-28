@@ -2,13 +2,15 @@ package com.example.offiqlresturantapp.ui.oderconfirm.view_model
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest
 import com.example.offiqlresturantapp.data.confirmOrder.ConfirmOrderRequest
 import com.example.offiqlresturantapp.data.table_info.model.json.TableDetail
+import com.example.offiqlresturantapp.dataStore.UserSoredData
+import com.example.offiqlresturantapp.di.RetrofitInstance
 import com.example.offiqlresturantapp.ui.oderconfirm.repo.confirmdining.ConfirmDiningRepositoryImpl
 import com.example.offiqlresturantapp.ui.oderconfirm.repo.confirmorder.ConfirmOrderRepositoryImpl
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
@@ -23,11 +25,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ConfirmOrderFragmentViewModel @Inject constructor(
-    private val useCase: ConfirmOrderUseCase,
-    private val application: Application,
-    private val confirmOrderRepository: ConfirmOrderRepositoryImpl,
-    private val confirmDiningRepository: ConfirmDiningRepositoryImpl
-) : ViewModel() {
+    application: Application
+) : AndroidViewModel(application) {
+
+
+    private val useCase = ConfirmOrderUseCase()
+    private val app = application
+    private val userSoredData = UserSoredData(application)
+    private lateinit var confirmOrderRepository: ConfirmOrderRepositoryImpl
+    private lateinit var confirmDiningRepository: ConfirmDiningRepositoryImpl
 
     private val _event = MutableLiveData<Events<Map<String, Boolean>>>()
     val event: LiveData<Events<Map<String, Boolean>>>
@@ -60,6 +66,19 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
         if (!application.isNetworkAvailable()) {
             _event.postValue(Events(mapOf("No Internet Connection" to false)))
         }
+
+        viewModelScope.launch {
+            userSoredData.readBase.collectLatest {
+                val auth = AllStringConst.getAuthHeader(genToken("${it.userId}:${it.passId}"))
+                val retrofit = RetrofitInstance.getInstance(auth = auth, baseUrl = it.baseUrl)
+                confirmOrderRepository = ConfirmOrderRepositoryImpl(
+                    retrofit = retrofit.getRetrofit()
+                )
+                confirmDiningRepository =
+                    ConfirmDiningRepositoryImpl(retrofit = retrofit.getRetrofit())
+            }
+        }
+
         getTime()
     }
 
@@ -151,8 +170,13 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
 
 
     fun updateAndLockTbl(confirmDiningRequest: ConfirmDiningRequest) {
+        if (!this::confirmDiningRepository.isInitialized) {
+            _event.postValue(Events(mapOf("Unknown Error" to false)))
+            return
+        }
+
         viewModelScope.launch {
-            if (application.isNetworkAvailable()) {
+            if (app.isNetworkAvailable()) {
                 confirmDiningRepository.updateAndLockTbl(confirmDiningRequest).collectLatest {
                     _orderDining.postValue(it)
                 }
@@ -163,8 +187,12 @@ class ConfirmOrderFragmentViewModel @Inject constructor(
     }
 
     fun saveUserOrderItem(confirmOrderRequest: ConfirmOrderRequest) {
+        if (!this::confirmOrderRepository.isInitialized) {
+            _event.postValue(Events(mapOf("Unknown Error" to false)))
+            return
+        }
         viewModelScope.launch {
-            if (application.isNetworkAvailable()) {
+            if (app.isNetworkAvailable()) {
                 confirmOrderRepository.saveUserOrderItem(confirmOrderRequest).collectLatest {
                     _orderConfirm.postValue(it)
                 }

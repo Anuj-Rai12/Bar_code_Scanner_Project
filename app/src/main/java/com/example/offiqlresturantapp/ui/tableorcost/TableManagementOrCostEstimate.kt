@@ -15,9 +15,9 @@ import com.example.offiqlresturantapp.ui.tableorcost.adaptor.TableManagementOrCo
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
 import com.example.offiqlresturantapp.utils.TAG
 import com.example.offiqlresturantapp.utils.changeStatusBarColor
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
+
 class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
 
     private lateinit var binding: TableOrCostLayoutBinding

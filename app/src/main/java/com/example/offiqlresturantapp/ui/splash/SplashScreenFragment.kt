@@ -18,10 +18,8 @@ import com.example.offiqlresturantapp.databinding.SplashSrcLayoutBinding
 import com.example.offiqlresturantapp.ui.testingconnection.viewModel.TestingConnectionViewModel
 import com.example.offiqlresturantapp.utils.*
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
 
 @SuppressLint("CustomSplashScreen")
-@AndroidEntryPoint
 class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
     private lateinit var binding: SplashSrcLayoutBinding
     private val viewModel: TestingConnectionViewModel by viewModels()
@@ -35,7 +33,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
         super.onViewCreated(view, savedInstanceState)
         binding = SplashSrcLayoutBinding.bind(view)
         binding.logoFileId3.animation = animation
-
+        doAuthTask()
         viewModel.events.observe(viewLifecycleOwner) {
             var count = 0
             it.getContentIfNotHandled()?.let { str ->
@@ -58,7 +56,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                doAuthTask()
+                viewModel.doLoginProcess()
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
@@ -74,10 +72,13 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
             when (it) {
                 is ApisResponse.Error -> {
                     it.exception?.localizedMessage?.let { exp ->
-                        if (!checkFieldValue(exp))
-                            requireActivity().msg(exp)
+                        Log.i(TAG, "doAuthTask: $exp")
                     }
-                    nextFrag(null)
+                    if (it.data == null) {
+                        nextFrag(null)
+                    } else {
+                        nextFrag("${it.data}")
+                    }
                 }
                 is ApisResponse.Loading -> {
                     Log.i(TAG, "checkApiResponse: ${it.data}")
@@ -96,14 +97,20 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
 
     private fun nextFrag(string: String?) {
         lifecycleScope.launchWhenStarted {
-            val action = if (string == null) {
-                SplashScreenFragmentDirections.actionSplashScreenFragmentToTestingConnectionFragment(
-                    null
-                )
-            } else {
-                SplashScreenFragmentDirections.actionSplashScreenFragmentToTableManagementOrCostEstimate(
-                    string
-                )
+            val action = when (string) {
+                null -> {
+                    SplashScreenFragmentDirections.actionSplashScreenFragmentToLoginScreenFragment()
+                }
+                "1" -> {
+                    SplashScreenFragmentDirections.actionSplashScreenFragmentToTestingConnectionFragment(
+                        null
+                    )
+                }
+                else -> {
+                    SplashScreenFragmentDirections.actionSplashScreenFragmentToTableManagementOrCostEstimate(
+                        string
+                    )
+                }
             }
             findNavController().navigate(action)
         }

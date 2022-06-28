@@ -18,9 +18,9 @@ import com.example.offiqlresturantapp.ui.tablemange.adaptor.TableManagementAdapt
 import com.example.offiqlresturantapp.ui.tablemange.view_model.TableManagementViewModel
 import com.example.offiqlresturantapp.utils.*
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
+
 class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
     private lateinit var binding: TableMangmentLayoutBinding
     private lateinit var tableManagementAdaptor: TableManagementAdaptor

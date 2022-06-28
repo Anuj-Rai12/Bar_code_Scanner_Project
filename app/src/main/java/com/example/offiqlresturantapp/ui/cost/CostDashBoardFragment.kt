@@ -10,10 +10,8 @@ import com.example.offiqlresturantapp.databinding.CostCalDashbordLayoutBinding
 import com.example.offiqlresturantapp.utils.changeStatusBarColor
 import com.example.offiqlresturantapp.utils.hide
 import com.example.offiqlresturantapp.utils.show
-import dagger.hilt.android.AndroidEntryPoint
 
 
-@AndroidEntryPoint
 class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout) {
     private lateinit var binding: CostCalDashbordLayoutBinding
 
