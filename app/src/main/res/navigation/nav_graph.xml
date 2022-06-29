@@ -17,6 +17,10 @@
         <action
             android:id="@+id/action_testingConnectionFragment_to_loginScreenFragment"
             app:destination="@id/loginScreenFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim"
             app:popUpTo="@id/testingConnectionFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -181,6 +185,10 @@
         <action
             android:id="@+id/action_splashScreenFragment_to_loginScreenFragment"
             app:destination="@id/loginScreenFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim"
             app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -192,6 +200,10 @@
         <action
             android:id="@+id/action_loginScreenFragment_to_tableManagementOrCostEstimate"
             app:destination="@id/tableManagementOrCostEstimate"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim"
             app:popUpTo="@id/loginScreenFragment"
             app:popUpToInclusive="true" />
     </fragment>
