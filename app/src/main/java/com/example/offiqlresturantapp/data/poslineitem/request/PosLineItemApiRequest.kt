@@ -23,8 +23,8 @@ data class PosLineItemApiRequest @JvmOverloads constructor(
 @Root(name = "POSLineItems", strict = false)
 data class RequestBody @JvmOverloads constructor(
 
-    @field:Element(name = "itemLineMPOS")
-    @param:Element(name = "itemLineMPOS")
+    @field:Element(name = "itemLineMPOS", required = false)
+    @param:Element(name = "itemLineMPOS", required = false)
     val items: MunItemContainer? = null,
 
     @field:Attribute(name = "xmlns")
@@ -36,8 +36,8 @@ data class RequestBody @JvmOverloads constructor(
 @Root(name = "itemLineMPOS", strict = false)
 data class MunItemContainer @JvmOverloads constructor(
 
-    @field:ElementList(name = "MPOSLineInsert")
-    @param:ElementList(name = "MPOSLineInsert")
+    @field:ElementList(name = "MPOSLineInsert", inline = true, required = false)
+    @param:ElementList(name = "MPOSLineInsert", inline = true, required = false)
     val item: List<MenuItem>? = null
 
 )
