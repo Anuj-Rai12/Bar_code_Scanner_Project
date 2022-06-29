@@ -3,7 +3,6 @@ package com.example.offiqlresturantapp.ui.searchfood.model
 import android.os.Parcelable
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
 import com.example.offiqlresturantapp.utils.listOfBg
-import com.example.offiqlresturantapp.utils.rand
 import kotlinx.parcelize.Parcelize
 
 //Sample Class to Provide sample data

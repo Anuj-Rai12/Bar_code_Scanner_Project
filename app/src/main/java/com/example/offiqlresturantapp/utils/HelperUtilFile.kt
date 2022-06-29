@@ -348,7 +348,7 @@ fun Activity.showDialogBoxToGetUrl(scan: () -> Unit, done: (String) -> Unit) {
         .setCancelable(false)
         .show()
 
-    binding.qtyEd.hint = "Please Add Url..."
+    binding.qtyEdLayout.hint = "Please Add Url"
     binding.qtyEd.inputType = InputType.TYPE_CLASS_TEXT
     binding.btnCancel.text = "Scan"
     binding.btnDone.setOnClickListener {

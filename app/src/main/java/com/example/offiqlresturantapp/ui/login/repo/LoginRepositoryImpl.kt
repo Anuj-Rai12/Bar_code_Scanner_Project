@@ -19,7 +19,7 @@ class LoginRepositoryImpl(
     private val apkLoginApi = buildApi<LoginApi>(retrofit)
 
     fun getApkLoginResponse(requestBody: ApKLoginPost, flag: Boolean) = flow {
-        emit(ApisResponse.Loading("Loading.."))
+        emit(ApisResponse.Loading("Please Wait"))
         val data = try {
             val response = apkLoginApi.sendApiPostRequest(requestBody)
             val info = if (response.isSuccessful) {

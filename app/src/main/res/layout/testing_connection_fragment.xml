@@ -67,18 +67,29 @@
         app:layout_constraintTop_toBottomOf="@id/scan_or_code_id" />
 
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/store_no_ed"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/store_no_ed_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="55dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/black_underline_border"
-        android:padding="10dp"
-        android:singleLine="true"
-        android:textColor="@color/black"
+        app:boxBackgroundColor="@color/white"
+        app:boxStrokeColor="@color/light_grey_color"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/black"
         app:layout_constraintLeft_toLeftOf="@id/store_no_txt"
-        app:layout_constraintRight_toRightOf="@id/user_name_ed"
-        app:layout_constraintTop_toBottomOf="@id/store_no_txt" />
+        app:layout_constraintRight_toRightOf="@id/user_name_ed_layout"
+        app:layout_constraintTop_toBottomOf="@id/store_no_txt">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/store_no_ed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto_medium"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <TextView
@@ -90,22 +101,33 @@
         android:text="@string/user_name"
         android:textColor="@color/light_grey_color"
         android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@id/store_no_ed"
-        app:layout_constraintTop_toBottomOf="@id/store_no_ed" />
+        app:layout_constraintLeft_toLeftOf="@id/store_no_ed_layout"
+        app:layout_constraintTop_toBottomOf="@id/store_no_ed_layout" />
 
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/user_name_ed"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/user_name_ed_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="55dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/black_underline_border"
-        android:padding="10dp"
-        android:singleLine="true"
-        android:textColor="@color/black"
+        app:boxBackgroundColor="@color/white"
+        app:boxStrokeColor="@color/light_grey_color"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/black"
         app:layout_constraintLeft_toLeftOf="@id/user_name_id"
         app:layout_constraintRight_toLeftOf="@id/logo_file_id"
-        app:layout_constraintTop_toBottomOf="@id/user_name_id" />
+        app:layout_constraintTop_toBottomOf="@id/user_name_id">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/user_name_ed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto_medium"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <TextView
@@ -117,22 +139,34 @@
         android:text="@string/user_pass"
         android:textColor="@color/light_grey_color"
         android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@id/user_name_ed"
-        app:layout_constraintTop_toBottomOf="@id/user_name_ed" />
+        app:layout_constraintLeft_toLeftOf="@id/user_name_ed_layout"
+        app:layout_constraintTop_toBottomOf="@id/user_name_ed_layout" />
 
-
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/user_pass_ed"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/user_pass_ed_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="55dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/black_underline_border"
-        android:padding="10dp"
-        android:singleLine="true"
-        android:textColor="@color/black"
+        app:boxBackgroundColor="@color/white"
+        app:boxStrokeColor="@color/light_grey_color"
         app:layout_constraintLeft_toLeftOf="@id/user_name_id"
         app:layout_constraintRight_toLeftOf="@id/logo_file_id"
-        app:layout_constraintTop_toBottomOf="@id/user_pass_id" />
+        app:layout_constraintTop_toBottomOf="@id/user_pass_id"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/black">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/user_pass_ed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto_medium"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <androidx.appcompat.widget.AppCompatButton
@@ -150,9 +184,9 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/user_pass_ed"
-        app:layout_constraintRight_toRightOf="@id/user_pass_ed"
-        app:layout_constraintTop_toBottomOf="@id/user_pass_ed" />
+        app:layout_constraintLeft_toLeftOf="@id/user_pass_ed_layout"
+        app:layout_constraintRight_toRightOf="@id/user_pass_ed_layout"
+        app:layout_constraintTop_toBottomOf="@id/user_pass_ed_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
