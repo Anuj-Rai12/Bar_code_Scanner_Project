@@ -45,6 +45,15 @@ class UserSoredData constructor(private val context: Context) {
         }
     }
 
+
+    suspend fun logout() {
+        context.dataStore.edit {
+            it.remove(allStoreString.USER_ID)
+            it.remove(allStoreString.PASS_NO)
+        }
+    }
+
+
     suspend fun updateBaseInfo(mainUrl: String, userId: String, password: String, storeId: String) {
         context.dataStore.edit { mutablePreferences ->
             mutablePreferences[allStoreString.BASE_URL] = mainUrl

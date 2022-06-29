@@ -59,31 +59,33 @@
 
 
     <ImageView
-        android:id="@+id/setting_btn_ic2"
+        android:id="@+id/logout_btn_ic2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:background="@drawable/circle_shape"
         android:contentDescription="@string/btn_setting"
         android:padding="4dp"
+        android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:srcCompat="@drawable/ic_logout" />
+        app:srcCompat="@drawable/ic_logout"
+        app:tint="@color/black" />
 
 
     <TextView
-        android:id="@+id/setting_txt2"
+        android:id="@+id/logout_txt2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:fontFamily="@font/roboto"
+        android:fontFamily="@font/roboto_medium"
         android:text="@string/btn_setting"
-        android:textColor="@color/light_grey_color"
+        android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/setting_btn_ic2"
-        app:layout_constraintLeft_toRightOf="@id/setting_btn_ic2"
-        app:layout_constraintTop_toTopOf="@id/setting_btn_ic2" />
+        app:layout_constraintBottom_toBottomOf="@id/logout_btn_ic2"
+        app:layout_constraintLeft_toRightOf="@id/logout_btn_ic2"
+        app:layout_constraintTop_toTopOf="@id/logout_btn_ic2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

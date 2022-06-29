@@ -9,13 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.offiqlresturantapp.MainActivity
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.TableOrCostLayoutBinding
 import com.example.offiqlresturantapp.ui.tableorcost.adaptor.TableManagementOrCostRecyclerAdaptor
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
 import com.example.offiqlresturantapp.utils.TAG
 import com.example.offiqlresturantapp.utils.changeStatusBarColor
-
+import com.example.offiqlresturantapp.utils.showDialogBox
 
 
 class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
@@ -32,6 +33,24 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
         binding.storeNm.text = args.storeName
         setRecycleView()
         setData()
+        binding.logoutBtnIc2.setOnClickListener {
+            showDialog()
+        }
+        binding.logoutTxt2.setOnClickListener {
+            showDialog()
+        }
+    }
+
+    private fun showDialog() {
+        showDialogBox(
+            "LogOut!!",
+            "Are you Sure You want to Logout?",
+            "Yes",
+            icon = R.drawable.ic_logout,
+            cancel = "No"
+        ) {
+            (activity as MainActivity?)?.logout()
+        }
     }
 
     private fun setRecycleView() {

@@ -278,6 +278,7 @@ fun Fragment.showDialogBox(
     desc: String,
     btn: String = "Ok",
     icon: Int = R.drawable.ic_info,
+    cancel: String? = null,
     listener: () -> Unit
 ) {
     val material = MaterialAlertDialogBuilder(
@@ -285,15 +286,19 @@ fun Fragment.showDialogBox(
         R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog_simple
     )
 
-    material.setTitle(title)
+    val dialog = material.setTitle(title)
         .setMessage(desc)
         .setIcon(icon)
         .setPositiveButton(btn) { dialog, _ ->
             listener.invoke()
             dialog.dismiss()
         }
-        .show()
-
+    cancel?.let {
+        dialog.setNegativeButton(it) { dialog, _ ->
+            dialog.dismiss()
+        }
+    }
+    dialog.show()
 }
 
 

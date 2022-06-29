@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
+import com.example.offiqlresturantapp.dataStore.UserSoredData
 import com.example.offiqlresturantapp.databinding.ActivityMainBinding
 import com.example.offiqlresturantapp.utils.*
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -42,6 +45,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             code,
             manifest,
         )
+
+
+    fun logout() {
+        lifecycleScope.launch {
+            val dataStore = UserSoredData(application)
+            dataStore.logout()
+            finish()
+        }
+    }
+
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         perms.forEach {
