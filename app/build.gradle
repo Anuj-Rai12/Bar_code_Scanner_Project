@@ -3,7 +3,6 @@ plugins {
     id 'kotlin-android'
     id("kotlin-parcelize")
     id 'androidx.navigation.safeargs'
-    id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
@@ -56,8 +55,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     //Dagger Hilt
-    implementation "com.google.dagger:hilt-android:2.38.1"
-    kapt "com.google.dagger:hilt-compiler:2.38.1"
+   // implementation "com.google.dagger:hilt-android:2.38.1"
+    //kapt "com.google.dagger:hilt-compiler:2.38.1"
 
 
     // ViewModel

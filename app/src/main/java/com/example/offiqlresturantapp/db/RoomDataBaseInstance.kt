@@ -9,7 +9,8 @@ import com.example.offiqlresturantapp.data.table_info.model.json.TableDetail
 
 @Database(
     entities = [ItemMaster::class, TableDetail::class],
-    version = 2
+    version = 2,
+    exportSchema = false
 )
 abstract class RoomDataBaseInstance : RoomDatabase() {
 
@@ -17,7 +18,7 @@ abstract class RoomDataBaseInstance : RoomDatabase() {
     abstract fun tblDao(): TableDetailDao
 
     companion object {
-        const val DatabaseName = "MY_RESTRUNTS_Table"
+        private const val DatabaseName = "MY_RESTRUNTS_Table"
 
         @Volatile
         private var INSTANCE: RoomDataBaseInstance? = null

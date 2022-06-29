@@ -17,14 +17,12 @@ import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.use_case.ConfirmOrderUseCase
 import com.example.offiqlresturantapp.utils.*
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ConfirmOrderFragmentViewModel @Inject constructor(
+
+class ConfirmOrderFragmentViewModel  constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
