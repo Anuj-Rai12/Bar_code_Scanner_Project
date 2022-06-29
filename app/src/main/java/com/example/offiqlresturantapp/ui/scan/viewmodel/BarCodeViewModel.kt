@@ -26,8 +26,8 @@ class BarCodeViewModel(application: Application) : AndroidViewModel(application)
     val events: LiveData<Events<ApisResponse<out Any>>>
         get() = _event
     private val app = application
-    private val _barCodeResponse = MutableLiveData<ApisResponse<out Any>>()
-    val barCodeResponse: LiveData<ApisResponse<out Any>>
+    private val _barCodeResponse = MutableLiveData<Events<ApisResponse<out Any>>>()
+    val barCodeResponse: LiveData<Events<ApisResponse<out Any>>>
         get() = _barCodeResponse
     private var storeNo = "PER002"
 
@@ -62,10 +62,11 @@ class BarCodeViewModel(application: Application) : AndroidViewModel(application)
             BarCodeRequest(body = BarCodeRequestBody(storeNo = storeNo, barcodeInput = itemCode))
         viewModelScope.launch {
             repository.getBarCodeResponse(response).collectLatest {
-                _barCodeResponse.postValue(it)
+                _barCodeResponse.postValue((Events(it)))
             }
         }
     }
+
 
     override fun onCleared() {
         super.onCleared()

@@ -37,7 +37,6 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.math.log
 
 
 class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
@@ -47,7 +46,6 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     private lateinit var cameraExecutor: ExecutorService
     private val args: ScanQrCodeFragmentArgs by navArgs()
     private var showDialog = true
-
     private val viewModel: BarCodeViewModel by viewModels()
 
     private val option = BarcodeScannerOptions.Builder()
@@ -93,50 +91,51 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     }
 
     private fun barCodeResult() {
-        viewModel.barCodeResponse.observe(viewLifecycleOwner) {
-            when (it) {
-                is ApisResponse.Error -> {
-                    showLoadingSrc(false)
-                    showScannerScreen(true)
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { err ->
-                            showDialogBox(
-                                "Failed!!",
-                                err,
-                                icon = R.drawable.ic_error,
-                                isCancel = false
-                            ) {
-                                flagList = false
+        viewModel.barCodeResponse.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
+                when (it) {
+                    is ApisResponse.Error -> {
+                        showLoadingSrc(false)
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { err ->
+                                showErrorDialog(err)
                             }
-                        }
-                    } else {
-                        showDialogBox(
-                            "Failed!!",
-                            "${it.data}",
-                            icon = R.drawable.ic_error,
-                            isCancel = false
-                        ) {
-                            flagList = false
+                        } else {
+                            showErrorDialog("${it.data}")
                         }
                     }
-                }
-                is ApisResponse.Loading -> {
-                    showLoadingSrc(true, "${it.data}")
-                    showScannerScreen(false)
-                }
-                is ApisResponse.Success -> {
-                    showLoadingSrc(false)
-                    showScannerScreen(false)
-                    (it.data as BarcodeJsonResponse?)?.let { res ->
-                        goToNextScreenConfirmScr(res)
-                    } ?: showDialogBox(
-                        "Failed!!",
-                        "Some thing Went Wrong",
-                        icon = R.drawable.ic_error
-                    ) {}
+                    is ApisResponse.Loading -> {
+                        showLoadingSrc(true, "${it.data}")
+                        showScannerScreen(false)
+                    }
+                    is ApisResponse.Success -> {
+                        showLoadingSrc(false)
+                        showScannerScreen(false)
+                        (it.data as BarcodeJsonResponse?)?.let { res ->
+                            goToNextScreenConfirmScr(res)
+                        } ?: showDialogBox(
+                            "Failed!!",
+                            "Some thing Went Wrong",
+                            icon = R.drawable.ic_error
+                        ) {}
+                    }
                 }
             }
         }
+    }
+
+    private fun showErrorDialog(msg: String) {
+        showDialogBox(
+            "Failed!!",
+            msg,
+            icon = R.drawable.ic_error,
+            isCancel = false
+        ) {
+            showScannerScreen(true)
+            flagList = false
+            //  showErrorDialogOnce = true
+        }
+        //showErrorDialogOnce = false
     }
 
 
@@ -152,7 +151,6 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
 
     private fun showScannerScreen(flag: Boolean) {
         if (flag) {
-            flagList = false
             binding.scanQrLayout.show()
         } else {
             binding.scanQrLayout.hide()
@@ -203,7 +201,6 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
 
                             }.addOnFailureListener { e ->
                                 Log.i(TAG, "startCamera: Error is $e")
-                                flagList = false
                             }
                         })
                     )
@@ -229,20 +226,11 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     }
 
     private fun sendData(first: Barcode) {
+        activity?.msg("Qr Code")
         if (args.tbl != null) {
-            try {
-                Log.i(TAG, "sendData: ${first.rawValue}")
-                Log.i(TAG, "sendData: ${first.url}")
-                Log.i(TAG, "sendData: ${first.format}")
-                Log.i(TAG, "sendData: ${first.phone}")
-                Log.i(TAG, "sendData: ${first.rawBytes}")
-                Log.i(TAG, "sendData: ${first.valueType}")
-                first.rawValue?.let {
-                    viewModel.checkForItemItem(it)
-                } ?: activity?.msg("Oops SomeThing Went Wrong")
-            } catch (e: Exception) {
-                activity?.msg("Try Some Other QR")
-            }
+            first.rawValue?.let {
+                viewModel.checkForItemItem(it)
+            } ?: activity?.msg("Oops SomeThing Went Wrong")
         } else {
             val handler = Handler(Looper.getMainLooper())
             handler.post {

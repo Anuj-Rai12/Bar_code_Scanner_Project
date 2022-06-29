@@ -1,9 +1,11 @@
 package com.example.offiqlresturantapp.ui.scan.repo
 
+import android.util.Log
 import com.example.offiqlresturantapp.api.barcode.BarCodeApi
 import com.example.offiqlresturantapp.data.barcode.request.BarCodeRequest
 import com.example.offiqlresturantapp.data.barcode.response.json.BarcodeJsonResponse
 import com.example.offiqlresturantapp.utils.ApisResponse
+import com.example.offiqlresturantapp.utils.TAG
 import com.example.offiqlresturantapp.utils.buildApi
 import com.example.offiqlresturantapp.utils.deserializeFromJson
 import kotlinx.coroutines.Dispatchers.IO
@@ -27,7 +29,8 @@ class BarCodeRepository(retrofit: Retrofit) {
                     ApisResponse.Success(json)
                 } ?: ApisResponse.Error(err, null)
             } else {
-                ApisResponse.Error(response.errorBody()?.string(), null)
+                Log.i(TAG, "getBarCodeResponse: ${response.errorBody()?.string()}")
+                ApisResponse.Error(err, null)
             }
         } catch (e: Exception) {
             ApisResponse.Error(null, e)
