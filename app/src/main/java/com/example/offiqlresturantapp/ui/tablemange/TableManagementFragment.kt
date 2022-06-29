@@ -8,6 +8,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,7 +19,8 @@ import com.example.offiqlresturantapp.ui.tablemange.adaptor.TableManagementAdapt
 import com.example.offiqlresturantapp.ui.tablemange.view_model.TableManagementViewModel
 import com.example.offiqlresturantapp.utils.*
 import com.google.android.material.snackbar.Snackbar
-
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
@@ -65,24 +67,38 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
                     }
                     Log.i(TAG, "setUpData: $exp")
                 }
-                is ApisResponse.Loading -> hideOrShowProgress(it.data?.toString())
+                is ApisResponse.Loading -> {
+                    val res = it.data as List<*>?
+                    if (res.isNullOrEmpty()) {
+                        hideOrShowProgress("Loading Tables")
+                    } else {
+                        displayData(it.data)
+                    }
+                }
                 is ApisResponse.Success -> {
                     hideOrShowProgress(null)
-                    it.data?.let { cls ->
-                        (cls as List<TableDetail>).let { res ->
-                            if (res.isNotEmpty()) {
-                                binding.tableInfoDetail.append("\nTotal Table Count ${res.size},")
-                                tableManagementAdaptor.notifyDataSetChanged()
-                                tableManagementAdaptor.submitList(res)
-                            } else {
-                                binding.root.showSandbar(
-                                    "Error the Get Data",
-                                    Snackbar.LENGTH_LONG,
-                                    requireActivity().getColorInt(R.color.color_red)
-                                )
-                            }
-                        }
+                    displayData(it.data)
+                }
+            }
+        }
+    }
+
+    private fun displayData(data: Any?) {
+        data?.let { cls ->
+            (cls as List<TableDetail>).let { res ->
+                if (res.isNotEmpty()) {
+                    lifecycleScope.launch {
+                        delay(800)
+                        binding.tableInfoDetail.append("\nTotal Table Count ${res.size},")
+                        tableManagementAdaptor.notifyDataSetChanged()
+                        tableManagementAdaptor.submitList(res)
                     }
+                } else {
+                    binding.root.showSandbar(
+                        "Error the Get Data",
+                        Snackbar.LENGTH_LONG,
+                        requireActivity().getColorInt(R.color.color_red)
+                    )
                 }
             }
         }
@@ -108,7 +124,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
             tableManagementAdaptor = TableManagementAdaptor { res ->
                 Log.i(TAG, "setRecycleView: $res")
                 val action = TableManagementFragmentDirections
-                    .actionTableManagementFragmentToConfirmOderFragment(null, res,null)
+                    .actionTableManagementFragmentToConfirmOderFragment(null, res, null)
                 findNavController().navigate(action)
             }
             adapter = tableManagementAdaptor

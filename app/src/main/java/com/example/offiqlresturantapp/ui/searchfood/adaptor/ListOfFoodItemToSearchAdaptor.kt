@@ -171,7 +171,6 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 borderBottomFood.show()
                 btnCloseId.show()
                 orderOfferListView.show()
-                btnWithOffer.show()
                 btnWithoutOffer.show()
                 //Order-Offer
                 offerTv.hide()

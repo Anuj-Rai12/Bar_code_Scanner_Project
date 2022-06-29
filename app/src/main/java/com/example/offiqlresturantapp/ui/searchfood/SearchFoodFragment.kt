@@ -127,25 +127,35 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
                     }
                 }
                 is ApisResponse.Loading -> {
-                    hideOrShow(it.data?.toString())
+                    val res = it.data as List<*>?
+                    if (res.isNullOrEmpty()) {
+                        hideOrShow("Loading Menu..")
+                    } else {
+                        displayData(it.data)
+                    }
+
                 }
                 is ApisResponse.Success -> {
                     hideOrShow(null)
-                    it.data?.let { item ->
-                        (item as List<ItemMaster>).let { res ->
-                            listOfFoodItemToSearchAdaptor.notifyDataSetChanged()
-                            listOfFoodItemToSearchAdaptor.submitList(res)
-                            binding.listOfFoodItem.smoothScrollToPosition(0)
-                        }
-                    } ?: showSnackBar(
-                        "No Data Found!!",
-                        R.color.color_red,
-                        Snackbar.LENGTH_LONG
-                    )
+                    displayData(it.data)
                 }
             }
         }
 
+    }
+
+    private fun displayData(data: Any?) {
+        data?.let { item ->
+            (item as List<ItemMaster>).let { res ->
+                listOfFoodItemToSearchAdaptor.notifyDataSetChanged()
+                listOfFoodItemToSearchAdaptor.submitList(res)
+                binding.listOfFoodItem.smoothScrollToPosition(0)
+            }
+        } ?: showSnackBar(
+            "No Data Found!!",
+            R.color.color_red,
+            Snackbar.LENGTH_LONG
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

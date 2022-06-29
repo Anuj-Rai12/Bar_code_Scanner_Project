@@ -11,6 +11,8 @@ import com.example.offiqlresturantapp.utils.buildApi
 import com.example.offiqlresturantapp.utils.deserializeFromJson
 import com.example.offiqlresturantapp.utils.isNetworkAvailable
 import com.example.offiqlresturantapp.utils.networkBoundResource
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.Retrofit
 
 class TblRepositoryImpl  constructor(
@@ -41,6 +43,6 @@ class TblRepositoryImpl  constructor(
         }, shouldFetch = {
             application.isNetworkAvailable()
         }
-    )
+    ).flowOn(IO)
 
 }

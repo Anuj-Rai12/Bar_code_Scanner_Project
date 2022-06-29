@@ -11,7 +11,7 @@ inline fun <ResultType, RequestType> networkBoundResource(
 ) = flow {
     val data = query().first()
     val flow = if (shouldFetch(data)) {
-        emit(ApisResponse.Loading("Please Wait"))
+        emit(ApisResponse.Loading(data))
         try {
             saveFetchResult(fetch())
             query().map { ApisResponse.Success(it) }

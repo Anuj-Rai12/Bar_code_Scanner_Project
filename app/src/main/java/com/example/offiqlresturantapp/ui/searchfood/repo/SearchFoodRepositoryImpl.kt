@@ -9,8 +9,10 @@ import com.example.offiqlresturantapp.data.item_master_sync.TableInformation
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMethodSyncJsonResponse
 import com.example.offiqlresturantapp.db.RoomDataBaseInstance
 import com.example.offiqlresturantapp.utils.*
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.Retrofit
 
 
@@ -42,7 +44,7 @@ class SearchFoodRepositoryImpl constructor(
         shouldFetch = {
             application.isNetworkAvailable()
         }
-    )
+    ).flowOn(IO)
 
     override fun getSearchFoodItem(query: String) = channelFlow {
         dao.searchResult(query).collectLatest {
