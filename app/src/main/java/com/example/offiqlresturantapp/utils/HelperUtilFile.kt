@@ -47,15 +47,18 @@ fun AppCompatActivity.hide() {
 }
 
 object AllStringConst {
-    const val BASE_URL = "http://20.204.153.37:7051/Navuser/WS/CKLifeStyle/Codeunit/"
+    //  const val BASE_URL = "http://20.204.153.37:7051/Navuser/WS/CKLifeStyle/Codeunit/"
 
     //http://223.31.53.229:28360/NAVUSER/WS/HLDGRP/Codeunit/
     const val _xmlns = "http://schemas.xmlsoap.org/soap/envelope/"
     const val _xmls = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI"
-    private const val userName = "Online"
-    private const val PASSWORD = "Pass@1234"
+    const val _xmlsList = "urn:microsoft-dynamics-nav/xmlports/x50006"
+
+    // private const val userName = "Online"
+    // private const val PASSWORD = "Pass@1234"
     const val PREFERENCES_USER = "User_INFO"
-    const val base = "$userName:$PASSWORD"
+
+    //const val base = "$userName:$PASSWORD"
     const val End_point = "MPOSWSAPI"
     const val Envelope = "Envelope"
 
@@ -74,7 +77,7 @@ object AllStringConst {
         const val tblInformation =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:TableInformation"
 
-        const val Barcode="urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ScanAndFindITEM"
+        const val Barcode = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ScanAndFindITEM"
 
     }
 
@@ -282,7 +285,7 @@ fun Fragment.showDialogBox(
     btn: String = "Ok",
     icon: Int = R.drawable.ic_info,
     cancel: String? = null,
-    isCancel:Boolean=true,
+    isCancel: Boolean = true,
     listener: () -> Unit
 ) {
     val material = MaterialAlertDialogBuilder(
