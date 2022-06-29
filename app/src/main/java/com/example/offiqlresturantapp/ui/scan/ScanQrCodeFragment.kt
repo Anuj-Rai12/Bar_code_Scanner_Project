@@ -1,5 +1,7 @@
 package com.example.offiqlresturantapp.ui.scan
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -14,22 +16,28 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.offiqlresturantapp.MainActivity
 import com.example.offiqlresturantapp.R
+import com.example.offiqlresturantapp.data.barcode.response.json.BarcodeJsonResponse
 import com.example.offiqlresturantapp.data.item_master_sync.json.ItemMaster
 import com.example.offiqlresturantapp.data.login.model.TestingBarcodeConnection
 import com.example.offiqlresturantapp.databinding.ScanQrLayoutBinding
 import com.example.offiqlresturantapp.ui.scan.utils.LuminosityAnalyzer
+import com.example.offiqlresturantapp.ui.scan.viewmodel.BarCodeViewModel
+import com.example.offiqlresturantapp.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.utils.*
+import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.log
 
 
 class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
@@ -39,6 +47,9 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     private lateinit var cameraExecutor: ExecutorService
     private val args: ScanQrCodeFragmentArgs by navArgs()
     private var showDialog = true
+
+    private val viewModel: BarCodeViewModel by viewModels()
+
     private val option = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
             Barcode.FORMAT_QR_CODE,
@@ -69,8 +80,85 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
         binding = ScanQrLayoutBinding.bind(view)
         cameraExecutor = Executors.newSingleThreadExecutor()
         (activity as MainActivity?)?.getPermission()
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { res ->
+                if (res is ApisResponse.Error) {
+                    showSnackBar("${res.data}")
+                }
+            }
+        }
+
+        barCodeResult()
         startCamera()
     }
+
+    private fun barCodeResult() {
+        viewModel.barCodeResponse.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    showLoadingSrc(false)
+                    showScannerScreen(true)
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { err ->
+                            showDialogBox(
+                                "Failed!!",
+                                err,
+                                icon = R.drawable.ic_error,
+                                isCancel = false
+                            ) {
+                                flagList = false
+                            }
+                        }
+                    } else {
+                        showDialogBox(
+                            "Failed!!",
+                            "${it.data}",
+                            icon = R.drawable.ic_error,
+                            isCancel = false
+                        ) {
+                            flagList = false
+                        }
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    showLoadingSrc(true, "${it.data}")
+                    showScannerScreen(false)
+                }
+                is ApisResponse.Success -> {
+                    showLoadingSrc(false)
+                    showScannerScreen(false)
+                    (it.data as BarcodeJsonResponse?)?.let { res ->
+                        goToNextScreenConfirmScr(res)
+                    } ?: showDialogBox(
+                        "Failed!!",
+                        "Some thing Went Wrong",
+                        icon = R.drawable.ic_error
+                    ) {}
+                }
+            }
+        }
+    }
+
+
+    private fun showLoadingSrc(flag: Boolean, text: String? = null) {
+        if (flag) {
+            binding.pbLayout.titleTxt.setTextColor(ColorStateList.valueOf(Color.GREEN))
+            binding.pbLayout.titleTxt.text = text
+            binding.pbLayout.root.show()
+        } else {
+            binding.pbLayout.root.hide()
+        }
+    }
+
+    private fun showScannerScreen(flag: Boolean) {
+        if (flag) {
+            flagList = false
+            binding.scanQrLayout.show()
+        } else {
+            binding.scanQrLayout.hide()
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -143,7 +231,15 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     private fun sendData(first: Barcode) {
         if (args.tbl != null) {
             try {
-                gotConfirmScreen(barcode = first)
+                Log.i(TAG, "sendData: ${first.rawValue}")
+                Log.i(TAG, "sendData: ${first.url}")
+                Log.i(TAG, "sendData: ${first.format}")
+                Log.i(TAG, "sendData: ${first.phone}")
+                Log.i(TAG, "sendData: ${first.rawBytes}")
+                Log.i(TAG, "sendData: ${first.valueType}")
+                first.rawValue?.let {
+                    viewModel.checkForItemItem(it)
+                } ?: activity?.msg("Oops SomeThing Went Wrong")
             } catch (e: Exception) {
                 activity?.msg("Try Some Other QR")
             }
@@ -164,33 +260,52 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
         }
     }
 
-    private fun gotConfirmScreen(barcode: Barcode) {
-        deserializeFromJson<ItemMaster>(barcode.rawValue)?.also { value ->
-            val handler = Handler(Looper.getMainLooper())
-            handler.post {
-                if (showDialog) {
-                    showDialog = false
-                    showQtyDialog(itemMaster = value, cancel = {
-                        flagList = it
-                        showDialog = true
-                    }, res = { res ->
-                        val arr = ArrayList<ItemMasterFoodItem>()
-                        args.food?.let { item ->
-                            arr.addAll(item.foodList)
-                        }
-                        Log.i("QR", "sendData: $res")
-                        arr.add(ItemMasterFoodItem(res, res.foodQty, res.foodAmt))
-                        val action =
-                            ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
-                                FoodItemList(arr),
-                                args.tbl!!,
-                                args.confirmreq
-                            )
-                        findNavController().navigate(action)
-                    })
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun showSnackBar(msg: String, length: Int = Snackbar.LENGTH_INDEFINITE) {
+        binding.root.showSandbar(
+            msg,
+            length,
+            requireActivity().getColorInt(R.color.color_red)
+        ) {
+            return@showSandbar "OK"
+        }
+    }
+
+
+    private fun goToNextScreenConfirmScr(barcode: BarcodeJsonResponse) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            if (showDialog) {
+                showDialog = false
+                val arr = ArrayList<ItemMasterFoodItem>()
+                args.food?.let { item ->
+                    arr.addAll(item.foodList)
                 }
+                val itemMaster = ItemMaster(
+                    barcode = barcode.barcode,
+                    id = 0,
+                    itemCategory = barcode.itemCategory,
+                    salePrice = barcode.salePrice,
+                    itemDescription = barcode.itemDescription,
+                    itemCode = barcode.itemCode,
+                    itemName = barcode.itemName,
+                    uOM = barcode.uOM
+                )
+                itemMaster.foodQty = barcode.qty
+                itemMaster.foodAmt =
+                    ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty
+                Log.i("QR", "sendData: $itemMaster")
+                arr.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
+                val action =
+                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
+                        FoodItemList(arr),
+                        args.tbl!!,
+                        args.confirmreq
+                    )
+                findNavController().navigate(action)
             }
-        } ?: activity?.msg("Oops Something Went Wrong?")
+        }
     }
 
 }

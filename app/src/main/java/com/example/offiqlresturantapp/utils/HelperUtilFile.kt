@@ -73,6 +73,9 @@ object AllStringConst {
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ItemMasterSync"
         const val tblInformation =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:TableInformation"
+
+        const val Barcode="urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ScanAndFindITEM"
+
     }
 
 
@@ -279,6 +282,7 @@ fun Fragment.showDialogBox(
     btn: String = "Ok",
     icon: Int = R.drawable.ic_info,
     cancel: String? = null,
+    isCancel:Boolean=true,
     listener: () -> Unit
 ) {
     val material = MaterialAlertDialogBuilder(
@@ -289,6 +293,7 @@ fun Fragment.showDialogBox(
     val dialog = material.setTitle(title)
         .setMessage(desc)
         .setIcon(icon)
+        .setCancelable(isCancel)
         .setPositiveButton(btn) { dialog, _ ->
             listener.invoke()
             dialog.dismiss()
