@@ -61,22 +61,5 @@ class SearchFoodRepositoryImpl constructor(
     }
 
 
-/*emit(ApisResponse.Loading("Please Wait.."))
-        val data = try {
-            val info = api.getItemMasterSync(ItemMasterSyncRequest(TableInformation(stateNo)))
-            val response = if (info.isSuccessful) {
-                info.body()?.apkLoginResult?.value?.let {
-                    return@let deserializeFromJson<ItemMethodSyncJsonResponse>(it)
-                }
-            } else {
-                Log.i(TAG, "getItemMasterSync: ${info.message()}")
-                null
-            }
 
-            ApisResponse.Success(response)
-
-        } catch (e: Exception) {
-            ApisResponse.Error(null, e)
-        }
-        emit(data)*/
 }

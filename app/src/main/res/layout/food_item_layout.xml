@@ -211,7 +211,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="6dp"
         android:text="@string/btn_without_offer"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="12sp"

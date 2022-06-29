@@ -234,7 +234,7 @@ fun Activity.addDialogMaterial(
             val customerNumber = binding.customerNumberEd.text?.toString()
             val coverNumber = binding.coverNumEd.text.toString()
             if (checkFieldValue(coverNumber) || !coverNumber.isDigitsOnly()) {
-                msg("Please Enter Terminal-Number\n Try Again.")
+                msg("Please Enter Correct Covers\n Try Again.")
                 return@setPositiveButton
             }
             if (!checkFieldValue(customerNumber.toString()) && !isValidPhone(customerNumber.toString())) {
@@ -376,9 +376,9 @@ fun Activity.showDialogBoxToGetUrl(scan: () -> Unit, done: (String) -> Unit) {
 }
 
 
-fun getDate(): String? {
+fun getDate(format: String = "yyyy-MM-dd"): String? {
     val current = LocalDateTime.now()
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val formatter = DateTimeFormatter.ofPattern(format)
     return current.format(formatter)
 }
 
