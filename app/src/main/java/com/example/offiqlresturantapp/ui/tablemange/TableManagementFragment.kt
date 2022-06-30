@@ -32,7 +32,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().changeStatusBarColor(R.color.semi_white_color)
+        requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = TableMangmentLayoutBinding.bind(view)
         binding.tableInfoDetail.text = args.storeName
         viewModel.events.observe(viewLifecycleOwner) {

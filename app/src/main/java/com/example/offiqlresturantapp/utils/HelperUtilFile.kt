@@ -180,7 +180,7 @@ fun Context.msg(string: String, time: Int = Toast.LENGTH_SHORT) {
 }*/
 
 @RequiresApi(Build.VERSION_CODES.M)
-fun Activity.changeStatusBarColor(color: Int = R.color.light_blue_bg) {
+fun Activity.changeStatusBarColor(color: Int = R.color.light_blue_bg_two) {
     this.window?.statusBarColor = resources.getColor(color, null)
 }
 

@@ -18,7 +18,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout) {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.changeStatusBarColor(R.color.semi_white_color)
+        activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = CostCalDashbordLayoutBinding.bind(view)
         binding.restItemBtn.setOnClickListener {
             binding.printerIcClick.hide()

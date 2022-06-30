@@ -12,6 +12,7 @@
 
     <!-- Project color-->
     <color name="light_blue_bg">#E0EDFF</color>
+    <color name="light_blue_bg_two">#E0EDFF</color>
     <color name="dark_blue_bg">#019DE2</color>
     <color name="blue_bg">#017AE2</color>
     <color name="light_grey_color">#707070</color>
@@ -21,6 +22,7 @@
 
     <color name="light_grey_black_color">#E3E3E3</color>
     <color name="semi_white_color">#FBFFF5</color>
+    <color name="semi_white_color_two">#E1E5DC</color>
 
     <color name="light_red_color">#F87B39</color>
     <color name="dark_red_color">#DB723B</color>

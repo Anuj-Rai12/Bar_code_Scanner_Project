@@ -31,6 +31,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.changeStatusBarColor(R.color.light_blue_bg)
         binding = SplashSrcLayoutBinding.bind(view)
         binding.logoFileId3.animation = animation
         doAuthTask()

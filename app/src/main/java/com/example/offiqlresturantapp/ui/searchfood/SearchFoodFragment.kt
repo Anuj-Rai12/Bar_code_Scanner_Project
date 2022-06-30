@@ -41,7 +41,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         savedInstanceState?.let { flag = it.getBoolean("flag") }
-        requireActivity().changeStatusBarColor(R.color.semi_white_color)
+        requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = SearchFoodItemLayoutBinding.bind(view)
         viewModel.fetchResponseApi()
         viewModel.events.observe(viewLifecycleOwner) {

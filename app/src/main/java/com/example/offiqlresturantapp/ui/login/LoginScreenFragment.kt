@@ -23,6 +23,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.changeStatusBarColor()
         binding = LoginScreenFragmentBinding.bind(view)
 
         viewModel.events.observe(viewLifecycleOwner) {

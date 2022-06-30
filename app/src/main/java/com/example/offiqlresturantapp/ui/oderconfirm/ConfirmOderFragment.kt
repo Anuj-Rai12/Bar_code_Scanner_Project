@@ -47,7 +47,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().changeStatusBarColor(R.color.semi_white_color)
+        requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = ConfirmOrderLayoutBinding.bind(view)
         binding.qrCodeScan.setOnClickListener {
             val action = ConfirmOderFragmentDirections
