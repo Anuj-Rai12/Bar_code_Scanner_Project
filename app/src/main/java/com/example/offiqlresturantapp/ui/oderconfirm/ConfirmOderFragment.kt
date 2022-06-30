@@ -59,6 +59,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 )
             findNavController().navigate(action)
         }
+
         viewModel.event.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { map ->
                 if (!map.values.first()) {
@@ -110,19 +111,21 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         }
 
         binding.confirmOrderBtn.setOnClickListener {
+            if (receiptNo > 0)
+                viewModel.postLineUrl(receiptNo.toString(), arrItem)
+            else
+                activity?.msg("0")
 
-            if (args.tbl.receiptNo.isNotEmpty()) {
-                //Push Custom Dinging
+            /*if (args.tbl.receiptNo.isNotEmpty()) {
+                //Push Push Item Item
                 viewModel.postLineUrl(args.tbl.receiptNo, arrItem)
-                //confirmOrder(ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = args.tbl.receiptNo)))
             } else {
                 //Create Customer Dining
-                /*args.confirmreq?.let { customDiningRequest = it }
+                *//*args.confirmreq?.let { customDiningRequest = it }
                 customDiningRequest?.let { res ->
                     confirmDinningOrder(res)
-                } ?: requestCustomerDining()*/
-
-            }
+                } ?: requestCustomerDining()*//*
+            }*/
         }
 
     }
@@ -147,6 +150,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 findNavController().popBackStack()
             }, listener = { res ->
                 customDiningRequest = res
+                confirmDinningOrder(customDiningRequest!!)
             })
     }
 
@@ -199,22 +203,22 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 }
                 is ApisResponse.Success -> {
                     Log.i("getConfirmDinningResponse", " Success ${it.data}")
+                    binding.pbLayout.root.hide()
                     (it.data as ConfirmDiningSuccessResponse?)?.let { res ->
                         val error = res.body?.errorFound?.toBoolean()
                         val errorBdy = res.body?.errorText.toString()
                         if (error == true) {
                             val result = Pair("Failed!", R.drawable.ic_error)
                             showDialogBox(result.first, errorBdy, icon = result.second) {}
-                            binding.pbLayout.root.hide()
                         } else {
-                            activity?.msg("create Receipt $receiptNo")
-                            val confirmOrderRequest =
-                                ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = receiptNo.toString()))
-                            confirmOrder(confirmOrderRequest)
+                            showDialogBox(
+                                "Success",
+                                "Table No:${args.tbl.tableNo}\nStatus: Occupied\nReceipt no:$receiptNo",
+                                icon = R.drawable.ic_success
+                            ) {}
                         }
                     } ?: run {
                         oopsSomeThingWentWrong()
-                        binding.pbLayout.root.hide()
                     }
                 }
             }
@@ -223,38 +227,43 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
     override fun onResume() {
         super.onResume()
-        receiptNo = args.confirmreq?.body?.rcptNo?.toLong() ?: 0
+        receiptNo = // ?: args.tbl.receiptNo.toLong() ?: 0
+            if (args.confirmreq?.body?.rcptNo != null) {
+                args.confirmreq?.body?.rcptNo?.toLong()!!
+            } else if (args.tbl.receiptNo.isNotEmpty()) {
+                args.tbl.receiptNo.toLong()
+            } else {
+                0
+            }
+
         if (args.confirmreq == null && args.tbl.receiptNo.isEmpty() && isCustomerDiningRequestVisible) {
             requestCustomerDining()
         }
     }
 
     private fun getPosItemRequest() {
-        viewModel.postLine.observe(viewLifecycleOwner) {
-            when (it) {
-                is ApisResponse.Error -> {
-                    binding.pbLayout.root.hide()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { msg ->
-                            showErrorDialog(msg)
+        viewModel.postLine.observe(viewLifecycleOwner) { pair ->
+            pair.second.let {
+                when (it) {
+                    is ApisResponse.Error -> {
+                        binding.pbLayout.root.hide()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { msg ->
+                                showErrorDialog(msg)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
                         }
-                    } else {
-                        showErrorDialog("${it.data}")
                     }
-                }
-                is ApisResponse.Loading -> {
-                    binding.pbLayout.titleTxt.text = "${it.data}"
-                    binding.pbLayout.root.show()
-                }
-                is ApisResponse.Success -> {
-                    binding.pbLayout.root.hide()
-                    val res = it.data as Pair<*, *>
-                    val status = res.first as Boolean
-                    val msg = res.second as String
-                    if (status) {
-                        showDialogBox("Success", msg, icon = R.drawable.ic_success) {}
-                    } else {
-                        showErrorDialog(msg)
+                    is ApisResponse.Loading -> {
+                        binding.pbLayout.titleTxt.text = "${it.data}"
+                        binding.pbLayout.root.show()
+                    }
+                    is ApisResponse.Success -> {
+                        binding.pbLayout.root.hide()
+                        Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
+                        //Add ConfirmOrder Request
+                        confirmOrder(ConfirmOrderRequest(ConfirmOrderBody(pair.first)))
                     }
                 }
             }
@@ -272,9 +281,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 }
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmOrderResponse", " Loading ${it.data}")
-                    if (args.tbl.receiptNo.isNotEmpty()) {
-                        binding.pbLayout.root.show()
-                    }
+                    binding.pbLayout.root.show()
                     binding.pbLayout.titleTxt.text = it.data.toString()
                 }
                 is ApisResponse.Success -> {

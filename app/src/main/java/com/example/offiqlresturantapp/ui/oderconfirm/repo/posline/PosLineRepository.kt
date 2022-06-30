@@ -17,15 +17,17 @@ class PosLineRepository(retrofit: Retrofit) {
         emit(ApisResponse.Loading("Submitting Items.."))
         val data = try {
             val response = api.sendPostRequest(body)
-            val apiRes=if (response.isSuccessful) {
+            val apiRes = if (response.isSuccessful) {
                 response.body()?.let {
                     val res = it.responseForBody?.value ?: ""
-                        val pair = if (!res.startsWith("01")&& res.isNotEmpty()) {
-                            Pair(true, "Success fully Inserted...")
-                        } else {
-                            Pair(false, "Failed to Insert Item")
-                        }
-                    return@let ApisResponse.Success(pair)
+                    return@let if (!res.startsWith("01") && res.isNotEmpty()) {
+                        ApisResponse.Success("Success fully Inserted...")
+                    } else {
+                        ApisResponse.Error(
+                            "Oops!! Looks Like Cannot Insert The Menu Item \nTry Again?",
+                            null
+                        )
+                    }
                 } ?: ApisResponse.Error("Cannot get the Response", null)
             } else {
                 ApisResponse.Error("Oops Something Went Wrong\nCannot Upload Menu Items", null)

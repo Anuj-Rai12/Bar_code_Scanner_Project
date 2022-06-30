@@ -18,10 +18,12 @@ import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.use_case.ConfirmOrderUseCase
 import com.example.offiqlresturantapp.utils.*
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.Serializable
 
 
 class ConfirmOrderFragmentViewModel constructor(
@@ -56,8 +58,8 @@ class ConfirmOrderFragmentViewModel constructor(
         get() = _orderConfirm
 
 
-    private val _postLine = MutableLiveData<ApisResponse<out Serializable>>()
-    val postLine: LiveData<ApisResponse<out Serializable>>
+    private val _postLine = MutableLiveData<Pair<String, ApisResponse<out String>>>()
+    val postLine: LiveData<Pair<String, ApisResponse<out String>>>
         get() = _postLine
 
 
@@ -214,6 +216,12 @@ class ConfirmOrderFragmentViewModel constructor(
     }
 
     fun postLineUrl(receipt: String, item: List<ItemMasterFoodItem>) {
+
+        if (item.isEmpty()) {
+            _event.postValue(Events(mapOf("Please Add The Menu Item!!" to false)))
+            return
+        }
+
         if (!this::posLineRepository.isInitialized) {
             _event.postValue(Events(mapOf("Unknown Error" to false)))
             return
@@ -223,22 +231,25 @@ class ConfirmOrderFragmentViewModel constructor(
             return@let it.substring(0, it.length - 2)
         } ?: "10:20"
 
-        val itemPosLine = useCase.getPosLineRequest(
-            receipt = receipt,
-            item = item,
-            time = time,
-            storeNo = storeNo
-        )
-
         viewModelScope.launch {
+            val postLineInstance = async(context = IO, start = CoroutineStart.LAZY) {
+                useCase.getPosLineRequest(
+                    receipt = receipt,
+                    item = item,
+                    time = time,
+                    storeNo = storeNo
+                )
+            }
+
             if (app.isNetworkAvailable()) {
-                posLineRepository.getPosLineResponse(itemPosLine).collectLatest {
-                    _postLine.postValue(it)
+                posLineRepository.getPosLineResponse(postLineInstance.await()).collectLatest {
+                    _postLine.postValue(Pair(receipt, it))
                 }
             } else {
                 _event.postValue(Events(mapOf("No Internet Connection" to false)))
             }
         }
+
     }
 
 
