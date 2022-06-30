@@ -121,5 +121,6 @@ dependencies {
 
     //Lottie
     implementation 'com.airbnb.android:lottie:5.0.1'
+    //Kotlin Reflect
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.0"
 }

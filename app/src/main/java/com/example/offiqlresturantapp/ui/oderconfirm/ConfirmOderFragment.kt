@@ -110,6 +110,17 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             findNavController().navigate(action)
         }
 
+        binding.infoBtn.setOnClickListener {
+            //Show Swipe dialog
+            activity?.showDialogForDeleteInfo("Swipe to DELETE ${getEmojiByUnicode(0x1F5D1)}")
+        }
+
+        binding.infoBtn.setOnLongClickListener {
+            activity?.msg("Help")
+            return@setOnLongClickListener true
+        }
+
+
         binding.confirmOrderBtn.setOnClickListener {
             if (receiptNo > 0)
                 viewModel.postLineUrl(receiptNo.toString(), arrItem)

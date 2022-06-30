@@ -389,6 +389,27 @@ fun Activity.showDialogBoxToGetUrl(scan: () -> Unit, done: (String) -> Unit) {
 }
 
 
+fun Activity.showDialogForDeleteInfo(title: String) {
+    val materialDialogs = MaterialAlertDialogBuilder(
+        this,
+        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+    )
+
+    val binding = QtyIncrementLayoutBinding.inflate(layoutInflater)
+    materialDialogs
+        .setView(binding.root)
+        .show()
+    binding.qtyEd.hide()
+    binding.btnDone.hide()
+    binding.btnCancel.hide()
+    binding.imageViewDelete.show()
+    binding.textSizeForTitle.show()
+    binding.lottieSwipe.show()
+    binding.textSizeForTitle.text = title
+}
+
+fun getEmojiByUnicode(unicode: Int) = String(Character.toChars(unicode))
+
 fun getDate(format: String = "yyyy-MM-dd"): String? {
     val current = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern(format)
