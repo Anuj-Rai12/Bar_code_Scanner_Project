@@ -1,7 +1,6 @@
 package com.example.offiqlresturantapp.data.poslineitem.request
 
 import com.example.offiqlresturantapp.utils.AllStringConst
-import com.example.offiqlresturantapp.utils.getDate
 import org.simpleframework.xml.*
 
 
@@ -44,7 +43,10 @@ data class MunItemContainer @JvmOverloads constructor(
 
 
 @Root(name = "MPOSLineInsert", strict = true)
-@org.simpleframework.xml.Order (elements = ["",""])
+@org.simpleframework.xml.Order(
+    elements = ["ItemNo", "RcptNo",
+        "Qty", "SalesType", "TransDate", "TransTime", "StoreNo", "P_FreeText", "P_Price"]
+)
 data class MenuItem @JvmOverloads constructor(
 
     @field:Element(name = "ItemNo")
@@ -59,10 +61,9 @@ data class MenuItem @JvmOverloads constructor(
     @param:Element(name = "Qty")
     val qty: String? = null,
 
-
     @field:Element(name = "SalesType")
     @param:Element(name = "SalesType")
-    val saleType: String = "RESTAURANT",
+    val saleType: String? = null,
 
     @field:Element(name = "TransDate")
     @param:Element(name = "TransDate")
