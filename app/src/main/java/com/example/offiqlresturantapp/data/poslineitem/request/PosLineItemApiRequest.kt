@@ -43,7 +43,8 @@ data class MunItemContainer @JvmOverloads constructor(
 )
 
 
-@Root(name = "MPOSLineInsert", strict = false)
+@Root(name = "MPOSLineInsert", strict = true)
+@org.simpleframework.xml.Order (elements = ["",""])
 data class MenuItem @JvmOverloads constructor(
 
     @field:Element(name = "ItemNo")
@@ -65,7 +66,7 @@ data class MenuItem @JvmOverloads constructor(
 
     @field:Element(name = "TransDate")
     @param:Element(name = "TransDate")
-    val date: String? = getDate("dd/MM/yy") ?: "10/20/22",
+    val date: String? = null,
 
     @field:Element(name = "TransTime")
     @param:Element(name = "TransTime")
@@ -77,7 +78,7 @@ data class MenuItem @JvmOverloads constructor(
 
     @field:Element(name = "P_FreeText")
     @param:Element(name = "P_FreeText")
-    val freeText: String = "",
+    val freeText: String? = null,
 
     @field:Element(name = "P_Price")
     @param:Element(name = "P_Price")

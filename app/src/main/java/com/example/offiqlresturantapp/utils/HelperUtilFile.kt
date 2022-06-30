@@ -69,6 +69,7 @@ object AllStringConst {
     fun getAuthHeader(token: String) = "Basic $token"
 
     object SoapAction {
+        const val HeaderKey = "SOAPAction: "
         const val ApkLogin = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:Login"
         const val confirmOrder = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ConfirmOrder"
         const val confirmDining = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CustomerDining"
@@ -78,6 +79,8 @@ object AllStringConst {
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:TableInformation"
 
         const val Barcode = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ScanAndFindITEM"
+
+        const val PosLineItem = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:POSLineItems"
 
     }
 
@@ -222,6 +225,7 @@ fun Activity.addDialogMaterial(
     receiptNo: Long,
     storeVar: String,
     staffID: String,
+    cancel: () -> Unit,
     listener: CustomerDining
 ) {
     val binding = ConfirmOrderDialogLayoutBinding.inflate(layoutInflater)
@@ -273,6 +277,7 @@ fun Activity.addDialogMaterial(
             dialog.dismiss()
         }.setCancelable(false)
         .setNegativeButton("Cancel") { dialog, _ ->
+            cancel.invoke()
             dialog.dismiss()
         }
         .create().show()

@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 interface BarCodeApi {
 
-    @Headers("SOAPAction: ${AllStringConst.SoapAction.Barcode}")
+    @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.Barcode}")
     @POST(AllStringConst.End_point)
     suspend fun sendApiPostRequest(
         @Body request: BarCodeRequest

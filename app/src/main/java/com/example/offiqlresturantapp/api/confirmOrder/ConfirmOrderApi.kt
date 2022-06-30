@@ -10,10 +10,10 @@ import retrofit2.http.POST
 
 interface ConfirmOrderApi {
 
-    @Headers("SOAPAction: ${AllStringConst.SoapAction.confirmOrder}")
+    @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.confirmOrder}")
     @POST(AllStringConst.End_point)
     suspend fun sendPostRequestApi(
         @Body request: ConfirmOrderRequest
-    ):Response<ConfirmOrderSuccessResponse>
+    ): Response<ConfirmOrderSuccessResponse>
 
 }

@@ -226,7 +226,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     }
 
     private fun sendData(first: Barcode) {
-        activity?.msg("Qr Code")
+        activity?.msg("Qr Code Detected")
         if (args.tbl != null) {
             first.rawValue?.let {
                 viewModel.checkForItemItem(it)

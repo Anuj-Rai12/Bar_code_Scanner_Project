@@ -1,8 +1,13 @@
 package com.example.offiqlresturantapp.use_case
 
 import android.util.Log
+import com.example.offiqlresturantapp.data.poslineitem.request.MenuItem
+import com.example.offiqlresturantapp.data.poslineitem.request.MunItemContainer
+import com.example.offiqlresturantapp.data.poslineitem.request.PosLineItemApiRequest
+import com.example.offiqlresturantapp.data.poslineitem.request.RequestBody
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.utils.TAG
+import com.example.offiqlresturantapp.utils.getDate
 import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,16 +35,16 @@ class ConfirmOrderUseCase {
             Log.i(TAG, "getCurrentDate: $dateInString")
             val item = when {
                 hrs == 12 -> {
-                    "\n$hrs:${dateTime.last()}PM"
+                    "$hrs:${dateTime.last()}PM"
                 }
                 (hrs - 12) == 12 -> {
-                    "\n00:${dateTime.last()}AM"
+                    "00:${dateTime.last()}AM"
                 }
                 hrs > 12 -> {
-                    "\n${hrs-12}:${dateTime.last()}PM"
+                    "${hrs - 12}:${dateTime.last()}PM"
                 }
                 else -> {
-                    "\n${hrs}:${dateTime.last()}AM"
+                    "${hrs}:${dateTime.last()}AM"
                 }
             }
             emit(item)
@@ -56,6 +61,32 @@ class ConfirmOrderUseCase {
     private fun getCurrentDateTime(): Date {
         return Calendar.getInstance().time
     }
+
+
+    fun getPosLineRequest(
+        receipt: String,
+        item: List<ItemMasterFoodItem>,
+        time: String,
+        storeNo: String
+    ): PosLineItemApiRequest {
+        val list = mutableListOf<MenuItem>()
+        item.forEach { itemMasterFoodItem ->
+            val menuItem = MenuItem(
+                itemNo = itemMasterFoodItem.itemMaster.itemCode,
+                receiptNo = receipt,
+                qty = itemMasterFoodItem.foodQty.toString(),
+                saleType = "RESTAURANT",
+                date =getDate("MM/dd/yy") ?: "10/20/22",
+                time = time,
+                storeNo = storeNo,
+                freeText = "",
+                price = itemMasterFoodItem.itemMaster.salePrice
+            )
+            list.add(menuItem)
+        }
+        return PosLineItemApiRequest(RequestBody(MunItemContainer(list)))
+    }
+
 
 }
 

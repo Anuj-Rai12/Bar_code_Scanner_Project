@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 interface LoginApi {
 
-    @Headers("SOAPAction: ${AllStringConst.SoapAction.ApkLogin}")
+    @Headers("${AllStringConst.SoapAction.HeaderKey} ${AllStringConst.SoapAction.ApkLogin}")
     @POST(AllStringConst.End_point)
     suspend fun sendApiPostRequest(
         @Body request: ApKLoginPost

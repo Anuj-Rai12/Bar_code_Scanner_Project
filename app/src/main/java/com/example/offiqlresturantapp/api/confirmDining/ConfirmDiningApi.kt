@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 interface ConfirmDiningApi {
 
-    @Headers("SOAPAction: ${AllStringConst.SoapAction.confirmDining}")
+    @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.confirmDining}")
     @POST(AllStringConst.End_point)
     suspend fun setPostRequestApi(
         @Body request: ConfirmDiningRequest

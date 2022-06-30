@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 interface TableInformationApi {
 
-    @Headers("SOAPAction: ${AllStringConst.SoapAction.tblInformation}")
+    @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.tblInformation}")
     @POST(AllStringConst.End_point)
     suspend fun getTblInformation(@Body request: TableInformationRequest): Response<TableInformationResponse>
 }

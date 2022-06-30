@@ -73,12 +73,14 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         setCallBack()
         binding.tblNumTxt.text = getString(R.string.sample_tbl_num, viewModel.getTbl(args.tbl))
         viewModel.time.observe(viewLifecycleOwner) {
-            binding.orderBookingTimeTxt.text = getString(R.string.sample_tbl_time, it)
+            binding.orderBookingTimeTxt.text = getString(R.string.sample_tbl_time, "\n$it")
         }
+
         viewModel.getOrderList(args.list)
         getData()
-        getConfirmDinningResponse()
         getConfirmOrderResponse()
+        getPosItemRequest()
+        getConfirmDinningResponse()
 
         binding.viewOfferBtn.setOnClickListener {
             if (!flagForViewDeals) {
@@ -107,23 +109,29 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             findNavController().navigate(action)
         }
 
-
         binding.confirmOrderBtn.setOnClickListener {
 
             if (args.tbl.receiptNo.isNotEmpty()) {
                 //Push Custom Dinging
-                confirmOrder(ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = args.tbl.receiptNo)))
+                viewModel.postLineUrl(args.tbl.receiptNo, arrItem)
+                //confirmOrder(ConfirmOrderRequest(body = ConfirmOrderBody(receiptNo = args.tbl.receiptNo)))
             } else {
                 //Create Customer Dining
-                args.confirmreq?.let { customDiningRequest = it }
+                /*args.confirmreq?.let { customDiningRequest = it }
                 customDiningRequest?.let { res ->
                     confirmDinningOrder(res)
-                } ?: requestCustomerDining()
+                } ?: requestCustomerDining()*/
 
             }
         }
 
     }
+
+
+    private fun showErrorDialog(msg: String) {
+        showDialogBox("Failed", msg, icon = R.drawable.ic_error) {}
+    }
+
 
     private fun requestCustomerDining() {
         receiptNo = randomNumber(10000000)
@@ -135,10 +143,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             tableNo = args.tbl.tableNo,
             receiptNo = receiptNo,
             storeVar = singletonCls.getStoreId()!!,
-            staffID = singletonCls.getUserId()!!
-        ) { res ->
-            customDiningRequest = res
-        }
+            staffID = singletonCls.getUserId()!!, cancel = {
+                findNavController().popBackStack()
+            }, listener = { res ->
+                customDiningRequest = res
+            })
     }
 
 
@@ -219,6 +228,39 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             requestCustomerDining()
         }
     }
+
+    private fun getPosItemRequest() {
+        viewModel.postLine.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    binding.pbLayout.root.hide()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.pbLayout.titleTxt.text = "${it.data}"
+                    binding.pbLayout.root.show()
+                }
+                is ApisResponse.Success -> {
+                    binding.pbLayout.root.hide()
+                    val res = it.data as Pair<*, *>
+                    val status = res.first as Boolean
+                    val msg = res.second as String
+                    if (status) {
+                        showDialogBox("Success", msg, icon = R.drawable.ic_success) {}
+                    } else {
+                        showErrorDialog(msg)
+                    }
+                }
+            }
+        }
+    }
+
 
     private fun getConfirmOrderResponse() {
         viewModel.orderConfirm.observe(viewLifecycleOwner) {

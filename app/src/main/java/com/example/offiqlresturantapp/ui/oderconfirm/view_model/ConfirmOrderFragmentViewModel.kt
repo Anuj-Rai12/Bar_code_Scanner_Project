@@ -13,6 +13,7 @@ import com.example.offiqlresturantapp.dataStore.UserSoredData
 import com.example.offiqlresturantapp.di.RetrofitInstance
 import com.example.offiqlresturantapp.ui.oderconfirm.repo.confirmdining.ConfirmDiningRepositoryImpl
 import com.example.offiqlresturantapp.ui.oderconfirm.repo.confirmorder.ConfirmOrderRepositoryImpl
+import com.example.offiqlresturantapp.ui.oderconfirm.repo.posline.PosLineRepository
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
 import com.example.offiqlresturantapp.use_case.ConfirmOrderUseCase
@@ -20,9 +21,10 @@ import com.example.offiqlresturantapp.utils.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.Serializable
 
 
-class ConfirmOrderFragmentViewModel  constructor(
+class ConfirmOrderFragmentViewModel constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -32,6 +34,9 @@ class ConfirmOrderFragmentViewModel  constructor(
     private val userSoredData = UserSoredData(application)
     private lateinit var confirmOrderRepository: ConfirmOrderRepositoryImpl
     private lateinit var confirmDiningRepository: ConfirmDiningRepositoryImpl
+    private lateinit var posLineRepository: PosLineRepository
+
+    private var storeNo = ""
 
     private val _event = MutableLiveData<Events<Map<String, Boolean>>>()
     val event: LiveData<Events<Map<String, Boolean>>>
@@ -51,6 +56,11 @@ class ConfirmOrderFragmentViewModel  constructor(
         get() = _orderConfirm
 
 
+    private val _postLine = MutableLiveData<ApisResponse<out Serializable>>()
+    val postLine: LiveData<ApisResponse<out Serializable>>
+        get() = _postLine
+
+
     private val _listOfOrder = MutableLiveData<ApisResponse<out List<ItemMasterFoodItem>>>()
     val listOfOrder: LiveData<ApisResponse<out List<ItemMasterFoodItem>>>
         get() = _listOfOrder
@@ -67,6 +77,7 @@ class ConfirmOrderFragmentViewModel  constructor(
 
         viewModelScope.launch {
             userSoredData.readBase.collectLatest {
+                storeNo = it.storeId
                 val auth = AllStringConst.getAuthHeader(genToken("${it.userId}:${it.passId}"))
                 val retrofit = RetrofitInstance.getInstance(auth = auth, baseUrl = it.baseUrl)
                 confirmOrderRepository = ConfirmOrderRepositoryImpl(
@@ -74,6 +85,8 @@ class ConfirmOrderFragmentViewModel  constructor(
                 )
                 confirmDiningRepository =
                     ConfirmDiningRepositoryImpl(retrofit = retrofit.getRetrofit())
+
+                posLineRepository = PosLineRepository(retrofit.getRetrofit())
             }
         }
 
@@ -193,6 +206,34 @@ class ConfirmOrderFragmentViewModel  constructor(
             if (app.isNetworkAvailable()) {
                 confirmOrderRepository.saveUserOrderItem(confirmOrderRequest).collectLatest {
                     _orderConfirm.postValue(it)
+                }
+            } else {
+                _event.postValue(Events(mapOf("No Internet Connection" to false)))
+            }
+        }
+    }
+
+    fun postLineUrl(receipt: String, item: List<ItemMasterFoodItem>) {
+        if (!this::posLineRepository.isInitialized) {
+            _event.postValue(Events(mapOf("Unknown Error" to false)))
+            return
+        }
+
+        val time = _time.value?.let {
+            return@let it.substring(0, it.length - 2)
+        } ?: "10:20"
+
+        val itemPosLine = useCase.getPosLineRequest(
+            receipt = receipt,
+            item = item,
+            time = time,
+            storeNo = storeNo
+        )
+
+        viewModelScope.launch {
+            if (app.isNetworkAvailable()) {
+                posLineRepository.getPosLineResponse(itemPosLine).collectLatest {
+                    _postLine.postValue(it)
                 }
             } else {
                 _event.postValue(Events(mapOf("No Internet Connection" to false)))
