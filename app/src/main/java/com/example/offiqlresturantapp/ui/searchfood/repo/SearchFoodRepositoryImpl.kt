@@ -54,12 +54,11 @@ class SearchFoodRepositoryImpl constructor(
     }
 
     override fun getSearchFoodItem() = channelFlow {
-        send(ApisResponse.Loading("Please Wait"))
+        send(ApisResponse.Loading(listOf()))
         dao.getAllItem().collectLatest {
             send(ApisResponse.Success(it))
         }
     }
-
 
 
 }

@@ -102,7 +102,7 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                         foodQty = foodItem.foodQty
                     )
                 )
-                binding.root.changeViewColor(color = R.color.semi_white_color)
+                //binding.root.changeViewColor(color = R.color.semi_white_color)
                 setInVisible()
             }
 
@@ -118,17 +118,17 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                         foodQty = foodItem.foodQty
                     )
                 )
-                binding.root.changeViewColor(color = R.color.semi_white_color)
+                //binding.root.changeViewColor(color = R.color.semi_white_color)
                 setInVisible()
             }
 
             binding.root.setOnClickListener {
-                it.changeViewColor(R.color.light_blue_bg)
+                //it.changeViewColor(R.color.light_blue_bg)
                 setVisible()
             }
 
             binding.btnCloseId.setOnClickListener {
-                binding.root.changeViewColor(color = R.color.semi_white_color)
+                //binding.root.changeViewColor(color = R.color.semi_white_color)
                 setInVisible()
             }
 

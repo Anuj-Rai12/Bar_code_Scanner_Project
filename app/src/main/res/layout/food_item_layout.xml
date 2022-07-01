@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/semi_white_color"
-    android:padding="18dp">
+    android:padding="10dp"
+    android:layout_margin="10dp"
+    android:background="@drawable/white_underline_boder"
+    android:elevation="10dp">
 
     <ImageView
         android:id="@+id/btn_close_id"
@@ -162,7 +164,7 @@
         android:id="@+id/order_offer_list_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/light_blue_bg"
+        android:background="@color/white"
         android:overScrollMode="never"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
