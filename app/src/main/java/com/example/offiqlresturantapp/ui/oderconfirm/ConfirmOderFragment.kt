@@ -113,12 +113,19 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.showDialogForDeleteInfo("Swipe to DELETE ${getEmojiByUnicode(0x1F5D1)}")
+            activity?.showDialogForDeleteInfo("Swipe to delete ${getEmojiByUnicode(0x1F5D1)}")
         }
 
         binding.infoBtn.setOnLongClickListener {
             activity?.msg("Help")
             return@setOnLongClickListener true
+        }
+
+        binding.foodItem.setOnClickListener {
+            serializeToJson(arrItem)?.let {
+                activity?.msg("Working on it..")
+                Log.i("FOOD", "onViewCreated: $it")
+            }
         }
 
 
