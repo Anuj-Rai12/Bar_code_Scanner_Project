@@ -25,7 +25,7 @@
 
     <string name="oder_confirm_btn">Confirm Oder</string>
     <string name="oder_reset">Reset All</string>
-    <string name="oder_del">Delete item</string>
+    <string name="oder_del">Fetch Item</string>
     <string name="oder_view">View Deals</string>
     <string name="total_sum">Grand Total</string>
 

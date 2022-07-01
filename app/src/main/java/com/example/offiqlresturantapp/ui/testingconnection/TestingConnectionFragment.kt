@@ -1,8 +1,10 @@
 package com.example.offiqlresturantapp.ui.testingconnection
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -27,7 +29,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().changeStatusBarColor()
+        activity?.changeStatusBarColor()
         binding = TestingConnectionFragmentBinding.bind(view)
 
         viewModel.events.observe(viewLifecycleOwner) {
@@ -40,9 +42,15 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         }
 
         args.bar?.let {
-            if (it.title != null && it.uri != null) {
-                requireActivity().msg("${it.uri}")
-                viewModel.scannerUrl = it.uri
+            try {
+                if (it.title != null && it.uri != null) {
+                    activity?.msg("${it.uri}")
+                    viewModel.scannerUrl = it.uri
+                } else {
+                    Log.i(TAG, "onViewCreated: url is Null")
+                }
+            } catch (e: Exception) {
+                Log.i(TAG, "onViewCreated: ${e.localizedMessage}")
             }
         }
 
@@ -96,17 +104,17 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
             when (it) {
                 is ApisResponse.Error -> {
                     hideProgress()
-                    requireActivity().msg("${it.exception?.localizedMessage}")
+                    activity?.msg("${it.exception?.localizedMessage}")
                     showDialogBox(
                         "Failed!!",
-                        "Please Update the Credentials",
+                        "Please Check the Credentials or Try Again!!",
                         icon = R.drawable.ic_error
                     ) {}
                 }
                 is ApisResponse.Loading -> {
                     binding.testConnectionId.showButtonProgress(
                         "${it.data}",
-                        requireActivity().getColorInt(R.color.white)
+                        activity?.getColorInt(R.color.white) ?: Color.WHITE
                     )
                 }
                 is ApisResponse.Success -> {
@@ -116,7 +124,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                     } ?: run {
                         showDialogBox(
                             "Failed!!",
-                            "Please Update the Credentials",
+                            "Please Check the Credentials or Try Again!!",
                             icon = R.drawable.ic_error
                         ) {}
                     }
@@ -130,7 +138,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         binding.root.showSandbar(
             msg,
             length,
-            requireActivity().getColorInt(R.color.color_red)
+            activity?.getColorInt(R.color.color_red) ?: Color.RED
         ) {
             return@showSandbar "OK"
         }

@@ -245,35 +245,34 @@ fun Activity.addDialogMaterial(
             val coverNumber = binding.coverNumEd.text.toString()
             if (checkFieldValue(coverNumber) || !coverNumber.isDigitsOnly()) {
                 msg("Please Enter Correct Covers\n Try Again.")
-                return@setPositiveButton
-            }
-            if (!checkFieldValue(customerNumber.toString()) && !isValidPhone(customerNumber.toString())) {
+                listener.invoke(null, false)
+            } else if (!checkFieldValue(customerNumber.toString()) && !isValidPhone(customerNumber.toString())) {
                 msg("Please Enter Correct Phone Number\n Try Again.")
-                return@setPositiveButton
-            }
-
-            val confirmDiningRequest = ConfirmDiningRequest(
-                body = ConfirmDiningBody(
-                    rcptNo = "$receiptNo",
-                    customerPhone = customerNumber ?: "",
-                    customerName = customerName ?: "",
-                    covers = coverNumber,
-                    storeVar = storeVar,
-                    tableNo = tableNo,
-                    terminalNo = "",
-                    errorFound = false.toString(),
-                    salesType = "RESTAURANT",
-                    staffID = staffID,
-                    transDate = getDate() ?: "2022-06-18",
-                    transTime = time,
-                    waiterName = "",
-                    waiterID = "",
-                    errorText = "",
-                    contactNo = "0000000000"
+                listener.invoke(null, false)
+            } else {
+                val confirmDiningRequest = ConfirmDiningRequest(
+                    body = ConfirmDiningBody(
+                        rcptNo = "$receiptNo",
+                        customerPhone = customerNumber ?: "",
+                        customerName = customerName ?: "",
+                        covers = coverNumber,
+                        storeVar = storeVar,
+                        tableNo = tableNo,
+                        terminalNo = "",
+                        errorFound = false.toString(),
+                        salesType = "RESTAURANT",
+                        staffID = staffID,
+                        transDate = getDate() ?: "2022-06-18",
+                        transTime = time,
+                        waiterName = "",
+                        waiterID = "",
+                        errorText = "",
+                        contactNo = "0000000000"
+                    )
                 )
-            )
-            msg("Saved")
-            listener.invoke(confirmDiningRequest)
+                msg("Saved")
+                listener.invoke(confirmDiningRequest, true)
+            }
             dialog.dismiss()
         }.setCancelable(false)
         .setNegativeButton("Cancel") { dialog, _ ->
@@ -430,7 +429,7 @@ fun Activity.isValidUrl(url: String?): Boolean {
 typealias ItemClickListerForTableOrCost = (selection: SelectionDataClass) -> Unit
 typealias ItemClickListerForListOfFood = (foodItem: ItemMasterFoodItem) -> Unit
 typealias LumaListener = (lum: Double) -> Unit
-typealias CustomerDining = (customer: ConfirmDiningRequest) -> Unit
+typealias CustomerDining = (customer: ConfirmDiningRequest?, flag: Boolean) -> Unit
 typealias ImageListener = (imageInput: InputImage) -> Unit
 typealias SnackBarListener = (msg: String?) -> String?
 //typealias ItemClickListerForFoodSelected = (foodItemSelected: FoodItemSelected) -> Unit

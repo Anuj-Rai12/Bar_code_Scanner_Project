@@ -96,6 +96,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         }
 
         binding.restItemBtn.setOnClickListener {
+            arrItem.clear()
             initial()
         }
 
@@ -126,17 +127,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 viewModel.postLineUrl(receiptNo.toString(), arrItem)
             else
                 activity?.msg("0")
-
-            /*if (args.tbl.receiptNo.isNotEmpty()) {
-                //Push Push Item Item
-                viewModel.postLineUrl(args.tbl.receiptNo, arrItem)
-            } else {
-                //Create Customer Dining
-                *//*args.confirmreq?.let { customDiningRequest = it }
-                customDiningRequest?.let { res ->
-                    confirmDinningOrder(res)
-                } ?: requestCustomerDining()*//*
-            }*/
         }
 
     }
@@ -159,9 +149,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             storeVar = singletonCls.getStoreId()!!,
             staffID = singletonCls.getUserId()!!, cancel = {
                 findNavController().popBackStack()
-            }, listener = { res ->
-                customDiningRequest = res
-                confirmDinningOrder(customDiningRequest!!)
+            }, listener = { res, flag ->
+                if (flag) {
+                    customDiningRequest = res
+                    confirmDinningOrder(customDiningRequest!!)
+                } else {
+                    requestCustomerDining()
+                }
             })
     }
 
@@ -240,8 +234,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         super.onResume()
         receiptNo = // ?: args.tbl.receiptNo.toLong() ?: 0
             if (args.confirmreq?.body?.rcptNo != null) {
+                binding.foodItem.show()
                 args.confirmreq?.body?.rcptNo?.toLong()!!
             } else if (args.tbl.receiptNo.isNotEmpty()) {
+                binding.foodItem.show()
                 args.tbl.receiptNo.toLong()
             } else {
                 0
