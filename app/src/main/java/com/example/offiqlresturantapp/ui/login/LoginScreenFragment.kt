@@ -73,6 +73,24 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                         val json = res as ApkLoginJsonResponse
                         if (json.status)
                             nextFrag(json.storeName)
+                        else
+                            showDialogBox(
+                                "Failed!!",
+                                "Cannot Login Unauthorized Access${getEmojiByUnicode(0x274C)}\n\nTip ${
+                                    getEmojiByUnicode(
+                                        0x1F4A1
+                                    )
+                                },\n${
+                                    getEmojiByUnicode(
+                                        0x2705
+                                    )
+                                } Try to check credentials Are correct?\nOr\n${
+                                    getEmojiByUnicode(
+                                        0x2705
+                                    )
+                                } Clear the storage for the App and reopen It.",
+                                icon = R.drawable.ic_error
+                            ) {}
                     } ?: run {
                         showDialogBox(
                             "Failed!!",
