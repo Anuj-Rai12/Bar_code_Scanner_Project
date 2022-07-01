@@ -14,9 +14,7 @@ import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.databinding.TableOrCostLayoutBinding
 import com.example.offiqlresturantapp.ui.tableorcost.adaptor.TableManagementOrCostRecyclerAdaptor
 import com.example.offiqlresturantapp.ui.tableorcost.model.SelectionDataClass
-import com.example.offiqlresturantapp.utils.TAG
-import com.example.offiqlresturantapp.utils.changeStatusBarColor
-import com.example.offiqlresturantapp.utils.showDialogBox
+import com.example.offiqlresturantapp.utils.*
 
 
 class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
@@ -28,11 +26,13 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().changeStatusBarColor()
+        activity?.changeStatusBarColor()
         binding = TableOrCostLayoutBinding.bind(view)
         binding.mposId3.text = args.storeName
         setRecycleView()
         setData()
+        removeItemFromBackStack()
+        showCountOfBackStack()
         binding.logoutBtnIc2.setOnClickListener {
             showDialog()
         }

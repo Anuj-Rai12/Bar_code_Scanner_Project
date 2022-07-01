@@ -23,7 +23,7 @@
     <string name="oder_amt">Amount</string>
     <string name="oder_hint">Search or scan to add items</string>
 
-    <string name="oder_confirm_btn">Confirm Oder</string>
+    <string name="oder_confirm_btn">Confirm Order</string>
     <string name="oder_reset">Reset All</string>
     <string name="oder_del">Fetch Item</string>
     <string name="oder_view">View Deals</string>

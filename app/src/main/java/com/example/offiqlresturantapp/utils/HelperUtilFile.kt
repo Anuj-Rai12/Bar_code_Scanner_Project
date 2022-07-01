@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Build
 import android.text.InputType
 import android.util.Base64
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.example.offiqlresturantapp.R
 import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningBody
 import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest
@@ -209,6 +211,19 @@ fun makeStringAlphaNumericForm(name: String): String {
     val normalized: String = Normalizer.normalize(name, Normalizer.Form.NFD)
     return normalized.replace("[^A-Za-z0-9]".toRegex(), "")
 }
+
+
+fun Fragment.removeItemFromBackStack() {
+    val p = activity?.supportFragmentManager
+    p?.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+}
+
+fun Fragment.showCountOfBackStack() {
+    val fm = activity?.supportFragmentManager
+    val count = fm?.backStackEntryCount
+    Log.i(TAG, "showCountOfBackStack: Back Entry is ->$count")
+}
+
 
 fun randomNumber(value: Long): Long = kotlin.math.floor((Math.random() * value)).toLong()
 fun isValidPhone(phone: String): Boolean {
