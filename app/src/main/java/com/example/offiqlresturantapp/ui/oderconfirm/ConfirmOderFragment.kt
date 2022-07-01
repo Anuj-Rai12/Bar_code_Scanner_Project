@@ -102,6 +102,9 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
         binding.searchBoxTxt.setOnClickListener {
             //New Fragment
+            Log.i(TAG, "Search: Table ${args.tbl}")
+            Log.i(TAG, "Search: CustomerDining $customDiningRequest")
+            Log.i(TAG, "Search: FoodItemList ${FoodItemList(arrItem)}")
             val action =
                 ConfirmOderFragmentDirections.actionConfirmOderFragmentToSearchFoodFragment(
                     args.tbl,
@@ -239,10 +242,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
     override fun onResume() {
         super.onResume()
+        customDiningRequest=args.confirmreq
         receiptNo = // ?: args.tbl.receiptNo.toLong() ?: 0
-            if (args.confirmreq?.body?.rcptNo != null) {
-                binding.foodItem.show()
-                args.confirmreq?.body?.rcptNo?.toLong()!!
+            if (customDiningRequest?.body?.rcptNo != null) {
+                customDiningRequest?.body?.rcptNo?.toLong()!!
             } else if (args.tbl.receiptNo.isNotEmpty()) {
                 binding.foodItem.show()
                 args.tbl.receiptNo.toLong()
@@ -250,7 +253,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 0
             }
 
-        if (args.confirmreq == null && args.tbl.receiptNo.isEmpty() && isCustomerDiningRequestVisible) {
+        Log.i(TAG, "onResume: Confirm Req $customDiningRequest")
+        Log.i(TAG, "onResume: Args Table Receipt  ${args.tbl}")
+        Log.i(TAG, "onResume: isCustomerDiningRequestVisible $isCustomerDiningRequestVisible")
+
+        if (customDiningRequest == null && args.tbl.receiptNo.isEmpty() && isCustomerDiningRequestVisible) {
             requestCustomerDining()
         }
     }
