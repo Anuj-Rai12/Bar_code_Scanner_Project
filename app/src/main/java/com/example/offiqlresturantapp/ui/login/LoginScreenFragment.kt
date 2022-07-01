@@ -88,7 +88,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                                     getEmojiByUnicode(
                                         0x2705
                                     )
-                                } Clear the storage for the App and reopen It.",
+                                } Clear the storage of this App and reopen It.",
                                 icon = R.drawable.ic_error
                             ) {}
                     } ?: run {
