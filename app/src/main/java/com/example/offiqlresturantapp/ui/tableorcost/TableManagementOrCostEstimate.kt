@@ -30,7 +30,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor()
         binding = TableOrCostLayoutBinding.bind(view)
-        binding.storeNm.text = args.storeName
+        binding.mposId3.text = args.storeName
         setRecycleView()
         setData()
         binding.logoutBtnIc2.setOnClickListener {

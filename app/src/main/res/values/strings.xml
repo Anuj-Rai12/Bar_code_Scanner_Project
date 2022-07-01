@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">OffiqlRestaurantApp</string>
     <string name="app_title">MPOS</string>
-    <string name="scan_btn">Scan QR code</string>
+    <string name="app_title_by">by MPOS</string>
+    <string name="scan_btn">QR code</string>
     <string name="store_no">Store ID</string>
     <string name="user_name">User ID</string>
     <string name="user_name_one">Personal User ID</string>

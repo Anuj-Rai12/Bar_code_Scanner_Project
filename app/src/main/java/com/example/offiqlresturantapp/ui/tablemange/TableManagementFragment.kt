@@ -120,7 +120,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
     private fun setRecycleView() {
         binding.totalTableRecycler.apply {
             setHasFixedSize(true)
-            layoutManager = GridLayoutManager(requireActivity(), 2)
+            layoutManager = GridLayoutManager(requireActivity(), 3)
             tableManagementAdaptor = TableManagementAdaptor { res ->
                 Log.i(TAG, "setRecycleView: $res")
                 val action = TableManagementFragmentDirections
