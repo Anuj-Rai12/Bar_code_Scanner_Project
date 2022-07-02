@@ -8,11 +8,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.offiqlresturantapp.data.cofirmDining.ConfirmDiningRequest
 import com.example.offiqlresturantapp.data.confirmOrder.ConfirmOrderRequest
+import com.example.offiqlresturantapp.data.occupied.OccupiedTableRequest
+import com.example.offiqlresturantapp.data.occupied.RequestBody
 import com.example.offiqlresturantapp.data.table_info.model.json.TableDetail
 import com.example.offiqlresturantapp.dataStore.UserSoredData
 import com.example.offiqlresturantapp.di.RetrofitInstance
 import com.example.offiqlresturantapp.ui.oderconfirm.repo.confirmdining.ConfirmDiningRepositoryImpl
 import com.example.offiqlresturantapp.ui.oderconfirm.repo.confirmorder.ConfirmOrderRepositoryImpl
+import com.example.offiqlresturantapp.ui.oderconfirm.repo.occupied.OccupiedTableRepository
 import com.example.offiqlresturantapp.ui.oderconfirm.repo.posline.PosLineRepository
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
@@ -37,6 +40,7 @@ class ConfirmOrderFragmentViewModel constructor(
     private lateinit var confirmOrderRepository: ConfirmOrderRepositoryImpl
     private lateinit var confirmDiningRepository: ConfirmDiningRepositoryImpl
     private lateinit var posLineRepository: PosLineRepository
+    private lateinit var occupiedTableRepository: OccupiedTableRepository
 
     private var storeNo = ""
 
@@ -58,6 +62,10 @@ class ConfirmOrderFragmentViewModel constructor(
         get() = _orderConfirm
 
 
+    private val _occupiedTbl = MutableLiveData<ApisResponse<out Any>>()
+    val occupiedTbl: LiveData<ApisResponse<out Any>>
+        get() = _occupiedTbl
+
     private val _postLine = MutableLiveData<Pair<String, ApisResponse<out String>>>()
     val postLine: LiveData<Pair<String, ApisResponse<out String>>>
         get() = _postLine
@@ -71,6 +79,10 @@ class ConfirmOrderFragmentViewModel constructor(
     private val _time = MutableLiveData<String>()
     val time: LiveData<String>
         get() = _time
+
+    private val _grandTotal = MutableLiveData<String>()
+    val grandTotal: LiveData<String>
+        get() = _grandTotal
 
     init {
         if (!application.isNetworkAvailable()) {
@@ -87,11 +99,11 @@ class ConfirmOrderFragmentViewModel constructor(
                 )
                 confirmDiningRepository =
                     ConfirmDiningRepositoryImpl(retrofit = retrofit.getRetrofit())
-
+                occupiedTableRepository = OccupiedTableRepository(retrofit.getRetrofit())
                 posLineRepository = PosLineRepository(retrofit.getRetrofit())
             }
         }
-
+        getGrandTotal(null)
         getTime()
     }
 
@@ -101,6 +113,10 @@ class ConfirmOrderFragmentViewModel constructor(
             _listOfOrder.postValue(ApisResponse.Success(foodItem.foodList))
             return@let
         } ?: _listOfOrder.postValue(ApisResponse.Loading(null))
+    }
+
+    fun removeItemFromListOrder() {
+        _listOfOrder.postValue(null)
     }
 
 
@@ -165,12 +181,17 @@ class ConfirmOrderFragmentViewModel constructor(
     }
 
 
-    fun getGrandTotal(list: List<ItemMasterFoodItem>?): String {
-        var total = 0
-        list?.let {
-            total = useCase.calGrandTotal(it)
+    fun getGrandTotal(list: List<ItemMasterFoodItem>?) {
+        viewModelScope.launch {
+            val res = async(IO) {
+                var total = 0
+                list?.let {
+                    total = useCase.calGrandTotal(it)
+                }
+                "$Rs_Symbol $total"
+            }
+            _grandTotal.postValue(res.await())
         }
-        return "$Rs_Symbol $total"
     }
 
     private fun getTime(time: String = "HH:mm") {
@@ -253,8 +274,33 @@ class ConfirmOrderFragmentViewModel constructor(
     }
 
 
+    fun getOccupiedTableItem(tableDetail: TableDetail) {
+        if (!this::occupiedTableRepository.isInitialized) {
+            _event.postValue(Events(mapOf("Unknown Error" to false)))
+            return
+        }
+        val requestBody = OccupiedTableRequest(
+            RequestBody(
+                tableNo = tableDetail.tableNo,
+                receiptNo = tableDetail.receiptNo
+            )
+        )
+        viewModelScope.launch {
+            occupiedTableRepository.getOccupiedMenuApi(requestBody)
+                .collectLatest {
+                    _occupiedTbl.postValue(it)
+                }
+        }
+    }
+
+    fun removeFetchItem() {
+        _occupiedTbl.postValue(null)
+    }
+
+
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
     }
+
 }

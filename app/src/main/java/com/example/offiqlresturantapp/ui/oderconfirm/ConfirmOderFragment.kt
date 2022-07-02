@@ -72,6 +72,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
         setRecycle()
         setCallBack()
+
         binding.tblNumTxt.text = getString(R.string.sample_tbl_num, viewModel.getTbl(args.tbl))
         viewModel.time.observe(viewLifecycleOwner) {
             binding.orderBookingTimeTxt.text = getString(R.string.sample_tbl_time, "\n$it")
@@ -82,6 +83,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         getConfirmOrderResponse()
         getPosItemRequest()
         getConfirmDinningResponse()
+        getGrandTotal()
 
         binding.viewOfferBtn.setOnClickListener {
             if (!flagForViewDeals) {
@@ -97,6 +99,9 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
         binding.restItemBtn.setOnClickListener {
             arrItem.clear()
+            viewModel.getGrandTotal(null)
+            viewModel.removeItemFromListOrder()
+            viewModel.removeFetchItem()
             initial()
         }
 
@@ -125,10 +130,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         }
 
         binding.foodItem.setOnClickListener {
-            serializeToJson(arrItem)?.let {
-                activity?.msg("Working on it..")
-                Log.i("FOOD", "onViewCreated: $it")
-            }
+            viewModel.getOccupiedTableItem(args.tbl)
+            getFetchItem()
         }
 
 
@@ -136,7 +139,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             if (receiptNo > 0)
                 viewModel.postLineUrl(receiptNo.toString(), arrItem)
             else
-                activity?.msg("0")
+                activity?.msg("Oops Some thing Went Wrong Try Again?")
         }
 
     }
@@ -169,6 +172,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             })
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.removeFetchItem()
+    }
+
 
     private fun getViewDeals() {
         viewModel.viewDeals.observe(viewLifecycleOwner) {
@@ -179,10 +187,20 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         }
     }
 
+    private fun getGrandTotal() {
+        viewModel.grandTotal.observe(viewLifecycleOwner) {
+            binding.totalOrderAmt.text = it
+        }
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun getData() {
         viewModel.listOfOrder.observe(viewLifecycleOwner) {
-            binding.totalOrderAmt.text = viewModel.getGrandTotal(it.data)
+            if (it != null)
+                viewModel.getGrandTotal(it.data)
+            else {
+                viewModel.getGrandTotal(null)
+            }
             when (it) {
                 is ApisResponse.Error -> Log.i(TAG, "getData: Error")
                 is ApisResponse.Loading -> if (it.data == null) {
@@ -193,15 +211,49 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                     it.data?.let { data ->
                         arrItem.clear()
                         arrItem.addAll(data)
-                        binding.orderRecycleViewHint.hide()
-                        binding.listOfItemRecycleView.show()
-                        confirmOderFragmentAdaptor.notifyDataSetChanged()
-                        confirmOderFragmentAdaptor.submitList(data)
+                        setUpRecycleAdaptor(data)
                     }
                 }
             }
         }
     }
+
+    private fun setUpRecycleAdaptor(data: List<ItemMasterFoodItem>) {
+        binding.orderRecycleViewHint.hide()
+        binding.listOfItemRecycleView.show()
+        confirmOderFragmentAdaptor.notifyDataSetChanged()
+        confirmOderFragmentAdaptor.submitList(data)
+    }
+
+
+    private fun getFetchItem() {
+        viewModel.occupiedTbl.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    binding.pbLayout.root.hide()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { err ->
+                            showErrorDialog(err)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.pbLayout.titleTxt.text = "${it.data}"
+                    binding.pbLayout.root.show()
+                }
+                is ApisResponse.Success -> {
+                    binding.pbLayout.root.hide()
+                    (it.data as FoodItemList?)?.let { item ->
+                        viewModel.getGrandTotal(item.foodList)
+                        setUpRecycleAdaptor(item.foodList)
+                    }
+                }
+            }
+        }
+    }
+
 
     private fun getConfirmDinningResponse() {
         viewModel.orderDining.observe(viewLifecycleOwner) {
@@ -242,7 +294,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
     override fun onResume() {
         super.onResume()
-        customDiningRequest=args.confirmreq
+        customDiningRequest = args.confirmreq
         receiptNo = // ?: args.tbl.receiptNo.toLong() ?: 0
             if (customDiningRequest?.body?.rcptNo != null) {
                 customDiningRequest?.body?.rcptNo?.toLong()!!
@@ -253,9 +305,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                 0
             }
 
-        Log.i(TAG, "onResume: Confirm Req $customDiningRequest")
-        Log.i(TAG, "onResume: Args Table Receipt  ${args.tbl}")
-        Log.i(TAG, "onResume: isCustomerDiningRequestVisible $isCustomerDiningRequestVisible")
 
         if (customDiningRequest == null && args.tbl.receiptNo.isEmpty() && isCustomerDiningRequestVisible) {
             requestCustomerDining()
