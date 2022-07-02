@@ -247,7 +247,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                     binding.pbLayout.root.hide()
                     (it.data as FoodItemList?)?.let { item ->
                         viewModel.getGrandTotal(item.foodList)
-                        setUpRecycleAdaptor(item.foodList)
+                        if (item.foodList.isNotEmpty())
+                            setUpRecycleAdaptor(item.foodList)
+                        else
+                            activity?.msg("No order found!! ${getEmojiByUnicode(0x1F615)}")
                     }
                 }
             }
