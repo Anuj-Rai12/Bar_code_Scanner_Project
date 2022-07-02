@@ -83,7 +83,8 @@ object AllStringConst {
         const val Barcode = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ScanAndFindITEM"
 
         const val PosLineItem = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:POSLineItems"
-
+        const val occupiedTbl =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:OccupiedTableDetail"
     }
 
 
