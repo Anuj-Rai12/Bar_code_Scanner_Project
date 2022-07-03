@@ -211,6 +211,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                     it.data?.let { data ->
                         arrItem.clear()
                         arrItem.addAll(data)
+                        confirmOderFragmentAdaptor.setQtyBoxType(true)
                         setUpRecycleAdaptor(data)
                     }
                 }
@@ -247,6 +248,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                     binding.pbLayout.root.hide()
                     (it.data as FoodItemList?)?.let { item ->
                         viewModel.getGrandTotal(item.foodList)
+                        confirmOderFragmentAdaptor.setQtyBoxType(false)
                         if (item.foodList.isNotEmpty())
                             setUpRecycleAdaptor(item.foodList)
                         else

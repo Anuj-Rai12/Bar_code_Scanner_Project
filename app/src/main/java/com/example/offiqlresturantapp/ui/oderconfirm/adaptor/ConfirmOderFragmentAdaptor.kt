@@ -25,6 +25,7 @@ class ConfirmOderFragmentAdaptor(
     ListAdapter<ItemMasterFoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
 
     private var showCheckBox: Boolean = false
+    private var showQtyBox: Boolean = true
 
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<ItemMasterFoodItem>() {
@@ -76,6 +77,7 @@ class ConfirmOderFragmentAdaptor(
                 }
 
                 qtyOfFood.setOnClickListener {
+                    if (showQtyBox)
                     itemClickListerForUpdate(foodItem)
                 }
                 qtyOfFood.apply {
@@ -90,9 +92,6 @@ class ConfirmOderFragmentAdaptor(
                     setBg(foodItem.bg)
                     text = "$Rs_Symbol ${foodItem.foodAmt}"
                 }
-                /*root.setOnClickListener {
-                    itemClickListerForFoodSelected(foodItem)
-                }*/
             }
         }
 
@@ -125,6 +124,13 @@ class ConfirmOderFragmentAdaptor(
         notifyDataSetChanged()
         showCheckBox = flag
     }
+
+
+    fun setQtyBoxType(flag: Boolean) {
+        notifyDataSetChanged()
+        showQtyBox = flag
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: SelectedFoodItemViewHolder, position: Int) {
