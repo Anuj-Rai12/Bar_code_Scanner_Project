@@ -293,9 +293,6 @@ class ConfirmOrderFragmentViewModel constructor(
         }
     }
 
-    fun removeFetchItem() {
-        _occupiedTbl.postValue(null)
-    }
 
 
     override fun onCleared() {

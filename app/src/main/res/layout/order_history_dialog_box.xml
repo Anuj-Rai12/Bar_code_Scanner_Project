@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/semi_white_color">
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/close_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:background="@android:color/transparent"
+        android:elevation="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_new_close_icon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/order_history_txt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/roboto_medium"
+        android:textColor="@color/light_grey_color"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/close_btn"
+        app:layout_constraintTop_toBottomOf="@id/close_btn"
+        tools:text="jdgjdfglkdfgkl" />
+
+
+    <LinearLayout
+        android:id="@+id/dsc_item_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/order_history_txt">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".9"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_desc"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_qty"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_rate"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_amt"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/order_recycle_view"
+        android:layout_width="0dp"
+        android:layout_height="350dp"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbarThumbVertical="@color/light_grey_color"
+        android:scrollbars="vertical"
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dsc_item_layout"
+        tools:listitem="@layout/list_of_food_item_selected" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/order_recycle_view_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/confirm_order_hint_border"
+        android:fontFamily="@font/roboto_medium"
+        android:minHeight="33dp"
+        android:paddingStart="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="9dp"
+        android:text="@string/oder_hint"
+        android:textColor="@color/light_grey_color"
+        android:textSize="12sp"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@id/dsc_item_layout"
+        app:layout_constraintRight_toRightOf="@id/dsc_item_layout"
+        app:layout_constraintTop_toBottomOf="@id/dsc_item_layout"
+        tools:visibility="visible" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/total_sum"
+        android:textColor="@color/light_grey_color"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/total_order_amt"
+        app:layout_constraintRight_toLeftOf="@id/total_order_amt"
+        app:layout_constraintTop_toTopOf="@id/total_order_amt" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/total_order_amt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="7dp"
+        android:background="@drawable/black_underline_border"
+        android:fontFamily="@font/roboto_medium"
+        android:paddingStart="41dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="41dp"
+        android:paddingBottom="8dp"
+        android:text="@string/sample_total_amt"
+        android:textColor="@color/light_grey_color"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="@id/order_recycle_view"
+        app:layout_constraintTop_toBottomOf="@id/order_recycle_view" />
+
+
+    <include
+        android:id="@+id/pb_layout"
+        layout="@layout/progress_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ import com.example.offiqlresturantapp.data.confirmOrder.ConfirmOrderRequest
 import com.example.offiqlresturantapp.data.confirmOrder.response.ConfirmOrderSuccessResponse
 import com.example.offiqlresturantapp.databinding.ConfirmOrderLayoutBinding
 import com.example.offiqlresturantapp.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
+import com.example.offiqlresturantapp.ui.oderconfirm.orderhistory.showDialogForOrderHistory
 import com.example.offiqlresturantapp.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
@@ -44,6 +45,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private var receiptNo: String? = null
     private var customDiningRequest: ConfirmDiningRequest? = null
     private var isCustomerDiningRequestVisible: Boolean = true
+    private var isOrderIsVisible = false
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -102,7 +104,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
             arrItem.clear()
             viewModel.getGrandTotal(null)
             viewModel.removeItemFromListOrder()
-            viewModel.removeFetchItem()
             initial()
         }
 
@@ -122,7 +123,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.showDialogForDeleteInfo("Swipe to delete ${getEmojiByUnicode(0x1F5D1)}")
+            activity?.showDialogForDeleteInfo("${getEmojiByUnicode(0x1F5D1)} Swipe to delete")
         }
 
         binding.infoBtn.setOnLongClickListener {
@@ -131,8 +132,20 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         }
 
         binding.foodItem.setOnClickListener {
-            viewModel.getOccupiedTableItem(args.tbl)
-            getFetchItem()
+            //Get Dialog
+            if (!isOrderIsVisible) {
+                isOrderIsVisible = true
+                val viewModel: ConfirmOrderFragmentViewModel by viewModels()
+                activity?.showDialogForOrderHistory(
+                    "${getEmojiByUnicode(0x1F372)} Order History",
+                    args.tbl,
+                    viewLifecycleOwner,
+                    viewModel
+                ) {
+                    viewModel.getGrandTotal(arrItem)
+                    isOrderIsVisible = false
+                }
+            }
         }
 
 
@@ -171,11 +184,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
                     requestCustomerDining()
                 }
             })
-    }
-
-    override fun onPause() {
-        super.onPause()
-        viewModel.removeFetchItem()
     }
 
 
@@ -228,39 +236,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     }
 
 
-    private fun getFetchItem() {
-        viewModel.occupiedTbl.observe(viewLifecycleOwner) {
-            when (it) {
-                is ApisResponse.Error -> {
-                    binding.pbLayout.root.hide()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { err ->
-                            showErrorDialog(err)
-                        }
-                    } else {
-                        showErrorDialog("${it.data}")
-                    }
-                }
-                is ApisResponse.Loading -> {
-                    binding.pbLayout.titleTxt.text = "${it.data}"
-                    binding.pbLayout.root.show()
-                }
-                is ApisResponse.Success -> {
-                    binding.pbLayout.root.hide()
-                    (it.data as FoodItemList?)?.let { item ->
-                        viewModel.getGrandTotal(item.foodList)
-                        confirmOderFragmentAdaptor.setQtyBoxType(false)
-                        if (item.foodList.isNotEmpty())
-                            setUpRecycleAdaptor(item.foodList)
-                        else
-                            activity?.msg("No order found!! ${getEmojiByUnicode(0x1F615)}")
-                    }
-                }
-            }
-        }
-    }
-
-
     private fun getConfirmDinningResponse() {
         viewModel.orderDining.observe(viewLifecycleOwner) {
             when (it) {
@@ -302,13 +277,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         super.onResume()
         customDiningRequest = args.confirmreq
         receiptNo = if (customDiningRequest?.body?.rcptNo != null) {
-                customDiningRequest?.body?.rcptNo.toString()
-            } else if (args.tbl.receiptNo.isNotEmpty()) {
-                binding.foodItem.show()
-                args.tbl.receiptNo
-            } else {
-                null
-            }
+            customDiningRequest?.body?.rcptNo.toString()
+        } else if (args.tbl.receiptNo.isNotEmpty()) {
+            binding.foodItem.show()
+            args.tbl.receiptNo
+        } else {
+            null
+        }
 
 
         if (customDiningRequest == null && args.tbl.receiptNo.isEmpty() && isCustomerDiningRequestVisible) {
