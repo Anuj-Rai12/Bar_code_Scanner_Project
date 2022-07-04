@@ -31,8 +31,8 @@ class TestingConnectionViewModel constructor(
         get() = _apkLogin
 
 
-    private val _testingConnection = MutableLiveData<ApisResponse<out String>>()
-    val testingConnection: LiveData<ApisResponse<out String>>
+    private val _testingConnection = MutableLiveData<ApisResponse<out String?>>()
+    val testingConnection: LiveData<ApisResponse<out String?>>
         get() = _testingConnection
 
     private val userSoredData = UserSoredData(app)

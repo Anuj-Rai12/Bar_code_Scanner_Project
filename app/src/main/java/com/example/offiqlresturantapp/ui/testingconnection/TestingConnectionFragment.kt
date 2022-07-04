@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
@@ -22,8 +24,10 @@ import com.google.android.material.snackbar.Snackbar
 class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment) {
     private lateinit var binding: TestingConnectionFragmentBinding
     private val viewModel: TestingConnectionViewModel by viewModels()
-
     private val args: TestingConnectionFragmentArgs by navArgs()
+    private var isGoneToLoginScreen = false
+    private var isGoneToScanScreen = false
+    private var isDialogForUrlOpen = false
 
     @SuppressLint("ResourceType")
     @RequiresApi(Build.VERSION_CODES.M)
@@ -74,28 +78,45 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
     }
 
     private fun getScannedUrl() {
-        activity?.showDialogBoxToGetUrl(scan = {
-            nextFragForScan()
-        }, done = { res ->
-            viewModel.scannerUrl = res
-        })
+        if (!isDialogForUrlOpen) {
+            isDialogForUrlOpen = true
+            activity?.showDialogBoxToGetUrl(scan = {
+                isDialogForUrlOpen = false
+                nextFragForScan()
+            }, done = { res ->
+                isDialogForUrlOpen = false
+                viewModel.scannerUrl = res
+            })
+        }
     }
 
     private fun nextFragForScan() {
-        val action =
-            TestingConnectionFragmentDirections.actionGlobalScanQrCodeFragment(
-                Url_barcode,
-                null,
-                null,
-                null
-            )
-        findNavController().navigate(action)
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            if (!isGoneToScanScreen) {
+                isGoneToScanScreen = true
+                val action =
+                    TestingConnectionFragmentDirections.actionGlobalScanQrCodeFragment(
+                        Url_barcode,
+                        null,
+                        null,
+                        null
+                    )
+                findNavController().navigate(action)
+            }
+        }
     }
 
     private fun nextFrag() {
-        val action =
-            TestingConnectionFragmentDirections.actionTestingConnectionFragmentToLoginScreenFragment()
-        findNavController().navigate(action)
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            if (!isGoneToLoginScreen) {
+                isGoneToLoginScreen = true
+                val action =
+                    TestingConnectionFragmentDirections.actionTestingConnectionFragmentToLoginScreenFragment()
+                findNavController().navigate(action)
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -104,12 +125,13 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
             when (it) {
                 is ApisResponse.Error -> {
                     hideProgress()
-                    activity?.msg("${it.exception?.localizedMessage}")
-                    showDialogBox(
-                        "Failed!!",
-                        "Please Check the Credentials or Try Again!!",
-                        icon = R.drawable.ic_error
-                    ) {}
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { err ->
+                            showErrorDialog(err)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
                 }
                 is ApisResponse.Loading -> {
                     binding.testConnectionId.showButtonProgress(
@@ -119,18 +141,18 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                 }
                 is ApisResponse.Success -> {
                     hideProgress()
-                    it.data?.let {
-                        nextFrag()
-                    } ?: run {
-                        showDialogBox(
-                            "Failed!!",
-                            "Please Check the Credentials or Try Again!!",
-                            icon = R.drawable.ic_error
-                        ) {}
-                    }
+                    nextFrag()
                 }
             }
         }
+    }
+
+    private fun showErrorDialog(desc: String) {
+        showDialogBox(
+            "Failed!!",
+            desc,
+            icon = R.drawable.ic_error
+        ) {}
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

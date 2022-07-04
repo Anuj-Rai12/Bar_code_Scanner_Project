@@ -85,6 +85,9 @@ object AllStringConst {
         const val PosLineItem = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:POSLineItems"
         const val occupiedTbl =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:OccupiedTableDetail"
+
+        const val testConnection =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ValidateStoreNo"
     }
 
 
