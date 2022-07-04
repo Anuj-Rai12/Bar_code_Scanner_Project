@@ -27,6 +27,7 @@ import com.example.offiqlresturantapp.ui.oderconfirm.adaptor.ConfirmOderFragment
 import com.example.offiqlresturantapp.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
 import com.example.offiqlresturantapp.ui.searchfood.model.FoodItemList
 import com.example.offiqlresturantapp.ui.searchfood.model.ItemMasterFoodItem
+import com.example.offiqlresturantapp.use_case.AlphaNumericString
 import com.example.offiqlresturantapp.utils.*
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -40,7 +41,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ConfirmOderFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
-    private var receiptNo: Long = 0
+    private var receiptNo: String? = null
     private var customDiningRequest: ConfirmDiningRequest? = null
     private var isCustomerDiningRequestVisible: Boolean = true
 
@@ -136,8 +137,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
 
         binding.confirmOrderBtn.setOnClickListener {
-            if (receiptNo > 0)
-                viewModel.postLineUrl(receiptNo.toString(), arrItem)
+            if (!receiptNo.isNullOrEmpty())
+                viewModel.postLineUrl(receiptNo!!, arrItem)
             else
                 activity?.msg("Oops Some thing Went Wrong Try Again?")
         }
@@ -151,14 +152,14 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
 
     private fun requestCustomerDining() {
-        receiptNo = randomNumber(10000000)
+        receiptNo = AlphaNumericString.getAlphaNumericString(8)
         isCustomerDiningRequestVisible = false
         val singletonCls = RestaurantSingletonCls.getInstance()
         activity?.addDialogMaterial(
             title = "Receipt No: $receiptNo",
             time = viewModel.time.value ?: "04:00 PM",
             tableNo = args.tbl.tableNo,
-            receiptNo = receiptNo,
+            receiptNo = receiptNo!!,
             storeVar = singletonCls.getStoreId()!!,
             staffID = singletonCls.getUserId()!!, cancel = {
                 findNavController().popBackStack()
@@ -300,14 +301,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
     override fun onResume() {
         super.onResume()
         customDiningRequest = args.confirmreq
-        receiptNo = // ?: args.tbl.receiptNo.toLong() ?: 0
-            if (customDiningRequest?.body?.rcptNo != null) {
-                customDiningRequest?.body?.rcptNo?.toLong()!!
+        receiptNo = if (customDiningRequest?.body?.rcptNo != null) {
+                customDiningRequest?.body?.rcptNo.toString()
             } else if (args.tbl.receiptNo.isNotEmpty()) {
                 binding.foodItem.show()
-                args.tbl.receiptNo.toLong()
+                args.tbl.receiptNo
             } else {
-                0
+                null
             }
 
 

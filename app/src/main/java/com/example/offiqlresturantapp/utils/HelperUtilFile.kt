@@ -241,7 +241,7 @@ fun Activity.addDialogMaterial(
     title: String,
     time: String,
     tableNo: String,
-    receiptNo: Long,
+    receiptNo: String,
     storeVar: String,
     staffID: String,
     cancel: () -> Unit,
@@ -271,7 +271,7 @@ fun Activity.addDialogMaterial(
             } else {
                 val confirmDiningRequest = ConfirmDiningRequest(
                     body = ConfirmDiningBody(
-                        rcptNo = "$receiptNo",
+                        rcptNo = receiptNo,
                         customerPhone = customerNumber ?: "",
                         customerName = customerName ?: "",
                         covers = coverNumber,
