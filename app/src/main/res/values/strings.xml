@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OffiqlRestaurantApp</string>
+    <string name="app_name">MPOS</string>
     <string name="app_title">MPOS</string>
     <string name="app_title_by">by MPOS</string>
     <string name="scan_btn">QR code</string>

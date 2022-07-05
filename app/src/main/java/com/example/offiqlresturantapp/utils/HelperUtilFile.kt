@@ -265,33 +265,40 @@ fun Activity.addDialogMaterial(
             if (checkFieldValue(coverNumber) || !coverNumber.isDigitsOnly()) {
                 msg("Please Enter Correct Covers\n Try Again.")
                 listener.invoke(null, false)
-            } else if (!checkFieldValue(customerNumber.toString()) && !isValidPhone(customerNumber.toString())) {
+                return@setPositiveButton
+            }
+            if (!checkFieldValue(customerNumber.toString()) && !isValidPhone(customerNumber.toString())) {
                 msg("Please Enter Correct Phone Number\n Try Again.")
                 listener.invoke(null, false)
-            } else {
-                val confirmDiningRequest = ConfirmDiningRequest(
-                    body = ConfirmDiningBody(
-                        rcptNo = receiptNo,
-                        customerPhone = customerNumber ?: "",
-                        customerName = customerName ?: "",
-                        covers = coverNumber,
-                        storeVar = storeVar,
-                        tableNo = tableNo,
-                        terminalNo = "",
-                        errorFound = false.toString(),
-                        salesType = "RESTAURANT",
-                        staffID = staffID,
-                        transDate = getDate() ?: "2022-06-18",
-                        transTime = time,
-                        waiterName = "",
-                        waiterID = "",
-                        errorText = "",
-                        contactNo = "0000000000"
-                    )
-                )
-                msg("Saved")
-                listener.invoke(confirmDiningRequest, true)
+                return@setPositiveButton
             }
+            if (coverNumber.isDigitsOnly() && coverNumber.toLong() <= 0) {
+                msg("Convert cannot be Zero!!")
+                listener.invoke(null, false)
+                return@setPositiveButton
+            }
+            val confirmDiningRequest = ConfirmDiningRequest(
+                body = ConfirmDiningBody(
+                    rcptNo = receiptNo,
+                    customerPhone = customerNumber ?: "",
+                    customerName = customerName ?: "",
+                    covers = coverNumber,
+                    storeVar = storeVar,
+                    tableNo = tableNo,
+                    terminalNo = "",
+                    errorFound = false.toString(),
+                    salesType = "RESTAURANT",
+                    staffID = staffID,
+                    transDate = getDate() ?: "2022-06-18",
+                    transTime = time,
+                    waiterName = "",
+                    waiterID = "",
+                    errorText = "",
+                    contactNo = "0000000000"
+                )
+            )
+            msg("Saved")
+            listener.invoke(confirmDiningRequest, true)
             dialog.dismiss()
         }.setCancelable(false)
         .setNegativeButton("Cancel") { dialog, _ ->
