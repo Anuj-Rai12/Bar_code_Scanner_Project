@@ -31,8 +31,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
         binding.mposId3.text = args.storeName
         setRecycleView()
         setData()
-        removeItemFromBackStack()
-        showCountOfBackStack()
+        //removeItemFromBackStack()
+        //showCountOfBackStack()
         binding.logoutBtnIc2.setOnClickListener {
             showDialog()
         }
