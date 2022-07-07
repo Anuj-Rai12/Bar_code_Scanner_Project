@@ -12,7 +12,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.offiqlresturantapp"
+        applicationId "com.fbts.mpos"
         minSdk 21
         targetSdk 31
         versionCode 1
@@ -55,7 +55,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     //Dagger Hilt
-   // implementation "com.google.dagger:hilt-android:2.38.1"
+    // implementation "com.google.dagger:hilt-android:2.38.1"
     //kapt "com.google.dagger:hilt-compiler:2.38.1"
 
 
