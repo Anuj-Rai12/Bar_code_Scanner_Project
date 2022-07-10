@@ -8,6 +8,7 @@ import com.fbts.mpos.R
 import com.fbts.mpos.data.mnu.MnuData
 import com.fbts.mpos.databinding.MnuBottomSheetFramgmentLayoutBinding
 import com.fbts.mpos.ui.menu.adaptor.MenuBottomSheetAdaptor
+import com.fbts.mpos.utils.getEmojiByUnicode
 import com.fbts.mpos.utils.hide
 import com.fbts.mpos.utils.msg
 import com.fbts.mpos.utils.show
@@ -33,6 +34,10 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         val view = View.inflate(context, R.layout.mnu_bottom_sheet_framgment_layout, null)
         binding = MnuBottomSheetFramgmentLayoutBinding.bind(view)
         binding.nameToolbar.text = title
+        binding.breakFastTxt.text = "${getEmojiByUnicode(0x1F968)} Breakfast"
+        binding.lunchTxt.text = "${getEmojiByUnicode(0x1F355)} Lunch"
+        binding.dinnerTxt.text = "${getEmojiByUnicode( 0x1F371)} Dinner"
+
         //setting layout with bottom sheet
         bottomSheet.setContentView(view)
         bottomSheetBehavior = BottomSheetBehavior.from(view.parent as View)
@@ -59,7 +64,7 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
                 activity?.msg("$it")
             }
             adapter = dinnerAdaptor
-            dinnerAdaptor.submitList(MnuData.getBreakFast())
+            dinnerAdaptor.submitList(MnuData.getDinner())
         }
     }
 
@@ -93,28 +98,17 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             binding.appBarLayout.hide()
                             binding.imageUp.show()
+                            binding.viewSpace.hide()
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             binding.appBarLayout.show()
                             binding.imageUp.hide()
+                            binding.viewSpace.show()
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {
                             dismiss()
                         }
                     }
-                    /*if (BottomSheetBehavior.STATE_EXPANDED == i) {
-                        showView(bi.appBarLayout, getActionBarSize());
-                        hideAppBar(bi.profileLayout);
-
-                    }
-                    if (BottomSheetBehavior.STATE_COLLAPSED == i) {
-                        hideAppBar(bi.appBarLayout);
-                        showView(bi.profileLayout, getActionBarSize());
-                    }
-
-                    if (BottomSheetBehavior.STATE_HIDDEN == i) {
-                        dismiss();
-                    }*/
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {}
@@ -124,7 +118,7 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
 
     override fun onStart() {
         super.onStart()
-         bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         binding.imageUp.show()
     }
 /*

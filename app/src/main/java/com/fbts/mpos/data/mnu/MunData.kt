@@ -10,20 +10,26 @@ data class MnuData(
     companion object {
         fun getBreakFast(): List<MnuData> {
             val list = ArrayList<MnuData>()
-            list.add(MnuData("Menu", MnuType.BREAKFAST.name, R.drawable.ic_breakfast))
+            list.add(MnuData("Small", MnuType.BREAKFAST.name, R.drawable.ic_breakfast))
+            list.add(MnuData("Regular", MnuType.BREAKFAST.name, R.drawable.ic_breakfast))
+            list.add(MnuData("Large", MnuType.BREAKFAST.name, R.drawable.ic_breakfast))
             return list
         }
 
         fun getLunch(): List<MnuData> {
             val list = ArrayList<MnuData>()
-            list.add(MnuData("Menu", MnuType.LUNCH.name, R.drawable.ic_lunch))
+            list.add(MnuData("Small", MnuType.LUNCH.name, R.drawable.ic_lunch))
+            list.add(MnuData("Regular", MnuType.LUNCH.name, R.drawable.ic_lunch))
+            list.add(MnuData("Large", MnuType.LUNCH.name, R.drawable.ic_lunch))
             return list
         }
 
 
         fun getDinner(): List<MnuData> {
             val list = ArrayList<MnuData>()
-            list.add(MnuData("Menu", MnuType.DINNER.name, R.drawable.ic_dinner))
+            list.add(MnuData("Small", MnuType.DINNER.name, R.drawable.ic_dinner))
+            list.add(MnuData("Regular", MnuType.DINNER.name, R.drawable.ic_dinner))
+            list.add(MnuData("Large", MnuType.DINNER.name, R.drawable.ic_dinner))
             return list
         }
     }

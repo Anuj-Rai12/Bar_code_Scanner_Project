@@ -23,6 +23,7 @@ import com.fbts.mpos.data.confirmOrder.ConfirmOrderBody
 import com.fbts.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.fbts.mpos.data.confirmOrder.response.ConfirmOrderSuccessResponse
 import com.fbts.mpos.databinding.ConfirmOrderLayoutBinding
+import com.fbts.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.fbts.mpos.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
 import com.fbts.mpos.ui.oderconfirm.orderhistory.showDialogForOrderHistory
 import com.fbts.mpos.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
@@ -80,6 +81,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         viewModel.time.observe(viewLifecycleOwner) {
             binding.orderBookingTimeTxt.text = getString(R.string.sample_tbl_time, "\n$it")
         }
+
+
+        binding.foodMnuBtn.setOnClickListener {
+            val mnuBottom = MenuBottomSheetFragment("Order Menu")
+            mnuBottom.show(parentFragmentManager, MenuBottomSheetFragment.NAME)
+        }
+
 
         viewModel.getOrderList(args.list)
         getData()
