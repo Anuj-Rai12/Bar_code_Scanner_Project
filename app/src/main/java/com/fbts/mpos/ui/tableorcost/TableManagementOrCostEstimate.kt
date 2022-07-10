@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fbts.mpos.R
 import com.fbts.mpos.databinding.TableOrCostLayoutBinding
+import com.fbts.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.fbts.mpos.ui.tableorcost.adaptor.TableManagementOrCostRecyclerAdaptor
 import com.fbts.mpos.ui.tableorcost.model.SelectionDataClass
 import com.fbts.mpos.utils.*
@@ -33,7 +34,10 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
         //removeItemFromBackStack()
         //showCountOfBackStack()
         binding.logoutBtnIc2.setOnClickListener {
-            showDialog()
+            //showDialog()
+            val mnuBottom = MenuBottomSheetFragment("Menu")
+            mnuBottom.show(parentFragmentManager, MenuBottomSheetFragment.NAME)
+
         }
         binding.logoutTxt2.setOnClickListener {
             showDialog()
