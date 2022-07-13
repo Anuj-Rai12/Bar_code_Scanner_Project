@@ -24,6 +24,7 @@ import com.fbts.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.fbts.mpos.data.confirmOrder.response.ConfirmOrderSuccessResponse
 import com.fbts.mpos.databinding.ConfirmOrderLayoutBinding
 import com.fbts.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
+import com.fbts.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.fbts.mpos.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
 import com.fbts.mpos.ui.oderconfirm.orderhistory.showDialogForOrderHistory
 import com.fbts.mpos.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
@@ -35,7 +36,7 @@ import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 
-class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
+class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomSheetClickListener {
     private lateinit var binding: ConfirmOrderLayoutBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
     private val viewModel: ConfirmOrderFragmentViewModel by viewModels()
@@ -85,6 +86,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
 
         binding.foodMnuBtn.setOnClickListener {
             val mnuBottom = MenuBottomSheetFragment("Order Menu")
+            mnuBottom.onBottomSheetClickListener = this
             mnuBottom.show(parentFragmentManager, MenuBottomSheetFragment.NAME)
         }
 
@@ -517,5 +519,9 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout) {
         ) {
             return@showSandbar "OK"
         }
+    }
+
+    override fun <T> onItemClicked(response: T) {
+        activity?.msg("$response")
     }
 }
