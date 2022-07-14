@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.fbts.mpos.R
 import com.fbts.mpos.data.login.model.api.json.ApkLoginJsonResponse
 import com.fbts.mpos.databinding.SplashSrcLayoutBinding
@@ -98,7 +97,8 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
 
     private fun nextFrag(string: String?) {
         lifecycleScope.launchWhenStarted {
-            val action = when (string) {
+            throw ExceptionInInitializerError("Next File Error!!")
+            /*val action = when (string) {
                 null -> {
                     SplashScreenFragmentDirections.actionSplashScreenFragmentToLoginScreenFragment()
                 }
@@ -114,6 +114,8 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                 }
             }
             findNavController().navigate(action)
+
+             */
         }
     }
 
