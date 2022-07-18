@@ -1,9 +1,7 @@
 package com.example.mpos.ui.login
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -112,7 +110,6 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun showSnackBar(msg: String, length: Int = Snackbar.LENGTH_INDEFINITE) {
         binding.root.showSandbar(
             msg,

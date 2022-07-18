@@ -161,9 +161,13 @@ fun Button.hideProgress(string: String) {
     hideProgress(string)
 }
 
-@RequiresApi(Build.VERSION_CODES.M)
+
 fun Activity.getColorInt(color: Int): Int {
-    return resources.getColor(color, null)
+    return if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+        resources.getColor(color, null)
+    }else{
+        resources.getColor(color)
+    }
 }
 
 fun View.hide() {
@@ -192,9 +196,9 @@ fun Context.msg(string: String, time: Int = Toast.LENGTH_SHORT) {
     return Random.nextInt(to - from) + from
 }*/
 
-@RequiresApi(Build.VERSION_CODES.M)
+
 fun Activity.changeStatusBarColor(color: Int = R.color.light_blue_bg_two) {
-    this.window?.statusBarColor = resources.getColor(color, null)
+    this.window?.statusBarColor = getColorInt(color)
 }
 
 @RequiresApi(Build.VERSION_CODES.M)

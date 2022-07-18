@@ -2,13 +2,11 @@ package com.example.mpos.ui.oderconfirm
 
 import android.annotation.SuppressLint
 import android.graphics.Canvas
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -52,7 +50,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     private var isCustomerDiningRequestVisible: Boolean = true
     private var isOrderIsVisible = false
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
@@ -544,7 +541,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
         binding.root.showSandbar(
             msg,
