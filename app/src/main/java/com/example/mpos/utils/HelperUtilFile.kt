@@ -88,6 +88,8 @@ object AllStringConst {
 
         const val testConnection =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ValidateStoreNo"
+
+        const val printBill = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:PrintPreBill"
     }
 
 

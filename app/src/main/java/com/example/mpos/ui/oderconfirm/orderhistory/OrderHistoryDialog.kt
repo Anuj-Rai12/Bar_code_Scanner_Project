@@ -44,8 +44,13 @@ fun Activity.showDialogForOrderHistory(
         materialDialogs.dismiss()
     }
 
-
     viewModel.getOccupiedTableItem(tableDetail)
+
+
+    binding.printBtn.setOnClickListener {
+        cancel.invoke()
+        materialDialogs.dismiss()
+    }
 
     viewModel.occupiedTbl.observe(viewLifecycleOwner) {
         when (it) {

@@ -10,6 +10,7 @@ import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.example.mpos.data.occupied.OccupiedTableRequest
 import com.example.mpos.data.occupied.RequestBody
+import com.example.mpos.data.printbIll.PrintBillRequest
 import com.example.mpos.data.table_info.model.json.TableDetail
 import com.example.mpos.dataStore.UserSoredData
 import com.example.mpos.di.RetrofitInstance
@@ -17,6 +18,7 @@ import com.example.mpos.ui.oderconfirm.repo.confirmdining.ConfirmDiningRepositor
 import com.example.mpos.ui.oderconfirm.repo.confirmorder.ConfirmOrderRepositoryImpl
 import com.example.mpos.ui.oderconfirm.repo.occupied.OccupiedTableRepository
 import com.example.mpos.ui.oderconfirm.repo.posline.PosLineRepository
+import com.example.mpos.ui.oderconfirm.repo.printbill.PrintBillRepository
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.use_case.ConfirmOrderUseCase
@@ -41,6 +43,7 @@ class ConfirmOrderFragmentViewModel constructor(
     private lateinit var confirmDiningRepository: ConfirmDiningRepositoryImpl
     private lateinit var posLineRepository: PosLineRepository
     private lateinit var occupiedTableRepository: OccupiedTableRepository
+    private lateinit var printBillRepository: PrintBillRepository
 
     private var storeNo = ""
 
@@ -70,6 +73,10 @@ class ConfirmOrderFragmentViewModel constructor(
     val postLine: LiveData<Pair<String, ApisResponse<out String>>>
         get() = _postLine
 
+
+    private val _printBill = MutableLiveData<ApisResponse<out String>>()
+    val printBill: LiveData<ApisResponse<out String>>
+        get() = _printBill
 
     private val _listOfOrder = MutableLiveData<ApisResponse<out List<ItemMasterFoodItem>>>()
     val listOfOrder: LiveData<ApisResponse<out List<ItemMasterFoodItem>>>
@@ -101,6 +108,7 @@ class ConfirmOrderFragmentViewModel constructor(
                     ConfirmDiningRepositoryImpl(retrofit = retrofit.getRetrofit())
                 occupiedTableRepository = OccupiedTableRepository(retrofit.getRetrofit())
                 posLineRepository = PosLineRepository(retrofit.getRetrofit())
+                printBillRepository = PrintBillRepository(retrofit.getRetrofit())
             }
         }
         getGrandTotal(null)
@@ -117,6 +125,23 @@ class ConfirmOrderFragmentViewModel constructor(
 
     fun removeItemFromListOrder() {
         _listOfOrder.postValue(null)
+    }
+
+    fun fetchPrintResponse(request: PrintBillRequest) {
+        if (!this::printBillRepository.isInitialized) {
+            _event.postValue(Events(mapOf("Unknown Error" to false)))
+            return
+        }
+
+        viewModelScope.launch {
+            if (app.isNetworkAvailable()) {
+                printBillRepository.getPrintBillResponse(request).collectLatest {
+                    _printBill.postValue(it)
+                }
+            } else {
+                _event.postValue(Events(mapOf("No Internet Connection" to false)))
+            }
+        }
     }
 
 
@@ -292,7 +317,6 @@ class ConfirmOrderFragmentViewModel constructor(
                 }
         }
     }
-
 
 
     override fun onCleared() {

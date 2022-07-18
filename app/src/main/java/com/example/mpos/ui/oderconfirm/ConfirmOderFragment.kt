@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -22,6 +23,8 @@ import com.example.mpos.data.cofirmDining.response.ConfirmDiningSuccessResponse
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.example.mpos.data.confirmOrder.response.ConfirmOrderSuccessResponse
+import com.example.mpos.data.printbIll.PrintBillRequest
+import com.example.mpos.data.printbIll.PrintBillRequestBody
 import com.example.mpos.databinding.ConfirmOrderLayoutBinding
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
@@ -141,6 +144,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             return@setOnLongClickListener true
         }
 
+        showPrintResponse()
+
         binding.foodItem.setOnClickListener {
             //Get Dialog
             if (!isOrderIsVisible) {
@@ -153,6 +158,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     viewModel
                 ) {
                     viewModel.getGrandTotal(arrItem)
+                    this.viewModel.fetchPrintResponse(PrintBillRequest(PrintBillRequestBody(args.tbl.receiptNo)))
                     isOrderIsVisible = false
                 }
             }
@@ -166,6 +172,34 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 activity?.msg("Oops Some thing Went Wrong Try Again?")
         }
 
+    }
+
+    private fun showPrintResponse() {
+        viewModel.printBill.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    binding.pbLayout.root.hide()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { res ->
+                            showErrorDialog(res)
+                        }
+                    } else {
+                        showErrorDialog(it.data)
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.pbLayout.root.show()
+                }
+                is ApisResponse.Success -> {
+                    binding.pbLayout.root.hide()
+                    if (it.data?.startsWith("01")!!) {
+                        activity?.msg("success", Toast.LENGTH_LONG)
+                    } else {
+                        activity?.msg("failed ${it.data}", Toast.LENGTH_LONG)
+                    }
+                }
+            }
+        }
     }
 
 
