@@ -4,8 +4,8 @@ plugins {
     id("kotlin-parcelize")
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
-    //id 'com.google.gms.google-services'
-    //id 'com.google.firebase.crashlytics'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -102,8 +102,8 @@ dependencies {
     implementation "com.google.android.odml:image:1.0.0-beta1"
 
     //Machine Learning BarCode
-    implementation 'com.google.mlkit:barcode-scanning:17.0.1'
-    implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:17.0.0'
+    implementation 'com.google.mlkit:barcode-scanning:17.0.2'
+    implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.0.0'
     //Button Progress
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
@@ -116,6 +116,10 @@ dependencies {
 
 
     //FireBase
+    implementation platform('com.google.firebase:firebase-bom:30.2.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+
     /*implementation platform('com.google.firebase:firebase-bom:30.1.0')
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'*/
