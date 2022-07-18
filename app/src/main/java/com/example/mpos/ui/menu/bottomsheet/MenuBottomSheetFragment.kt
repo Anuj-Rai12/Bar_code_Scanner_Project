@@ -43,11 +43,11 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         //setting layout with bottom sheet
         bottomSheet.setContentView(view)
         binding.nameToolbar.text = title
+        binding.viewPager.isUserInputEnabled = false
         bottomSheetBehavior = BottomSheetBehavior.from(view.parent as View)
 
         //setting Peek at the 16:9 ratio key-line of its parent.
         bottomSheetBehavior?.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
-
         viewModel.event.observe(this) {
             it.getContentIfNotHandled()?.let { res ->
                 showSnackBar(res, R.color.color_red)
@@ -90,6 +90,9 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
     private fun setUpFragment(title: String) {
         viewPagerAdaptor.setFragment(MnuTabFragment(title))
     }
+
+    fun getMnuResponse() = menuResponse
+
 
     private fun getMenuItem() {
         viewModel.mnuItem.observe(this) {

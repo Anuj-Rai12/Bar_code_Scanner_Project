@@ -15,7 +15,6 @@ class MenuBottomSheetAdaptor(private val itemClicked: mnuItemClicked) :
     inner class MnuItemViewHolder(private val binding: MnuItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun setData(data: MnuData, itemClicked: mnuItemClicked) {
-            binding.itemLogoImg.setImageResource(data.img)
             binding.menuTitle.text = data.title
             binding.root.setOnClickListener {
                 itemClicked.invoke(data)
@@ -28,7 +27,7 @@ class MenuBottomSheetAdaptor(private val itemClicked: mnuItemClicked) :
             override fun areItemsTheSame(
                 oldItem: MnuData,
                 newItem: MnuData
-            ) = oldItem.img == newItem.img
+            ) = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
                 oldItem: MnuData,
