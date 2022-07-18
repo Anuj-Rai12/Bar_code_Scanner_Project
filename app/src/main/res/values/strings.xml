@@ -30,6 +30,7 @@
     <string name="total_sum">Grand Total</string>
 
     <string name="arr_bck">back Arrow</string>
+    <string name="arr_up">Up Arrow</string>
     <string name="clos_btn">clear</string>
     <string name="off_txt">No Offer</string>
     <string name="src_hint">Search..</string>

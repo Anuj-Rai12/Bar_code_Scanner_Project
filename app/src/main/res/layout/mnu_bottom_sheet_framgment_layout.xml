@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/semi_white_color"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:background="@color/semi_white_color">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:background="@color/semi_white_color"
         android:visibility="gone"
         tools:visibility="visible">
@@ -26,6 +28,7 @@
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/clos_btn"
                 android:src="@drawable/ic_crossed_knife_and_fork"
                 app:tint="@color/black" />
 
@@ -36,184 +39,66 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
-                android:text="Name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                tools:text="Name" />
         </LinearLayout>
 
 
     </com.google.android.material.appbar.AppBarLayout>
 
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_up"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="3dp"
+        android:background="@color/white"
+        app:tabBackground="@drawable/tab_layout"
+        app:tabIndicatorColor="@android:color/transparent"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextAppearance="@style/customTabLayout"
+        app:tabTextColor="@color/black" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tabs"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabs" />
+
+
     <ImageButton
         android:id="@+id/image_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/appBarLayout"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginTop="3dp"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/arr_up"
         android:rotationX="180"
         android:src="@drawable/ic_baseline_keyboard"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/pb_layout_include"
-            layout="@layout/progress_layout"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/break_fast_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="Breakfast"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/break_fast_arrow_to_start"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/circle_shape"
-            android:backgroundTint="@color/semi_white_color"
-            android:elevation="5dp"
-            android:padding="3dp"
-            android:src="@drawable/ic_arrow_back_24"
-            android:tint="@color/light_grey_color"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/break_fast_recycle_view"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/break_fast_txt"
-            tools:visibility="visible" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/break_fast_recycle_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:scrollbars="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/break_fast_txt"
-            tools:listitem="@layout/mnu_item_layout" />
-
-
-        <TextView
-            android:id="@+id/lunch_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="Lunch"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/break_fast_recycle_view" />
-
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/lunch_arrow_to_start"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/circle_shape"
-            android:backgroundTint="@color/semi_white_color"
-            android:elevation="5dp"
-            android:padding="3dp"
-            android:src="@drawable/ic_arrow_back_24"
-            android:tint="@color/light_grey_color"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/lunch_recycle_view"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lunch_txt"
-            tools:visibility="visible" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/lunch_recycle_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:scrollbars="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lunch_txt"
-            tools:listitem="@layout/mnu_item_layout" />
-
-
-        <TextView
-            android:id="@+id/dinner_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="Dinner"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lunch_recycle_view" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/dinner_recycle_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:scrollbars="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dinner_txt"
-            tools:listitem="@layout/mnu_item_layout" />
-
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/dinner_arrow_to_start"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/circle_shape"
-            android:backgroundTint="@color/semi_white_color"
-            android:elevation="5dp"
-            android:padding="3dp"
-            android:src="@drawable/ic_arrow_back_24"
-            android:tint="@color/light_grey_color"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/dinner_recycle_view"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dinner_txt"
-            tools:visibility="visible" />
-
-        <View
-            android:id="@+id/view_space"
-            android:layout_width="match_parent"
-            android:layout_height="15dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dinner_recycle_view"
-            tools:visibility="visible" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <!--</androidx.core.widget.NestedScrollView>-->
-
-
-</LinearLayout>
+    <include
+        android:id="@+id/pb_layout_include"
+        layout="@layout/progress_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</RelativeLayout>

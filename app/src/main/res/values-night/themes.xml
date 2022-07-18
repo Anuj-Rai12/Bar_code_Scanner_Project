@@ -65,5 +65,9 @@
         <item name="fontFamily">@font/roboto</item>
     </style>
 
-
+    <style name="customTabLayout" parent="Widget.Design.TabLayout">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
 </resources>
