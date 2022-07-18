@@ -4,7 +4,9 @@ import com.example.mpos.api.printbill.PrintBillApi
 import com.example.mpos.data.printbIll.PrintBillRequest
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.buildApi
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.Retrofit
 
 class PrintBillRepository(retrofit: Retrofit) {
@@ -30,6 +32,6 @@ class PrintBillRepository(retrofit: Retrofit) {
             ApisResponse.Error(null, e)
         }
         emit(data)
-    }
+    }.flowOn(IO)
 
 }

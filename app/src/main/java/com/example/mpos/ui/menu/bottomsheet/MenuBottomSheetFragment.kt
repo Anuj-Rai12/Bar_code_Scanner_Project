@@ -2,23 +2,27 @@ package com.example.mpos.ui.menu.bottomsheet
 
 
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
 import com.example.mpos.R
 import com.example.mpos.data.mnu.MnuData
+import com.example.mpos.data.mnu.response.json.MenuDataResponse
 import com.example.mpos.databinding.MnuBottomSheetFramgmentLayoutBinding
 import com.example.mpos.ui.menu.adaptor.MenuBottomSheetAdaptor
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
-import com.example.mpos.utils.getEmojiByUnicode
-import com.example.mpos.utils.hide
-import com.example.mpos.utils.show
+import com.example.mpos.ui.menu.viewmodel.BottomSheetViewModel
+import com.example.mpos.utils.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 
 
 class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFragment() {
@@ -28,6 +32,8 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
     private lateinit var breakfastAdaptor: MenuBottomSheetAdaptor
     private lateinit var lunchAdaptor: MenuBottomSheetAdaptor
     private lateinit var dinnerAdaptor: MenuBottomSheetAdaptor
+
+    private val viewModel: BottomSheetViewModel by viewModels()
 
     var onBottomSheetClickListener: OnBottomSheetClickListener? = null
 
@@ -39,11 +45,6 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         val view = View.inflate(context, R.layout.mnu_bottom_sheet_framgment_layout, null)
         binding = MnuBottomSheetFramgmentLayoutBinding.bind(view)
-        binding.nameToolbar.text = title
-        binding.breakFastTxt.text = "${getEmojiByUnicode(0x1F968)} Breakfast"
-        binding.lunchTxt.text = "${getEmojiByUnicode(0x1F355)} Lunch"
-        binding.dinnerTxt.text = "${getEmojiByUnicode(0x1F371)} Dinner"
-
         //setting layout with bottom sheet
         bottomSheet.setContentView(view)
         bottomSheetBehavior = BottomSheetBehavior.from(view.parent as View)
@@ -51,6 +52,70 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         //setting Peek at the 16:9 ratio key-line of its parent.
         bottomSheetBehavior?.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
 
+        viewModel.event.observe(this) {
+            it.getContentIfNotHandled()?.let { res ->
+                showSnackBar(res, R.color.color_red)
+                showErrorDialog(msg = res)
+            }
+        }
+
+        getMenuItem()
+
+
+        deleteResponse()
+        return bottomSheet
+    }
+
+    private fun getMenuItem() {
+        viewModel.mnuItem.observe(this) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    binding.pbLayoutInclude.root.hide()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { res ->
+                            showErrorDialog(res)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.pbLayoutInclude.root.show()
+                    binding.pbLayoutInclude.titleTxt.text = "${it.data}"
+                }
+                is ApisResponse.Success -> {
+                    binding.pbLayoutInclude.root.hide()
+                    val mnuDataLink = it.data as MenuDataResponse
+                    activity?.msg("$mnuDataLink")
+                }
+            }
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
+        binding.root.showSandbar(
+            msg,
+            length,
+            requireActivity().getColorInt(color)
+        ) {
+            return@showSandbar "OK"
+        }
+    }
+
+
+    private fun showErrorDialog(msg: String) {
+        showDialogBox("Failed", msg, icon = R.drawable.ic_error) {
+
+        }
+    }
+
+    private fun deleteResponse() {
+        binding.nameToolbar.text = title
+        binding.breakFastTxt.text = "${getEmojiByUnicode(0x1F968)} Breakfast"
+        binding.lunchTxt.text = "${getEmojiByUnicode(0x1F355)} Lunch"
+        binding.dinnerTxt.text = "${getEmojiByUnicode(0x1F371)} Dinner"
 
 
         setCallBack()
@@ -69,7 +134,6 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         binding.cancelBtn.setOnClickListener {
             dismiss()
         }
-        return bottomSheet
     }
 
     private fun onBackArrowClicked(view: View, recyclerView: RecyclerView) {

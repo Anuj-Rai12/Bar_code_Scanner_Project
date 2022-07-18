@@ -90,7 +90,12 @@ object AllStringConst {
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ValidateStoreNo"
 
         const val printBill = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:PrintPreBill"
-    }
+
+        const val categoryMenu = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CategoryMenu"
+
+
+
+}
 
 
     enum class API {
