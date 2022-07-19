@@ -74,8 +74,8 @@ class ConfirmOrderFragmentViewModel constructor(
         get() = _postLine
 
 
-    private val _printBill = MutableLiveData<ApisResponse<out String>>()
-    val printBill: LiveData<ApisResponse<out String>>
+    private val _printBill = MutableLiveData<Events<ApisResponse<out String>>>()
+    val printBill: LiveData<Events<ApisResponse<out String>>>
         get() = _printBill
 
     private val _listOfOrder = MutableLiveData<ApisResponse<out List<ItemMasterFoodItem>>>()
@@ -136,7 +136,7 @@ class ConfirmOrderFragmentViewModel constructor(
         viewModelScope.launch {
             if (app.isNetworkAvailable()) {
                 printBillRepository.getPrintBillResponse(request).collectLatest {
-                    _printBill.postValue(it)
+                    _printBill.postValue(Events(it))
                 }
             } else {
                 _event.postValue(Events(mapOf("No Internet Connection" to false)))

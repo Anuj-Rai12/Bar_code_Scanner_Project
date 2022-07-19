@@ -1,12 +1,12 @@
 package com.example.mpos.ui.menu.tabs
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.mpos.R
 import com.example.mpos.data.mnu.MenuType
+import com.example.mpos.data.mnu.response.json.ItemList
 import com.example.mpos.data.mnu.response.json.MenuDataResponse
 import com.example.mpos.data.mnu.response.json.SubMenu
 import com.example.mpos.databinding.MenuFragmentLayoutBinding
@@ -14,7 +14,6 @@ import com.example.mpos.ui.menu.adaptor.MenuBottomSheetAdaptor
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.example.mpos.ui.menu.viewmodel.BottomSheetViewModel
 import com.example.mpos.utils.getColorInt
-import com.example.mpos.utils.msg
 import com.example.mpos.utils.showSandbar
 import com.google.android.material.snackbar.Snackbar
 
@@ -31,7 +30,7 @@ class MnuTabFragment constructor(private val title: String) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = MenuFragmentLayoutBinding.bind(view)
-        mnuItem = (parentFragment as MenuBottomSheetFragment).getMnuResponse()
+        mnuItem = (parentFragment as MenuBottomSheetFragment?)?.getMnuResponse()
 
         viewModel.event.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { res ->
@@ -61,9 +60,7 @@ class MnuTabFragment constructor(private val title: String) :
                         viewModel.getFoodItem(subMenu)
                     }
                     MenuType.ItemList -> {
-                        //Send Response
-                        Log.i("MNU", "setRecycleAdaptor: $it")
-                        activity?.msg("$it")
+                        (parentFragment as MenuBottomSheetFragment?)?.getItem(it.data as ItemList?)
                     }
                 }
             }

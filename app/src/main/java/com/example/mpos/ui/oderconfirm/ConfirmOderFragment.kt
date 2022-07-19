@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.R
+import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
 import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.cofirmDining.response.ConfirmDiningSuccessResponse
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.example.mpos.data.confirmOrder.response.ConfirmOrderSuccessResponse
+import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.data.printbIll.PrintBillRequest
 import com.example.mpos.data.printbIll.PrintBillRequestBody
 import com.example.mpos.databinding.ConfirmOrderLayoutBinding
@@ -29,6 +31,7 @@ import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
 import com.example.mpos.ui.oderconfirm.orderhistory.showDialogForOrderHistory
 import com.example.mpos.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
+import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.use_case.AlphaNumericString
@@ -89,9 +92,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             mnuBottom.onBottomSheetClickListener = this
             mnuBottom.show(parentFragmentManager, MenuBottomSheetFragment.NAME)
         }
-
-
-        viewModel.getOrderList(args.list)
+        setInitialValue()
         getData()
         getConfirmOrderResponse()
         getPosItemRequest()
@@ -155,7 +156,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     viewModel
                 ) {
                     viewModel.getGrandTotal(arrItem)
-                    this.viewModel.fetchPrintResponse(PrintBillRequest(PrintBillRequestBody(args.tbl.receiptNo)))
+                    viewModel.fetchPrintResponse(PrintBillRequest(PrintBillRequestBody(args.tbl.receiptNo)))
                     isOrderIsVisible = false
                 }
             }
@@ -171,28 +172,48 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
     }
 
+    private fun setInitialValue() {
+        val list = mutableListOf<ItemMasterFoodItem>()
+        if (args.list != null) {
+            if (arrItem.isNotEmpty()) {
+                if (!args.list?.foodList?.containsAll(arrItem)!!) {
+                    list.addAll(arrItem)
+                }
+            }
+            list.addAll(args.list?.foodList!!)
+            viewModel.getOrderList(FoodItemList(list))
+        } else if (args.list == null && arrItem.isNotEmpty()) {
+            list.addAll(arrItem)
+            viewModel.getOrderList(FoodItemList(list))
+        } else if (args.list == null && list.isEmpty()) {
+            viewModel.getOrderList(null)
+        }
+    }
+
     private fun showPrintResponse() {
-        viewModel.printBill.observe(viewLifecycleOwner) {
-            when (it) {
-                is ApisResponse.Error -> {
-                    binding.pbLayout.root.hide()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { res ->
-                            showErrorDialog(res)
+        viewModel.printBill.observe(viewLifecycleOwner) { ev ->
+            ev.getContentIfNotHandled()?.let {
+                when (it) {
+                    is ApisResponse.Error -> {
+                        binding.pbLayout.root.hide()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { res ->
+                                showErrorDialog(res)
+                            }
+                        } else {
+                            showErrorDialog(it.data)
                         }
-                    } else {
-                        showErrorDialog(it.data)
                     }
-                }
-                is ApisResponse.Loading -> {
-                    binding.pbLayout.root.show()
-                }
-                is ApisResponse.Success -> {
-                    binding.pbLayout.root.hide()
-                    if (it.data?.startsWith("01")!!) {
-                        activity?.msg("success", Toast.LENGTH_LONG)
-                    } else {
-                        activity?.msg("failed ${it.data}", Toast.LENGTH_LONG)
+                    is ApisResponse.Loading -> {
+                        binding.pbLayout.root.show()
+                    }
+                    is ApisResponse.Success -> {
+                        binding.pbLayout.root.hide()
+                        if (it.data?.startsWith("01")!!) {
+                            activity?.msg("order Printed", Toast.LENGTH_LONG)
+                        } else {
+                            activity?.msg("failed ${it.data}", Toast.LENGTH_LONG)
+                        }
                     }
                 }
             }
@@ -272,6 +293,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     private fun setUpRecycleAdaptor(data: List<ItemMasterFoodItem>) {
         binding.orderRecycleViewHint.hide()
         binding.listOfItemRecycleView.show()
+        Log.i(TAG, "setUpRecycleAdaptor:  is Data empty ? ${data.isEmpty()}")
         confirmOderFragmentAdaptor.notifyDataSetChanged()
         confirmOderFragmentAdaptor.submitList(data)
     }
@@ -552,6 +574,27 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     }
 
     override fun <T> onItemClicked(response: T) {
+        val barcode = response as BarcodeJsonResponse
+        Log.i(TAG, "onItemClicked: $response")
         activity?.msg("$response")
+        val itemMaster = ItemMaster(
+            barcode = barcode.barcode,
+            id = 0,
+            itemCategory = barcode.itemCategory,
+            salePrice = barcode.salePrice,
+            itemDescription = barcode.itemDescription,
+            itemCode = barcode.itemCode,
+            itemName = barcode.itemName,
+            uOM = barcode.uOM
+        )
+        itemMaster.foodQty = barcode.qty
+        itemMaster.foodAmt =
+            ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty
+        val mutableList = mutableListOf<ItemMasterFoodItem>()
+        if (arrItem.isNotEmpty()) {
+            mutableList.addAll(arrItem)
+        }
+        mutableList.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
+        viewModel.getOrderList(FoodItemList(mutableList))
     }
 }
