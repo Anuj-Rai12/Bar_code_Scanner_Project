@@ -576,7 +576,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     override fun <T> onItemClicked(response: T) {
         val barcode = response as BarcodeJsonResponse
         Log.i(TAG, "onItemClicked: $response")
-        activity?.msg("$response")
         val itemMaster = ItemMaster(
             barcode = barcode.barcode,
             id = 0,

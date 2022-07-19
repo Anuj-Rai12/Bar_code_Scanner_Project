@@ -13,8 +13,7 @@ import com.example.mpos.databinding.MenuFragmentLayoutBinding
 import com.example.mpos.ui.menu.adaptor.MenuBottomSheetAdaptor
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.example.mpos.ui.menu.viewmodel.BottomSheetViewModel
-import com.example.mpos.utils.getColorInt
-import com.example.mpos.utils.showSandbar
+import com.example.mpos.utils.*
 import com.google.android.material.snackbar.Snackbar
 
 class MnuTabFragment constructor(private val title: String) :
@@ -31,7 +30,7 @@ class MnuTabFragment constructor(private val title: String) :
         super.onViewCreated(view, savedInstanceState)
         binding = MenuFragmentLayoutBinding.bind(view)
         mnuItem = (parentFragment as MenuBottomSheetFragment?)?.getMnuResponse()
-
+        binding.noDataFound.text = "${getEmojiByUnicode(0x1F615)} No Data Found!!"
         viewModel.event.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { res ->
                 showSnackBar(res, R.color.color_red)
@@ -71,6 +70,11 @@ class MnuTabFragment constructor(private val title: String) :
     private fun getFoodSubMenuItem() {
         viewModel.foodItemMnu.observe(viewLifecycleOwner) {
             if (it != null) {
+                if (it.isNotEmpty()) {
+                    binding.noDataFound.hide()
+                }else{
+                    binding.noDataFound.show()
+                }
                 adaptor.notifyDataSetChanged()
                 adaptor.submitList(it)
             }
