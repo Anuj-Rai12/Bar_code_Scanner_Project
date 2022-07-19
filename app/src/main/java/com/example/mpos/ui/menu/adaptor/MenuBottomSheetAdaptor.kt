@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.data.mnu.MnuData
 import com.example.mpos.databinding.MnuItemLayoutBinding
 
-typealias mnuItemClicked = (data: MnuData) -> Unit
+typealias mnuItemClicked = (data: MnuData<out Any>) -> Unit
 
 class MenuBottomSheetAdaptor(private val itemClicked: mnuItemClicked) :
-    ListAdapter<MnuData, MenuBottomSheetAdaptor.MnuItemViewHolder>(diffUtil) {
+    ListAdapter<MnuData<out Any>, MenuBottomSheetAdaptor.MnuItemViewHolder>(diffUtil) {
     inner class MnuItemViewHolder(private val binding: MnuItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun setData(data: MnuData, itemClicked: mnuItemClicked) {
+        fun setData(data: MnuData<out Any>, itemClicked: mnuItemClicked) {
             binding.menuTitle.text = data.title
             binding.root.setOnClickListener {
                 itemClicked.invoke(data)
@@ -23,16 +23,20 @@ class MenuBottomSheetAdaptor(private val itemClicked: mnuItemClicked) :
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<MnuData>() {
+        val diffUtil = object : DiffUtil.ItemCallback<MnuData<out Any>>() {
             override fun areItemsTheSame(
-                oldItem: MnuData,
-                newItem: MnuData
-            ) = oldItem.id == newItem.id
+                oldItem: MnuData<out Any>,
+                newItem: MnuData<out Any>
+            ): Boolean {
+                return oldItem.id == newItem.id
+            }
 
             override fun areContentsTheSame(
-                oldItem: MnuData,
-                newItem: MnuData
-            ) = oldItem == newItem
+                oldItem: MnuData<out Any>,
+                newItem: MnuData<out Any>
+            ): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 

@@ -7,47 +7,20 @@
     android:background="@color/semi_white_color"
     tools:context="com.example.mpos.ui.menu.tabs.MnuTabFragment">
 
-    <TextView
-        android:id="@+id/food_path_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:scrollbars="horizontal"
-        android:scrollbarThumbHorizontal="@color/light_grey_color"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="15dp"
-        android:singleLine="true"
-        android:layout_marginEnd="15dp"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        tools:text="hello/ok/23/gfddfhkj ghfghklkl ghjkfghl fghkjfghkgfk gjhfklhjkslksdgl ksawporwp o" />
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/item_recycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/food_path_view"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:overScrollMode="ifContentScrolls"
         android:scrollbarThumbVertical="@color/light_grey_color"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
+        app:spanCount="2"
         tools:listitem="@layout/mnu_item_layout" />
-
-
-    <include
-        android:id="@+id/pb_layout_include"
-        layout="@layout/progress_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        tools:visibility="visible" />
 
 
 </RelativeLayout>

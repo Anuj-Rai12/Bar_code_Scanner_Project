@@ -4,20 +4,84 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.mpos.R
+import com.example.mpos.data.mnu.MenuType
+import com.example.mpos.data.mnu.response.json.MenuDataResponse
+import com.example.mpos.data.mnu.response.json.SubMenu
 import com.example.mpos.databinding.MenuFragmentLayoutBinding
+import com.example.mpos.ui.menu.adaptor.MenuBottomSheetAdaptor
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
-import com.example.mpos.utils.TAG
+import com.example.mpos.ui.menu.viewmodel.BottomSheetViewModel
+import com.example.mpos.utils.getColorInt
+import com.example.mpos.utils.msg
+import com.example.mpos.utils.showSandbar
+import com.google.android.material.snackbar.Snackbar
 
 class MnuTabFragment constructor(private val title: String) :
     Fragment(R.layout.menu_fragment_layout) {
 
     private lateinit var binding: MenuFragmentLayoutBinding
+ //   private var enumTitle = MenuType.SubMenu.name
+    private var mnuItem: MenuDataResponse? = null
+    private val viewModel: BottomSheetViewModel by viewModels()
+    private lateinit var adaptor: MenuBottomSheetAdaptor
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = MenuFragmentLayoutBinding.bind(view)
-        val op = (parentFragment as MenuBottomSheetFragment).getMnuResponse()
-        Log.i(TAG, "onViewCreated: $op")
+        mnuItem = (parentFragment as MenuBottomSheetFragment).getMnuResponse()
+
+        viewModel.event.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { res ->
+                showSnackBar(res, R.color.color_red)
+            }
+        }
+        viewModel.getFoodSubMenuItem(mnuItem, title)
+
+        setRecycleAdaptor()
+        getFoodSubMenuItem()
     }
+
+    private fun setRecycleAdaptor() {
+        binding.itemRecycle.apply {
+            setHasFixedSize(true)
+            this@MnuTabFragment.adaptor = MenuBottomSheetAdaptor {
+                when (MenuType.valueOf(it.type)) {
+                    MenuType.SubMenu -> {
+                        val subMenu = it.data as SubMenu
+                        viewModel.getFoodItem(subMenu)
+                    }
+                    MenuType.ItemList -> {
+                        //Send Response
+                        Log.i("MNU", "setRecycleAdaptor: $it")
+                        activity?.msg("$it")
+                    }
+                }
+            }
+            adapter = this@MnuTabFragment.adaptor
+        }
+    }
+
+    private fun getFoodSubMenuItem() {
+        viewModel.foodItemMnu.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                adaptor.notifyDataSetChanged()
+                adaptor.submitList(it)
+            }
+        }
+    }
+
+
+    private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
+        binding.root.showSandbar(
+            msg,
+            length,
+            requireActivity().getColorInt(color)
+        ) {
+            return@showSandbar "OK"
+        }
+    }
+
+
 }
