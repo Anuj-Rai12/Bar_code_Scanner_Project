@@ -140,14 +140,16 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
             viewModelScope.launch {
                 val def = async(IO) {
                     food.subMenu.forEachIndexed { index, subMenu ->
-                        arr.add(
-                            MnuData(
-                                index,
-                                subMenu.parameter ?: "Unknown Food",
-                                MenuType.SubMenu.name,
-                                subMenu
+                        subMenu.parameter?.let {
+                            arr.add(
+                                MnuData(
+                                    index,
+                                    subMenu.parameter,
+                                    MenuType.SubMenu.name,
+                                    subMenu
+                                )
                             )
-                        )
+                        }
                     }
                     arr
                 }
@@ -167,7 +169,9 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             val def = async(IO) {
                 subMenu.itemList.forEachIndexed { index, itemList ->
-                    arr.add(MnuData(index, itemList.description, MenuType.ItemList.name, itemList))
+                    if (!checkFieldValue(itemList.description)) {
+                        arr.add(MnuData(index, itemList.description, MenuType.ItemList.name, itemList))
+                    }
                 }
                 arr
             }

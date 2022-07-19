@@ -48,6 +48,10 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     /*implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
     implementation 'com.google.firebase:firebase-analytics:21.0.0'*/
+
+    //swipe able refresh view
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

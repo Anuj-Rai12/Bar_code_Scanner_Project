@@ -22,7 +22,8 @@ class MnuTabFragment constructor(private val title: String) :
     Fragment(R.layout.menu_fragment_layout) {
 
     private lateinit var binding: MenuFragmentLayoutBinding
- //   private var enumTitle = MenuType.SubMenu.name
+
+    //   private var enumTitle = MenuType.SubMenu.name
     private var mnuItem: MenuDataResponse? = null
     private val viewModel: BottomSheetViewModel by viewModels()
     private lateinit var adaptor: MenuBottomSheetAdaptor
@@ -41,6 +42,13 @@ class MnuTabFragment constructor(private val title: String) :
 
         setRecycleAdaptor()
         getFoodSubMenuItem()
+
+        binding.root.setOnRefreshListener {
+            if (binding.root.isRefreshing) {
+                viewModel.getFoodSubMenuItem(mnuItem, title)
+                binding.root.isRefreshing = false
+            }
+        }
     }
 
     private fun setRecycleAdaptor() {
@@ -65,7 +73,7 @@ class MnuTabFragment constructor(private val title: String) :
 
     private fun getFoodSubMenuItem() {
         viewModel.foodItemMnu.observe(viewLifecycleOwner) {
-            if (!it.isNullOrEmpty()) {
+            if (it != null) {
                 adaptor.notifyDataSetChanged()
                 adaptor.submitList(it)
             }
