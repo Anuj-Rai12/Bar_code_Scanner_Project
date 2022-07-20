@@ -26,6 +26,7 @@
     <string name="oder_confirm_btn">Confirm Order</string>
     <string name="oder_reset">Reset All</string>
     <string name="oder_del">Order History</string>
+    <string name="print_order">Print Order</string>
     <string name="oder_view">View Deals</string>
     <string name="total_sum">Grand Total</string>
 
