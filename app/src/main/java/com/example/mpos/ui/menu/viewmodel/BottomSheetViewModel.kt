@@ -140,11 +140,11 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
             viewModelScope.launch {
                 val def = async(IO) {
                     food.subMenu.forEachIndexed { index, subMenu ->
-                        subMenu.parameter?.let {
+                        subMenu.description?.let {
                             arr.add(
                                 MnuData(
                                     index,
-                                    subMenu.parameter,
+                                    subMenu.description,
                                     MenuType.SubMenu.name,
                                     subMenu
                                 )
