@@ -166,7 +166,6 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
                         binding.pbLayoutInclude.root.hide()
                         (it.data as BarcodeJsonResponse?)?.let { res ->
                             onBottomSheetClickListener?.onItemClicked(res)
-                            dismiss()
                         } ?: showDialogBox(
                             "Failed!!",
                             "Some thing Went Wrong",

@@ -139,19 +139,23 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
         } else {
             viewModelScope.launch {
                 val def = async(IO) {
-                    food.subMenu.forEachIndexed { index, subMenu ->
-                        subMenu.description?.let {
-                            arr.add(
-                                MnuData(
-                                    index,
-                                    subMenu.description,
-                                    MenuType.SubMenu.name,
-                                    subMenu
+                    return@async try {
+                        food.subMenu.forEachIndexed { index, subMenu ->
+                            subMenu.description?.let { desc ->
+                                arr.add(
+                                    MnuData(
+                                        index,
+                                        desc,
+                                        MenuType.SubMenu.name,
+                                        subMenu
+                                    )
                                 )
-                            )
+                            }
                         }
+                        arr
+                    } catch (e: Exception) {
+                        arr
                     }
-                    arr
                 }
                 _foodItemMnu.postValue(def.await())
             }
@@ -170,7 +174,14 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
             val def = async(IO) {
                 subMenu.itemList.forEachIndexed { index, itemList ->
                     if (!checkFieldValue(itemList.description)) {
-                        arr.add(MnuData(index, itemList.description, MenuType.ItemList.name, itemList))
+                        arr.add(
+                            MnuData(
+                                index,
+                                itemList.description,
+                                MenuType.ItemList.name,
+                                itemList
+                            )
+                        )
                     }
                 }
                 arr
