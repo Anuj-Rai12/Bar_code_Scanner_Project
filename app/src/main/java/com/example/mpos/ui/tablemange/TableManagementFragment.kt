@@ -1,11 +1,9 @@
 package com.example.mpos.ui.tablemange
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +26,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
     private val args: TableManagementFragmentArgs by navArgs()
     private val viewModel: TableManagementViewModel by viewModels()
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
@@ -50,7 +48,6 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun setUpData() {
         viewModel.tblInfo.observe(viewLifecycleOwner) {
             when (it) {
