@@ -7,17 +7,20 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.data.mnu.MnuData
 import com.example.mpos.databinding.MnuItemLayoutBinding
+import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 
-typealias mnuItemClicked = (data: MnuData<out Any>) -> Unit
-
-class MenuBottomSheetAdaptor(private val itemClicked: mnuItemClicked) :
+class MenuBottomSheetAdaptor :
     ListAdapter<MnuData<out Any>, MenuBottomSheetAdaptor.MnuItemViewHolder>(diffUtil) {
+
+    var listener: OnBottomSheetClickListener? = null
+
     inner class MnuItemViewHolder(private val binding: MnuItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun setData(data: MnuData<out Any>, itemClicked: mnuItemClicked) {
+        fun setData(data: MnuData<out Any>) {
             binding.menuTitle.text = data.title
             binding.root.setOnClickListener {
-                itemClicked.invoke(data)
+                listener?.onItemClicked(data)
+                //itemClicked.invoke(data)
             }
         }
     }
@@ -49,7 +52,7 @@ class MenuBottomSheetAdaptor(private val itemClicked: mnuItemClicked) :
     override fun onBindViewHolder(holder: MnuItemViewHolder, position: Int) {
         val currItem = getItem(position)
         currItem?.let {
-            holder.setData(it, itemClicked)
+            holder.setData(it)
         }
     }
 

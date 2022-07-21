@@ -6,18 +6,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.mpos.R
 import com.example.mpos.data.mnu.MenuType
+import com.example.mpos.data.mnu.MnuData
 import com.example.mpos.data.mnu.response.json.ItemList
 import com.example.mpos.data.mnu.response.json.MenuDataResponse
 import com.example.mpos.data.mnu.response.json.SubMenu
 import com.example.mpos.databinding.MenuFragmentLayoutBinding
 import com.example.mpos.ui.menu.adaptor.MenuBottomSheetAdaptor
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
+import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.menu.viewmodel.BottomSheetViewModel
 import com.example.mpos.utils.*
 import com.google.android.material.snackbar.Snackbar
 
 class MnuTabFragment constructor(private val title: String) :
-    Fragment(R.layout.menu_fragment_layout) {
+    Fragment(R.layout.menu_fragment_layout), OnBottomSheetClickListener {
 
     private lateinit var binding: MenuFragmentLayoutBinding
 
@@ -52,35 +54,48 @@ class MnuTabFragment constructor(private val title: String) :
     private fun setRecycleAdaptor() {
         binding.itemRecycle.apply {
             setHasFixedSize(true)
-            this@MnuTabFragment.adaptor = MenuBottomSheetAdaptor {
-                when (MenuType.valueOf(it.type)) {
-                    MenuType.SubMenu -> {
-                        val subMenu = it.data as SubMenu
-                        viewModel.getFoodItem(subMenu)
-                    }
-                    MenuType.ItemList -> {
-                        (parentFragment as MenuBottomSheetFragment?)?.getItem(it.data as ItemList?)
-                    }
-                }
-            }
+            this@MnuTabFragment.adaptor = MenuBottomSheetAdaptor()
+            this@MnuTabFragment.adaptor.listener = this@MnuTabFragment
             adapter = this@MnuTabFragment.adaptor
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun getFoodSubMenuItem() {
         viewModel.foodItemMnu.observe(viewLifecycleOwner) {
-            if (it != null) {
-                if (it.isNotEmpty()) {
-                    binding.noDataFound.hide()
-                }else{
-                    binding.noDataFound.show()
+            when (it) {
+                is ApisResponse.Error -> {
+                    if (it.data != null) {
+                        hideRecycle("${it.data}")
+                    } else {
+                        hideRecycle("")
+                        it.exception?.localizedMessage?.let { err ->
+                            showDialogBox("Failed", err, icon = R.drawable.ic_error) {}
+                        }
+                    }
                 }
-                adaptor.notifyDataSetChanged()
-                adaptor.submitList(it)
+                is ApisResponse.Loading -> {
+                    hideRecycle("${it.data}")
+                }
+                is ApisResponse.Success -> {
+                    showRecycle()
+                    adaptor.notifyDataSetChanged()
+                    adaptor.submitList(it.data as List<MnuData<out Any>>)
+                }
             }
         }
     }
 
+    private fun hideRecycle(txt: String) {
+        binding.itemRecycle.hide()
+        binding.noDataFound.show()
+        binding.noDataFound.text = txt
+    }
+
+    private fun showRecycle() {
+        binding.itemRecycle.show()
+        binding.noDataFound.hide()
+    }
 
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
         binding.root.showSandbar(
@@ -89,6 +104,19 @@ class MnuTabFragment constructor(private val title: String) :
             requireActivity().getColorInt(color)
         ) {
             return@showSandbar "OK"
+        }
+    }
+
+    override fun <T> onItemClicked(response: T) {
+        val it= response as MnuData<*>
+        when (MenuType.valueOf(it.type)) {
+            MenuType.SubMenu -> {
+                val subMenu = it.data as SubMenu
+                viewModel.getFoodItem(subMenu)
+            }
+            MenuType.ItemList -> {
+                (parentFragment as MenuBottomSheetFragment?)?.getItem(it.data as ItemList?)
+            }
         }
     }
 

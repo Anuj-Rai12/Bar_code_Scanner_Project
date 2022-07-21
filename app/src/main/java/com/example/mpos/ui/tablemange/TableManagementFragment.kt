@@ -79,6 +79,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun displayData(data: Any?) {
         data?.let { cls ->
             (cls as List<TableDetail>).let { res ->

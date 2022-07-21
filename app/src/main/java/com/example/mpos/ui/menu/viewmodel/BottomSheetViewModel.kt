@@ -5,11 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.mpos.data.mnu.MenuType
-import com.example.mpos.data.mnu.MnuData
 import com.example.mpos.data.mnu.request.MenuItemRequest
 import com.example.mpos.data.mnu.request.MenuItemRequestBody
-import com.example.mpos.data.mnu.response.json.ItemList
 import com.example.mpos.data.mnu.response.json.MenuDataResponse
 import com.example.mpos.data.mnu.response.json.SubMenu
 import com.example.mpos.dataStore.UserSoredData
@@ -48,8 +45,8 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
         get() = _mnuTab
 
 
-    private val _foodItemMnu = MutableLiveData<List<MnuData<out Any>>>()
-    val foodItemMnu: LiveData<List<MnuData<out Any>>>
+    private val _foodItemMnu = MutableLiveData<ApisResponse<out Any>>()
+    val foodItemMnu: LiveData<ApisResponse<out Any>>
         get() = _foodItemMnu
 
 
@@ -122,73 +119,40 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-
+    private val err = MenuRepository.err_emoji
     fun getFoodSubMenuItem(mnuData: MenuDataResponse?, foodItem: String) {
         if (mnuData == null) {
             _event.postValue(Events("Something Went Wrong!!"))
             return
         }
-        val arr = mutableListOf<MnuData<SubMenu>>()
         val food = mnuData.find {
             val title = it.description[0].uppercaseChar() + it.description.substring(1)
                 .lowercase(Locale.getDefault())
             title == foodItem
         }
         if (food == null || food.subMenu.isEmpty()) {
-            _foodItemMnu.postValue(arr)
-        } else {
-            viewModelScope.launch {
-                val def = async(IO) {
-                    return@async try {
-                        food.subMenu.forEachIndexed { index, subMenu ->
-                            subMenu.description?.let { desc ->
-                                arr.add(
-                                    MnuData(
-                                        index,
-                                        desc,
-                                        MenuType.SubMenu.name,
-                                        subMenu
-                                    )
-                                )
-                            }
-                        }
-                        arr
-                    } catch (e: Exception) {
-                        arr
-                    }
-                }
-                _foodItemMnu.postValue(def.await())
+            _foodItemMnu.postValue(ApisResponse.Error(err, null))
+            return
+        }
+
+        viewModelScope.launch {
+            mnuRepository.getSubMenuList(food).collectLatest {
+                _foodItemMnu.postValue(it)
             }
         }
     }
 
 
     fun getFoodItem(subMenu: SubMenu) {
-        val arr = mutableListOf<MnuData<ItemList>>()
         if (subMenu.itemList.isNullOrEmpty()) {
-            _foodItemMnu.postValue(arr)
+            _foodItemMnu.postValue(ApisResponse.Error(err, null))
             return
         }
-
         viewModelScope.launch {
-            val def = async(IO) {
-                subMenu.itemList.forEachIndexed { index, itemList ->
-                    if (!checkFieldValue(itemList.description)) {
-                        arr.add(
-                            MnuData(
-                                index,
-                                itemList.description,
-                                MenuType.ItemList.name,
-                                itemList
-                            )
-                        )
-                    }
-                }
-                arr
+            mnuRepository.getLoadItemData(subMenu).collectLatest {
+                _foodItemMnu.postValue(it)
             }
-            _foodItemMnu.postValue(def.await())
         }
-
     }
 
 
