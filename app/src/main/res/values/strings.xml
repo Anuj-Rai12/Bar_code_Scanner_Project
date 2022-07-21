@@ -15,6 +15,7 @@
     <string name="btn_setting">Log Out</string>
     <string name="item_table">Table Management</string>
     <string name="item_cost">Cost Estimate</string>
+    <string name="item_cost_estimate">Estimation</string>
     <string name="open_table">Open</string>
 
     <string name="oder_desc">Description</string>

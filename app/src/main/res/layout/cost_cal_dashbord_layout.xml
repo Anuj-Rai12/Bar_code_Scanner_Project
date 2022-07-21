@@ -32,7 +32,7 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:fontFamily="@font/roboto_medium"
-        android:text="@string/item_table"
+        android:text="@string/item_cost_estimate"
         android:textColor="@color/light_grey_color"
         android:textSize="22sp"
         app:layout_constraintLeft_toRightOf="@id/food_mnu_btn"
@@ -50,43 +50,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logofile" />
 
-    <LinearLayout
-        android:id="@+id/tbl_detail_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="@id/food_mnu_btn"
-        app:layout_constraintRight_toRightOf="@id/logo_file_id4"
-        app:layout_constraintTop_toBottomOf="@id/table_Id_2">
 
-        <TextView
-            android:id="@+id/tbl_num_txt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_medium"
-            android:maxLines="2"
-            android:textColor="@color/light_grey_color"
-            android:textSize="18sp"
-            tools:text="@string/sample_tbl_num" />
-
-
-        <TextView
-            android:id="@+id/order_booking_time_txt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_medium"
-            android:gravity="center"
-            android:maxLines="2"
-            android:textColor="@color/light_grey_color"
-            android:textSize="18sp"
-            tools:text="@string/sample_tbl_time" />
-
-    </LinearLayout>
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -101,7 +65,7 @@
         android:drawablePadding="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/qr_code_scan"
-        app:layout_constraintTop_toBottomOf="@id/tbl_detail_layout" />
+        app:layout_constraintTop_toBottomOf="@id/food_mnu_btn" />
 
     <ImageButton
         android:id="@+id/qr_code_scan"
@@ -122,7 +86,7 @@
         android:id="@+id/dsc_item_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="26dp"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="@id/search_box_txt"
         app:layout_constraintRight_toRightOf="@id/qr_code_scan"
@@ -188,6 +152,7 @@
         android:fontFamily="@font/roboto_medium"
         android:minHeight="33dp"
         android:paddingStart="15dp"
+        android:paddingEnd="0dp"
         android:paddingTop="8dp"
         android:paddingBottom="9dp"
         android:text="@string/oder_hint"
@@ -251,16 +216,17 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/info_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="@android:color/transparent"
         android:elevation="10dp"
         android:src="@drawable/ic_info"
+        app:layout_constraintHorizontal_bias=".5"
+        app:layout_constraintLeft_toRightOf="@id/confirm_order_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/confirm_order_btn"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0" />
 
 
     <androidx.appcompat.widget.AppCompatButton
@@ -289,6 +255,7 @@
         android:layout_marginStart="9dp"
         android:layout_marginBottom="22dp"
         android:layout_weight="1"
+        android:visibility="gone"
         android:background="@drawable/modify_order_btn_border"
         android:fontFamily="@font/roboto_medium"
         android:text="@string/print_order"

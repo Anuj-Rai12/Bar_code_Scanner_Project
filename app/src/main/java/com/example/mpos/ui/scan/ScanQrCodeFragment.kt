@@ -226,7 +226,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
 
     private fun sendData(first: Barcode) {
         activity?.msg("Qr Code Detected")
-        if (args.tbl != null) {
+        if (args.item == Url_Text) {
             first.rawValue?.let {
                 viewModel.checkForItemItem(it)
             } ?: activity?.msg("Oops SomeThing Went Wrong")
@@ -284,12 +284,18 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                     ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty
                 Log.i("QR", "sendData: $itemMaster")
                 arr.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
-                val action =
+                val action = if (args.tbl != null) {
                     ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
                         FoodItemList(arr),
                         args.tbl!!,
                         args.confirmreq
                     )
+                } else {
+                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToCostDashBoardFragment(
+                        FoodItemList(arr),
+                        args.confirmreq
+                    )
+                }
                 findNavController().navigate(action)
             }
         }
