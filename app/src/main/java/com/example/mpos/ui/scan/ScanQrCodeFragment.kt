@@ -2,13 +2,11 @@ package com.example.mpos.ui.scan
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
@@ -70,7 +68,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.black)
@@ -248,7 +246,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     private fun showSnackBar(msg: String, length: Int = Snackbar.LENGTH_INDEFINITE) {
         binding.root.showSandbar(
             msg,

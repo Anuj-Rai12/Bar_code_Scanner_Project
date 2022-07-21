@@ -149,6 +149,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
 
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun displayData(data: Any?) {
         data?.let { item ->
             (item as List<ItemMaster>).let { res ->
