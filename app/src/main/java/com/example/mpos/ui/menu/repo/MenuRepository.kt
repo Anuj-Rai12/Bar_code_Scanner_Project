@@ -85,6 +85,7 @@ class MenuRepository constructor(retrofit: Retrofit) {
                     )
                 }
             }
+            arr.sortBy { it.title }
             ApisResponse.Success(arr)
         } catch (e: Exception) {
             ApisResponse.Error(null, e)

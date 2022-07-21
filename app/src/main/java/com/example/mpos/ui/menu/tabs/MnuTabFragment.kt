@@ -81,6 +81,7 @@ class MnuTabFragment constructor(private val title: String) :
                     showRecycle()
                     adaptor.notifyDataSetChanged()
                     adaptor.submitList(it.data as List<MnuData<out Any>>)
+                    binding.itemRecycle.smoothScrollToPosition(0)
                 }
             }
         }
