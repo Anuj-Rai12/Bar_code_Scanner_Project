@@ -3,6 +3,7 @@ package com.example.mpos.ui.tablemange.adaptor
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -45,8 +46,14 @@ class TableManagementAdaptor(private val itemClicked: ItemTableClick) :
                         tblEmpty.hide()
                         tblReserved.hide()
                         tblOccupiedLayout.show()
+                        if (tableData.billPrinted.equals("No",true)) {
+                            occupiedTblPrint.hide()
+                            occupiedTblMany.layoutParams = LinearLayout.LayoutParams(
+                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT, 0.0f
+                            )
+                        }
                         occupiedTblMany.text = tableData.guestNumber
-                        occupiedTblTime.text = ">${tableData.guestNumber}h"
                     }
                 }
                 root.setOnClickListener {

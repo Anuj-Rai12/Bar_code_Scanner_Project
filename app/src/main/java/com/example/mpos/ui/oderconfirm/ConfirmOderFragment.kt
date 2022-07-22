@@ -210,7 +210,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     is ApisResponse.Success -> {
                         binding.pbLayout.root.hide()
                         if (it.data?.startsWith("01")!!) {
-                            activity?.msg("order Printed", Toast.LENGTH_LONG)
+                            activity?.msg("order Printed ${getEmojiByUnicode(0x1F5A8)}", Toast.LENGTH_LONG)
+                            findNavController().popBackStack()
                         } else {
                             activity?.msg("failed ${it.data}", Toast.LENGTH_LONG)
                         }

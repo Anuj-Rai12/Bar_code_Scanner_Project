@@ -119,9 +119,19 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
             setHasFixedSize(true)
             tableManagementAdaptor = TableManagementAdaptor { res ->
                 Log.i(TAG, "setRecycleView: $res")
-                val action = TableManagementFragmentDirections
-                    .actionTableManagementFragmentToConfirmOderFragment(null, res, null)
-                findNavController().navigate(action)
+                if (res.billPrinted.equals("No", true)) {
+                    val action = TableManagementFragmentDirections
+                        .actionTableManagementFragmentToConfirmOderFragment(null, res, null)
+                    findNavController().navigate(action)
+                } else {
+                    lifecycleScope.launchWhenResumed {
+                        showDialogBox(
+                            "Cannot Access",
+                            "Not Allowed to take order in this Table, because table bill is all ready Printed ${getEmojiByUnicode(0x1F5A8)}\n" +
+                                    "Try again when table is open"
+                        ) {}
+                    }
+                }
             }
             adapter = tableManagementAdaptor
         }
