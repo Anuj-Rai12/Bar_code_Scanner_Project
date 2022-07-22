@@ -41,10 +41,10 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: CostDashBoardFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
-    private var receiptNo: String? = null
+    //private var receiptNo: String? = null
     private var customDiningRequest: ConfirmDiningRequest? = null
-    private var isCustomerDiningRequestVisible: Boolean = true
-    private var isOrderIsVisible = false
+   // private var isCustomerDiningRequestVisible: Boolean = true
+    //private var isOrderIsVisible = false
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -189,9 +189,30 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         viewModel.getOrderItem(it)
                 }, itemClickListerForUpdate = { res ->
                     updateQtyDialogBox(res)
+                }, itemClickInstructionLinter = { res ->
+                    updateFreeTxt(res)
                 })
             adapter = confirmOderFragmentAdaptor
         }
+    }
+
+    private fun updateFreeTxt(itemMasterFoodItem: ItemMasterFoodItem) {
+        showQtyDialog(
+            true,
+            itemMasterFoodItem.itemMaster,
+            type = "Instruction",
+            value = itemMasterFoodItem.free_txt,
+            cancel = {},
+            res = {},
+            instruction = { free_txt ->
+                val it = itemMasterFoodItem.itemMaster
+                val food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt)
+                Log.i(TAG, "updateQtyDialogBox: $food")
+                viewModel.addUpdateQty(
+                    food = food,
+                    itemRemoved = itemMasterFoodItem
+                )
+            })
     }
 
     private fun setCallBack() {
@@ -276,19 +297,19 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         itemTouchHelper.attachToRecyclerView(binding.listOfItemRecycleView)
     }
 
-    /*private fun oopsSomeThingWentWrong() {
-        showSnackBar(msg = "Oops Something Went Wrong..", color = R.color.color_red)
-    }
+/*private fun oopsSomeThingWentWrong() {
+    showSnackBar(msg = "Oops Something Went Wrong..", color = R.color.color_red)
+}
 
-    private fun confirmDinningOrder(confirmDiningRequest: ConfirmDiningRequest) {
-        Log.i("confirmDinningOrder", "$confirmDiningRequest")
-        viewModel.updateAndLockTbl(confirmDiningRequest)
-    }
+private fun confirmDinningOrder(confirmDiningRequest: ConfirmDiningRequest) {
+    Log.i("confirmDinningOrder", "$confirmDiningRequest")
+    viewModel.updateAndLockTbl(confirmDiningRequest)
+}
 
-    private fun confirmOrder(confirmOrderRequest: ConfirmOrderRequest) {
-        Log.i("confirmOrder", "$confirmOrderRequest")
-        viewModel.saveUserOrderItem(confirmOrderRequest)
-    }*/
+private fun confirmOrder(confirmOrderRequest: ConfirmOrderRequest) {
+    Log.i("confirmOrder", "$confirmOrderRequest")
+    viewModel.saveUserOrderItem(confirmOrderRequest)
+}*/
 
     @SuppressLint("SetTextI18n")
     private fun initial() {
@@ -302,7 +323,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
                 itemRemoved = itemMasterFoodItem
             )
-        })
+        }, instruction = {})
     }
 
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {

@@ -210,7 +210,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     is ApisResponse.Success -> {
                         binding.pbLayout.root.hide()
                         if (it.data?.startsWith("01")!!) {
-                            activity?.msg("order Printed ${getEmojiByUnicode(0x1F5A8)}", Toast.LENGTH_LONG)
+                            activity?.msg(
+                                "order Printed ${getEmojiByUnicode(0x1F5A8)}",
+                                Toast.LENGTH_LONG
+                            )
                             findNavController().popBackStack()
                         } else {
                             activity?.msg("failed ${it.data}", Toast.LENGTH_LONG)
@@ -549,9 +552,28 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         viewModel.getOrderItem(it)
                 }, itemClickListerForUpdate = { res ->
                     updateQtyDialogBox(res)
+                }, itemClickInstructionLinter = { res ->
+                    updateFreeTxt(res)
                 })
             adapter = confirmOderFragmentAdaptor
         }
+    }
+
+    private fun updateFreeTxt(itemMasterFoodItem: ItemMasterFoodItem) {
+        showQtyDialog(
+            true,
+            itemMasterFoodItem.itemMaster,
+            value = itemMasterFoodItem.free_txt,
+            type = "Instruction",
+            cancel = {},
+            res = {},
+            instruction = { free_txt ->
+                val it = itemMasterFoodItem.itemMaster
+                viewModel.addUpdateQty(
+                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt),
+                    itemRemoved = itemMasterFoodItem
+                )
+            })
     }
 
     private fun updateQtyDialogBox(itemMasterFoodItem: ItemMasterFoodItem) {
@@ -560,7 +582,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
                 itemRemoved = itemMasterFoodItem
             )
-        })
+        }, instruction = { })
     }
 
 
@@ -596,6 +618,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         }
         mutableList.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
         viewModel.getOrderList(FoodItemList(mutableList))
-        activity?.msg(itemMaster.itemName+"\n${getEmojiByUnicode(0x2705)}")
+        activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
     }
 }

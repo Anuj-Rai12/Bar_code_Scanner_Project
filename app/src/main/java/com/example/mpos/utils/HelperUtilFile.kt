@@ -94,8 +94,7 @@ object AllStringConst {
         const val categoryMenu = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CategoryMenu"
 
 
-
-}
+    }
 
 
     enum class API {
@@ -163,9 +162,17 @@ fun Button.hideProgress(string: String) {
 
 
 fun Activity.getColorInt(color: Int): Int {
-    return if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         resources.getColor(color, null)
-    }else{
+    } else {
+        resources.getColor(color)
+    }
+}
+
+fun Context.getColorInt(color: Int): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        resources.getColor(color, null)
+    } else {
         resources.getColor(color)
     }
 }
@@ -354,8 +361,11 @@ fun Fragment.showDialogBox(
 fun Fragment.showQtyDialog(
     isCancelable: Boolean = false,
     itemMaster: ItemMaster,
+    value: String = "",
+    type: String = "Quantity",
     cancel: (Boolean) -> Unit,
-    res: (ItemMaster) -> Unit
+    res: (ItemMaster) -> Unit,
+    instruction:(String)->Unit
 ) {
     val materialDialogs = MaterialAlertDialogBuilder(
         requireActivity(),
@@ -366,21 +376,30 @@ fun Fragment.showQtyDialog(
     val dialog = materialDialogs.setView(binding.root)
         .setCancelable(isCancelable)
         .show()
-
+    binding.qtyEdLayout.hint = "Please Enter $type"
+    if (!checkFieldValue(value))
+    binding.qtyEd.setText(value)
+if (type!="Quantity"){
+    binding.qtyEd.inputType=InputType.TYPE_CLASS_TEXT
+}
     binding.btnDone.setOnClickListener {
         val qty = binding.qtyEd.text.toString()
         if (checkFieldValue(qty)) {
-            activity?.msg("Please Enter Quantity")
+            activity?.msg("Please Enter $type")
             return@setOnClickListener
         }
-        if (!qty.isDigitsOnly()) {
-            activity?.msg("Please Enter Correct Quantity")
-            return@setOnClickListener
+        if (type=="Quantity"){
+            if (!qty.isDigitsOnly()) {
+                activity?.msg("Please Enter Correct $type")
+                return@setOnClickListener
+            }
+            itemMaster.foodQty = qty.toInt()
+            itemMaster.foodAmt =
+                ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * qty.toInt()
+            res.invoke(itemMaster)
+        }else{
+            instruction.invoke(qty)
         }
-        itemMaster.foodQty = qty.toInt()
-        itemMaster.foodAmt =
-            ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * qty.toInt()
-        res.invoke(itemMaster)
         dialog.dismiss()
     }
 

@@ -1,26 +1,24 @@
 package com.example.mpos.ui.oderconfirm.adaptor
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
+import android.graphics.PorterDuff
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.R
 import com.example.mpos.databinding.ListOfFoodItemSelectedBinding
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
-import com.example.mpos.utils.Rs_Symbol
-import com.example.mpos.utils.checkFieldValue
-import com.example.mpos.utils.hide
-import com.example.mpos.utils.show
+import com.example.mpos.utils.*
 
 class ConfirmOderFragmentAdaptor(
     private val itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
-    private val itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit
+    private val itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit,
+    private val itemClickInstructionLinter: (foodItem: ItemMasterFoodItem) -> Unit,
 ) :
     ListAdapter<ItemMasterFoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
 
@@ -51,12 +49,13 @@ class ConfirmOderFragmentAdaptor(
         private var flagSelection: Boolean = false
         val checkBoxView = binding.btnClickViewDetail
 
-        @RequiresApi(Build.VERSION_CODES.M)
+
         @SuppressLint("SetTextI18n")
         fun setData(
             foodItem: ItemMasterFoodItem,
             itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
-            itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit
+            itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit,
+            itemClickInstructionLinter: (foodItem: ItemMasterFoodItem) -> Unit
         ) {
             binding.apply {
                 foodItemName.apply {
@@ -66,19 +65,35 @@ class ConfirmOderFragmentAdaptor(
                         else foodItem.itemMaster.itemDescription
                 }
                 btnClickViewDetail.setOnClickListener {
-                    it.backgroundTintList = if (!flagSelection) {
-                        flagSelection = true
-                        getTintColor(it, R.color.dark_green_color)
-                    } else {
-                        flagSelection = false
-                        getTintColor(it, R.color.light_grey_black_color)
+                    if (showCheckBox || foodItem.free_txt.isEmpty()) {
+                        if (!flagSelection) {
+                            flagSelection = true
+                            getTintColor(btnClickViewDetail, R.color.dark_green_color)
+                        } else {
+                            flagSelection = false
+                            getTintColor(btnClickViewDetail, R.color.light_grey_black_color)
+                        }
+                        itemClickListerForFoodSelected(foodItem)
                     }
-                    itemClickListerForFoodSelected(foodItem)
                 }
+
+                if (!showCheckBox && foodItem.free_txt.isNotEmpty()) {
+                    checkBoxView.show()
+                    checkBoxView.setImageResource(R.drawable.ic_info)
+                    getTintColor(checkBoxView, R.color.green_color)
+                }
+
+
+
 
                 qtyOfFood.setOnClickListener {
                     if (showQtyBox)
-                    itemClickListerForUpdate(foodItem)
+                        itemClickListerForUpdate(foodItem)
+                }
+                foodItemName.setOnClickListener {
+                    if (showQtyBox){
+                        itemClickInstructionLinter(foodItem)
+                    }
                 }
                 qtyOfFood.apply {
                     setBg(foodItem.bg)
@@ -95,14 +110,17 @@ class ConfirmOderFragmentAdaptor(
             }
         }
 
-        @RequiresApi(Build.VERSION_CODES.M)
-        private fun getTintColor(it: View, color: Int): ColorStateList {
-            return ColorStateList.valueOf(
-                it.resources.getColor(
+
+        fun getTintColor(it: AppCompatImageButton, col: Int) {
+            val color = it.context.getColorInt(col)
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+                it.background.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+            } else {
+                it.setColorFilter(
                     color,
-                    null
+                    PorterDuff.Mode.MULTIPLY
                 )
-            )
+            }
         }
 
         private fun View.setBg(layout: Int) {
@@ -132,16 +150,17 @@ class ConfirmOderFragmentAdaptor(
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: SelectedFoodItemViewHolder, position: Int) {
         val curr = getItem(position)
         curr?.let {
             if (showCheckBox) {
+                holder.checkBoxView.setImageResource(R.drawable.ic_check_box)
+                holder.getTintColor(holder.checkBoxView,R.color.light_grey_black_color)
                 holder.checkBoxView.show()
             } else {
                 holder.checkBoxView.hide()
             }
-            holder.setData(it, itemClickListerForFoodSelected, itemClickListerForUpdate)
+            holder.setData(it, itemClickListerForFoodSelected, itemClickListerForUpdate,itemClickInstructionLinter)
         }
     }
 }

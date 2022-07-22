@@ -24,6 +24,7 @@ data class ItemMasterFoodItem(
     var foodQty: Int,
     var foodAmt: Int,
     val bg: Int = listOfBg.first(),
+    val free_txt: String = ""
 ) : Parcelable
 
 

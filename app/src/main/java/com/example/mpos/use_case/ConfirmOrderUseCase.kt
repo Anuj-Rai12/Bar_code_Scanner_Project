@@ -79,7 +79,7 @@ class ConfirmOrderUseCase {
                 date =getDate("MM/dd/yy") ?: "10/20/22",
                 time = time,
                 storeNo = storeNo,
-                freeText = "",
+                freeText = itemMasterFoodItem.free_txt,
                 price = itemMasterFoodItem.itemMaster.salePrice
             )
             list.add(menuItem)
