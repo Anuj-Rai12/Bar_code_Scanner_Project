@@ -64,25 +64,24 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
     }
 
     private fun screenNav(selection: SelectionDataClass) {
-        when (SelectionDataClass.Companion.RestaurantSelection.valueOf(selection.type)) {
-            SelectionDataClass.Companion.RestaurantSelection.TABLE_MANAGEMENT -> {
-                val action =
+        val action =
+            when (SelectionDataClass.Companion.RestaurantSelection.valueOf(selection.type)) {
+                SelectionDataClass.Companion.RestaurantSelection.TABLE_MANAGEMENT -> {
                     TableManagementOrCostEstimateDirections
                         .actionTableManagementOrCostEstimateToTableManagementFragment(args.storeName)
-                findNavController().navigate(action)
-            }
-            SelectionDataClass.Companion.RestaurantSelection.COST_ESTIMATION -> {
-                val action =
+                }
+                SelectionDataClass.Companion.RestaurantSelection.COST_ESTIMATION -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToCostDashBoardFragment(
                         null,
                         null
                     )
-                findNavController().navigate(action)
+                }
+                SelectionDataClass.Companion.RestaurantSelection.TABLE_RESERVATION -> {
+                    TableManagementOrCostEstimateDirections
+                        .actionTableManagementOrCostEstimateToTableReservationFragment()
+                }
             }
-            SelectionDataClass.Companion.RestaurantSelection.TABLE_RESERVATION -> {
-
-            }
-        }
+        findNavController().navigate(action)
     }
 
 }

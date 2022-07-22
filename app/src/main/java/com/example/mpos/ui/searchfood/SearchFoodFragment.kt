@@ -1,12 +1,10 @@
 package com.example.mpos.ui.searchfood
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
-import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,7 +35,6 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         outState.putBoolean("flag", flag)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         savedInstanceState?.let { flag = it.getBoolean("flag") }
@@ -90,7 +87,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     private fun showSnackBar(msg: String, color: Int, length: Int) {
         binding.root.showSandbar(
             msg,
@@ -121,7 +118,6 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun setData() {
         viewModel.fdInfo.observe(viewLifecycleOwner) {
             when (it) {
@@ -164,7 +160,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     private fun setRecycleView() {
         binding.listOfFoodItem.apply {
             setHasFixedSize(true)
