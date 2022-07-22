@@ -2,6 +2,8 @@ package com.example.mpos.ui.tablemange
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -124,7 +126,8 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
                         .actionTableManagementFragmentToConfirmOderFragment(null, res, null)
                     findNavController().navigate(action)
                 } else {
-                    lifecycleScope.launchWhenResumed {
+                    Handler(Looper.getMainLooper()).post {
+                        Log.i(TAG, "setRecycleView: dialog hit")
                         showDialogBox(
                             "Cannot Access",
                             "Not Allowed to take order in this Table, because table bill is all ready Printed ${getEmojiByUnicode(0x1F5A8)}\n" +

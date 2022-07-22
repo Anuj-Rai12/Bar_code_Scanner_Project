@@ -1,6 +1,7 @@
 package com.example.mpos.ui.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -53,6 +54,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                 is ApisResponse.Error -> {
                     hideProgress()
                     activity?.msg("${it.exception?.localizedMessage}")
+                    Log.i(TAG, "checkAuthCycle: ${it.exception?.localizedMessage}")
                     showDialogBox(
                         "Failure",
                         "Please Check The Credentials",
