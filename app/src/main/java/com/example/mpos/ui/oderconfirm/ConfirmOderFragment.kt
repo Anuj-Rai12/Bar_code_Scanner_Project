@@ -155,8 +155,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     viewLifecycleOwner,
                     viewModel
                 ) {
-                    viewModel.getGrandTotal(arrItem)
-                    viewModel.fetchPrintResponse(PrintBillRequest(PrintBillRequestBody(args.tbl.receiptNo)))
+                    if (it) {
+                        viewModel.getGrandTotal(arrItem)
+                        viewModel.fetchPrintResponse(PrintBillRequest(PrintBillRequestBody(args.tbl.receiptNo)))
+                    }
                     isOrderIsVisible = false
                 }
             }

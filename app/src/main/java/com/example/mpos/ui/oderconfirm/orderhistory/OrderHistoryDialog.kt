@@ -18,7 +18,7 @@ fun Activity.showDialogForOrderHistory(
     tableDetail: TableDetail,
     viewLifecycleOwner: LifecycleOwner,
     viewModel: ConfirmOrderFragmentViewModel,
-    cancel: () -> Unit
+    cancel: (Boolean) -> Unit
 ) {
     lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
 
@@ -40,7 +40,7 @@ fun Activity.showDialogForOrderHistory(
     }
 
     binding.closeBtn.setOnClickListener {
-        cancel.invoke()
+        cancel.invoke(false)
         materialDialogs.dismiss()
     }
 
@@ -48,7 +48,7 @@ fun Activity.showDialogForOrderHistory(
 
 
     binding.printBtn.setOnClickListener {
-        cancel.invoke()
+        cancel.invoke(true)
         materialDialogs.dismiss()
     }
 
