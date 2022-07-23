@@ -130,7 +130,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
                         Log.i(TAG, "setRecycleView: dialog hit")
                         showDialogBox(
                             "Cannot Access",
-                            "Not Allowed to take order in this Table, because table bill is all ready Printed ${getEmojiByUnicode(0x1F5A8)}\n" +
+                            "Not Allowed to take order in this Table, because table bill is already Printed ${getEmojiByUnicode(0x1F5A8)}\n" +
                                     "Try again when table is open"
                         ) {}
                     }

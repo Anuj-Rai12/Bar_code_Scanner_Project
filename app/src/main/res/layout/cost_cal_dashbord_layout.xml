@@ -7,19 +7,23 @@
     android:background="@color/semi_white_color"
     tools:context="com.example.mpos.ui.cost.CostDashBoardFragment">
 
+
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/food_mnu_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="12dp"
         android:background="@drawable/circle_shape"
+        android:contentDescription="Food menu"
         android:elevation="5dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         android:padding="10dp"
         android:src="@drawable/ic_food_mnu"
-        app:layout_constraintBottom_toBottomOf="@id/table_Id_2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/confirm_order_btn"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/confirm_order_btn"
+        app:layout_constraintVertical_bias="0"
         app:tint="#019DE2" />
 
 
@@ -27,30 +31,66 @@
         android:id="@+id/table_Id_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:textAlignment="center"
-        android:maxLines="1"
         android:ellipsize="end"
         android:fontFamily="@font/roboto_medium"
-        android:text="@string/item_cost_estimate"
+        android:maxLines="1"
+        android:text="@string/item_table"
+        android:textAlignment="center"
         android:textColor="@color/light_grey_color"
         android:textSize="22sp"
-        app:layout_constraintLeft_toRightOf="@id/food_mnu_btn"
+        app:layout_constraintBottom_toBottomOf="@id/info_btn"
+        app:layout_constraintLeft_toRightOf="@id/info_btn"
         app:layout_constraintRight_toLeftOf="@id/logo_file_id4"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias=".7" />
 
     <ImageView
         android:id="@+id/logo_file_id4"
-        android:layout_width="31dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="12dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="10dp"
         android:contentDescription="@string/app_title"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/info_btn"
         app:srcCompat="@drawable/logofile" />
 
+    <LinearLayout
+        android:id="@+id/tbl_detail_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="@id/info_btn"
+        app:layout_constraintRight_toRightOf="@id/logo_file_id4"
+        app:layout_constraintTop_toBottomOf="@id/table_Id_2">
 
+        <TextView
+            android:id="@+id/tbl_num_txt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="2"
+            android:textColor="@color/light_grey_color"
+            android:textSize="18sp"
+            tools:text="@string/sample_tbl_num" />
+
+
+        <TextView
+            android:id="@+id/order_booking_time_txt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textColor="@color/light_grey_color"
+            android:textSize="18sp"
+            tools:text="@string/sample_tbl_time" />
+
+    </LinearLayout>
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -65,7 +105,7 @@
         android:drawablePadding="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/qr_code_scan"
-        app:layout_constraintTop_toBottomOf="@id/food_mnu_btn" />
+        app:layout_constraintTop_toBottomOf="@id/tbl_detail_layout" />
 
     <ImageButton
         android:id="@+id/qr_code_scan"
@@ -73,6 +113,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/circle_shape"
         android:contentDescription="@string/scan_btn"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         android:padding="10dp"
         android:scaleType="fitXY"
         android:src="@drawable/qr_code"
@@ -86,7 +128,7 @@
         android:id="@+id/dsc_item_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="32dp"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="@id/search_box_txt"
         app:layout_constraintRight_toRightOf="@id/qr_code_scan"
@@ -152,7 +194,6 @@
         android:fontFamily="@font/roboto_medium"
         android:minHeight="33dp"
         android:paddingStart="15dp"
-        android:paddingEnd="0dp"
         android:paddingTop="8dp"
         android:paddingBottom="9dp"
         android:text="@string/oder_hint"
@@ -218,14 +259,16 @@
         android:id="@+id/info_btn"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="12dp"
         android:background="@android:color/transparent"
+        android:contentDescription="help"
         android:elevation="10dp"
+        android:scaleType="center"
         android:src="@drawable/ic_info"
-        app:layout_constraintHorizontal_bias=".5"
-        app:layout_constraintLeft_toRightOf="@id/confirm_order_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/confirm_order_btn"
+        app:layout_constraintBottom_toBottomOf="@id/table_Id_2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0" />
 
 
@@ -255,19 +298,19 @@
         android:layout_marginStart="9dp"
         android:layout_marginBottom="22dp"
         android:layout_weight="1"
-        android:visibility="gone"
         android:background="@drawable/modify_order_btn_border"
         android:fontFamily="@font/roboto_medium"
-        android:text="@string/print_order"
+        android:text="@string/oder_del"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="12sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/confirm_order_btn"
         app:layout_constraintEnd_toStartOf="@+id/view_offer_btn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/rest_item_btn"
-        />
+        tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/view_offer_btn"
@@ -306,6 +349,7 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias=".35"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -324,353 +368,3 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
-
-<!--
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/semi_white_color"
-    tools:context="com.example.mpos.ui.cost.CostDashBoardFragment">
-
-    <TextView
-        android:id="@+id/table_Id_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/roboto_medium"
-        android:text="@string/item_table"
-        android:textColor="@color/light_grey_color"
-        android:textSize="22sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/logo_file_id4"
-        android:layout_width="31dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="12dp"
-        android:contentDescription="@string/app_title"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logofile" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/search_box_txt"
-        android:layout_width="0dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="26dp"
-        android:background="@drawable/white_underline_boder"
-        android:drawableEnd="@drawable/ic_search_24"
-        android:drawablePadding="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/qr_code_scan"
-        app:layout_constraintTop_toBottomOf="@id/table_Id_2" />
-
-    <ImageButton
-        android:id="@+id/qr_code_scan"
-        android:layout_width="33dp"
-        android:layout_height="33dp"
-        android:background="@color/semi_white_color"
-        android:contentDescription="@string/scan_btn"
-        android:scaleType="fitXY"
-        android:src="@drawable/qr_code"
-        app:layout_constraintBottom_toBottomOf="@id/search_box_txt"
-        app:layout_constraintRight_toRightOf="@id/logo_file_id4"
-        app:layout_constraintTop_toTopOf="@id/search_box_txt" />
-
-
-    <LinearLayout
-        android:id="@+id/dsc_item_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="@id/search_box_txt"
-        app:layout_constraintRight_toRightOf="@id/qr_code_scan"
-        app:layout_constraintTop_toBottomOf="@id/search_box_txt">
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_medium"
-            android:maxLines="1"
-            android:text="@string/oder_desc"
-            android:textColor="@color/light_grey_color"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_medium"
-            android:maxLines="1"
-            android:text="@string/oder_qty"
-            android:textAlignment="center"
-            android:textColor="@color/light_grey_color"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_medium"
-            android:maxLines="1"
-            android:text="@string/oder_rate"
-            android:textAlignment="center"
-            android:textColor="@color/light_grey_color"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_medium"
-            android:maxLines="1"
-            android:text="@string/oder_amt"
-            android:textAlignment="center"
-            android:textColor="@color/light_grey_color"
-            android:textSize="14sp" />
-
-    </LinearLayout>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/order_recycle_view_hint"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:background="@drawable/confirm_order_hint_border"
-        android:fontFamily="@font/roboto_medium"
-        android:minHeight="33dp"
-        android:paddingStart="15dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="9dp"
-        android:text="@string/oder_hint"
-        android:textColor="@color/light_grey_color"
-        android:textSize="12sp"
-        android:visibility="visible"
-        app:layout_constraintLeft_toLeftOf="@id/dsc_item_layout"
-        app:layout_constraintRight_toRightOf="@id/dsc_item_layout"
-        app:layout_constraintTop_toBottomOf="@id/dsc_item_layout"
-        tools:visibility="visible" />
-
-
-    &lt;!&ndash; Here will be recycle view for Search&ndash;&gt;
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_of_item_recycle_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="7dp"
-        android:overScrollMode="never"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/total_order_amt"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dsc_item_layout"
-        tools:listitem="@layout/list_of_food_item_selected"
-        tools:visibility="visible" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:fontFamily="@font/roboto_medium"
-        android:text="@string/total_sum"
-        android:textColor="@color/light_grey_color"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/total_order_amt"
-        app:layout_constraintRight_toLeftOf="@id/total_order_amt"
-        app:layout_constraintTop_toTopOf="@id/total_order_amt" />
-
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/total_order_amt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
-        android:background="@drawable/black_underline_border"
-        android:fontFamily="@font/roboto_medium"
-        android:paddingStart="41dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="41dp"
-        android:paddingBottom="8dp"
-        android:text="@string/sample_total_amt"
-        android:textColor="@color/light_grey_color"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@id/view_offer_btn"
-        app:layout_constraintRight_toRightOf="@id/view_offer_btn" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/rest_item_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:layout_marginBottom="22dp"
-        android:layout_weight="1"
-        android:background="@drawable/modify_order_btn_border"
-        android:fontFamily="@font/roboto_medium"
-        android:text="@string/oder_reset"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@id/save_ic_click"
-        app:layout_constraintEnd_toStartOf="@+id/delete_food_item"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/delete_food_item"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:layout_marginBottom="22dp"
-        android:layout_weight="1"
-        android:background="@drawable/modify_order_btn_border"
-        android:fontFamily="@font/roboto_medium"
-        android:text="@string/oder_del"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@id/save_ic_click"
-        app:layout_constraintEnd_toStartOf="@+id/view_offer_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/rest_item_btn" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/view_offer_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:layout_marginEnd="9dp"
-        android:layout_marginBottom="22dp"
-        android:layout_weight="1"
-        android:background="@drawable/modify_order_btn_border"
-        android:fontFamily="@font/roboto_medium"
-        android:text="@string/oder_view"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@id/save_ic_click"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/delete_food_item" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/save_ic_click"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="14dp"
-        android:elevation="5dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/blue_underline_boder_color"
-        android:minHeight="56dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/printer_ic_click"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/imag_ic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="27dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/ic_save"
-            android:contentDescription="@string/sv_btn"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="44dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/roboto_medium"
-            android:text="@string/sv_btn"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/imag_ic"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/printer_ic_click"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="30dp"
-        android:elevation="5dp"
-        android:background="@drawable/blue_underline_boder_color"
-        android:minHeight="56dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/save_ic_click">
-
-        <ImageView
-            android:id="@+id/imag_ic_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="27dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/ic_printer_icon"
-            android:contentDescription="@string/pr_btn"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="44dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/roboto_medium"
-            android:text="@string/pr_btn"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/imag_ic_btn"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>-->

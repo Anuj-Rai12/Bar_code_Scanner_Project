@@ -11,15 +11,18 @@
         android:id="@+id/food_mnu_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="12dp"
         android:background="@drawable/circle_shape"
+        android:contentDescription="Food menu"
         android:elevation="5dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         android:padding="10dp"
         android:src="@drawable/ic_food_mnu"
-        app:layout_constraintBottom_toBottomOf="@id/table_Id_2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/confirm_order_btn"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/confirm_order_btn"
+        app:layout_constraintVertical_bias="0"
         app:tint="#019DE2" />
 
 
@@ -27,27 +30,27 @@
         android:id="@+id/table_Id_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:textAlignment="center"
-        android:maxLines="1"
         android:ellipsize="end"
         android:fontFamily="@font/roboto_medium"
-        android:text="@string/item_table"
+        android:maxLines="1"
+        android:text="@string/item_cost_estimate"
+        android:textAlignment="center"
         android:textColor="@color/light_grey_color"
         android:textSize="22sp"
-        app:layout_constraintLeft_toRightOf="@id/food_mnu_btn"
+        app:layout_constraintBottom_toBottomOf="@id/info_btn"
+        app:layout_constraintLeft_toRightOf="@id/info_btn"
         app:layout_constraintRight_toLeftOf="@id/logo_file_id4"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias=".7" />
 
     <ImageView
         android:id="@+id/logo_file_id4"
-        android:layout_width="31dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="12dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="10dp"
         android:contentDescription="@string/app_title"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/info_btn"
         app:srcCompat="@drawable/logofile" />
 
     <LinearLayout
@@ -56,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="@id/food_mnu_btn"
+        app:layout_constraintLeft_toLeftOf="@id/info_btn"
         app:layout_constraintRight_toRightOf="@id/logo_file_id4"
         app:layout_constraintTop_toBottomOf="@id/table_Id_2">
 
@@ -109,6 +112,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/circle_shape"
         android:contentDescription="@string/scan_btn"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         android:padding="10dp"
         android:scaleType="fitXY"
         android:src="@drawable/qr_code"
@@ -253,14 +258,16 @@
         android:id="@+id/info_btn"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="12dp"
         android:background="@android:color/transparent"
+        android:contentDescription="help"
         android:elevation="10dp"
+        android:scaleType="center"
         android:src="@drawable/ic_info"
-        app:layout_constraintHorizontal_bias=".5"
-        app:layout_constraintLeft_toRightOf="@id/confirm_order_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/confirm_order_btn"
+        app:layout_constraintBottom_toBottomOf="@id/table_Id_2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0" />
 
 
@@ -302,7 +309,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/rest_item_btn"
-        tools:visibility="visible" />
+         />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/view_offer_btn"
@@ -341,6 +348,7 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias=".35"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 

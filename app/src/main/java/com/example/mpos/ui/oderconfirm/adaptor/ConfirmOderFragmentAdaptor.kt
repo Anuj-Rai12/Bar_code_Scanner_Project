@@ -80,7 +80,7 @@ class ConfirmOderFragmentAdaptor(
                 if (!showCheckBox && foodItem.free_txt.isNotEmpty()) {
                     checkBoxView.show()
                     checkBoxView.setImageResource(R.drawable.ic_info)
-                    getTintColor(checkBoxView, R.color.green_color)
+                    getTintColor(checkBoxView, R.color.dark_green_color)
                 }
 
 
