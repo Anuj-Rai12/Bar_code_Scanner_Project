@@ -72,4 +72,9 @@
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
+    <style name="shape_for_fab" parent="@style/ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
 </resources>

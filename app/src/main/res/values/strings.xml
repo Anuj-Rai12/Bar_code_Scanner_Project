@@ -16,7 +16,14 @@
     <string name="item_table">Table Management</string>
     <string name="item_cost">Cost Estimate</string>
     <string name="item_cost_estimate">Estimation</string>
+    <string name="table_reservation">Table Reservation</string>
     <string name="open_table">Open</string>
+    <string name="bok_tbl">Book the table</string>
+
+    <string name="so_number">Serial No</string>
+    <string name="name_of_customer">Name of Customer</string>
+    <string name="mobile_num">Mobile</string>
+    <string name="time">Time</string>
 
     <string name="oder_desc">Description</string>
     <string name="oder_qty">Qty</string>
