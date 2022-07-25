@@ -6,7 +6,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpos.R
 import com.example.mpos.databinding.TableOrCostLayoutBinding
 import com.example.mpos.ui.tableorcost.adaptor.TableManagementOrCostRecyclerAdaptor
@@ -53,7 +52,6 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
 
     private fun setRecycleView() {
         binding.chooseTableOrCostRecycle.apply {
-            layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
             tableManagementOrCostRecyclerAdaptor = TableManagementOrCostRecyclerAdaptor {
                 Log.i(TAG, "setRecycleView: $it")
@@ -77,10 +75,12 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                     )
                 }
                 SelectionDataClass.Companion.RestaurantSelection.TABLE_RESERVATION -> {
-                    TableManagementOrCostEstimateDirections
-                        .actionTableManagementOrCostEstimateToTableReservationFragment()
+                   /* TableManagementOrCostEstimateDirections
+                        .actionTableManagementOrCostEstimateToTableReservationFragment()*/
+                    null
                 }
             }
+        if (action!=null)
         findNavController().navigate(action)
     }
 
