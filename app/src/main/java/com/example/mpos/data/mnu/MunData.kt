@@ -9,5 +9,6 @@ data class MnuData<T>(
 
 enum class MenuType {
     SubMenu,
-    ItemList
+    ItemList,
+    Food
 }

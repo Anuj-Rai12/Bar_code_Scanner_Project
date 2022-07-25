@@ -5,10 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.mpos.data.mnu.MenuType
 import com.example.mpos.data.mnu.request.MenuItemRequest
 import com.example.mpos.data.mnu.request.MenuItemRequestBody
 import com.example.mpos.data.mnu.response.json.MenuDataResponse
-import com.example.mpos.data.mnu.response.json.SubMenu
 import com.example.mpos.dataStore.UserSoredData
 import com.example.mpos.di.RetrofitInstance
 import com.example.mpos.ui.menu.repo.MenuRepository
@@ -22,7 +22,7 @@ import java.io.Serializable
 import java.util.*
 
 class BottomSheetViewModel(application: Application) : AndroidViewModel(application) {
-    //private val app = application
+    private val app = application
 
     private lateinit var mnuRepository: MenuRepository
 
@@ -45,13 +45,13 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
         get() = _mnuTab
 
 
-    private val _foodItemMnu = MutableLiveData<ApisResponse<out Any>>()
-    val foodItemMnu: LiveData<ApisResponse<out Any>>
+    private val _foodItemMnu = MutableLiveData<Pair<String, ApisResponse<out Any>>>()
+    val foodItemMnu: LiveData<Pair<String, ApisResponse<out Any>>>
         get() = _foodItemMnu
 
 
     init {
-        if (application.isNetworkAvailable()) {
+        if (app.isNetworkAvailable()) {
             viewModelScope.launch {
                 userSoredData.readBase.collectLatest { testConnection ->
                     if (checkFieldValue(testConnection.baseUrl) || checkFieldValue(testConnection.passId)
@@ -68,9 +68,6 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
                             )
                         storeID = testConnection.storeId
                         mnuRepository = MenuRepository(retrofit.getRetrofit())
-
-                        fetchMenuDetail()
-
                     }
                 }
             }
@@ -80,7 +77,7 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
 
     }
 
-    private fun fetchMenuDetail() {
+    fun fetchMenuDetail() {
         if (!this::mnuRepository.isInitialized) {
             _event.postValue(Events("Unknown Error"))
             return
@@ -131,29 +128,30 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
             title == foodItem
         }
         if (food == null || food.subMenu.isEmpty()) {
-            _foodItemMnu.postValue(ApisResponse.Error(err, null))
+            _foodItemMnu.postValue(Pair(MenuType.Food.name, ApisResponse.Error(err, null)))
             return
         }
 
         viewModelScope.launch {
             mnuRepository.getSubMenuList(food).collectLatest {
-                _foodItemMnu.postValue(it)
+                _foodItemMnu.postValue(Pair(MenuType.Food.name, it))
             }
         }
     }
 
 
-    fun getFoodItem(subMenu: SubMenu) {
+    /*fun getFoodItem(subMenu: SubMenu) {
         if (subMenu.itemList.isNullOrEmpty()) {
-            _foodItemMnu.postValue(ApisResponse.Error(err, null))
+            _foodItemMnu.postValue(Pair(MenuType.SubMenu.name, ApisResponse.Error(err, null)))
             return
         }
         viewModelScope.launch {
             mnuRepository.getLoadItemData(subMenu).collectLatest {
-                _foodItemMnu.postValue(it)
+                Log.i("TEST", "getFoodItem: Menu Sub List Adding...")
+                _foodItemMnu.postValue(Pair(MenuType.SubMenu.name, it))
             }
         }
-    }
+    }*/
 
 
 }

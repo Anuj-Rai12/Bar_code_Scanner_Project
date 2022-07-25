@@ -34,7 +34,7 @@
         android:ellipsize="end"
         android:fontFamily="@font/roboto_medium"
         android:maxLines="1"
-        android:text="@string/item_table"
+        android:text="@string/item_cost_estimate"
         android:textAlignment="center"
         android:textColor="@color/light_grey_color"
         android:textSize="22sp"

@@ -1,6 +1,9 @@
 package com.example.mpos.ui.menu.tabs
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,6 +16,7 @@ import com.example.mpos.data.mnu.response.json.SubMenu
 import com.example.mpos.databinding.MenuFragmentLayoutBinding
 import com.example.mpos.ui.menu.adaptor.MenuBottomSheetAdaptor
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
+import com.example.mpos.ui.menu.repo.MenuRepository
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.menu.viewmodel.BottomSheetViewModel
 import com.example.mpos.utils.*
@@ -23,10 +27,13 @@ class MnuTabFragment constructor(private val title: String) :
 
     private lateinit var binding: MenuFragmentLayoutBinding
 
-    //   private var enumTitle = MenuType.SubMenu.name
+    private var sumMenuList: List<MnuData<out Any>>? = null
+    private var foodMenuList: List<MnuData<out Any>>? = null
+
     private var mnuItem: MenuDataResponse? = null
     private val viewModel: BottomSheetViewModel by viewModels()
     private lateinit var adaptor: MenuBottomSheetAdaptor
+    private var currentStructureName: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,14 +45,28 @@ class MnuTabFragment constructor(private val title: String) :
                 showSnackBar(res, R.color.color_red)
             }
         }
-        viewModel.getFoodSubMenuItem(mnuItem, title)
-
         setRecycleAdaptor()
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (currentStructureName == null) {
+                Log.i("TEST", "onViewCreated: Loading menu!!")
+                viewModel.getFoodSubMenuItem(mnuItem, title)
+            }
+        }, 1000)
         getFoodSubMenuItem()
-
         binding.root.setOnRefreshListener {
             if (binding.root.isRefreshing) {
-                viewModel.getFoodSubMenuItem(mnuItem, title)
+                showRecycle()
+                if (currentStructureName != null) {
+                    Log.i("TEST", "onViewCreated: is FoodMenuList is Null ${foodMenuList == null}")
+                    if (foodMenuList != null) {
+                        currentStructureName = MenuType.Food.name
+                        setRecycleData(foodMenuList!!)
+                    } else {
+                        viewModel.getFoodSubMenuItem(mnuItem, title)
+                    }
+                } else {
+                    viewModel.getFoodSubMenuItem(mnuItem, title)
+                }
                 binding.root.isRefreshing = false
             }
         }
@@ -62,9 +83,10 @@ class MnuTabFragment constructor(private val title: String) :
 
     @Suppress("UNCHECKED_CAST")
     private fun getFoodSubMenuItem() {
-        viewModel.foodItemMnu.observe(viewLifecycleOwner) {
-            when (it) {
+        viewModel.foodItemMnu.observe(viewLifecycleOwner) { res ->
+            when (val it = res.second) {
                 is ApisResponse.Error -> {
+                    binding.root.isRefreshing = false
                     if (it.data != null) {
                         hideRecycle("${it.data}")
                     } else {
@@ -76,12 +98,46 @@ class MnuTabFragment constructor(private val title: String) :
                 }
                 is ApisResponse.Loading -> {
                     hideRecycle("${it.data}")
+                    binding.root.isRefreshing = true
                 }
                 is ApisResponse.Success -> {
+                    currentStructureName = res.first
+                    Log.i(TAG, "getFoodSubMenuItem: Success $title and $currentStructureName")
+                    when (MenuType.valueOf(currentStructureName!!)) {
+                        MenuType.SubMenu -> {
+                            sumMenuList = it.data as List<MnuData<out Any>>
+                        }
+                        MenuType.ItemList -> {}
+                        MenuType.Food -> {
+                            foodMenuList = it.data as List<MnuData<out Any>>
+                        }
+                    }
                     showRecycle()
-                    adaptor.notifyDataSetChanged()
-                    adaptor.submitList(it.data as List<MnuData<out Any>>)
-                    binding.itemRecycle.smoothScrollToPosition(0)
+                    setRecycleData(it.data as List<MnuData<out Any>>)
+                }
+            }
+        }
+    }
+
+    private fun setRecycleData(list: List<MnuData<out Any>>) {
+        adaptor.notifyDataSetChanged()
+        adaptor.submitList(list)
+        binding.itemRecycle.smoothScrollToPosition(0)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i(TAG, "onResume: $currentStructureName and $title")
+        if (currentStructureName == null) {
+            viewModel.getFoodSubMenuItem(mnuItem, title)
+        } else {
+            when (MenuType.valueOf(currentStructureName!!)) {
+                MenuType.SubMenu -> {
+                    setRecycleData(sumMenuList!!)
+                }
+                MenuType.ItemList -> {}
+                MenuType.Food -> {
+                    setRecycleData(foodMenuList!!)
                 }
             }
         }
@@ -94,6 +150,7 @@ class MnuTabFragment constructor(private val title: String) :
     }
 
     private fun showRecycle() {
+        binding.root.isRefreshing = false
         binding.itemRecycle.show()
         binding.noDataFound.hide()
     }
@@ -109,15 +166,62 @@ class MnuTabFragment constructor(private val title: String) :
     }
 
     override fun <T> onItemClicked(response: T) {
-        val it= response as MnuData<*>
+        val it = response as MnuData<*>
         when (MenuType.valueOf(it.type)) {
             MenuType.SubMenu -> {
+                Log.i("TEST", "OnItemClicked Listener is Clicked")
                 val subMenu = it.data as SubMenu
-                viewModel.getFoodItem(subMenu)
+                getArr(subMenu)
+                /*handler.postDelayed({
+                    val subMenu = it.data as SubMenu
+                    viewModel.getFoodItem(subMenu)
+                }, 500)*/
+                /*if (sumMenuList == null) {
+                    val subMenu = it.data as SubMenu
+                    viewModel.getFoodItem(subMenu)
+                } else {
+                    currentStructureName = MenuType.SubMenu.name
+                    setRecycleData(sumMenuList!!)
+                }*/
             }
             MenuType.ItemList -> {
                 (parentFragment as MenuBottomSheetFragment?)?.getItem(it.data as ItemList?)
             }
+            MenuType.Food -> {
+                activity?.msg("UnWanted Call")
+            }
+        }
+    }
+
+    private fun getArr(subMenu: SubMenu){
+        hideRecycle(MenuRepository.loading)
+        binding.root.isRefreshing=true
+        val res=try {
+            val arr = mutableListOf<MnuData<ItemList>>()
+            subMenu.itemList?.forEachIndexed { index, itemList ->
+                if (!checkFieldValue(itemList.description)) {
+                    arr.add(
+                        MnuData(
+                            index,
+                            itemList.description,
+                            MenuType.ItemList.name,
+                            itemList
+                        )
+                    )
+                }
+            }
+            arr.sortBy { it.title }
+            arr
+        }catch (e:Exception){
+            null
+        }
+
+        if (res.isNullOrEmpty()){
+            binding.root.isRefreshing=false
+            binding.noDataFound.text=MenuRepository.err_emoji
+        }else{
+            showRecycle()
+            setRecycleData(res)
         }
     }
 

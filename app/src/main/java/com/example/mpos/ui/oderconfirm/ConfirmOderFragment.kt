@@ -620,6 +620,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         }
         mutableList.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
         viewModel.getOrderList(FoodItemList(mutableList))
-        activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
+        activity?.msg("${itemMaster.itemName} ${getEmojiByUnicode(0x2705)}")
     }
 }

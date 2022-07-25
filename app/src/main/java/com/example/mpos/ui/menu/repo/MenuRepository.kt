@@ -4,11 +4,13 @@ import com.example.mpos.api.menu.MenuApi
 import com.example.mpos.data.mnu.MenuType
 import com.example.mpos.data.mnu.MnuData
 import com.example.mpos.data.mnu.request.MenuItemRequest
-import com.example.mpos.data.mnu.response.json.ItemList
 import com.example.mpos.data.mnu.response.json.MenuDataResponse
 import com.example.mpos.data.mnu.response.json.MenuDataResponseItem
 import com.example.mpos.data.mnu.response.json.SubMenu
-import com.example.mpos.utils.*
+import com.example.mpos.utils.ApisResponse
+import com.example.mpos.utils.buildApi
+import com.example.mpos.utils.deserializeFromJson
+import com.example.mpos.utils.getEmojiByUnicode
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -22,7 +24,7 @@ class MenuRepository constructor(retrofit: Retrofit) {
         const val err = "Oops Something Went Wrong!!"
         const val nullError = "Cannot load Response \n Please Try Again!!"
         val err_emoji = "${getEmojiByUnicode(0x1F615)} No Data Found!!"
-        private val loading = "loading.. ${getEmojiByUnicode(0x1F575)}"
+        val loading = "loading.. ${getEmojiByUnicode(0x1F575)}"
     }
 
     fun getMenuData(request: MenuItemRequest) = flow {
@@ -69,7 +71,7 @@ class MenuRepository constructor(retrofit: Retrofit) {
     }.flowOn(IO)
 
 
-     fun getLoadItemData(subMenu: SubMenu) = flow {
+    /* fun getLoadItemData(subMenu: SubMenu) = flow {
         emit(ApisResponse.Loading(loading))
         val data = try {
             val arr = mutableListOf<MnuData<ItemList>>()
@@ -91,6 +93,6 @@ class MenuRepository constructor(retrofit: Retrofit) {
             ApisResponse.Error(null, e)
         }
         emit(data)
-    }.flowOn(IO)
+    }.flowOn(IO)*/
 
 }

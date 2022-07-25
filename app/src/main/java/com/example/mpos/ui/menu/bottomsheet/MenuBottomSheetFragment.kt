@@ -81,7 +81,7 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
 
 
     private fun setAdaptor() {
-        viewPagerAdaptor = ViewPagerAdapter(this)
+        viewPagerAdaptor = ViewPagerAdapter(childFragmentManager, this.lifecycle)
         binding.viewPager.adapter = viewPagerAdaptor
     }
 
@@ -222,5 +222,9 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         barCodeViewModel.checkForItemItem(itemList.itemCode)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchMenuDetail()
+    }
 
 }
