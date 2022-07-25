@@ -21,7 +21,7 @@
     <string name="bok_tbl">Book the table</string>
 
     <string name="so_number">Serial No</string>
-    <string name="name_of_customer">Name of Customer</string>
+    <string name="name_of_customer">Customer Name</string>
     <string name="mobile_num">Mobile</string>
     <string name="time">Time</string>
 
