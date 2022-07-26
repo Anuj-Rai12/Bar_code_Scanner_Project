@@ -37,7 +37,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
             val userName = binding.userNameEd2.text.toString()
             val passWord = binding.userPassEd2.text.toString()
             if (checkFieldValue(userName) || checkFieldValue(passWord)) {
-                activity?.msg("Please Enter Correct Password")
+                activity?.msg("Please Enter Correct Detail")
                 return@setOnClickListener
             }
             viewModel.checkLoginTraditional(userID = userName, password = passWord)
