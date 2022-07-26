@@ -411,21 +411,22 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                             Pair(
                                 R.drawable.ic_error, Pair(
                                     "Failed!",
-                                    "Order is Not Inserted in Navision at All."
+                                    Pair("Order is Not Inserted in Navision at All.",true)
                                 )
                             )
                         } else {
                             Pair(
                                 R.drawable.ic_success, Pair(
                                     "Successfully Inserted",
-                                    "Order is Inserted in Navision at All."
+                                    Pair("Order is Inserted in Navision at All.",false)
                                 )
                             )
                         }
                         showDialogBox(
-                            result.second.first,
-                            result.second.second,
-                            icon = result.first
+                            title = result.second.first,
+                            desc = result.second.second.first,
+                            icon = result.first,
+                            isCancel = result.second.second.second
                         ) {
                             if (str != "01") {
                                 findNavController().popBackStack()

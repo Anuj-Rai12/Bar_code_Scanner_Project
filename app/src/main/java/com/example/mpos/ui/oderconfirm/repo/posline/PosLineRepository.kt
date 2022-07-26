@@ -20,7 +20,7 @@ class PosLineRepository(retrofit: Retrofit) {
             val apiRes = if (response.isSuccessful) {
                 response.body()?.let {
                     val res = it.responseForBody?.value ?: ""
-                    return@let if (!res.startsWith("01") && res.isNotEmpty()) {
+                    return@let if (res.isNotEmpty() && !res.startsWith("01")) {
                         ApisResponse.Success("Success fully Inserted...")
                     } else {
                         ApisResponse.Error(

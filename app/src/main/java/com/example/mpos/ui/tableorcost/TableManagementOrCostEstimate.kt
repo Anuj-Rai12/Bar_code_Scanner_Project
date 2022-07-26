@@ -75,12 +75,12 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                     )
                 }
                 SelectionDataClass.Companion.RestaurantSelection.TABLE_RESERVATION -> {
-                    TableManagementOrCostEstimateDirections
-                        .actionTableManagementOrCostEstimateToTableReservationFragment()
+                    /*TableManagementOrCostEstimateDirections
+                        .actionTableManagementOrCostEstimateToTableReservationFragment()*/
+                    null
                 }
             }
-
-        findNavController().navigate(action)
+        action?.let { findNavController().navigate(it) }
     }
 
 }
