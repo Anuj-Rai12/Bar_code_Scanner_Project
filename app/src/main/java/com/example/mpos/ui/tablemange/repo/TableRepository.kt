@@ -8,7 +8,8 @@ interface TableRepository {
 
     fun getTblInformation(
         storeId: String,
-        type: String = AllStringConst.API.RESTAURANT.name
+        type: String = AllStringConst.API.RESTAURANT.name,
+        staffID:String
     ): Flow<ApisResponse<out Any?>>
 
 

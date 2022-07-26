@@ -56,13 +56,11 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
                 is ApisResponse.Error -> {
                     hideOrShowProgress(null)
                     val exp = it.exception?.localizedMessage
-                    binding.root.showSandbar(
-                        exp ?: "UnKnown Error",
-                        Snackbar.LENGTH_INDEFINITE,
-                        requireActivity().getColorInt(R.color.color_red)
-                    ) {
-                        return@showSandbar "OK"
-                    }
+                    val error=exp?.let {
+                        return@let "Failed to get Response Error Details :-\n$exp"
+                    }?:"Failed to get Response Error Detail :-\nUnknown  Error"
+
+                    showDialogBox("Failed!!", error , icon = R.drawable.ic_error) {}
                     Log.i(TAG, "setUpData: $exp")
                 }
                 is ApisResponse.Loading -> {
@@ -130,7 +128,11 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
                         Log.i(TAG, "setRecycleView: dialog hit")
                         showDialogBox(
                             "Cannot Access",
-                            "Not Allowed to take order in this Table, because table bill is already Printed ${getEmojiByUnicode(0x1F5A8)}\n" +
+                            "Not Allowed to take order in this Table, because table bill is already Printed ${
+                                getEmojiByUnicode(
+                                    0x1F5A8
+                                )
+                            }\n" +
                                     "Try again when table is open"
                         ) {}
                     }

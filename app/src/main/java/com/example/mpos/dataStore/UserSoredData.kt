@@ -28,9 +28,9 @@ class UserSoredData constructor(private val context: Context) {
             throw e
         }
     }.map { preferences ->
-        val password = preferences[allStoreString.PASS_NO] ?: ""
+        val password = preferences[allStoreString.PASS_NO] ?: "" //Personal User Password or Staff Password
         val storeId = preferences[allStoreString.STORE_NUMBER] ?: ""
-        val userId = preferences[allStoreString.USER_ID] ?: ""
+        val userId = preferences[allStoreString.USER_ID] ?: "" //Personal User ID or Staff ID
         ApkBody(
             storeNo = storeId,
             userID = userId,

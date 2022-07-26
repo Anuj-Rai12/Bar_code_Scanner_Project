@@ -32,6 +32,11 @@ data class TableInformation(
     @param:Element(name = "salesType")
     val salesType: String? = null,
 
+
+    @field:Element(name = "staffID")
+    @param:Element(name = "staffID")
+    val staffID: String? = null,
+
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
     val xmlns: String = AllStringConst._xmls

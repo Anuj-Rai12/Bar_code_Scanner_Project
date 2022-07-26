@@ -60,12 +60,13 @@ class TableManagementViewModel(application: Application) : AndroidViewModel(appl
         }
         viewModelScope.launch {
             userSoredData.read.collectLatest {
-                if (checkFieldValue(it.storeNo.toString())) {
+                if (checkFieldValue(it.storeNo.toString()) || checkFieldValue(it.userID.toString())) {
                     _event.postValue(Events("Internal Error \nTry Login Again"))
                 } else {
-                    repositoryImpl.getTblInformation(it.storeNo!!).collectLatest { res ->
-                        _tblInfo.postValue(res)
-                    }
+                    repositoryImpl.getTblInformation(storeId = it.storeNo!!, staffID = it.userID!!)
+                        .collectLatest { res ->
+                            _tblInfo.postValue(res)
+                        }
                 }
             }
         }
