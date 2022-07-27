@@ -9,11 +9,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mpos.R
 import com.example.mpos.data.table_info.model.json.TableDetail
 import com.example.mpos.databinding.TableMangmentLayoutBinding
+import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.tablemange.adaptor.TableManagementAdaptor
 import com.example.mpos.ui.tablemange.view_model.TableManagementViewModel
 import com.example.mpos.utils.*
@@ -22,7 +23,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
+class TableManagementFragment : Fragment(R.layout.table_mangment_layout),
+    OnBottomSheetClickListener {
     private lateinit var binding: TableMangmentLayoutBinding
     private lateinit var tableManagementAdaptor: TableManagementAdaptor
     private val args: TableManagementFragmentArgs by navArgs()
@@ -56,11 +58,11 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
                 is ApisResponse.Error -> {
                     hideOrShowProgress(null)
                     val exp = it.exception?.localizedMessage
-                    val error=exp?.let {
+                    val error = exp?.let {
                         return@let "Failed to get Response Error Details :-\n$exp"
-                    }?:"Failed to get Response Error Detail :-\nUnknown  Error"
+                    } ?: "Failed to get Response Error Detail :-\nUnknown  Error"
 
-                    showDialogBox("Failed!!", error , icon = R.drawable.ic_error) {}
+                    showDialogBox("Failed!!", error, icon = R.drawable.ic_error) {}
                     Log.i(TAG, "setUpData: $exp")
                 }
                 is ApisResponse.Loading -> {
@@ -117,28 +119,33 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout) {
     private fun setRecycleView() {
         binding.totalTableRecycler.apply {
             setHasFixedSize(true)
-            tableManagementAdaptor = TableManagementAdaptor { res ->
-                Log.i(TAG, "setRecycleView: $res")
-                if (res.billPrinted.equals("No", true)) {
-                    val action = TableManagementFragmentDirections
-                        .actionTableManagementFragmentToConfirmOderFragment(null, res, null)
-                    findNavController().navigate(action)
-                } else {
-                    Handler(Looper.getMainLooper()).post {
-                        Log.i(TAG, "setRecycleView: dialog hit")
-                        showDialogBox(
-                            "Cannot Access",
-                            "Not Allowed to take order in this Table, because table bill is already Printed ${
-                                getEmojiByUnicode(
-                                    0x1F5A8
-                                )
-                            }\n" +
-                                    "Try again when table is open"
-                        ) {}
-                    }
-                }
-            }
+            tableManagementAdaptor = TableManagementAdaptor()
+            tableManagementAdaptor.onClickLister=this@TableManagementFragment
             adapter = tableManagementAdaptor
+        }
+    }
+
+    override fun <T> onItemClicked(response: T) {
+        val res= response as TableDetail
+        Log.i(TAG, "setRecycleView: $res")
+        if (res.billPrinted.equals("No", true)) {
+            val action = TableManagementFragmentDirections
+                .actionTableManagementFragmentToConfirmOderFragment(null, res, null)
+            findNavController().navigate(action)
+        } else {
+            activity?.msg("Cannot Open it already printed ${getEmojiByUnicode(0x1F5A8)}")
+            Handler(Looper.getMainLooper()).post {
+                Log.i(TAG, "setRecycleView: dialog hit")
+                showDialogBox(
+                    "Cannot Access",
+                    "Not Allowed to take order in this Table, because table bill is already Printed ${
+                        getEmojiByUnicode(
+                            0x1F5A8
+                        )
+                    }\n" +
+                            "Try again when table is open"
+                ) {}
+            }
         }
     }
 }

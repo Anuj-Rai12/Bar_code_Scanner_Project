@@ -11,20 +11,19 @@ import com.example.mpos.R
 import com.example.mpos.data.table_info.model.json.TableDetail
 import com.example.mpos.data.table_info.model.json.TblStatus
 import com.example.mpos.databinding.TableTypeItemLayoutBinding
+import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.utils.hide
 import com.example.mpos.utils.show
 
-typealias ItemTableClick = (data: TableDetail) -> Unit
 
-class TableManagementAdaptor(private val itemClicked: ItemTableClick) :
+class TableManagementAdaptor :
     ListAdapter<TableDetail, TableManagementAdaptor.TableItemViewHolder>(diffUtil) {
+    var onClickLister: OnBottomSheetClickListener? = null
+
     inner class TableItemViewHolder(private val binding: TableTypeItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun setData(
-            tableData: TableDetail,
-            itemClickListerForTableData: ItemTableClick
-        ) {
+        fun setData(tableData: TableDetail) {
             binding.apply {
                 tableNumberTxt.text =
                     tableNumberTxt.context.getString(R.string.tbl_title_id, tableData.tableNo)
@@ -46,7 +45,7 @@ class TableManagementAdaptor(private val itemClicked: ItemTableClick) :
                         tblEmpty.hide()
                         tblReserved.hide()
                         tblOccupiedLayout.show()
-                        if (tableData.billPrinted.equals("No",true)) {
+                        if (tableData.billPrinted.equals("No", true)) {
                             occupiedTblPrint.hide()
                             occupiedTblMany.layoutParams = LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -57,7 +56,7 @@ class TableManagementAdaptor(private val itemClicked: ItemTableClick) :
                     }
                 }
                 root.setOnClickListener {
-                    itemClickListerForTableData(tableData)
+                    onClickLister?.onItemClicked(tableData)
                 }
 
             }
@@ -87,7 +86,7 @@ class TableManagementAdaptor(private val itemClicked: ItemTableClick) :
     override fun onBindViewHolder(holder: TableItemViewHolder, position: Int) {
         val currItem = getItem(position)
         currItem?.let {
-            holder.setData(it, itemClicked)
+            holder.setData(it)
         }
     }
 
