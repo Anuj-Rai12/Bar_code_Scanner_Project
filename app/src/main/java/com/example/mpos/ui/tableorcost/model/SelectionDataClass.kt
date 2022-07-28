@@ -24,13 +24,17 @@ data class SelectionDataClass(
                 image = R.drawable.ic_cost_estimation,
                 title = "Cost Estimate",
                 type = RestaurantSelection.COST_ESTIMATION.name
+            ), SelectionDataClass(
+                image = R.drawable.ic_receipt_bill,
+                title = "Bill Payment",
+                type = RestaurantSelection.TABLE_RESERVATION.name
             )
         )
 
         enum class RestaurantSelection {
             TABLE_MANAGEMENT,
             COST_ESTIMATION,
-            TABLE_RESERVATION
+            TABLE_RESERVATION,
         }
 
     }

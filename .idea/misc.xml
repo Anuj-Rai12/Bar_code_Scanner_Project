@@ -37,6 +37,7 @@
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_new_close_icon.xml" value="0.132" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_person.xml" value="0.24375" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_printer_icon.xml" value="0.234" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_receipt_bill.xml" value="0.15" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_remove_icon.xml" value="0.19722222222222222" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_round_close_24.xml" value="0.19814814814814816" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/ic_round_delete.xml" value="0.2101851851851852" />
@@ -60,6 +61,7 @@
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/white_underline_boder.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/drawable/whitebox.xml" value="0.18055555555555555" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/activity_main.xml" value="0.2234375" />
+        <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/billing_fragment_layout.xml" value="0.166796875" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/book_tbl_item_layout.xml" value="0.535264483627204" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/confirm_order_dialog_layout.xml" value="0.2" />
         <entry key="..\:/Androidprojects/OffiqlResturantApp/app/src/main/res/layout/confirm_order_layout.xml" value="0.25" />

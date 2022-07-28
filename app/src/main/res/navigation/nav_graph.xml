@@ -53,6 +53,9 @@
             app:exitAnim="@anim/exit_anim"
             app:popEnterAnim="@anim/pop_enter_anim"
             app:popExitAnim="@anim/pop_exit_anim" />
+        <action
+            android:id="@+id/action_tableManagementOrCostEstimate_to_billingFragment"
+            app:destination="@id/billingFragment" />
     </fragment>
     <fragment
         android:id="@+id/tableManagementFragment"
@@ -245,4 +248,9 @@
         android:name="com.example.mpos.ui.reservation.TableReservationFragment"
         android:label="table_reservation_layout"
         tools:layout="@layout/table_reservation_layout" />
+    <fragment
+        android:id="@+id/billingFragment"
+        android:name="com.example.mpos.ui.billing.BillingFragment"
+        android:label="billing_fragment_layout"
+        tools:layout="@layout/billing_fragment_layout" />
 </navigation>
