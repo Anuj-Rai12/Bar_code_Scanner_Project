@@ -7,9 +7,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.R
+import com.example.mpos.data.reservation.request.AddReservationBody
+import com.example.mpos.data.reservation.request.AddTableReservationRequest
 import com.example.mpos.data.reservation.request.GetTableReservationRequest
 import com.example.mpos.data.reservation.request.GetTableReservationRequestBody
 import com.example.mpos.data.reservation.response.json.GetReservationResponse
+import com.example.mpos.data.reservation.response.json.addRequest.AddReservationJsonResponse
 import com.example.mpos.databinding.TableReservationLayoutBinding
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.reservation.adaptor.TblReservationAdaptor
@@ -28,9 +31,9 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = TableReservationLayoutBinding.bind(view)
 
-        viewModel.events.observe(viewLifecycleOwner){
-            it.getContentIfNotHandled()?.let {res->
-                showErrorDialog(res)
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { res ->
+                showDialogResponse(res)
             }
         }
 
@@ -44,6 +47,51 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
         onScrollListener()
         getAllResponse()
         setData()
+        makeReservationResponse()
+        binding.bookTbl.setOnClickListener {
+            viewModel.addReservation(
+                AddTableReservationRequest(
+                    AddReservationBody(
+                        phoneNumber = "7894561230",
+                        customerName = "Anuj Rai",
+                        reservationDate = "2022-06-19",
+                        reservationTime = "10:20 AM",
+                        cover = "2",
+                        reservationRemarks = "Testing API"
+                    )
+                )
+            )
+        }
+    }
+
+    private fun makeReservationResponse() {
+        viewModel.addReservationItem.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    binding.pbLayout.root.hide()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { res ->
+                            showDialogResponse(res)
+                        }
+                    } else {
+                        showDialogResponse("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.pbLayout.root.show()
+                    binding.pbLayout.titleTxt.text = "${it.data}"
+                }
+                is ApisResponse.Success -> {
+                    binding.pbLayout.root.hide()
+                    val response = it.data as AddReservationJsonResponse
+                    if (response.status) {
+                        showDialogResponse(msg = response.message, title = "Success",icon= R.drawable.ic_success)
+                    }else{
+                        showDialogResponse(msg = response.message)
+                    }
+                }
+            }
+        }
     }
 
     private fun getAllResponse() {
@@ -64,10 +112,10 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
                     hidePbLayout()
                     if (it.data == null) {
                         it.exception?.localizedMessage?.let { res ->
-                            showErrorDialog(res)
+                            showDialogResponse(res)
                         }
                     } else {
-                        showErrorDialog("${it.data}")
+                        showDialogResponse("${it.data}")
                     }
                 }
                 is ApisResponse.Loading -> {
@@ -82,8 +130,12 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
         }
     }
 
-    private fun showErrorDialog(msg: String) {
-        showDialogBox("Failed", msg, icon = R.drawable.ic_error) {}
+    private fun showDialogResponse(
+        msg: String,
+        title: String = "Failed",
+        icon: Int = R.drawable.ic_error
+    ) {
+        showDialogBox(title, msg, icon = icon) {}
     }
 
 

@@ -21,7 +21,7 @@ data class GetTableReservationRequest @JvmOverloads constructor(
 )
 
 
-@Root(name = AllStringConst.Envelope, strict = false)
+@Root(name = "GetReservationDetails", strict = false)
 data class GetTableReservationRequestBody @JvmOverloads constructor(
 
     @field:Element(name = "searchByMobile", required = false)

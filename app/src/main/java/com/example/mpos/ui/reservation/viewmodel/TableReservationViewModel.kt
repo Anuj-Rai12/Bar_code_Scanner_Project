@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.mpos.data.reservation.request.AddTableReservationRequest
 import com.example.mpos.data.reservation.request.GetTableReservationRequest
 import com.example.mpos.dataStore.UserSoredData
 import com.example.mpos.di.RetrofitInstance
@@ -33,6 +34,11 @@ class TableReservationViewModel(application: Application) : AndroidViewModel(app
     private val _getAllReservationItem = MutableLiveData<ApisResponse<out Any>>()
     val getAllReservationItem: LiveData<ApisResponse<out Any>>
         get() = _getAllReservationItem
+
+
+    private val _addReservationItem = MutableLiveData<ApisResponse<out Any>>()
+    val addReservationItem: LiveData<ApisResponse<out Any>>
+        get() = _addReservationItem
 
     private lateinit var staffID: String
 
@@ -69,6 +75,25 @@ class TableReservationViewModel(application: Application) : AndroidViewModel(app
                 _getAllReservationItem.postValue(it)
             }
         }
+    }
+
+
+    fun addReservation(reservationResponse: AddTableReservationRequest) {
+        if (!this::staffID.isInitialized || !this::tableReservationRepository.isInitialized) {
+            _event.postValue(Events("Cannot SetUp Response Item"))
+            return
+        }
+        if (checkFieldValue(this.staffID)) {
+            _event.postValue(Events("Invalid Staff_ID"))
+            return
+        }
+        reservationResponse.body?.staffID = staffID
+        viewModelScope.launch {
+            tableReservationRepository.addReservationItem(reservationResponse).collectLatest {
+                _addReservationItem.postValue(it)
+            }
+        }
+
     }
 
 
