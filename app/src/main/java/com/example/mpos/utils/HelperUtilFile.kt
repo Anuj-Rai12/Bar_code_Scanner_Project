@@ -93,7 +93,11 @@ object AllStringConst {
 
         const val categoryMenu = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CategoryMenu"
 
+        const val addReservation =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:AddReservation"
 
+        const val getReservation =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:GetReservationDetails"
     }
 
 
@@ -365,7 +369,7 @@ fun Fragment.showQtyDialog(
     type: String = "Quantity",
     cancel: (Boolean) -> Unit,
     res: (ItemMaster) -> Unit,
-    instruction:(String)->Unit
+    instruction: (String) -> Unit
 ) {
     val materialDialogs = MaterialAlertDialogBuilder(
         requireActivity(),
@@ -378,17 +382,17 @@ fun Fragment.showQtyDialog(
         .show()
     binding.qtyEdLayout.hint = "Please Enter $type"
     if (!checkFieldValue(value))
-    binding.qtyEd.setText(value)
-if (type!="Quantity"){
-    binding.qtyEd.inputType=InputType.TYPE_CLASS_TEXT
-}
+        binding.qtyEd.setText(value)
+    if (type != "Quantity") {
+        binding.qtyEd.inputType = InputType.TYPE_CLASS_TEXT
+    }
     binding.btnDone.setOnClickListener {
         val qty = binding.qtyEd.text.toString()
         if (checkFieldValue(qty)) {
             activity?.msg("Please Enter $type")
             return@setOnClickListener
         }
-        if (type=="Quantity"){
+        if (type == "Quantity") {
             if (!qty.isDigitsOnly()) {
                 activity?.msg("Please Enter Correct $type")
                 return@setOnClickListener
@@ -397,7 +401,7 @@ if (type!="Quantity"){
             itemMaster.foodAmt =
                 ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * qty.toInt()
             res.invoke(itemMaster)
-        }else{
+        } else {
             instruction.invoke(qty)
         }
         dialog.dismiss()

@@ -1,40 +1,46 @@
 package com.example.mpos.ui.reservation.adaptor
 
-import android.view.ViewGroup
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mpos.data.reverse.ReservationTbl
+import com.example.mpos.data.reservation.response.json.GetReservationResponseItem
 import com.example.mpos.databinding.BookTblItemLayoutBinding
+import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 
-typealias itemClickListener = (data: ReservationTbl) -> Unit
 
-class TblReservationAdaptor(private val itemClicked: itemClickListener) :
-    ListAdapter<ReservationTbl, TblReservationAdaptor.TableResViewHolder>(diffUtil) {
+class TblReservationAdaptor :
+    ListAdapter<GetReservationResponseItem, TblReservationAdaptor.TableResViewHolder>(diffUtil) {
+
+    var itemClickListener: OnBottomSheetClickListener? = null
+
     inner class TableResViewHolder(private val binding: BookTblItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun setData(data: ReservationTbl, itemClicked: itemClickListener) {
+        fun setData(
+            data: GetReservationResponseItem,
+            position: Int
+        ) {
             binding.nameOfCustomer.text = data.customerName
-            binding.phoneNumber.text = data.phoneNumber
-            binding.timeNumber.text=data.time
-            binding.serialNumberTxt.text = data.id.toString()
-            binding.root.setOnClickListener {
-                itemClicked.invoke(data)
+            binding.phoneNumber.text = data.customerMobile
+            binding.timeNumber.text = data.reserveTime
+            binding.serialNumberTxt.text = position.toString()
+            binding.linearLayout.setOnClickListener {
+                itemClickListener?.onItemClicked(data)
             }
         }
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<ReservationTbl>() {
+        val diffUtil = object : DiffUtil.ItemCallback<GetReservationResponseItem>() {
             override fun areItemsTheSame(
-                oldItem: ReservationTbl,
-                newItem: ReservationTbl
-            ) = oldItem.id == newItem.id
+                oldItem: GetReservationResponseItem,
+                newItem: GetReservationResponseItem
+            ) = oldItem.customerMobile == newItem.customerMobile
 
             override fun areContentsTheSame(
-                oldItem: ReservationTbl,
-                newItem: ReservationTbl
+                oldItem: GetReservationResponseItem,
+                newItem: GetReservationResponseItem
             ) = oldItem == newItem
         }
     }
@@ -48,7 +54,7 @@ class TblReservationAdaptor(private val itemClicked: itemClickListener) :
     override fun onBindViewHolder(holder: TableResViewHolder, position: Int) {
         val currItem = getItem(position)
         currItem?.let {
-            holder.setData(it, itemClicked)
+            holder.setData(it, position + 1)
         }
     }
 

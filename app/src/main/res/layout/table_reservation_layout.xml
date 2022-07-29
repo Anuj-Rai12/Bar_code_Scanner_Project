@@ -114,6 +114,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="5dp"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/serial_number_txt"
@@ -121,6 +122,18 @@
         app:layout_constraintTop_toBottomOf="@id/serial_number_txt"
         tools:listitem="@layout/book_tbl_item_layout" />
 
+
+
+    <include
+        android:id="@+id/pb_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        layout="@layout/progress_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/book_tbl"
