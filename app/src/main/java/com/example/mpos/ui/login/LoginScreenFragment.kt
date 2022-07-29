@@ -72,7 +72,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                     it.data?.let { res ->
                         val json = res as ApkLoginJsonResponse
                         if (json.status)
-                            nextFrag(json.storeName)
+                            nextFrag(json)
                         else
                             showDialogBox(
                                 "Failed!!",
@@ -103,11 +103,9 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
         }
     }
 
-    private fun nextFrag(storeNumber: String) {
+    private fun nextFrag(storeNumber: ApkLoginJsonResponse) {
         val action =
-            LoginScreenFragmentDirections.actionLoginScreenFragmentToTableManagementOrCostEstimate(
-                storeNumber
-            )
+            LoginScreenFragmentDirections.actionLoginScreenFragmentToTableManagementOrCostEstimate(storeNumber)
         findNavController().navigate(action)
     }
 

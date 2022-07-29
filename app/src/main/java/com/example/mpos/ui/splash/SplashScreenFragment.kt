@@ -88,7 +88,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                     it.data?.let { type ->
                         val json = type as ApkLoginJsonResponse
                         if (json.status)
-                            nextFrag(json.storeName)
+                            nextFrag(json.storeName,json)
                     }
                 }
             }
@@ -96,7 +96,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
     }
 
 
-    private fun nextFrag(string: String?) {
+    private fun nextFrag(string: String?,data:ApkLoginJsonResponse?=null) {
         lifecycleScope.launchWhenStarted {
             val action = when (string) {
                 null -> {
@@ -108,9 +108,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                     )
                 }
                 else -> {
-                    SplashScreenFragmentDirections.actionSplashScreenFragmentToTableManagementOrCostEstimate(
-                        string
-                    )
+                    SplashScreenFragmentDirections.actionSplashScreenFragmentToTableManagementOrCostEstimate(data!!)
                 }
             }
             findNavController().navigate(action)

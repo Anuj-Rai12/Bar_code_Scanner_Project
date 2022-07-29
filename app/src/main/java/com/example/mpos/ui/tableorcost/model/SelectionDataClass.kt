@@ -9,33 +9,34 @@ data class SelectionDataClass(
     val type: String
 ) {
     companion object {
-        val list = listOf(
-            SelectionDataClass(
-                image = R.drawable.ic_waiter,
-                title = "Table Management",
-                type = RestaurantSelection.TABLE_MANAGEMENT.name
-            ),
-            SelectionDataClass(
-                image = R.drawable.ic_table_dinner,
-                title = "Table Reservation",
-                type = RestaurantSelection.TABLE_RESERVATION.name
-            ),
-            SelectionDataClass(
-                image = R.drawable.ic_cost_estimation,
-                title = "Cost Estimate",
-                type = RestaurantSelection.COST_ESTIMATION.name
-            ), SelectionDataClass(
-                image = R.drawable.ic_receipt_bill,
-                title = "Bill Payment",
-                type = RestaurantSelection.TABLE_RESERVATION.name
-            )
+        val tblManagement = SelectionDataClass(
+            image = R.drawable.ic_waiter,
+            title = "Table Management",
+            type = RestaurantSelection.TABLEMGT.name
+        )
+        val tblReservation = SelectionDataClass(
+            image = R.drawable.ic_table_dinner,
+            title = "Table Reservation",
+            type = RestaurantSelection.TABLERESERVATION.name
+        )
+        val cost = SelectionDataClass(
+            image = R.drawable.ic_cost_estimation,
+            title = "Cost Estimate",
+            type = RestaurantSelection.ESTIMATION.name
+        )
+        val bill = SelectionDataClass(
+            image = R.drawable.ic_receipt_bill,
+            title = "Bill Payment",
+            type = RestaurantSelection.BILLING.name
         )
 
         enum class RestaurantSelection {
-            TABLE_MANAGEMENT,
-            COST_ESTIMATION,
-            TABLE_RESERVATION,
+            TABLEMGT,
+            TABLERESERVATION,
+            ESTIMATION,
+            BILLING,
         }
 
     }
+
 }

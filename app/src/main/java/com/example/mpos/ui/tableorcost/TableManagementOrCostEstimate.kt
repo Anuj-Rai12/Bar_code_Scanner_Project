@@ -10,9 +10,11 @@ import com.example.mpos.R
 import com.example.mpos.databinding.TableOrCostLayoutBinding
 import com.example.mpos.ui.tableorcost.adaptor.TableManagementOrCostRecyclerAdaptor
 import com.example.mpos.ui.tableorcost.model.SelectionDataClass
+import com.example.mpos.ui.tableorcost.model.SelectionDataClass.Companion.RestaurantSelection.*
 import com.example.mpos.utils.TAG
 import com.example.mpos.utils.changeStatusBarColor
 import com.example.mpos.utils.showDialogBox
+import java.util.*
 
 
 class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
@@ -25,9 +27,9 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor()
         binding = TableOrCostLayoutBinding.bind(view)
-        binding.mposId3.text = args.storeName
+        binding.mposId3.text = args.information.storeName
         setRecycleView()
-        tableManagementOrCostRecyclerAdaptor.submitList(SelectionDataClass.list)
+        setData()
         //removeItemFromBackStack()
         //showCountOfBackStack()
         binding.logoutBtnIc2.setOnClickListener {
@@ -36,6 +38,29 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
         binding.logoutTxt2.setOnClickListener {
             showDialog()
         }
+    }
+
+    private fun setData() {
+        val list = mutableListOf<SelectionDataClass>()
+        args.information.screenList.forEach { item ->
+            val value = item.trim().uppercase(Locale.getDefault()).replace("\\s".toRegex(), "")
+            Log.i("ITEMS", "setData: $value")
+            when (valueOf(value)) {
+                TABLEMGT -> {
+                    list.add(SelectionDataClass.tblManagement)
+                }
+                TABLERESERVATION -> {
+                    list.add(SelectionDataClass.tblReservation)
+                }
+                ESTIMATION -> {
+                    list.add(SelectionDataClass.cost)
+                }
+                BILLING -> {
+                    list.add(SelectionDataClass.bill)
+                }
+            }
+        }
+        tableManagementOrCostRecyclerAdaptor.submitList(list)
     }
 
     private fun showDialog() {
@@ -63,24 +88,26 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
 
     private fun screenNav(selection: SelectionDataClass) {
         val action =
-            when (SelectionDataClass.Companion.RestaurantSelection.valueOf(selection.type)) {
-                SelectionDataClass.Companion.RestaurantSelection.TABLE_MANAGEMENT -> {
+            when (valueOf(selection.type)) {
+                TABLEMGT -> {
                     TableManagementOrCostEstimateDirections
-                        .actionTableManagementOrCostEstimateToTableManagementFragment(args.storeName)
+                        .actionTableManagementOrCostEstimateToTableManagementFragment(args.information.storeName)
                 }
-                SelectionDataClass.Companion.RestaurantSelection.COST_ESTIMATION -> {
+                ESTIMATION -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToCostDashBoardFragment(
                         null,
                         null
                     )
                 }
-                SelectionDataClass.Companion.RestaurantSelection.TABLE_RESERVATION -> {
-                    /*TableManagementOrCostEstimateDirections
-                        .actionTableManagementOrCostEstimateToTableReservationFragment()*/
-                    null
+                TABLERESERVATION -> {
+                    TableManagementOrCostEstimateDirections
+                        .actionTableManagementOrCostEstimateToTableReservationFragment()
+                }
+                BILLING -> {
+                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToBillingFragment()
                 }
             }
-        action?.let { findNavController().navigate(it) }
+        findNavController().navigate(action)
     }
 
 }

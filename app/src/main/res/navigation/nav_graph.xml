@@ -43,9 +43,6 @@
             app:exitAnim="@anim/exit_anim"
             app:popEnterAnim="@anim/pop_enter_anim"
             app:popExitAnim="@anim/pop_exit_anim" />
-        <argument
-            android:name="store_name"
-            app:argType="string" />
         <action
             android:id="@+id/action_tableManagementOrCostEstimate_to_tableReservationFragment"
             app:destination="@id/tableReservationFragment"
@@ -56,6 +53,9 @@
         <action
             android:id="@+id/action_tableManagementOrCostEstimate_to_billingFragment"
             app:destination="@id/billingFragment" />
+        <argument
+            android:name="information"
+            app:argType="com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse" />
     </fragment>
     <fragment
         android:id="@+id/tableManagementFragment"
