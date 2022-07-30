@@ -10,6 +10,7 @@ import com.example.mpos.R
 import com.example.mpos.data.reservation.request.GetTableReservationRequest
 import com.example.mpos.data.reservation.request.GetTableReservationRequestBody
 import com.example.mpos.data.reservation.response.json.GetReservationResponse
+import com.example.mpos.data.reservation.response.json.GetReservationResponseItem
 import com.example.mpos.data.reservation.response.json.addRequest.AddReservationJsonResponse
 import com.example.mpos.databinding.TableReservationLayoutBinding
 import com.example.mpos.ui.menu.repo.MenuRepository
@@ -133,7 +134,7 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
                 }
                 is ApisResponse.Loading -> {
                     if (!binding.swipeLayout.isRefreshing)
-                    showPbLayout("${it.data}")
+                        showPbLayout("${it.data}")
                 }
                 is ApisResponse.Success -> {
                     binding.swipeLayout.isRefreshing = false
@@ -197,7 +198,18 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
     }
 
     override fun <T> onItemClicked(response: T) {
-        activity?.msg("$response")
+        val res = response as GetReservationResponseItem
+        showDialogBox(
+            "Reservation Info",
+            "${getEmojiByUnicode(0x1F468)} Total Cover ${res.cover}\n\n" +
+                    "${getEmojiByUnicode(0x1F4F1)} Phone Number ${res.customerMobile}\n\n" +
+                    "${getEmojiByUnicode(0x1F468)} Customer Name ${res.customerName}\n\n" +
+                    "${getEmojiByUnicode(0x1F4C5)} Booking Date ${res.reserveDate}\n\n" +
+                    "${getEmojiByUnicode(0x23F0)} Booking Time ${res.reserveTime}\n\n" +
+                    "${getEmojiByUnicode(0x1F4DC)} Special Instruction ${
+                        if (checkFieldValue(res.instruction))
+                            "No Special Instruction" else res.instruction
+                    }",
+            listener = {})
     }
-
 }
