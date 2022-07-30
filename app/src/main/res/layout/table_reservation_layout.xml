@@ -37,126 +37,152 @@
         app:layout_constraintTop_toTopOf="@id/logo_img" />
 
 
-    <TextView
-        android:id="@+id/serial_number_txt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:ellipsize="end"
-        android:fontFamily="@font/roboto_medium"
-        android:maxLines="1"
-        android:text="@string/so_number"
-        android:textAlignment="textStart"
-        android:textColor="@color/light_grey_color"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/name_of_customer"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo_img" />
-
-
-    <TextView
-        android:id="@+id/name_of_customer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="@font/roboto_medium"
-        android:maxLines="1"
-        android:text="@string/name_of_customer"
-        android:textAlignment="center"
-        android:textColor="@color/light_grey_color"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/phone_number"
-        app:layout_constraintHorizontal_weight="1.5"
-        app:layout_constraintStart_toEndOf="@+id/serial_number_txt"
-        app:layout_constraintTop_toTopOf="@id/serial_number_txt" />
-
-    <TextView
-        android:id="@+id/phone_number"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="@font/roboto_medium"
-        android:maxLines="1"
-        android:text="@string/mobile_num"
-        android:textAlignment="center"
-        android:textColor="@color/light_grey_color"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/time_number"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/name_of_customer"
-        app:layout_constraintTop_toTopOf="@id/name_of_customer" />
-
-
-    <TextView
-        android:id="@+id/time_number"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="@font/roboto_medium"
-        android:maxLines="1"
-        android:text="@string/time"
-        android:textAlignment="center"
-        android:textColor="@color/light_grey_color"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@id/logo_img"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/phone_number"
-        app:layout_constraintTop_toTopOf="@id/phone_number" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/time_reserve_list"
-        android:layout_width="0dp"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:id="@+id/swipe_layout"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/serial_number_txt"
-        app:layout_constraintRight_toRightOf="@id/time_number"
-        app:layout_constraintTop_toBottomOf="@id/serial_number_txt"
-        tools:listitem="@layout/book_tbl_item_layout" />
-
-
-
-    <include
-        android:id="@+id/pb_layout"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        layout="@layout/progress_layout"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/book_tbl"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="25dp"
-        android:backgroundTint="#c2e7ff"
-        android:contentDescription="@string/table_reservation"
-        android:ellipsize="end"
-        android:fontFamily="@font/roboto_medium"
-        android:maxLines="1"
-        android:text="@string/bok_tbl"
-        android:textAllCaps="false"
-        app:shapeAppearanceOverlay="@style/shape_for_fab"
-        android:textColor="#223f58"
-        app:collapsedSize="50dp"
-        app:icon="@drawable/ic_add"
-        app:iconTint="#223f58"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:strokeColor="#c2e7ff" />
+        app:layout_constraintTop_toBottomOf="@id/logo_img">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
 
+            <TextView
+                android:id="@+id/serial_number_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_medium"
+                android:maxLines="1"
+                android:text="@string/so_number"
+                android:textAlignment="textStart"
+                android:textColor="@color/light_grey_color"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/name_of_customer"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/name_of_customer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_medium"
+                android:maxLines="1"
+                android:text="@string/name_of_customer"
+                android:textAlignment="center"
+                android:textColor="@color/light_grey_color"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/phone_number"
+                app:layout_constraintHorizontal_weight="1.5"
+                app:layout_constraintStart_toEndOf="@+id/serial_number_txt"
+                app:layout_constraintTop_toTopOf="@id/serial_number_txt" />
+
+            <TextView
+                android:id="@+id/phone_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_medium"
+                android:maxLines="1"
+                android:text="@string/mobile_num"
+                android:textAlignment="center"
+                android:textColor="@color/light_grey_color"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/time_number"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/name_of_customer"
+                app:layout_constraintTop_toTopOf="@id/name_of_customer" />
+
+
+            <TextView
+                android:id="@+id/time_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_medium"
+                android:maxLines="1"
+                android:text="@string/time"
+                android:textAlignment="center"
+                android:textColor="@color/light_grey_color"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/phone_number"
+                app:layout_constraintTop_toTopOf="@id/phone_number" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/time_reserve_list"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/serial_number_txt"
+                app:layout_constraintRight_toRightOf="@id/time_number"
+                app:layout_constraintTop_toBottomOf="@id/serial_number_txt"
+                tools:listitem="@layout/book_tbl_item_layout" />
+
+
+            <include
+                android:id="@+id/pb_layout"
+                layout="@layout/progress_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/no_data_found"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/book_tbl"
+                style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="25dp"
+                android:backgroundTint="#c2e7ff"
+                android:contentDescription="@string/table_reservation"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_medium"
+                android:maxLines="1"
+                android:text="@string/bok_tbl"
+                android:textAllCaps="false"
+                android:textColor="#223f58"
+                app:collapsedSize="50dp"
+                app:icon="@drawable/ic_add"
+                app:iconTint="#223f58"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:shapeAppearanceOverlay="@style/shape_for_fab"
+                app:strokeColor="#c2e7ff" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

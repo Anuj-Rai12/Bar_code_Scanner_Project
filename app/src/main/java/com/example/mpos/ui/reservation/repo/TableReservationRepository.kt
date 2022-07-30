@@ -5,6 +5,7 @@ import com.example.mpos.data.reservation.request.AddTableReservationRequest
 import com.example.mpos.data.reservation.request.GetTableReservationRequest
 import com.example.mpos.data.reservation.response.json.GetReservationResponse
 import com.example.mpos.data.reservation.response.json.addRequest.AddReservationJsonResponse
+import com.example.mpos.ui.menu.repo.MenuRepository
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.buildApi
 import com.example.mpos.utils.deserializeFromJson
@@ -26,7 +27,11 @@ class TableReservationRepository(retrofit: Retrofit) {
             val response = api.getReservationSection(request)
             if (response.isSuccessful) {
                 deserializeFromJson<GetReservationResponse>(response.body()?.responseForBody?.value)?.let { res ->
-                    ApisResponse.Success(res)
+                    if (res.isEmpty()){
+                        ApisResponse.Success(MenuRepository.err_emoji)
+                    }else{
+                        ApisResponse.Success(res)
+                    }
                 } ?: ApisResponse.Error(errMsg, null)
             } else {
                 ApisResponse.Error(err, null)

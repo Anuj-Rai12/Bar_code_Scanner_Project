@@ -15,6 +15,7 @@ import com.example.mpos.utils.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.Serializable
 
 class TableReservationViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -31,8 +32,8 @@ class TableReservationViewModel(application: Application) : AndroidViewModel(app
         get() = _event
 
 
-    private val _getAllReservationItem = MutableLiveData<ApisResponse<out Any>>()
-    val getAllReservationItem: LiveData<ApisResponse<out Any>>
+    private val _getAllReservationItem = MutableLiveData<ApisResponse<out Serializable>>()
+    val getAllReservationItem: LiveData<ApisResponse<out Serializable>>
         get() = _getAllReservationItem
 
 

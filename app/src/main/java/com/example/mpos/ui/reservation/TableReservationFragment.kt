@@ -7,13 +7,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.R
-import com.example.mpos.data.reservation.request.AddReservationBody
-import com.example.mpos.data.reservation.request.AddTableReservationRequest
 import com.example.mpos.data.reservation.request.GetTableReservationRequest
 import com.example.mpos.data.reservation.request.GetTableReservationRequestBody
 import com.example.mpos.data.reservation.response.json.GetReservationResponse
 import com.example.mpos.data.reservation.response.json.addRequest.AddReservationJsonResponse
 import com.example.mpos.databinding.TableReservationLayoutBinding
+import com.example.mpos.ui.menu.repo.MenuRepository
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.reservation.adaptor.TblReservationAdaptor
 import com.example.mpos.ui.reservation.viewmodel.TableReservationViewModel
@@ -48,20 +47,28 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
         getAllResponse()
         setData()
         makeReservationResponse()
-        binding.bookTbl.setOnClickListener {
-            viewModel.addReservation(
-                AddTableReservationRequest(
-                    AddReservationBody(
-                        phoneNumber = "7894561230",
-                        customerName = "Anuj Rai",
-                        reservationDate = "2022-06-19",
-                        reservationTime = "10:20 AM",
-                        cover = "2",
-                        reservationRemarks = "Testing API"
-                    )
-                )
-            )
+        binding.swipeLayout.setOnRefreshListener {
+            if (binding.swipeLayout.isRefreshing) {
+                getAllResponse()
+            }
         }
+        binding.bookTbl.setOnClickListener {
+            addBooking()
+        }
+    }
+
+    private fun addBooking() {
+        activity?.addReservation(
+            "Make Booking",
+            fragmentManager = parentFragmentManager,
+            cancel = {},
+            listener = { data ->
+                if (data == null) {
+                    addBooking()
+                } else {
+                    viewModel.addReservation(data)
+                }
+            })
     }
 
     private fun makeReservationResponse() {
@@ -85,8 +92,12 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
                     binding.pbLayout.root.hide()
                     val response = it.data as AddReservationJsonResponse
                     if (response.status) {
-                        showDialogResponse(msg = response.message, title = "Success",icon= R.drawable.ic_success)
-                    }else{
+                        showDialogResponse(
+                            msg = response.message,
+                            title = "Success",
+                            icon = R.drawable.ic_success
+                        )
+                    } else {
                         showDialogResponse(msg = response.message)
                     }
                 }
@@ -110,6 +121,8 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
             when (it) {
                 is ApisResponse.Error -> {
                     hidePbLayout()
+                    binding.swipeLayout.isRefreshing = false
+                    binding.noDataFound.text = MenuRepository.err_emoji
                     if (it.data == null) {
                         it.exception?.localizedMessage?.let { res ->
                             showDialogResponse(res)
@@ -119,12 +132,19 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
                     }
                 }
                 is ApisResponse.Loading -> {
+                    if (!binding.swipeLayout.isRefreshing)
                     showPbLayout("${it.data}")
                 }
                 is ApisResponse.Success -> {
-                    hidePbLayout()
-                    tblReservationAdaptor.notifyDataSetChanged()
-                    tblReservationAdaptor.submitList(it.data as GetReservationResponse)
+                    binding.swipeLayout.isRefreshing = false
+                    if (it.data is String) {
+                        binding.pbLayout.root.hide()
+                        binding.noDataFound.text = it.data
+                    } else {
+                        hidePbLayout()
+                        tblReservationAdaptor.notifyDataSetChanged()
+                        tblReservationAdaptor.submitList(it.data as GetReservationResponse)
+                    }
                 }
             }
         }
@@ -141,6 +161,7 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
 
     private fun showPbLayout(msg: String) {
         binding.pbLayout.root.show()
+        binding.noDataFound.text = ""
         binding.pbLayout.titleTxt.text = msg
         binding.timeReserveList.hide()
     }

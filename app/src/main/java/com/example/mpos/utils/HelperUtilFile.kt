@@ -21,6 +21,8 @@ import com.example.mpos.R
 import com.example.mpos.data.cofirmDining.ConfirmDiningBody
 import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.item_master_sync.json.ItemMaster
+import com.example.mpos.data.reservation.request.AddReservationBody
+import com.example.mpos.data.reservation.request.AddTableReservationRequest
 import com.example.mpos.databinding.ConfirmOrderDialogLayoutBinding
 import com.example.mpos.databinding.QtyIncrementLayoutBinding
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
@@ -28,8 +30,13 @@ import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.ui.tableorcost.model.SelectionDataClass
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
@@ -37,8 +44,10 @@ import com.vmadalin.easypermissions.EasyPermissions
 import retrofit2.Retrofit
 import java.net.URL
 import java.text.Normalizer
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 import java.util.regex.Pattern
 
 const val CAMERA_INT = 11
@@ -331,6 +340,193 @@ fun Activity.addDialogMaterial(
 }
 
 
+fun Activity.addReservation(
+    title: String,
+    fragmentManager: FragmentManager,
+    cancel: () -> Unit,
+    listener: AddReservation
+) {
+    val binding = ConfirmOrderDialogLayoutBinding.inflate(layoutInflater)
+
+    var isTimePickerClick = false
+    var isDatePickerClick = false
+
+    val material = MaterialAlertDialogBuilder(
+        this,
+        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+    )
+    material
+        .setView(binding.root)
+        .setCancelable(false)
+        .setTitle(title)
+        .setPositiveButton("Done") { dialog, _ ->
+            val cover = binding.coverNumEd.text.toString()
+            val phone = binding.customerNumberEd.text.toString()
+            val name = binding.customerNameEd.text.toString()
+            val time = binding.reservationTimeEd.text.toString()
+            val date = binding.reservationDateEd.text.toString()
+            val remark = binding.reservationRemarkEd.text.toString()
+
+            if (checkFieldValue(cover) || checkFieldValue(phone) || checkFieldValue(name) || checkFieldValue(
+                    time
+                ) || checkFieldValue(date)
+            ) {
+                listener.invoke(null)
+                msg("Please Add Correct Information")
+                return@setPositiveButton
+            }
+
+            if (!cover.isDigitsOnly()) {
+                msg("Please Add Correct Cover Number")
+                listener.invoke(null)
+                return@setPositiveButton
+            } else if (cover.isDigitsOnly() && cover.toInt() <= 0) {
+                msg("Cover Cannot be 0")
+                listener.invoke(null)
+                return@setPositiveButton
+            }
+
+            if (!phone.isDigitsOnly() || !isValidPhone(phone)) {
+                msg("Please  Add Correct PhoneNumber")
+                listener.invoke(null)
+                return@setPositiveButton
+            }
+
+            listener.invoke(
+                AddTableReservationRequest(
+                    AddReservationBody(
+                        phoneNumber = phone,
+                        customerName = name,
+                        reservationDate = date,
+                        reservationTime = time,
+                        reservationRemarks = if (checkFieldValue(remark)) "" else remark,
+                        cover = cover
+                    )
+                )
+            )
+            dialog.dismiss()
+        }.setNegativeButton("Cancel") { dialog, id ->
+            cancel.invoke()
+            dialog.dismiss()
+        }.create().show()
+    binding.customerNumTv.text = "Customer PhoneNo"
+    binding.customerNameTxt.text = "Customer Name"
+    binding.reserveTime.show()
+    binding.reserveRemark.show()
+    binding.reservationRemarkLayout.show()
+    binding.reserveTime.text = "Reservation Time ${getEmojiByUnicode(0x23F0)}"
+    binding.reservationTimeEdLayout.show()
+    binding.reserveDate.show()
+    binding.reserveDate.text = "Reservation Date ${getEmojiByUnicode(0x1F4C5)}"
+    binding.reservationDateEdLayout.show()
+
+
+    binding.reservationTimeEd.setOnClickListener {
+        if (!isTimePickerClick) {
+            isTimePickerClick = true
+            timePicker(fragmentManager = fragmentManager, timeListener = { time ->
+                binding.reservationTimeEd.setText(time)
+                isTimePickerClick = false
+            }, cancel = {
+                isTimePickerClick = false
+            })
+        } else {
+            msg("Opening Time Picker ${getEmojiByUnicode(0x23F0)}")
+        }
+    }
+
+    binding.reservationDateEd.setOnClickListener {
+        if (!isDatePickerClick) {
+            isDatePickerClick = true
+            calenderPicker(fragmentManager, cancel = {
+                isDatePickerClick = false
+            }, dateListener = { date ->
+                isDatePickerClick = false
+                binding.reservationDateEd.setText(date)
+            })
+        } else {
+            msg("Opening Date Picker ${getEmojiByUnicode(0x1F4C5)}")
+        }
+    }
+}
+
+
+fun Activity.timePicker(
+    fragmentManager: FragmentManager,
+    timeListener: (txt: String) -> Unit,
+    cancel: () -> Unit
+) {
+
+    //val isSystem24Hour = is24HourFormat(this)
+    //val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+
+    val timePicker = MaterialTimePicker
+        .Builder()
+        .setTimeFormat(TimeFormat.CLOCK_24H)
+        .setTitleText("Select Booking Time")
+        .setHour(10)
+        .setMinute(56)
+        .build()
+
+    timePicker.addOnPositiveButtonClickListener {
+        val time = if (timePicker.hour < 12) {
+            "${timePicker.hour}:${timePicker.minute} AM"
+        } else {
+            "${timePicker.hour}:${timePicker.minute} PM"
+        }
+        timeListener.invoke(time)
+        timePicker.dismiss()
+    }
+
+    timePicker.addOnDismissListener {
+        cancel.invoke()
+        it.dismiss()
+    }
+    timePicker.addOnCancelListener {
+        cancel.invoke()
+        it.dismiss()
+    }
+
+    timePicker.show(fragmentManager, "Picker")
+
+}
+
+
+fun Activity.calenderPicker(
+    fragmentManager: FragmentManager,
+    cancel: () -> Unit,
+    dateListener: (txt: String) -> Unit
+) {
+    val constraint = CalendarConstraints.Builder().setValidator(DateValidatorPointForward.now())
+    val datePicker = MaterialDatePicker
+        .Builder
+        .datePicker()
+        .setTitleText("Select Booking Date")
+        .setCalendarConstraints(constraint.build())
+        .build()
+
+
+    datePicker.addOnCancelListener {
+        cancel.invoke()
+        it.dismiss()
+    }
+
+    datePicker.addOnDismissListener {
+        cancel.invoke()
+        it.dismiss()
+    }
+
+    datePicker.addOnPositiveButtonClickListener { time ->
+        val calendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        calendar.timeInMillis = time
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        val formattedDate: String = format.format(calendar.time)
+        dateListener.invoke(formattedDate)
+    }
+    datePicker.show(fragmentManager, "DatePicker")
+}
+
+
 fun Fragment.showDialogBox(
     title: String,
     desc: String,
@@ -492,4 +688,5 @@ typealias LumaListener = (lum: Double) -> Unit
 typealias CustomerDining = (customer: ConfirmDiningRequest?, flag: Boolean) -> Unit
 typealias ImageListener = (imageInput: InputImage) -> Unit
 typealias SnackBarListener = (msg: String?) -> String?
+typealias AddReservation = (data: AddTableReservationRequest?) -> Unit
 //typealias ItemClickListerForFoodSelected = (foodItemSelected: FoodItemSelected) -> Unit

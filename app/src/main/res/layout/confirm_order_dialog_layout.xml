@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:overScrollMode="never">
@@ -8,7 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#E0EDFF">
+        android:background="#E0EDFF"
+        android:paddingBottom="20dp">
 
         <TextView
             android:id="@+id/cover_num_txt"
@@ -104,23 +106,153 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/customer_name_ed_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
             app:boxBackgroundColor="@color/white"
             app:boxStrokeColor="@color/light_grey_color"
             app:endIconMode="clear_text"
             app:endIconTint="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/customer_name_txt"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/customer_name_txt">
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/customer_name_ed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/reserve_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/light_grey_color"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@id/customer_name_ed_layout"
+            app:layout_constraintTop_toBottomOf="@id/customer_name_ed_layout"
+            tools:text="Reservation Time"
+            tools:visibility="visible" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reservation_time_ed_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone"
+            app:boxBackgroundColor="@color/white"
+            app:boxStrokeColor="@color/light_grey_color"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black"
+            app:layout_constraintLeft_toLeftOf="@id/customer_name_txt"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reserve_time"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/reservation_time_ed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cursorVisible="false"
+                android:editable="false"
+                android:inputType="none"
+                android:padding="10dp"
+                android:textColor="@color/black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/reserve_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/light_grey_color"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@id/reservation_time_ed_layout"
+            app:layout_constraintTop_toBottomOf="@id/reservation_time_ed_layout"
+            tools:text="Reservation Date"
+            tools:visibility="visible" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reservation_date_ed_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone"
+            app:boxBackgroundColor="@color/white"
+            app:boxStrokeColor="@color/light_grey_color"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black"
+            app:layout_constraintLeft_toLeftOf="@id/reserve_date"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reserve_date"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/reservation_date_ed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cursorVisible="false"
+                android:editable="false"
+                android:inputType="none"
+                android:padding="10dp"
+                android:textColor="@color/black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/reserve_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Reservation Remark (optional)"
+            android:textColor="@color/light_grey_color"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@id/reservation_date_ed_layout"
+            app:layout_constraintTop_toBottomOf="@id/reservation_date_ed_layout"
+            tools:visibility="visible" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reservation_remark_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone"
+            app:boxBackgroundColor="@color/white"
+            app:boxStrokeColor="@color/light_grey_color"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black"
+            app:layout_constraintLeft_toLeftOf="@id/reserve_remark"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reserve_remark"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/reservation_remark_ed"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="10dp"
