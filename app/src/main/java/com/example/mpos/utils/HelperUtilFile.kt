@@ -107,6 +107,8 @@ object AllStringConst {
 
         const val getReservation =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:GetReservationDetails"
+        const val costEstimation =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ConfirmEstimation"
     }
 
 

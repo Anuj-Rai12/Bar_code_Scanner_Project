@@ -13,6 +13,7 @@ import com.example.mpos.ui.tableorcost.model.SelectionDataClass
 import com.example.mpos.ui.tableorcost.model.SelectionDataClass.Companion.RestaurantSelection.*
 import com.example.mpos.utils.TAG
 import com.example.mpos.utils.changeStatusBarColor
+import com.example.mpos.utils.msg
 import com.example.mpos.utils.showDialogBox
 import java.util.*
 
@@ -104,10 +105,12 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                         .actionTableManagementOrCostEstimateToTableReservationFragment()
                 }
                 BILLING -> {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToBillingFragment()
+                    //TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToBillingFragment()
+                    activity?.msg("Working on it")
+                    null
                 }
             }
-        findNavController().navigate(action)
+        action?.let { findNavController().navigate(it) }
     }
 
 }

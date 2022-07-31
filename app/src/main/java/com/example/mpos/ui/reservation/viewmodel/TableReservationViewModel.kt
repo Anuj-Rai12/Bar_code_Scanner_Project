@@ -66,6 +66,10 @@ class TableReservationViewModel(application: Application) : AndroidViewModel(app
 
 
     fun getTableReservedInfo(request: GetTableReservationRequest) {
+        if (!app.isNetworkAvailable()) {
+            _event.postValue(Events("No Internet Connection Found!!"))
+            return
+        }
         if (!this::staffID.isInitialized || !this::tableReservationRepository.isInitialized) {
             _event.postValue(Events("Cannot SetUp Response Item"))
             return
@@ -80,6 +84,10 @@ class TableReservationViewModel(application: Application) : AndroidViewModel(app
 
 
     fun addReservation(reservationResponse: AddTableReservationRequest) {
+        if (!app.isNetworkAvailable()) {
+            _event.postValue(Events("No Internet Connection Found!!"))
+            return
+        }
         if (!this::staffID.isInitialized || !this::tableReservationRepository.isInitialized) {
             _event.postValue(Events("Cannot SetUp Response Item"))
             return
