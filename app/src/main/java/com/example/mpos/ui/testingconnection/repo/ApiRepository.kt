@@ -51,7 +51,7 @@ class ApiRepository constructor(
     }.flowOn(IO)
 
     private val error = "Please Check the Credentials or Try Again!!"
-    private val errorApi = "Oops SomeTing Went Wrong Try Again!!"
+    private val errorApi = "Oops Something Went Wrong Try Again!!"
 
     fun addTestingUrl(testingConnection: TestingConnection) = flow {
         emit(ApisResponse.Loading("Please Wait.."))
