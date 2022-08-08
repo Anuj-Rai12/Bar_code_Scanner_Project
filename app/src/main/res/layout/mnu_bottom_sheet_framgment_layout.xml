@@ -23,15 +23,6 @@
             android:orientation="horizontal">
 
 
-            <ImageButton
-                android:id="@+id/cancelBtn"
-                android:layout_width="?attr/actionBarSize"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/clos_btn"
-                android:src="@drawable/ic_crossed_knife_and_fork"
-                app:tint="@color/black" />
-
             <TextView
                 android:id="@+id/nameToolbar"
                 android:layout_width="0dp"
@@ -42,6 +33,15 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/black"
                 tools:text="Name" />
+
+            <ImageButton
+                android:id="@+id/cancelBtn"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/clos_btn"
+                android:src="@drawable/ic_crossed_knife_and_fork"
+                app:tint="@color/black" />
         </LinearLayout>
 
 
