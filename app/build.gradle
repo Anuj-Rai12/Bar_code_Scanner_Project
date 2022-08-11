@@ -133,4 +133,7 @@ dependencies {
     implementation 'com.airbnb.android:lottie:5.0.1'
     //Kotlin Reflect
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.0"
+
+    //Print Document
+    implementation 'com.itextpdf:itextg:5.5.10'
 }

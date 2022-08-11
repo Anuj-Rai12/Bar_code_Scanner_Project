@@ -34,6 +34,8 @@ import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.use_case.AlphaNumericString
 import com.example.mpos.utils.*
+import com.example.mpos.utils.print.MainPrintFeatures
+import com.example.mpos.utils.print.PrintUtils
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
@@ -106,7 +108,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         getConfirmOrderResponse()
 
         binding.confirmOrderBtn.setOnClickListener {
-            if (arrItem.isEmpty()) {
+            printDocument("Testing_pdf_${System.currentTimeMillis()}.pdf")
+            /*if (arrItem.isEmpty()) {
                 costEstimationViewModel.addError("Please Add Item Menu !!")
                 return@setOnClickListener
             }
@@ -114,7 +117,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 costEstimationViewModel.getCostEstimation(costEstimation!!)
             } else {
                 costEstimationViewModel.addError("Oops cannot setUp a Process!!")
-            }
+            }*/
         }
 
         binding.infoBtn.setOnClickListener {
@@ -149,6 +152,13 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             initial()
         }
 
+    }
+
+    private fun printDocument(fileName: String) {
+
+        val pdf =
+            MainPrintFeatures(requireActivity(), fileName)
+        pdf.createFile(PrintUtils.getFileSaveLocation() + fileName)
     }
 
     private fun getCostEstimationResponse() {
