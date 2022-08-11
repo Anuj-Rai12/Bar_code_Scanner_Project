@@ -201,14 +201,16 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
         val res = response as GetReservationResponseItem
         showDialogBox(
             "Reservation Info",
-            "${getEmojiByUnicode(0x1F468)} Total Cover ${res.cover}\n\n" +
-                    "${getEmojiByUnicode(0x1F4F1)} Phone Number ${res.customerMobile}\n\n" +
-                    "${getEmojiByUnicode(0x1F468)} Customer Name ${res.customerName}\n\n" +
-                    "${getEmojiByUnicode(0x1F4C5)} Booking Date ${res.reserveDate}\n\n" +
-                    "${getEmojiByUnicode(0x23F0)} Booking Time ${res.reserveTime}\n\n" +
-                    "${getEmojiByUnicode(0x1F4DC)} Special Instruction ${
+            "${getEmojiByUnicode(0x1F468)} Total Cover-> ${res.cover}\n\n" +
+                    "${getEmojiByUnicode(0x1F4F1)} Phone Number-> ${res.customerMobile}\n\n" +
+                    "${getEmojiByUnicode(0x1F468)} Name-> ${res.customerName}\n\n" +
+                    "${getEmojiByUnicode(0x1F4C5)} Booking Date-> ${res.reserveDate}\n\n" +
+                    "${getEmojiByUnicode(0x23F0)} Booking Time-> ${res.reserveTime}\n\n" +
+                    "${getEmojiByUnicode(0x1F4DC)} Special Instruction :-\n${
                         if (checkFieldValue(res.instruction))
-                            "No Special Instruction" else res.instruction
+                            "No Special Instruction"
+                        else
+                            res.instruction
                     }",
             listener = {})
     }
