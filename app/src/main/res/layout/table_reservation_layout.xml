@@ -38,9 +38,9 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/swipe_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -61,7 +61,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:maxLines="1"
                 android:text="@string/so_number"
-                android:textAlignment="textStart"
+                android:textAlignment="center"
                 android:textColor="@color/light_grey_color"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/name_of_customer"
@@ -83,7 +83,7 @@
                 android:textColor="@color/light_grey_color"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/phone_number"
-                app:layout_constraintHorizontal_weight="1.5"
+                app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/serial_number_txt"
                 app:layout_constraintTop_toTopOf="@id/serial_number_txt" />
 
@@ -134,7 +134,8 @@
                 app:layout_constraintLeft_toLeftOf="@id/serial_number_txt"
                 app:layout_constraintRight_toRightOf="@id/time_number"
                 app:layout_constraintTop_toBottomOf="@id/serial_number_txt"
-                tools:listitem="@layout/book_tbl_item_layout" />
+                tools:listitem="@layout/book_tbl_item_layout"
+                tools:visibility="visible" />
 
 
             <include

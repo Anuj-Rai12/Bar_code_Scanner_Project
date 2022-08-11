@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/semi_white_color"
     android:layout_margin="5dp"
-    android:overScrollMode="ifContentScrolls">
+    android:background="@color/semi_white_color">
 
     <LinearLayout
         android:id="@+id/linear_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/serial_number_txt"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/food_item_one_selcetion_layout"
             android:ellipsize="end"
             android:fontFamily="@font/roboto_medium"
@@ -32,9 +35,10 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/name_of_customer"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:layout_weight="1"
             android:background="@drawable/food_item_one_selcetion_layout"
             android:ellipsize="end"
             android:fontFamily="@font/roboto_medium"
@@ -47,9 +51,10 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/phone_number"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:layout_weight="1"
             android:background="@drawable/food_item_one_selcetion_layout"
             android:ellipsize="end"
             android:fontFamily="@font/roboto_medium"
@@ -63,9 +68,10 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/time_number"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:layout_weight="1"
             android:background="@drawable/food_item_one_selcetion_layout"
             android:ellipsize="end"
             android:fontFamily="@font/roboto_medium"
@@ -77,4 +83,4 @@
             tools:text="10:00 PM" />
 
     </LinearLayout>
-</HorizontalScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

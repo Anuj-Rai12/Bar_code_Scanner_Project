@@ -417,6 +417,7 @@ fun Activity.addReservation(
     binding.reserveRemark.show()
     binding.reservationRemarkLayout.show()
     binding.reserveTime.text = "Reservation Time ${getEmojiByUnicode(0x23F0)}"
+    binding.reservationDateEd.setText(getDate())
     binding.reservationTimeEdLayout.show()
     binding.reserveDate.show()
     binding.reserveDate.text = "Reservation Date ${getEmojiByUnicode(0x1F4C5)}"
