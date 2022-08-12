@@ -108,8 +108,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         getConfirmOrderResponse()
 
         binding.confirmOrderBtn.setOnClickListener {
-            printDocument("Testing_pdf_${System.currentTimeMillis()}.pdf")
-            /*if (arrItem.isEmpty()) {
+            if (arrItem.isEmpty()) {
                 costEstimationViewModel.addError("Please Add Item Menu !!")
                 return@setOnClickListener
             }
@@ -117,7 +116,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 costEstimationViewModel.getCostEstimation(costEstimation!!)
             } else {
                 costEstimationViewModel.addError("Oops cannot setUp a Process!!")
-            }*/
+            }
         }
 
         binding.infoBtn.setOnClickListener {
@@ -155,9 +154,18 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     }
 
     private fun printDocument(fileName: String) {
-
+        val time = confirmOrderViewModel.time.value ?: "12:59 PM"
+        val date = getDate()
         val pdf =
-            MainPrintFeatures(requireActivity(), fileName)
+            MainPrintFeatures(
+                requireActivity(),
+                fileName,
+                "MITHAI Shop/Showroom\nAmritsar",
+                "G1",
+                date ?: "2022-08-12",
+                time,
+                arrItem
+            )
         pdf.createFile(PrintUtils.getFileSaveLocation() + fileName)
     }
 
@@ -231,30 +239,25 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                     hidePb()
                     (it.data as ConfirmOrderSuccessResponse?)?.let { res ->
                         val str = res.body?.returnValue
-                        val result = if (str == "01") {
-                            Pair(
+                        if (str == "01") {
+                            val item=Pair(
                                 R.drawable.ic_error, Pair(
                                     "Failed!",
                                     Pair("Order is Not Inserted in Navision at All.", true)
                                 )
                             )
-                        } else {
-                            Pair(
-                                R.drawable.ic_success, Pair(
-                                    "Successfully Inserted",
-                                    Pair("Order is Inserted in Navision at All.", false)
-                                )
-                            )
-                        }
-                        showDialogBox(
-                            title = result.second.first,
-                            desc = result.second.second.first,
-                            icon = result.first,
-                            isCancel = result.second.second.second
-                        ) {
-                            if (str != "01") {
-                                findNavController().popBackStack()
+                            showDialogBox(
+                                title = item.second.first,
+                                desc = item.second.second.first,
+                                icon = item.first,
+                                isCancel = item.second.second.second
+                            ) {
+                                if (str != "01") {
+                                    findNavController().popBackStack()
+                                }
                             }
+                        } else {
+                            printDocument("Testing_pdf_${System.currentTimeMillis()}.pdf")
                         }
                     } ?: run {
                         val res =
