@@ -31,6 +31,7 @@ class LoginRepositoryImpl(
                         )
                         RestaurantSingletonCls.getInstance().setStoreId(requestBody.apK.storeNo!!)
                         RestaurantSingletonCls.getInstance().setUserID(requestBody.apK.userID)
+                        RestaurantSingletonCls.getInstance().setRestaurantName(it.storeName)
                     }
                     return@let it
                 }

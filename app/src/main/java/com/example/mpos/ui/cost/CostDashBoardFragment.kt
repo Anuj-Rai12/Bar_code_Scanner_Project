@@ -160,11 +160,12 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             MainPrintFeatures(
                 requireActivity(),
                 fileName,
-                "MITHAI Shop/Showroom\nAmritsar",
+                RestaurantSingletonCls.getInstance().getRestaurantName()?:"Unknown Restaurant",
                 "G1",
                 date ?: "2022-08-12",
                 time,
-                arrItem
+                arrItem,
+                confirmOrderViewModel.grandTotal.value ?: "0"
             )
         pdf.createFile(PrintUtils.getFileSaveLocation() + fileName)
     }
@@ -240,7 +241,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                     (it.data as ConfirmOrderSuccessResponse?)?.let { res ->
                         val str = res.body?.returnValue
                         if (str == "01") {
-                            val item=Pair(
+                            val item = Pair(
                                 R.drawable.ic_error, Pair(
                                     "Failed!",
                                     Pair("Order is Not Inserted in Navision at All.", true)

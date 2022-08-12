@@ -36,6 +36,7 @@ class ApiRepository constructor(
                             password = requestBody.apK.password!!,
                         )
                         RestaurantSingletonCls.getInstance().setStoreId(requestBody.apK.storeNo!!)
+                        RestaurantSingletonCls.getInstance().setRestaurantName(it.storeName)
                     }
                     return@let it
                 }

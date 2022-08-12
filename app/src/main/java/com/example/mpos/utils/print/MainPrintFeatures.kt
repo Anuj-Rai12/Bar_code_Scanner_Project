@@ -6,7 +6,6 @@ import android.print.PrintAttributes
 import android.print.PrintManager
 import android.util.Log
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
-import com.example.mpos.utils.Rs_Symbol
 import com.example.mpos.utils.checkFieldValue
 import com.example.mpos.utils.msg
 import com.itextpdf.text.*
@@ -27,7 +26,8 @@ class MainPrintFeatures(
     private val orderValue: String,
     private val date: String,
     private val time: String,
-    private val list: MutableList<ItemMasterFoodItem>
+    private val list: MutableList<ItemMasterFoodItem>,
+    private val totalPrice: String
 ) {
 
 
@@ -92,25 +92,25 @@ class MainPrintFeatures(
             addNewItemLeftAndRight(
                 document,
                 totalWithOutGst,
-                "290\t",
+                "$totalPrice\t",
                 fontTitle2,
                 fontTitle
             )
             addDottedSeparator(document)
             //Total item in bill
-            addNewItemLeftAndRight(document, noOfItem, "10\t", fontTitle2, fontTitle)
+            addNewItemLeftAndRight(document, noOfItem, "${list.size}\t", fontTitle2, fontTitle)
             addDottedSeparator(document)
             //Total item with Gst
             addNewItemLeftAndRight(
                 document,
                 totalWithGst,
-                "290\t",
+                "${totalPrice}\t",
                 fontTitle2,
                 fontTitle
             )
             addDottedSeparator(document)
             //total amount
-            addNewItemLeftAndRight(document, total, "300\t", fontTitle2, fontTitle)
+            addNewItemLeftAndRight(document, total, "$totalPrice\t", fontTitle2, fontTitle)
             addLineSeparator(document)
             activity.msg("Created PDF")
             document.close()
@@ -144,10 +144,11 @@ class MainPrintFeatures(
         list.forEach { foodItem ->
             setTableData(
                 if (!checkFieldValue(foodItem.itemMaster.itemName)) foodItem.itemMaster.itemName
-                else foodItem.itemMaster.itemDescription, table)
+                else foodItem.itemMaster.itemDescription, table
+            )
             setTableData(foodItem.foodQty.toString(), table)
-            setTableData("$Rs_Symbol ${foodItem.itemMaster.salePrice}", table)
-            setTableData("$Rs_Symbol ${foodItem.foodAmt}", table)
+            setTableData(foodItem.itemMaster.salePrice, table)
+            setTableData("${foodItem.foodAmt}", table)
         }
 
 

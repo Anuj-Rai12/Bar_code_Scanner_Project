@@ -1,11 +1,10 @@
 package com.example.mpos.utils
 
 
-
 class RestaurantSingletonCls {
     private var storeId: String? = null
     private var userId: String? = null
-
+    private var restaurantName: String? = null
 
     companion object {
         private var INSTANCE: RestaurantSingletonCls? = null
@@ -30,5 +29,10 @@ class RestaurantSingletonCls {
         this.userId = usr
     }
 
+    fun setRestaurantName(res: String) {
+        this.restaurantName = res
+    }
+
+    fun getRestaurantName() = restaurantName
 
 }
