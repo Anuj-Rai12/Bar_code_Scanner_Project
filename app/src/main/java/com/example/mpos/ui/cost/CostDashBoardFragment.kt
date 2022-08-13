@@ -258,7 +258,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                                 }
                             }
                         } else {
-                            printDocument("Testing_pdf_${System.currentTimeMillis()}.pdf")
+                            printDocument("Cost_Estimation_at_${getDate()}_in_${System.currentTimeMillis()}.pdf")
                         }
                     } ?: run {
                         val res =
