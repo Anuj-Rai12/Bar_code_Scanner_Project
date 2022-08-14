@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         lifecycleScope.launch {
             val dataStore = UserSoredData(application)
             dataStore.logout()
-            finish()
         }
     }
 

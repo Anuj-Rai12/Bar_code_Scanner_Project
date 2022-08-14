@@ -13,28 +13,27 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="19dp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        tools:text="Sample Mail this there fdjkdglk gjdfklgfdkl gjdfkldklfh jgdklfhlk"
         android:layout_marginTop="12dp"
+        android:ellipsize="end"
         android:fontFamily="@font/roboto_medium"
+        android:maxLines="1"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintRight_toLeftOf="@id/logo_file_id3"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toLeftOf="@id/logo_file_id3"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Sample Mail this there fdjkdglk gjdfklgfdkl gjdfkldklfh jgdklfhlk" />
 
     <TextView
         android:id="@+id/store_nm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_medium"
+        android:text="@string/app_title_by"
         android:textColor="@color/light_grey_color"
         android:textSize="15sp"
-        android:text="@string/app_title_by"
         app:layout_constraintLeft_toLeftOf="@id/mpos_id3"
-        app:layout_constraintTop_toBottomOf="@id/mpos_id3"
-        />
+        app:layout_constraintTop_toBottomOf="@id/mpos_id3" />
 
     <ImageView
         android:id="@+id/logo_file_id3"
@@ -53,15 +52,27 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:overScrollMode="never"
-        app:spanCount="2"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         android:layout_marginBottom="10dp"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/logout_txt2"
         app:layout_constraintLeft_toLeftOf="@id/mpos_id3"
         app:layout_constraintRight_toRightOf="@id/logo_file_id3"
         app:layout_constraintTop_toBottomOf="@id/store_nm"
+        app:spanCount="2"
         tools:listitem="@layout/table_item_layout" />
+
+
+    <include
+        android:id="@+id/pb_layout"
+        layout="@layout/progress_layout"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageView

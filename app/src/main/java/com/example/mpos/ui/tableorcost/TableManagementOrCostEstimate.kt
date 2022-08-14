@@ -4,17 +4,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mpos.R
 import com.example.mpos.databinding.TableOrCostLayoutBinding
+import com.example.mpos.ui.login.viewmodel.LoginScreenViewModel
 import com.example.mpos.ui.tableorcost.adaptor.TableManagementOrCostRecyclerAdaptor
 import com.example.mpos.ui.tableorcost.model.SelectionDataClass
 import com.example.mpos.ui.tableorcost.model.SelectionDataClass.Companion.RestaurantSelection.*
-import com.example.mpos.utils.TAG
-import com.example.mpos.utils.changeStatusBarColor
-import com.example.mpos.utils.msg
-import com.example.mpos.utils.showDialogBox
+import com.example.mpos.utils.*
 import java.util.*
 
 
@@ -23,6 +22,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
     private lateinit var binding: TableOrCostLayoutBinding
     private lateinit var tableManagementOrCostRecyclerAdaptor: TableManagementOrCostRecyclerAdaptor
     private val args: TableManagementOrCostEstimateArgs by navArgs()
+    private val viewModel: LoginScreenViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,11 +33,50 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
         setData()
         //removeItemFromBackStack()
         //showCountOfBackStack()
+        getLogOutResponse()
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { msg ->
+                showErrorDialog(msg)
+            }
+        }
         binding.logoutBtnIc2.setOnClickListener {
             showDialog()
         }
         binding.logoutTxt2.setOnClickListener {
             showDialog()
+        }
+    }
+
+    private fun getLogOutResponse() {
+        viewModel.logOutStaff.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    binding.pbLayout.root.hide()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog(it.data)
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.pbLayout.titleTxt.text = it.data
+                    binding.pbLayout.root.show()
+                }
+                is ApisResponse.Success -> {
+                    binding.pbLayout.root.hide()
+                    (activity as com.example.mpos.MainActivity?)?.logout()
+                    showDialogBox(
+                        "LogOut!!",
+                        "You Are No Log In!!\nPlease Proceed to Login Section",
+                        isCancel = false,
+                        icon = R.drawable.ic_logout
+                    ) {
+                        activity?.finish()
+                    }
+                }
+            }
         }
     }
 
@@ -72,8 +111,18 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
             icon = R.drawable.ic_logout,
             cancel = "No"
         ) {
-            (activity as com.example.mpos.MainActivity?)?.logout()
+            viewModel.staffLogOut()
         }
+    }
+
+
+    private fun showErrorDialog(desc: String) {
+        showDialogBox(
+            "Failed!!",
+            desc,
+            "Ok",
+            icon = R.drawable.ic_error
+        ) {}
     }
 
     private fun setRecycleView() {

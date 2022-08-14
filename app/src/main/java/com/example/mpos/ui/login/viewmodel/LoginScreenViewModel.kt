@@ -6,14 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mpos.data.login.model.api.ApKLoginPost
+import com.example.mpos.data.logoutstaff.LogOutRequest
+import com.example.mpos.data.logoutstaff.LogOutRequestBody
 import com.example.mpos.dataStore.UserSoredData
 import com.example.mpos.di.RetrofitInstance
 import com.example.mpos.ui.login.repo.LoginRepositoryImpl
 import com.example.mpos.use_case.LoginUseCase
-import com.example.mpos.utils.AllStringConst
-import com.example.mpos.utils.ApisResponse
-import com.example.mpos.utils.Events
-import com.example.mpos.utils.genToken
+import com.example.mpos.utils.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -22,7 +21,7 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
 
     private val loginUseCase: LoginUseCase
         get() = LoginUseCase()
-
+    private val app = application
 
     private lateinit var repository: LoginRepositoryImpl
     private var storeId: String = "PER002"
@@ -49,12 +48,20 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
         get() = _apkLogin
 
 
+    private val _logOutStaff = MutableLiveData<ApisResponse<out String?>>()
+    val logOutStaff: LiveData<ApisResponse<out String?>>
+        get() = _logOutStaff
+
+
     fun checkLoginTraditional(userID: String, password: String) {
         if (!this::repository.isInitialized) {
             _event.postValue(Events("Unknown Error"))
             return
         }
-
+        if (!app.isNetworkAvailable()) {
+            _event.postValue(Events("No Internet Connection Found"))
+            return
+        }
         viewModelScope.launch {
             loginUseCase.getLoginResponse(userID, password, storeId).collectLatest {
                 if (it is ApisResponse.Loading) {
@@ -71,6 +78,26 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
         }
 
     }
+
+
+    fun staffLogOut() {
+        if (!this::repository.isInitialized) {
+            _event.postValue(Events("Unknown Error"))
+            return
+        }
+        if (!app.isNetworkAvailable()) {
+            _event.postValue(Events("No Internet Connection Found"))
+            return
+        }
+        val staffId = RestaurantSingletonCls.getInstance().getUserId()!!
+        viewModelScope.launch {
+            repository.getLogOutResponse(LogOutRequest(LogOutRequestBody(staffId))).collectLatest {
+                _logOutStaff.postValue(it)
+            }
+        }
+
+    }
+
 
     override fun onCleared() {
         super.onCleared()
