@@ -31,8 +31,6 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
         binding.mposId3.text = args.information.storeName
         setRecycleView()
         setData()
-        //removeItemFromBackStack()
-        //showCountOfBackStack()
         getLogOutResponse()
         viewModel.events.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { msg ->

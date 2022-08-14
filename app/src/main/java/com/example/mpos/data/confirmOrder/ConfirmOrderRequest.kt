@@ -28,6 +28,10 @@ data class ConfirmOrderBody(
     @param:Element(name = "receiptNo")
     val receiptNo: String? = null,
 
+    @field:Element(name = "getBillDetailFlag")
+    @param:Element(name = "getBillDetailFlag")
+    val getPrintBody: String = false.toString(),
+
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
     val xmlns: String = AllStringConst._xmls,

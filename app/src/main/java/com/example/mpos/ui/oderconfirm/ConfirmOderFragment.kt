@@ -21,7 +21,6 @@ import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.cofirmDining.response.ConfirmDiningSuccessResponse
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
-import com.example.mpos.data.confirmOrder.response.ConfirmOrderSuccessResponse
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.data.printbIll.PrintBillRequest
 import com.example.mpos.data.printbIll.PrintBillRequestBody
@@ -155,8 +154,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     viewLifecycleOwner,
                     viewModel
                 ) {
+                    viewModel.getGrandTotal(arrItem)
                     if (it) {
-                        viewModel.getGrandTotal(arrItem)
                         viewModel.fetchPrintResponse(PrintBillRequest(PrintBillRequestBody(args.tbl.receiptNo)))
                     }
                     isOrderIsVisible = false
@@ -394,9 +393,15 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         viewModel.orderConfirm.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
-                    Log.i("getConfirmOrderResponse", " Error ${it.exception}")
-                    oopsSomeThingWentWrong()
+                    //Log.i("getConfirmOrderResponse", " Error ${it.exception}")
                     binding.pbLayout.root.hide()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { err ->
+                            showErrorDialog(err)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
                 }
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmOrderResponse", " Loading ${it.data}")
@@ -405,37 +410,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 }
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
-                    (it.data as ConfirmOrderSuccessResponse?)?.let { res ->
-                        val str = res.body?.returnValue
-                        val result = if (str == "01") {
-                            Pair(
-                                R.drawable.ic_error, Pair(
-                                    "Failed!",
-                                    Pair("Order is Not Inserted in Navision at All.",true)
-                                )
-                            )
-                        } else {
-                            Pair(
-                                R.drawable.ic_success, Pair(
-                                    "Successfully Inserted",
-                                    Pair("Order is Inserted in Navision at All.",false)
-                                )
-                            )
-                        }
-                        showDialogBox(
-                            title = result.second.first,
-                            desc = result.second.second.first,
-                            icon = result.first,
-                            isCancel = result.second.second.second
-                        ) {
-                            if (str != "01") {
-                                findNavController().popBackStack()
-                            }
-                        }
-                    } ?: run {
-                        val res =
-                            Pair("Failed!", "Order is Not Inserted in Navision at All.")
-                        showDialogBox(res.first, res.second, icon = R.drawable.ic_error) {}
+                    showDialogBox(
+                        "Successfully Inserted",
+                        "${it.data}",
+                        icon = R.drawable.ic_success,
+                        isCancel = false
+                    ) {
+                        findNavController().popBackStack()
                     }
                 }
             }

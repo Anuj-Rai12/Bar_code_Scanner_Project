@@ -19,7 +19,7 @@ import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
 import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
-import com.example.mpos.data.confirmOrder.response.ConfirmOrderSuccessResponse
+import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.data.costestimation.request.ConfirmEstimationBody
 import com.example.mpos.data.costestimation.request.CostEstimation
 import com.example.mpos.data.item_master_sync.json.ItemMaster
@@ -153,19 +153,12 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     }
 
-    private fun printDocument(fileName: String) {
-        val time = confirmOrderViewModel.time.value ?: "12:59 PM"
-        val date = getDate()
+    private fun printDocument(fileName: String, responseBody: PrintReceiptInfo) {
         val pdf =
             MainPrintFeatures(
                 requireActivity(),
                 fileName,
-                RestaurantSingletonCls.getInstance().getRestaurantName()?:"Unknown Restaurant",
-                "G1",
-                date ?: "2022-08-12",
-                time,
-                arrItem,
-                confirmOrderViewModel.grandTotal.value ?: "0"
+                responseBody
             )
         pdf.createFile(PrintUtils.getFileSaveLocation() + fileName)
     }
@@ -216,7 +209,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         binding.pbLayout.root.hide()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
                         //Add ConfirmOrder Request
-                        confirmOrder(ConfirmOrderRequest(ConfirmOrderBody(pair.first)))
+                        confirmOrder(ConfirmOrderRequest(ConfirmOrderBody(pair.first, true.toString())))
                     }
                 }
             }
@@ -229,8 +222,13 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
-                    Log.i("getConfirmOrderResponse", " Error ${it.exception}")
-                    showErrorDialog(it.exception?.localizedMessage ?: "Cannot Upload order item!!")
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { err ->
+                            showErrorDialog(err)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
                 }
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmOrderResponse", " Loading ${it.data}")
@@ -238,33 +236,12 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    (it.data as ConfirmOrderSuccessResponse?)?.let { res ->
-                        val str = res.body?.returnValue
-                        if (str == "01") {
-                            val item = Pair(
-                                R.drawable.ic_error, Pair(
-                                    "Failed!",
-                                    Pair("Order is Not Inserted in Navision at All.", true)
-                                )
-                            )
-                            showDialogBox(
-                                title = item.second.first,
-                                desc = item.second.second.first,
-                                icon = item.first,
-                                isCancel = item.second.second.second
-                            ) {
-                                if (str != "01") {
-                                    findNavController().popBackStack()
-                                }
-                            }
-                        } else {
-                            printDocument("Cost_Estimation_at_${getDate()}_in_${System.currentTimeMillis()}.pdf")
-                        }
-                    } ?: run {
-                        val res =
-                            Pair("Failed!", "Order is Not Inserted in Navision at All.")
-                        showDialogBox(res.first, res.second, icon = R.drawable.ic_error) {}
-                    }
+                    (it.data as PrintReceiptInfo?)?.let { body ->
+                        printDocument(
+                            "Cost_Estimation_at_${getDate()}_in_${System.currentTimeMillis()}.pdf",
+                            body
+                        )
+                    } ?: showErrorDialog("Cannot Print Bill")
                 }
             }
         }

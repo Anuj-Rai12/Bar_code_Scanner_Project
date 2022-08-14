@@ -5,8 +5,8 @@ import android.content.Context
 import android.print.PrintAttributes
 import android.print.PrintManager
 import android.util.Log
-import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
-import com.example.mpos.utils.checkFieldValue
+import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
+import com.example.mpos.utils.getEmojiByUnicode
 import com.example.mpos.utils.msg
 import com.itextpdf.text.*
 import com.itextpdf.text.Rectangle.NO_BORDER
@@ -22,12 +22,7 @@ import java.io.FileOutputStream
 class MainPrintFeatures(
     private val activity: Activity,
     private val fileName: String,
-    private val restaurantName: String,
-    private val orderValue: String,
-    private val date: String,
-    private val time: String,
-    private val list: MutableList<ItemMasterFoodItem>,
-    private val totalPrice: String
+    private val responseBody: PrintReceiptInfo
 ) {
 
 
@@ -66,20 +61,20 @@ class MainPrintFeatures(
             //U can add custom font!!
             val fontTitle =
                 Font(Font.FontFamily.COURIER, fontSize, Font.BOLD, BaseColor.BLACK)
-
+            val fontTitle2 =
+                Font(Font.FontFamily.COURIER, valueFontSize, Font.NORMAL, BaseColor.BLACK)
             //Restaurant_Name
             addLineSeparator(document)
-            addNewItem(document, restaurantName, font = fontTitle)
+            addNewItem(document, responseBody.headerTxt, font = fontTitle)
+            addNewItem(document, responseBody.headerTxt2, font = fontTitle2)
             addDottedSeparator(document)
 
             //Order Details with timeStamps
-            val fontTitle2 =
-                Font(Font.FontFamily.COURIER, valueFontSize, Font.NORMAL, BaseColor.BLACK)
             //addNewItem(document, orderNo, Element.ALIGN_LEFT, fontTitle2)
             addNewItemLeftAndRight(
                 document,
-                "$orderNo $orderValue",
-                "$date $time",
+                "$orderNo ${responseBody.orderId}",
+                responseBody.datetime,
                 fontTitle2,
                 fontTitle2
             )
@@ -92,32 +87,44 @@ class MainPrintFeatures(
             addNewItemLeftAndRight(
                 document,
                 totalWithOutGst,
-                "$totalPrice\t",
+                "${responseBody.amtExclGST}\t",
                 fontTitle2,
                 fontTitle
             )
             addDottedSeparator(document)
             //Total item in bill
-            addNewItemLeftAndRight(document, noOfItem, "${list.size}\t", fontTitle2, fontTitle)
+            addNewItemLeftAndRight(
+                document,
+                noOfItem,
+                "${responseBody.itemCount}\t",
+                fontTitle2,
+                fontTitle
+            )
             addDottedSeparator(document)
             //Total item with Gst
             addNewItemLeftAndRight(
                 document,
                 totalWithGst,
-                "${totalPrice}\t",
+                "${responseBody.amtInclGST}\t",
                 fontTitle2,
                 fontTitle
             )
             addDottedSeparator(document)
             //total amount
-            addNewItemLeftAndRight(document, total, "$totalPrice\t", fontTitle2, fontTitle)
+            addNewItemLeftAndRight(
+                document,
+                total,
+                "${responseBody.amtInclGST}\t",
+                fontTitle2,
+                fontTitle
+            )
             addLineSeparator(document)
-            activity.msg("Created PDF")
+            activity.msg("Generating Receipt ${getEmojiByUnicode(0x1F5A8)}")
             document.close()
             printPdf()
 
         } catch (e: Exception) {
-            activity.msg("Error")
+            activity.msg("Cannot Print Bill")
             Log.i("create", "createFile: ${e.localizedMessage}")
         }
 
@@ -127,28 +134,29 @@ class MainPrintFeatures(
         val pointColumnWidths = floatArrayOf(30f, 10f, 15f, 20f)
         val table = PdfPTable(4)
         table.setWidths(pointColumnWidths)
-
+        val fontTitle2 =
+            Font(Font.FontFamily.COURIER, 10f, Font.NORMAL, BaseColor.BLACK)
         //DESCRIPTION
-        setTableData(desc, table)
+        setTableData(desc, table, fontTitle2)
         //QTY
-        setTableData(qty, table)
+        setTableData(qty, table, fontTitle2)
         //PRICE
-        setTableData(price, table)
+        setTableData(price, table, fontTitle2)
         //AMOUNT
-        setTableData(amt, table)
+        setTableData(amt, table, fontTitle2)
 
         //Setting table column name
         document.add(table)
         table.deleteBodyRows()
         addDottedSeparator(document, false)
-        list.forEach { foodItem ->
+        responseBody.itemList.forEach { foodItem ->
             setTableData(
-                if (!checkFieldValue(foodItem.itemMaster.itemName)) foodItem.itemMaster.itemName
-                else foodItem.itemMaster.itemDescription, table
+                foodItem.description,
+                table, fontTitle2
             )
-            setTableData(foodItem.foodQty.toString(), table)
-            setTableData(foodItem.itemMaster.salePrice, table)
-            setTableData("${foodItem.foodAmt}", table)
+            setTableData(foodItem.qty.toString(), table, fontTitle2)
+            setTableData(foodItem.price.toString(), table, fontTitle2)
+            setTableData(foodItem.amount.toString(), table, fontTitle2)
         }
 
 
@@ -174,8 +182,8 @@ class MainPrintFeatures(
     }
 
 
-    private fun setTableData(value: String, table: PdfPTable) {
-        val cell = PdfPCell(Phrase(value))
+    private fun setTableData(value: String, table: PdfPTable, fontTitle2: Font) {
+        val cell = PdfPCell(Phrase(value, fontTitle2))
         cell.border = NO_BORDER
         cell.setPadding(0f)
         table.addCell(cell)
