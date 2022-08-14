@@ -80,7 +80,6 @@ class MainPrintFeatures(
             )
             addDottedSeparator(document, false)
             //Order Details
-            addLineSpace(document)
             setOrderTable(document)
             addDottedSeparator(document)
             //Total item withOut gst
@@ -96,7 +95,7 @@ class MainPrintFeatures(
             addNewItemLeftAndRight(
                 document,
                 noOfItem,
-                "${responseBody.itemCount}\t",
+                "${responseBody.itemList.size}\t",
                 fontTitle2,
                 fontTitle
             )
@@ -148,35 +147,16 @@ class MainPrintFeatures(
         //Setting table column name
         document.add(table)
         table.deleteBodyRows()
-        addDottedSeparator(document, false)
+        addDottedSeparator(document)
         responseBody.itemList.forEach { foodItem ->
             setTableData(
                 foodItem.description,
                 table, fontTitle2
             )
             setTableData(foodItem.qty.toString(), table, fontTitle2)
-            setTableData(foodItem.price.toString(), table, fontTitle2)
-            setTableData(foodItem.amount.toString(), table, fontTitle2)
+            setTableData(foodItem.price, table, fontTitle2)
+            setTableData(foodItem.amount, table, fontTitle2)
         }
-
-
-        //1 Order Item
-        /*setTableData("Pizza", table)
-        setTableData("3", table)
-        setTableData("100", table)
-        setTableData("300", table)
-
-        //2 Order Item
-        setTableData("Samosa", table)
-        setTableData("4", table)
-        setTableData("100", table)
-        setTableData("400", table)
-
-        //3 Order Item
-        setTableData("Chocolate", table)
-        setTableData("5", table)
-        setTableData("500", table)
-        setTableData("2500", table)*/
 
         document.add(table)
     }

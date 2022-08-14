@@ -98,6 +98,7 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
                             title = "Success",
                             icon = R.drawable.ic_success
                         )
+                        getAllResponse()
                     } else {
                         showDialogResponse(msg = response.message)
                     }
@@ -142,6 +143,7 @@ class TableReservationFragment : Fragment(R.layout.table_reservation_layout),
                         binding.pbLayout.root.hide()
                         binding.noDataFound.text = it.data
                     } else {
+                        binding.noDataFound.hide()
                         hidePbLayout()
                         tblReservationAdaptor.notifyDataSetChanged()
                         tblReservationAdaptor.submitList(it.data as GetReservationResponse)
