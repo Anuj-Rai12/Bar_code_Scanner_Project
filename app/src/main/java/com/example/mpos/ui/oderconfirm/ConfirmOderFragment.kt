@@ -99,15 +99,17 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         getGrandTotal()
 
         binding.viewOfferBtn.setOnClickListener {
-            if (!flagForViewDeals) {
-                flagForViewDeals = true
-                getViewDeals()
-                confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
-            } else {
-                flagForViewDeals = false
-                activity?.msg("No Offer Available")
-                confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
-            }
+            /* if (!flagForViewDeals) {
+                 flagForViewDeals = true
+                 getViewDeals()
+                 confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
+             } else {
+                 flagForViewDeals = false
+                 activity?.msg("No Offer Available")
+                 confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
+             }*/
+            val action = ConfirmOderFragmentDirections.actionConfirmOderFragmentToDealsFragment()
+            findNavController().navigate(action)
         }
 
         binding.restItemBtn.setOnClickListener {
