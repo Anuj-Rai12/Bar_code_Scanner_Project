@@ -152,12 +152,10 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                         .actionTableManagementOrCostEstimateToTableReservationFragment()
                 }
                 BILLING -> {
-                    //TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToBillingFragment()
-                    activity?.msg("Working on it")
-                    null
+                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToBillingFragment()
                 }
             }
-        action?.let { findNavController().navigate(it) }
+        findNavController().navigate(action)
     }
 
 }
