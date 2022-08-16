@@ -111,6 +111,8 @@ object AllStringConst {
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ConfirmEstimation"
 
         const val logoutStaff = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:LogoutStaff"
+
+        const val getDeals = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:DealMenu"
     }
 
 
