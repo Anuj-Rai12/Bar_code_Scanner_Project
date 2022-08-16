@@ -42,6 +42,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     OnBottomSheetClickListener {
+
     private lateinit var binding: CostCalDashbordLayoutBinding
 
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
@@ -109,7 +110,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
         binding.confirmOrderBtn.setOnClickListener {
             if (arrItem.isEmpty()) {
-                costEstimationViewModel.addError("Please Add Item Menu !!")
+                costEstimationViewModel.addError("Please Add Items to Screen!!")
                 return@setOnClickListener
             }
             if (setUpCostEstimation()) {
@@ -209,7 +210,14 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         binding.pbLayout.root.hide()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
                         //Add ConfirmOrder Request
-                        confirmOrder(ConfirmOrderRequest(ConfirmOrderBody(pair.first, true.toString())))
+                        confirmOrder(
+                            ConfirmOrderRequest(
+                                ConfirmOrderBody(
+                                    pair.first,
+                                    true.toString()
+                                )
+                            )
+                        )
                     }
                 }
             }
@@ -236,6 +244,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 }
                 is ApisResponse.Success -> {
                     hidePb()
+                    arrItem.clear()
+                    confirmOrderViewModel.getOrderList(null)
                     (it.data as PrintReceiptInfo?)?.let { body ->
                         printDocument(
                             "Cost_Estimation_at_${getDate()}_in_${System.currentTimeMillis()}.pdf",

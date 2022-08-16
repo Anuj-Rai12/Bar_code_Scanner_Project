@@ -8,6 +8,8 @@ import android.util.Log
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.utils.getEmojiByUnicode
 import com.example.mpos.utils.msg
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import com.itextpdf.text.*
 import com.itextpdf.text.Rectangle.NO_BORDER
 import com.itextpdf.text.pdf.PdfPCell
@@ -123,7 +125,8 @@ class MainPrintFeatures(
             printPdf()
 
         } catch (e: Exception) {
-            activity.msg("Cannot Print Bill")
+            activity.msg("Cannot Print Bill ${getEmojiByUnicode(0x1F5A8)}")
+            Firebase.crashlytics.recordException(e)
             Log.i("create", "createFile: ${e.localizedMessage}")
         }
 
