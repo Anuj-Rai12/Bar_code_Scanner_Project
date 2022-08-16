@@ -74,6 +74,7 @@ class PdfDocumentAdaptor constructor(private val path: String, private val conte
 
             }
         } catch (e: Exception) {
+            MainPrintFeatures.setCashAnalytics(e)
             Log.i(ContentValues.TAG, "onWrite: $e")
         } finally {
             try {
@@ -81,6 +82,7 @@ class PdfDocumentAdaptor constructor(private val path: String, private val conte
                 outputStream?.close()
             } catch (e: Exception) {
                 Log.i("WRITE ERROR", "onWrite: ${e.localizedMessage}")
+                MainPrintFeatures.setCashAnalytics(e)
             }
 
         }

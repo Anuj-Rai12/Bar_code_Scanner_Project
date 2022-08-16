@@ -126,10 +126,16 @@ class MainPrintFeatures(
 
         } catch (e: Exception) {
             activity.msg("Cannot Print Bill ${getEmojiByUnicode(0x1F5A8)}")
-            Firebase.crashlytics.recordException(e)
+            setCashAnalytics(e)
             Log.i("create", "createFile: ${e.localizedMessage}")
         }
 
+    }
+
+    companion object {
+        fun setCashAnalytics(e: Exception) {
+            Firebase.crashlytics.recordException(e)
+        }
     }
 
     private fun setOrderTable(document: Document) {
@@ -185,6 +191,7 @@ class MainPrintFeatures(
             )
         } catch (e: Exception) {
             Log.i("Error", "printPdf: ${e.localizedMessage}")
+            setCashAnalytics(e)
         }
 
     }
