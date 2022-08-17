@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
     android:layout_margin="10dp"
     android:background="@drawable/white_underline_boder"
-    android:elevation="10dp">
+    android:elevation="10dp"
+    android:padding="10dp">
 
     <ImageView
         android:id="@+id/btn_close_id"
@@ -208,13 +208,11 @@
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="17dp"
         android:background="@drawable/add_offer_btn_border_layout"
-        tools:background="@drawable/add_with_out_offer_btn_layout"
         android:fontFamily="@font/roboto_medium"
         android:paddingStart="16dp"
-        android:text="Add Item"
         android:paddingTop="5dp"
         android:paddingBottom="6dp"
-        tools:text="@string/btn_without_offer"
+        android:text="Add Item"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@color/white"
@@ -226,6 +224,8 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/order_offer_list_view"
+        tools:background="@drawable/add_with_out_offer_btn_layout"
+        tools:text="@string/btn_without_offer"
         tools:visibility="visible" />
 
 

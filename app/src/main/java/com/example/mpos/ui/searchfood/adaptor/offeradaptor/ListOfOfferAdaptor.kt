@@ -38,9 +38,22 @@ class ListOfOfferAdaptor(
         @RequiresApi(Build.VERSION_CODES.M)
         fun setData(offer: OfferDesc, oderOfferListCallBack: OderOfferListCallBack) {
             binding.orderFoodItemDescTv.text = offer.title
+
             if (offer.title == "No offer")
                 binding.btnClickCheckBox.hide()
+            if (offer.selected) {
+                binding.btnClickCheckBox.backgroundTintList =
+                    ColorStateList.valueOf(
+                        binding.btnClickCheckBox.resources.getColor(
+                            R.color.dark_green_color,
+                            null
+                        )
+                    )
+            }
             binding.root.setOnClickListener {
+                return@setOnClickListener
+                /*if (!offer.selected)
+                    return@setOnClickListener
                 if (offer.title == "No offer")
                     return@setOnClickListener
                 flag = if (!flag) {
@@ -66,7 +79,7 @@ class ListOfOfferAdaptor(
                         )
                     offer.selected = false
                     false
-                }
+                }*/
                 oderOfferListCallBack(offer)
             }
 
