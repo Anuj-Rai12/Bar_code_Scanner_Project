@@ -160,7 +160,9 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 requireActivity(),
                 fileName,
                 responseBody
-            )
+            ) {
+                showErrorDialog(it.localizedMessage ?: "Unknown Error")
+            }
         pdf.createFile(PrintUtils.getFileSaveLocation() + fileName)
     }
 

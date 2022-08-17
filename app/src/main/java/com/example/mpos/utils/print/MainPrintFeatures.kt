@@ -24,7 +24,8 @@ import java.io.FileOutputStream
 class MainPrintFeatures(
     private val activity: Activity,
     private val fileName: String,
-    private val responseBody: PrintReceiptInfo
+    private val responseBody: PrintReceiptInfo,
+    private val error: (e: Exception) -> Unit
 ) {
 
 
@@ -127,6 +128,7 @@ class MainPrintFeatures(
         } catch (e: Exception) {
             activity.msg("Cannot Print Bill ${getEmojiByUnicode(0x1F5A8)}")
             setCashAnalytics(e)
+            error.invoke(e)
             Log.i("create", "createFile: ${e.localizedMessage}")
         }
 
@@ -192,6 +194,7 @@ class MainPrintFeatures(
         } catch (e: Exception) {
             Log.i("Error", "printPdf: ${e.localizedMessage}")
             setCashAnalytics(e)
+            error.invoke(e)
         }
 
     }
