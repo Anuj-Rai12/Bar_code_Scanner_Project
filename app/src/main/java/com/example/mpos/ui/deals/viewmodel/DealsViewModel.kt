@@ -7,12 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mpos.data.deals.DealRequestBody
 import com.example.mpos.data.deals.DealsRequest
+import com.example.mpos.data.deals.confirmdeals.ConfirmDealsOrderBody
+import com.example.mpos.data.deals.confirmdeals.ConfirmDealsRequest
+import com.example.mpos.data.deals.scan_and_find_deals.ScanAndFindDealsRequest
+import com.example.mpos.data.deals.scan_and_find_deals.ScanAndFindDealsRequestBody
 import com.example.mpos.di.RetrofitInstance
 import com.example.mpos.ui.deals.repo.DealsRepository
-import com.example.mpos.utils.ApisResponse
-import com.example.mpos.utils.Events
-import com.example.mpos.utils.RestaurantSingletonCls
-import com.example.mpos.utils.isNetworkAvailable
+import com.example.mpos.utils.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,6 +33,17 @@ class DealsViewModel(application: Application) : AndroidViewModel(application) {
     private val _dealsResponse = MutableLiveData<ApisResponse<out Any>>()
     val dealsResponse: LiveData<ApisResponse<out Any>>
         get() = _dealsResponse
+
+    //Confirm Deals Api
+    private val _dealConfirmResponse = MutableLiveData<ApisResponse<out Any>>()
+    val dealConfirmResponse: LiveData<ApisResponse<out Any>>
+        get() = _dealConfirmResponse
+
+    //Get Deals Api
+    private val _dealItemResponse = MutableLiveData<ApisResponse<out Any>>()
+    val dealItemResponse: LiveData<ApisResponse<out Any>>
+        get() = _dealItemResponse
+
 
     init {
         if (!app.isNetworkAvailable()) {
@@ -54,6 +66,60 @@ class DealsViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             repository.getDealsResponse(DealsRequest(DealRequestBody(storeId))).collectLatest {
                 _dealsResponse.postValue(it)
+            }
+        }
+    }
+
+    fun postConfirmDealsApi(rcpt: String, dealCode: String) {
+        if (!app.isNetworkAvailable()) {
+            addError("No Internet Connection found!!")
+            return
+        }
+        if (checkFieldValue(dealCode)) {
+            addError("Invalid Deal Code")
+            return
+        }
+        if (checkFieldValue(rcpt)) {
+            addError("Invalid Rcpt Number")
+            return
+        }
+
+
+        viewModelScope.launch {
+            repository.postDealsResponse(
+                ConfirmDealsRequest(
+                    ConfirmDealsOrderBody(
+                        rcptNo = rcpt,
+                        dealsCode = dealCode
+                    )
+                )
+            ).collectLatest {
+                _dealConfirmResponse.postValue(it)
+            }
+        }
+    }
+
+
+    fun getScanDealApi(dealCode: String) {
+        if (!app.isNetworkAvailable()) {
+            addError("No Internet Connection found!!")
+            return
+        }
+        if (checkFieldValue(dealCode)) {
+            addError("Invalid Deal Code")
+            return
+        }
+
+
+        viewModelScope.launch {
+            repository.getScanDealsApiResponse(
+                ScanAndFindDealsRequest(
+                    ScanAndFindDealsRequestBody(
+                        dealCode
+                    )
+                )
+            ).collectLatest {
+                _dealItemResponse.postValue(it)
             }
         }
     }
