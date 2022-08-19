@@ -71,18 +71,20 @@ class ConfirmOrderUseCase {
     ): PosLineItemApiRequest {
         val list = mutableListOf<MenuItem>()
         item.forEach { itemMasterFoodItem ->
-            val menuItem = MenuItem(
-                itemNo = itemMasterFoodItem.itemMaster.itemCode,
-                receiptNo = receipt,
-                qty = itemMasterFoodItem.foodQty.toString(),
-                saleType = "RESTAURANT",
-                date =getDate("MM/dd/yy") ?: "10/20/22",
-                time = time,
-                storeNo = storeNo,
-                freeText = itemMasterFoodItem.free_txt,
-                price = itemMasterFoodItem.itemMaster.salePrice
-            )
-            list.add(menuItem)
+            if (!itemMasterFoodItem.isDeal) {
+                val menuItem = MenuItem(
+                    itemNo = itemMasterFoodItem.itemMaster.itemCode,
+                    receiptNo = receipt,
+                    qty = itemMasterFoodItem.foodQty.toString(),
+                    saleType = "RESTAURANT",
+                    date = getDate("MM/dd/yy") ?: "10/20/22",
+                    time = time,
+                    storeNo = storeNo,
+                    freeText = itemMasterFoodItem.free_txt,
+                    price = itemMasterFoodItem.itemMaster.salePrice
+                )
+                list.add(menuItem)
+            }
         }
         return PosLineItemApiRequest(RequestBody(MunItemContainer(list)))
     }

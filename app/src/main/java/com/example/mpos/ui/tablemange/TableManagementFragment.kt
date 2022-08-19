@@ -114,6 +114,8 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout),
     override fun onResume() {
         super.onResume()
         viewModel.fetchTbl()
+        DealsStoreInstance.getInstance().clear()
+        DealsStoreInstance.getInstance().setResetButtonClick(false)
     }
 
     private fun setRecycleView() {

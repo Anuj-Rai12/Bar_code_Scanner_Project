@@ -118,7 +118,11 @@ class ConfirmOrderFragmentViewModel constructor(
 
     fun getOrderList(foodItemList: FoodItemList?) {
         foodItemList?.let { foodItem ->
-            _listOfOrder.postValue(ApisResponse.Success(foodItem.foodList))
+            if (foodItem.foodList.isNotEmpty())
+                _listOfOrder.postValue(ApisResponse.Success(foodItem.foodList))
+            else {
+                _listOfOrder.postValue(ApisResponse.Loading(null))
+            }
             return@let
         } ?: _listOfOrder.postValue(ApisResponse.Loading(null))
     }
@@ -154,6 +158,14 @@ class ConfirmOrderFragmentViewModel constructor(
                     val item = mutableListOf<ItemMasterFoodItem>()
                     item.addAll(list)
                     item.remove(food)
+                    if (food.isDeal) {
+                        Log.i(
+                            "DELETE_DEALS",
+                            "deleteSwipe:$food is delete or not ${
+                                DealsStoreInstance.getInstance().deleteItem(food)
+                            }"
+                        )
+                    }
                     if (item.isNotEmpty()) {
                         Log.i(TAG, "deleteSwipe:TEST $item")
                         _listOfOrder.postValue(ApisResponse.Success(item))

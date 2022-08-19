@@ -65,6 +65,9 @@ class ConfirmOderFragmentAdaptor(
                         else foodItem.itemMaster.itemDescription
                 }
                 btnClickViewDetail.setOnClickListener {
+                    if (foodItem.isDeal){
+                        return@setOnClickListener
+                    }
                     if (showCheckBox || foodItem.free_txt.isEmpty()) {
                         if (!flagSelection) {
                             flagSelection = true
@@ -87,10 +90,16 @@ class ConfirmOderFragmentAdaptor(
 
 
                 qtyOfFood.setOnClickListener {
+                    if (foodItem.isDeal){
+                        return@setOnClickListener
+                    }
                     if (showQtyBox)
                         itemClickListerForUpdate(foodItem)
                 }
                 foodItemName.setOnClickListener {
+                    if (foodItem.isDeal){
+                        return@setOnClickListener
+                    }
                     if (showQtyBox){
                         itemClickInstructionLinter(foodItem)
                     }

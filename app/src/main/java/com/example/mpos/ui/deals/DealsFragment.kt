@@ -24,6 +24,7 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
     private var dealsAddOnMenuAdaptor: DealsAdaptor<AddOnMenu>? = null
     private var dealsAddOnMenuItemAdaptor: DealsAdaptor<ScanAndFindDealsJsonItem>? = null
     private var currentIcon = R.drawable.ic_arrow_back_24
+    private var currentDeals: AddOnMenu? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,8 +42,15 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
             if (currentIcon == R.drawable.ic_arrow_back_24) {
                 findNavController().popBackStack()
             } else {
-                //Add Item
-                activity?.msg("${binding.topAppBar.title} ${getEmojiByUnicode(0x2705)}")
+                currentDeals?.let {
+                    val res = DealsStoreInstance.getInstance().addDealsItem(it)
+                    if (res) {
+                        activity?.msg("${binding.topAppBar.title} ${getEmojiByUnicode(0x2705)}")
+                    } else {
+                        viewModel.addError("Cannot Add Same Deal Multiple Times!!")
+                    }
+                    return@let
+                } ?: activity?.msg("${binding.topAppBar.title} Not Added")
                 initial()
             }
         }
@@ -151,7 +159,8 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
     }
 
     private fun initial() {
-        currentIcon=R.drawable.ic_arrow_back_24
+        currentDeals = null
+        currentIcon = R.drawable.ic_arrow_back_24
         binding.topAppBar.title = "Deals"
         binding.topAppBar.setNavigationIcon(currentIcon)
         viewModel.getDeals()
@@ -159,6 +168,7 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
 
     override fun <T> onItemClicked(response: T) {
         if (response is AddOnMenu) {
+            currentDeals = response
             binding.topAppBar.title = response.description
             currentIcon = R.drawable.ic_check
             binding.topAppBar.setNavigationIcon(currentIcon)
