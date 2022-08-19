@@ -37,7 +37,6 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
         }
         getDealsResponse()
         getDealsItemResponse()
-        getConfirmDealsResponse()
         binding.topAppBar.setNavigationOnClickListener {
             if (currentIcon == R.drawable.ic_arrow_back_24) {
                 findNavController().popBackStack()
@@ -59,31 +58,6 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
         }
     }
 
-    //Remove it
-    private fun getConfirmDealsResponse() {
-        viewModel.dealConfirmResponse.observe(viewLifecycleOwner) {
-            when (it) {
-                is ApisResponse.Error -> {
-                    binding.pbLayout.root.hide()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { err ->
-                            showErrorMessage(err)
-                        }
-                    } else {
-                        showErrorMessage("${it.data}")
-                    }
-                }
-                is ApisResponse.Loading -> {
-                    binding.pbLayout.titleTxt.text = "${it.data}"
-                    binding.pbLayout.root.show()
-                }
-                is ApisResponse.Success -> {
-                    Log.i("DEALS", "getConfirmDealsResponse: ${it.data}")
-                    activity?.msg("${it.data}")
-                }
-            }
-        }
-    }
 
     private fun getDealsItemResponse() {
         viewModel.dealItemResponse.observe(viewLifecycleOwner) {
