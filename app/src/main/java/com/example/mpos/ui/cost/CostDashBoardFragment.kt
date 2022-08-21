@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mpos.MainActivity
 import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
 import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
@@ -34,8 +35,7 @@ import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.use_case.AlphaNumericString
 import com.example.mpos.utils.*
-import com.example.mpos.utils.print.MainPrintFeatures
-import com.example.mpos.utils.print.PrintUtils
+import com.example.mpos.utils.print.PrintBill
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
@@ -47,6 +47,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
 
+    private lateinit var printBill: PrintBill
     private val confirmOrderViewModel: ConfirmOrderFragmentViewModel by viewModels()
     private val costEstimationViewModel: CostDashBoardViewModel by viewModels()
 
@@ -92,6 +93,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             }
         }
 
+        initializePrinter()
+
         binding.foodMnuBtn.setOnClickListener {
             val mnuBottom = MenuBottomSheetFragment("Order Menu")
             mnuBottom.onBottomSheetClickListener = this
@@ -107,14 +110,30 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         getCostEstimationResponse()
         getPosItemRequest()
         getConfirmOrderResponse()
-
+        (activity as MainActivity?)?.getPermissionForBlueTooth()
         binding.confirmOrderBtn.setOnClickListener {
+            if (!this::printBill.isInitialized) {
+                initializePrinter()
+                activity?.msg("Failed to Set Up Try Again!!")
+                return@setOnClickListener
+            }
             if (arrItem.isEmpty()) {
                 costEstimationViewModel.addError("Please Add Items to Screen!!")
                 return@setOnClickListener
             }
             if (setUpCostEstimation()) {
-                costEstimationViewModel.getCostEstimation(costEstimation!!)
+                if (!printBill.isBluetoothDeviceFound()) {
+                    showDialogBox(
+                        "Error",
+                        printBill.printNotConnectedToProceed,
+                        btn = "Yes",
+                        cancel = "No"
+                    ) {
+                        costEstimationViewModel.getCostEstimation(costEstimation!!)
+                    }
+                } else {
+                    costEstimationViewModel.getCostEstimation(costEstimation!!)
+                }
             } else {
                 costEstimationViewModel.addError("Oops cannot setUp a Process!!")
             }
@@ -163,16 +182,18 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     }
 
-    private fun printDocument(fileName: String, responseBody: PrintReceiptInfo) {
-        val pdf =
-            MainPrintFeatures(
-                requireActivity(),
-                fileName,
-                responseBody
-            ) {
-                showErrorDialog(it.localizedMessage ?: "Unknown Error")
+    private fun initializePrinter() {
+        activity?.let {
+            printBill = PrintBill(it) { err ->
+                costEstimationViewModel.addError(err)
             }
-        pdf.createFile(PrintUtils.getFileSaveLocation() + fileName)
+        } ?: costEstimationViewModel.addError(
+            "Cannot Initialized Printer ${
+                getEmojiByUnicode(
+                    0x1F5A8
+                )
+            }"
+        )
     }
 
     private fun getCostEstimationResponse() {
@@ -255,10 +276,14 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                     arrItem.clear()
                     confirmOrderViewModel.getOrderList(null)
                     (it.data as PrintReceiptInfo?)?.let { body ->
-                        printDocument(
-                            "Cost_Estimation_at_${getDate()}_in_${System.currentTimeMillis()}.pdf",
-                            body
-                        )
+                        if (printBill.isBluetoothDeviceFound())
+                            printBill.doPrint(body)
+                        else
+                            showDialogBox(
+                                "Success",
+                                "All Food Item are added Successfully",
+                                icon = R.drawable.ic_success
+                            ) {}
                     } ?: showErrorDialog("Cannot Print Bill")
                 }
             }
@@ -266,8 +291,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     }
 
 
-    private fun showErrorDialog(msg: String) {
-        showDialogBox("Failed", msg, icon = R.drawable.ic_error) {}
+    private fun showErrorDialog(msg: String, ic: Int = R.drawable.ic_error) {
+        showDialogBox("Failed", msg, icon = ic) {}
     }
 
 

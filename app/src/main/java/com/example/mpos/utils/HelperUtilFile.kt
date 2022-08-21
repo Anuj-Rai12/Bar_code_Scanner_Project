@@ -51,6 +51,12 @@ import java.util.*
 import java.util.regex.Pattern
 
 const val CAMERA_INT = 11
+
+const val BLUE_TOOTH = 211
+const val BLUE_ADIMS = 121
+const val BLUE_SCAN = 113
+const val BLUE_CONNECT = 231
+
 const val Url_barcode = Barcode.TYPE_URL
 const val Url_Text = Barcode.TYPE_TEXT
 fun AppCompatActivity.hide() {
@@ -114,7 +120,8 @@ object AllStringConst {
 
         const val getDeals = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:DealMenu"
 
-        const val scanAndFindDeals="urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ScanAndFindDeal"
+        const val scanAndFindDeals =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ScanAndFindDeal"
     }
 
 
@@ -248,6 +255,30 @@ val listOfBg by lazy {
 
 fun Activity.checkCameraPermission() =
     EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)
+
+
+fun Activity.checkBlueToothPermission() =
+    EasyPermissions.hasPermissions(this, Manifest.permission.BLUETOOTH)
+
+
+fun Activity.checkBlueAdminPermission() =
+    EasyPermissions.hasPermissions(this, Manifest.permission.BLUETOOTH_ADMIN)
+
+
+fun Activity.checkBlueConnectPermission() =
+    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && EasyPermissions.hasPermissions(
+        this,
+        Manifest.permission.BLUETOOTH_CONNECT
+    )
+            )
+
+
+fun Activity.checkBlueScanPermission() =
+    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && EasyPermissions.hasPermissions(
+        this,
+        Manifest.permission.BLUETOOTH_SCAN
+    )
+            )
 
 fun makeStringAlphaNumericForm(name: String): String {
     //val name = "12434adfjks%^&$" //"I>télé"; //fbts

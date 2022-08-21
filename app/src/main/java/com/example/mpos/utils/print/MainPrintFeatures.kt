@@ -1,4 +1,5 @@
 package com.example.mpos.utils.print
+/*
 
 import android.app.Activity
 import android.content.Context
@@ -8,6 +9,7 @@ import android.util.Log
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.utils.getEmojiByUnicode
 import com.example.mpos.utils.msg
+import com.example.mpos.utils.print.PrintBill.Companion.setCashAnalytics
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.itextpdf.text.*
@@ -134,11 +136,7 @@ class MainPrintFeatures(
 
     }
 
-    companion object {
-        fun setCashAnalytics(e: Exception) {
-            Firebase.crashlytics.recordException(e)
-        }
-    }
+
 
     private fun setOrderTable(document: Document) {
         val pointColumnWidths = floatArrayOf(30f, 10f, 15f, 20f)
@@ -254,4 +252,4 @@ class MainPrintFeatures(
     }
 
 
-}
+}*/

@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding: ActivityMainBinding
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.hide()
@@ -25,13 +24,31 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getPermission()
+
     }
 
     fun getPermission() {
         if (!this.checkCameraPermission()) {
             requestPermission()
         }
+        getPermissionForBlueTooth()
     }
+
+    fun getPermissionForBlueTooth() {
+        if (!this.checkBlueToothPermission()) {
+            requestPermission(Manifest.permission.BLUETOOTH, BLUE_TOOTH, "Bluetooth")
+        }
+        if (!this.checkBlueAdminPermission()) {
+            requestPermission(Manifest.permission.BLUETOOTH_ADMIN, BLUE_ADIMS, "Bluetooth")
+        }
+        if (!this.checkBlueScanPermission()) {
+            requestPermission(Manifest.permission.BLUETOOTH_SCAN, BLUE_SCAN, "Bluetooth")
+        }
+        if (!this.checkBlueConnectPermission()) {
+            requestPermission(Manifest.permission.BLUETOOTH_CONNECT, BLUE_CONNECT, "Bluetooth")
+        }
+    }
+
 
     private fun requestPermission(
         manifest: String = Manifest.permission.CAMERA,

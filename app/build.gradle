@@ -135,5 +135,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.0"
 
     //Print Document
-    implementation 'com.itextpdf:itextg:5.5.10'
+    //implementation 'com.itextpdf:itextg:5.5.10'
+    implementation 'com.github.DantSu:ESCPOS-ThermalPrinter-Android:3.2.0'
 }

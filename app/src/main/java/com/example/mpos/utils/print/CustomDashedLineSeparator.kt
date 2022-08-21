@@ -1,4 +1,5 @@
 package com.example.mpos.utils.print
+/*
 
 import com.itextpdf.text.pdf.PdfContentByte
 import com.itextpdf.text.pdf.draw.DottedLineSeparator
@@ -19,3 +20,4 @@ class CustomDashedLineSeparator : DottedLineSeparator() {
         canvas.restoreState()
     }
 }
+*/

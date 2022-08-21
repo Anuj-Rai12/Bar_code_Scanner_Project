@@ -1,4 +1,5 @@
 package com.example.mpos.utils.print
+/*
 
 import android.os.Environment
 import android.util.Log
@@ -25,4 +26,4 @@ class PrintUtils {
             return folder.path + File.separator
         }
     }
-}
+}*/

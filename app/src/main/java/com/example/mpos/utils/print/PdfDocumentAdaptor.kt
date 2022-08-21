@@ -1,5 +1,6 @@
 package com.example.mpos.utils.print
 
+/*
 import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.print.PrintAttributes
 import android.print.PrintDocumentAdapter
 import android.print.PrintDocumentInfo
 import android.util.Log
+import com.example.mpos.utils.print.PrintBill.Companion.setCashAnalytics
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -74,7 +76,7 @@ class PdfDocumentAdaptor constructor(private val path: String, private val conte
 
             }
         } catch (e: Exception) {
-            MainPrintFeatures.setCashAnalytics(e)
+            setCashAnalytics(e)
             Log.i(ContentValues.TAG, "onWrite: $e")
         } finally {
             try {
@@ -82,7 +84,7 @@ class PdfDocumentAdaptor constructor(private val path: String, private val conte
                 outputStream?.close()
             } catch (e: Exception) {
                 Log.i("WRITE ERROR", "onWrite: ${e.localizedMessage}")
-                MainPrintFeatures.setCashAnalytics(e)
+                setCashAnalytics(e)
             }
 
         }
@@ -91,4 +93,4 @@ class PdfDocumentAdaptor constructor(private val path: String, private val conte
     }
 
 
-}
+}*/
