@@ -85,6 +85,11 @@ data class MenuItem @JvmOverloads constructor(
     @param:Element(name = "P_Price")
     val price: String? = null,
 
+
+    @field:Element(name = "DealLine")
+    @param:Element(name = "DealLine")
+    val dealLine: String? = null,
+
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
     val xmlns: String = AllStringConst._xmlsList

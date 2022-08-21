@@ -2,7 +2,6 @@ package com.example.mpos.ui.deals.repo
 
 import com.example.mpos.api.deal.DealsApi
 import com.example.mpos.data.deals.DealsRequest
-import com.example.mpos.data.deals.confirmdeals.ConfirmDealsRequest
 import com.example.mpos.data.deals.json.DealsJsonResponse
 import com.example.mpos.data.deals.scan_and_find_deals.ScanAndFindDealsRequest
 import com.example.mpos.data.deals.scan_and_find_deals.json.ScanAndFindDealsJson
@@ -29,31 +28,6 @@ class DealsRepository(retrofit: Retrofit) {
                 getJsonOrStringResponse<DealsJsonResponse>(str)
             } else {
                 ApisResponse.Error("Cannot find the Deals", null)
-            }
-        } catch (e: Exception) {
-            ApisResponse.Error(e, null)
-        }
-        emit(data)
-    }.flowOn(IO)
-
-
-    fun postDealsResponse(requestBody: ConfirmDealsRequest) = flow {
-        emit(ApisResponse.Loading("Adding Deals..."))
-        val data=try {
-            val response = api.postDealsToApi(requestBody)
-            if (response.isSuccessful) {
-                if (response.body()?.body?.value.isNullOrEmpty()) {
-                    ApisResponse.Error("Cannot get a Response ", null)
-                } else {
-                    val value = response.body()?.body?.value!!
-                    if (value.startsWith("01")) {
-                        ApisResponse.Success(requestBody.body?.rcptNo!!)
-                    } else {
-                        ApisResponse.Error(value, null)
-                    }
-                }
-            } else {
-                ApisResponse.Error("Cannot Add Deals Response", null)
             }
         } catch (e: Exception) {
             ApisResponse.Error(e, null)

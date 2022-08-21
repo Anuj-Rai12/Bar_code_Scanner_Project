@@ -114,9 +114,6 @@ object AllStringConst {
 
         const val getDeals = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:DealMenu"
 
-        const val confirmDeals =
-            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ConfirmDealPressed"
-
         const val scanAndFindDeals="urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ScanAndFindDeal"
     }
 

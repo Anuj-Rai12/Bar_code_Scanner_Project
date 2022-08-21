@@ -108,6 +108,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                  activity?.msg("No Offer Available")
                  confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
              }*/
+            //DealsStoreInstance.getInstance().setDashBoardSelectedItem(arrItem)
             val action = ConfirmOderFragmentDirections.actionConfirmOderFragmentToDealsFragment()
             findNavController().navigate(action)
         }
@@ -116,6 +117,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             arrItem.clear()
             viewModel.getGrandTotal(null)
             viewModel.removeItemFromListOrder()
+            DealsStoreInstance.getInstance().clear()
+            DealsStoreInstance.getInstance().setResetButtonClick(true)
             initial()
         }
 
@@ -177,19 +180,39 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
     private fun setInitialValue() {
         val list = mutableListOf<ItemMasterFoodItem>()
+        if (DealsStoreInstance.getInstance().isDealsSelected()) {
+            Log.i(
+                "TESTING_ARGS",
+                "setInitialValue: ITEM_SELECTED-> ${DealsStoreInstance.getInstance().getItem()}"
+            )
+            list.addAll(DealsStoreInstance.getInstance().getItem())
+        }
         if (args.list != null) {
+            Log.i("TESTING_ARGS", "setInitialValue: ARR_ITEM -> $arrItem")
             if (arrItem.isNotEmpty()) {
                 if (!args.list?.foodList?.containsAll(arrItem)!!) {
-                    list.addAll(arrItem)
+                    //     list.clear()
+                    //       list.addAll(arrItem)
                 }
             }
-            list.addAll(args.list?.foodList!!)
+            Log.i("TESTING_ARGS", "setInitialValue:ARGS ${args.list?.foodList}")
+            if (!list.containsAll(args.list?.foodList!!) && !DealsStoreInstance.getInstance()
+                    .isResetButtonClick()
+            )
+                list.addAll(args.list?.foodList!!)
+            Log.i("TESTING_ARGS", "setInitialValue: $list")
             viewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && arrItem.isNotEmpty()) {
-            list.addAll(arrItem)
+            if (!list.containsAll(arrItem)) {
+                activity?.msg("Arr Item is No match $arrItem")
+                list.addAll(arrItem)
+            }
+            Log.i("TESTING_ARGS", "setInitialValue: $list")
             viewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && list.isEmpty()) {
             viewModel.getOrderList(null)
+        } else if (args.list == null && list.isNotEmpty()) {
+            viewModel.getOrderList(FoodItemList(list))
         }
     }
 
@@ -256,14 +279,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     }
 
 
-    private fun getViewDeals() {
-        viewModel.viewDeals.observe(viewLifecycleOwner) {
-            if (!it.isNullOrEmpty()) {
-                // Go To View Deals Fragments
-                Log.i(TAG, "getViewDeals: ${it.size}")
-            }
-        }
-    }
 
     private fun getGrandTotal() {
         viewModel.grandTotal.observe(viewLifecycleOwner) {

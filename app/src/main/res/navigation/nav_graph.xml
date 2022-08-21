@@ -197,6 +197,9 @@
             android:name="confirm"
             app:argType="com.example.mpos.data.cofirmDining.ConfirmDiningRequest"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_costDashBoardFragment_to_dealsFragment"
+            app:destination="@id/dealsFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
@@ -260,9 +263,5 @@
         android:id="@+id/dealsFragment"
         android:name="com.example.mpos.ui.deals.DealsFragment"
         android:label="deals_fragment_layout"
-        tools:layout="@layout/deals_fragment_layout" >
-        <action
-            android:id="@+id/action_dealsFragment_to_confirmOderFragment"
-            app:destination="@id/confirmOderFragment" />
-    </fragment>
+        tools:layout="@layout/deals_fragment_layout" />
 </navigation>

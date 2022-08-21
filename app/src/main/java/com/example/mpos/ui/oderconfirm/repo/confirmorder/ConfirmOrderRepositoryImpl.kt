@@ -40,7 +40,7 @@ class ConfirmOrderRepositoryImpl(
                 }
             } else {
                 ApisResponse.Error(
-                    "Oops Something went wrong no able to add order the The Table",
+                    "Oops Something went wrong not able to add order for this Table",
                     null
                 )
             }

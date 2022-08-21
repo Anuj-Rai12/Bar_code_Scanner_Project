@@ -145,10 +145,19 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         }
 
 
+
+        binding.viewOfferBtn.setOnClickListener {
+            val action =
+                CostDashBoardFragmentDirections.actionCostDashBoardFragmentToDealsFragment()
+            findNavController().navigate(action)
+        }
+
         binding.restItemBtn.setOnClickListener {
             arrItem.clear()
             confirmOrderViewModel.getGrandTotal(null)
             confirmOrderViewModel.removeItemFromListOrder()
+            DealsStoreInstance.getInstance().clear()
+            DealsStoreInstance.getInstance().setResetButtonClick(true)
             initial()
         }
 
@@ -209,8 +218,6 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         showPb("${it.data}")
                     }
                     is ApisResponse.Success -> {
-                        binding.pbLayout.root.hide()
-                        Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
                         //Add ConfirmOrder Request
                         confirmOrder(
                             ConfirmOrderRequest(
@@ -225,7 +232,6 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             }
         }
     }
-
 
     private fun getConfirmOrderResponse() {
         confirmOrderViewModel.orderConfirm.observe(viewLifecycleOwner) {
@@ -328,19 +334,39 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private fun setInitialValue() {
         val list = mutableListOf<ItemMasterFoodItem>()
+        if (DealsStoreInstance.getInstance().isDealsSelected()) {
+            Log.i(
+                "TESTING_ARGS",
+                "setInitialValue: ITEM_SELECTED-> ${DealsStoreInstance.getInstance().getItem()}"
+            )
+            list.addAll(DealsStoreInstance.getInstance().getItem())
+        }
         if (args.list != null) {
+            Log.i("TESTING_ARGS", "setInitialValue: ARR_ITEM -> $arrItem")
             if (arrItem.isNotEmpty()) {
-                if (!args.list?.foodList?.containsAll(arrItem)!!) {
-                    list.addAll(arrItem)
-                }
+                /*if (!args.list?.foodList?.containsAll(arrItem)!!) {
+                    //     list.clear()
+                    //       list.addAll(arrItem)
+                }*/
             }
-            list.addAll(args.list?.foodList!!)
+            Log.i("TESTING_ARGS", "setInitialValue:ARGS ${args.list?.foodList}")
+            if (!list.containsAll(args.list?.foodList!!) && !DealsStoreInstance.getInstance()
+                    .isResetButtonClick()
+            )
+                list.addAll(args.list?.foodList!!)
+            Log.i("TESTING_ARGS", "setInitialValue: $list")
             confirmOrderViewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && arrItem.isNotEmpty()) {
-            list.addAll(arrItem)
+            if (!list.containsAll(arrItem)) {
+                activity?.msg("Arr Item is No match $arrItem")
+                list.addAll(arrItem)
+            }
+            Log.i("TESTING_ARGS", "setInitialValue: $list")
             confirmOrderViewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && list.isEmpty()) {
             confirmOrderViewModel.getOrderList(null)
+        } else if (args.list == null && list.isNotEmpty()) {
+            confirmOrderViewModel.getOrderList(FoodItemList(list))
         }
     }
 

@@ -25,11 +25,7 @@ class DealsStoreInstance {
     }
 
 
-    fun setOldDealsList(list: List<ItemMasterFoodItem>) {
-        val deals = list.filter { it.isDeal }
-        listOfItem.clear()
-        listOfItem.addAll(deals)
-    }
+
 
 
     fun isResetButtonClick() = resetButtonClick
@@ -43,19 +39,13 @@ class DealsStoreInstance {
 
 
     fun addDealsItem(deals: AddOnMenu): Boolean {
-        val check = listOfItem.find {
-            it.itemMaster.itemDescription == deals.description
-        }
-        if (check != null) {
-            return false
-        }
         isDealSelected = true
         val item = ItemMasterFoodItem(
             itemMaster = ItemMaster(
                 0,
                 "",
                 "Food",
-                "1",
+                itemCode = deals.menuCode,
                 deals.description,
                 deals.description,
                 deals.price.toString(),
@@ -64,8 +54,7 @@ class DealsStoreInstance {
             foodQty = 1,
             foodAmt = deals.price,
             bg = listOfBg.last(),
-            isDeal = true,
-            dealCode = deals.menuCode
+            isDeal = true
         )
         listOfItem.add(item)
         return true

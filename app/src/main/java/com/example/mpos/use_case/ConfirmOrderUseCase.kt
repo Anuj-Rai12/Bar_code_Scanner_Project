@@ -6,6 +6,7 @@ import com.example.mpos.data.poslineitem.request.MunItemContainer
 import com.example.mpos.data.poslineitem.request.PosLineItemApiRequest
 import com.example.mpos.data.poslineitem.request.RequestBody
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
+import com.example.mpos.utils.AllStringConst
 import com.example.mpos.utils.TAG
 import com.example.mpos.utils.getDate
 import kotlinx.coroutines.flow.flow
@@ -71,20 +72,19 @@ class ConfirmOrderUseCase {
     ): PosLineItemApiRequest {
         val list = mutableListOf<MenuItem>()
         item.forEach { itemMasterFoodItem ->
-            if (!itemMasterFoodItem.isDeal) {
-                val menuItem = MenuItem(
-                    itemNo = itemMasterFoodItem.itemMaster.itemCode,
-                    receiptNo = receipt,
-                    qty = itemMasterFoodItem.foodQty.toString(),
-                    saleType = "RESTAURANT",
-                    date = getDate("MM/dd/yy") ?: "10/20/22",
-                    time = time,
-                    storeNo = storeNo,
-                    freeText = itemMasterFoodItem.free_txt,
-                    price = itemMasterFoodItem.itemMaster.salePrice
-                )
-                list.add(menuItem)
-            }
+            val menuItem = MenuItem(
+                itemNo = itemMasterFoodItem.itemMaster.itemCode,
+                receiptNo = receipt,
+                qty = itemMasterFoodItem.foodQty.toString(),
+                saleType = AllStringConst.API.RESTAURANT.name,
+                date = getDate("MM/dd/yy") ?: "10/20/22",
+                time = time,
+                storeNo = storeNo,
+                freeText = itemMasterFoodItem.free_txt,
+                price = itemMasterFoodItem.itemMaster.salePrice,
+                dealLine = itemMasterFoodItem.isDeal.toString().uppercase(Locale.getDefault())
+            )
+            list.add(menuItem)
         }
         return PosLineItemApiRequest(RequestBody(MunItemContainer(list)))
     }
