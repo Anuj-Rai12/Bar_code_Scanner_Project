@@ -3,6 +3,7 @@ package com.example.mpos.ui.deals.adaptor
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mpos.R
 import com.example.mpos.data.deals.json.AddOnMenu
 import com.example.mpos.data.deals.scan_and_find_deals.json.ScanAndFindDealsJsonItem
 import com.example.mpos.databinding.FoodItemLayoutBinding
@@ -25,6 +26,9 @@ class DealsAdaptor<T>(private val list: List<T>) :
             binding.btnWithoutOffer.setOnClickListener {
                 onClickListener?.onItemClicked(data)
             }
+            binding.btnWithOffer.setOnClickListener {
+                onClickListener?.onItemClicked(Pair(false, data))
+            }
             setUpRecycleView()
             if (data is AddOnMenu) {
                 binding.orderOfferListView.show()
@@ -43,8 +47,11 @@ class DealsAdaptor<T>(private val list: List<T>) :
                     )
                 }
                 listOfOfferAdaptor.submitList(orderList)
-                binding.btnWithoutOffer.text = "View Deals items"
+                binding.btnWithoutOffer.text = "View Deals Item"
+                binding.btnWithOffer.text = "Add Deals Item"
+                binding.btnWithoutOffer.setBackgroundResource(R.drawable.add_with_out_offer_btn_layout)
                 binding.btnWithoutOffer.show()
+                binding.btnWithOffer.show()
             } else if (data is ScanAndFindDealsJsonItem) {
                 binding.foodItemTv.text = data.itemName
                 binding.offerTv.text = "on Offer"

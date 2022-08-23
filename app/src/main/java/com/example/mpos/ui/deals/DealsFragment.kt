@@ -183,6 +183,10 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
             currentIcon = R.drawable.ic_check
             binding.topAppBar.setNavigationIcon(currentIcon)
             viewModel.getScanDealApi(response.menuCode)
+        } else if (response is Pair<*, *>) {
+            val res = DealsStoreInstance.getInstance().addDealsItem(response.second as AddOnMenu)
+            listOfFoodItem.add(res)
+            activity?.msg("${(response.second as AddOnMenu).description} ${getEmojiByUnicode(0x2705)}")
         }
     }
 }
