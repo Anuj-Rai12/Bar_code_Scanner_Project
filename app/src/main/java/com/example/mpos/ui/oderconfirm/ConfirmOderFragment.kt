@@ -113,6 +113,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             arrItem.clear()
             viewModel.getGrandTotal(null)
             viewModel.removeItemFromListOrder()
+            DealsStoreInstance.getInstance().setIsResetButtonClick(true)
             initial()
         }
 
@@ -174,12 +175,16 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
     private fun setInitialValue() {
         val list = mutableListOf<ItemMasterFoodItem>()
+        if (DealsStoreInstance.getInstance().isResetButtonClick()) {
+            viewModel.getOrderList(null)
+            return
+        }
         if (args.list != null) {
             if (arrItem.isNotEmpty()) {
                 if (!args.list?.foodList?.containsAll(arrItem)!!) {
                     list.addAll(arrItem)
                 } else
-                    list.addAll(args.list?.foodList!!)
+                    list.addAll(arrItem)
             } else
                 list.addAll(args.list?.foodList!!)
 

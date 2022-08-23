@@ -175,6 +175,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
 
         binding.restItemBtn.setOnClickListener {
+            DealsStoreInstance.getInstance().setIsResetButtonClick(true)
             arrItem.clear()
             confirmOrderViewModel.getGrandTotal(null)
             confirmOrderViewModel.removeItemFromListOrder()
@@ -372,13 +373,17 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         val list = mutableListOf<ItemMasterFoodItem>()
         Log.i("ARRAY_P", "setInitialValue:ARGS ${args.list?.foodList?.size}  ---> ${args.list}")
         Log.i("ARRAY_P", "setInitialValue:ARRAY ${arrItem.size} ---> $arrItem")
+        if (DealsStoreInstance.getInstance().isResetButtonClick()) {
+            confirmOrderViewModel.getOrderList(null)
+            return
+        }
         if (args.list != null) {
             if (arrItem.isNotEmpty()) {
                 if (!args.list?.foodList?.containsAll(arrItem)!!) {
                     list.addAll(arrItem)
-                }else
-                    list.addAll(args.list?.foodList!!)
-            }else
+                } else
+                    list.addAll(arrItem)
+            } else
                 list.addAll(args.list?.foodList!!)
 
             confirmOrderViewModel.getOrderList(FoodItemList(list))

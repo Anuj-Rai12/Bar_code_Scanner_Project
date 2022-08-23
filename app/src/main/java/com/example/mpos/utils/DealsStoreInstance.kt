@@ -6,8 +6,6 @@ import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 
 class DealsStoreInstance {
-    private val listOfItem = mutableListOf<ItemMasterFoodItem>()
-    private var isDealSelected: Boolean = false
     private var resetButtonClick = false
 
     companion object {
@@ -20,26 +18,16 @@ class DealsStoreInstance {
         }
     }
 
-    fun setResetButtonClick(flag: Boolean) {
+
+    fun isResetButtonClick() = resetButtonClick
+
+    fun setIsResetButtonClick(flag: Boolean) {
         resetButtonClick = flag
     }
 
 
-
-
-
-    fun isResetButtonClick() = resetButtonClick
-
-
-    fun clear(): Boolean {
-        listOfItem.clear()
-        isDealSelected = false
-        return listOfItem.isEmpty()
-    }
-
-
     fun addDealsItem(deals: AddOnMenu): ItemMasterFoodItem {
-         return ItemMasterFoodItem(
+        return ItemMasterFoodItem(
             itemMaster = ItemMaster(
                 0,
                 "",
@@ -57,17 +45,5 @@ class DealsStoreInstance {
         )
     }
 
-    /*fun isItemEmpty(): Boolean {
-        return listOfItem.isEmpty()
-    }*/
-    fun deleteItem(item: ItemMasterFoodItem): Boolean {
-        return listOfItem.remove(item)
-    }
-
-    fun isDealsSelected() = isDealSelected
-
-    fun getItem(): List<ItemMasterFoodItem> {
-        return listOfItem.toList()
-    }
 
 }

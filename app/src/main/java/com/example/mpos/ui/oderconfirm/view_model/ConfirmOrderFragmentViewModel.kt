@@ -161,6 +161,7 @@ class ConfirmOrderFragmentViewModel constructor(
                         Log.i(TAG, "deleteSwipe:TEST $item")
                         _listOfOrder.postValue(ApisResponse.Success(item))
                     } else {
+                        DealsStoreInstance.getInstance().setIsResetButtonClick(true)
                         _listOfOrder.postValue(ApisResponse.Loading(null))
                     }
                 }

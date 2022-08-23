@@ -78,6 +78,7 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
             "chooseOptionBackScreenOption: $listOfFoodItem\n\n And Flag Value is -> $isEveryThingSetUp"
         )
         if (isEveryThingSetUp && listOfFoodItem.isNotEmpty()) {
+            DealsStoreInstance.getInstance().setIsResetButtonClick(false)
             listOfFoodItem.addAll(args.list.foodList)
             val action = args.tbl?.let {
                 DealsFragmentDirections.actionDealsFragmentToConfirmOderFragment(

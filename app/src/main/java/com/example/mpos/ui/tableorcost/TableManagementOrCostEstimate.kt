@@ -47,6 +47,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
 
     override fun onResume() {
         super.onResume()
+        DealsStoreInstance.getInstance().setIsResetButtonClick(false)
     }
 
     private fun getLogOutResponse() {

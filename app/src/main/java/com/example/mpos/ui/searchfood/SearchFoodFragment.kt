@@ -87,7 +87,6 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
     }
 
 
-
     private fun showSnackBar(msg: String, color: Int, length: Int) {
         binding.root.showSandbar(
             msg,
@@ -102,6 +101,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
     private fun chooseOptionBackScreenOption() {
         Log.i(TAG, "chooseOptionBackScreenOption: $listOfFoodItem\n\n And Flag Value is -> $flag")
         if (flag && listOfFoodItem.isNotEmpty()) {
+            DealsStoreInstance.getInstance().setIsResetButtonClick(false)
             listOfFoodItem.addAll(args.list.foodList)
             val action = args.tbl?.let {
                 SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
