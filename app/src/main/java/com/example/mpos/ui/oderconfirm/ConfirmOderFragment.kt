@@ -43,6 +43,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     private lateinit var binding: ConfirmOrderLayoutBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
     private val viewModel: ConfirmOrderFragmentViewModel by viewModels()
+
     //private var flagForViewDeals: Boolean = false
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ConfirmOderFragmentArgs by navArgs()
@@ -99,7 +100,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         getGrandTotal()
 
         binding.viewOfferBtn.setOnClickListener {
-
+            val action =
+                ConfirmOderFragmentDirections.actionConfirmOderFragmentToDealsFragment(
+                    FoodItemList(arrItem),
+                    args.tbl,
+                    customDiningRequest
+                )
+            findNavController().navigate(action)
         }
 
         binding.restItemBtn.setOnClickListener {
@@ -244,8 +251,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 }
             })
     }
-
-
 
 
     private fun getGrandTotal() {

@@ -19,6 +19,7 @@
             android:background="@color/semi_white_color"
             app:navigationIcon="@drawable/ic_arrow_back_24"
             app:title="Testing..."
+            app:titleTextColor="@color/black"
             app:titleTextAppearance="@style/customToolBarTitle" />
 
     </com.google.android.material.appbar.AppBarLayout>

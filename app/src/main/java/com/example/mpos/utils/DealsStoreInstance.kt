@@ -38,9 +38,8 @@ class DealsStoreInstance {
     }
 
 
-    fun addDealsItem(deals: AddOnMenu): Boolean {
-        isDealSelected = true
-        val item = ItemMasterFoodItem(
+    fun addDealsItem(deals: AddOnMenu): ItemMasterFoodItem {
+         return ItemMasterFoodItem(
             itemMaster = ItemMaster(
                 0,
                 "",
@@ -56,8 +55,6 @@ class DealsStoreInstance {
             bg = listOfBg.last(),
             isDeal = true
         )
-        listOfItem.add(item)
-        return true
     }
 
     /*fun isItemEmpty(): Boolean {

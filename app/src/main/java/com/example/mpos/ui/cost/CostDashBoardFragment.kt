@@ -52,7 +52,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     private val costEstimationViewModel: CostDashBoardViewModel by viewModels()
 
 
-    private var flagForViewDeals: Boolean = false
+    //private var flagForViewDeals: Boolean = false
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: CostDashBoardFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
@@ -137,6 +137,16 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             } else {
                 costEstimationViewModel.addError("Oops cannot setUp a Process!!")
             }
+        }
+
+
+        binding.viewOfferBtn.setOnClickListener {
+            val action =
+                CostDashBoardFragmentDirections.actionCostDashBoardFragmentToDealsFragment(
+                    FoodItemList(arrItem), null,
+                    customDiningRequest
+                )
+            findNavController().navigate(action)
         }
 
         binding.infoBtn.setOnClickListener {
@@ -276,7 +286,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                                 "All Food Item are added Successfully",
                                 icon = R.drawable.ic_success
                             ) {}
-                            activity?.msg("Bill List is Empty",Toast.LENGTH_LONG)
+                            activity?.msg("Bill List is Empty", Toast.LENGTH_LONG)
                         } else if (printBill.isBluetoothDeviceFound())
                             printBill.doPrint(body)
                         else
@@ -388,8 +398,6 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor =
                 ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {
-                    if (flagForViewDeals)
-                        confirmOrderViewModel.getOrderItem(it)
                 }, itemClickListerForUpdate = { res ->
                     updateQtyDialogBox(res)
                 }, itemClickInstructionLinter = { res ->

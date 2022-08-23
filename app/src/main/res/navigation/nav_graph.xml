@@ -9,7 +9,7 @@
         android:id="@+id/testingConnectionFragment"
         android:name="com.example.mpos.ui.testingconnection.TestingConnectionFragment"
         android:label="testing_connection_fragment"
-        tools:layout="@layout/testing_connection_fragment" >
+        tools:layout="@layout/testing_connection_fragment">
         <argument
             android:name="bar"
             app:argType="com.example.mpos.data.login.model.TestingBarcodeConnection"
@@ -28,7 +28,7 @@
         android:id="@+id/tableManagementOrCostEstimate"
         android:name="com.example.mpos.ui.tableorcost.TableManagementOrCostEstimate"
         android:label="table_or_cost_layout"
-        tools:layout="@layout/table_or_cost_layout" >
+        tools:layout="@layout/table_or_cost_layout">
         <action
             android:id="@+id/action_tableManagementOrCostEstimate_to_tableManagementFragment"
             app:destination="@id/tableManagementFragment"
@@ -61,7 +61,7 @@
         android:id="@+id/tableManagementFragment"
         android:name="com.example.mpos.ui.tablemange.TableManagementFragment"
         android:label="table_mangment_layout"
-        tools:layout="@layout/table_mangment_layout" >
+        tools:layout="@layout/table_mangment_layout">
         <action
             android:id="@+id/action_tableManagementFragment_to_confirmOderFragment"
             app:destination="@id/confirmOderFragment"
@@ -77,7 +77,7 @@
         android:id="@+id/confirmOderFragment"
         android:name="com.example.mpos.ui.oderconfirm.ConfirmOderFragment"
         android:label="confirm_order_layout"
-        tools:layout="@layout/confirm_order_layout" >
+        tools:layout="@layout/confirm_order_layout">
         <action
             android:id="@+id/action_confirmOderFragment_to_searchFoodFragment"
             app:destination="@id/searchFoodFragment"
@@ -85,7 +85,8 @@
             app:exitAnim="@anim/exit_anim"
             app:popEnterAnim="@anim/pop_enter_anim"
             app:popExitAnim="@anim/pop_exit_anim" />
-        <argument android:name="list"
+        <argument
+            android:name="list"
             app:argType="com.example.mpos.ui.searchfood.model.FoodItemList"
             app:nullable="true" />
         <argument
@@ -103,7 +104,7 @@
         android:id="@+id/searchFoodFragment"
         android:name="com.example.mpos.ui.searchfood.SearchFoodFragment"
         android:label="search_food_item_layout"
-        tools:layout="@layout/search_food_item_layout" >
+        tools:layout="@layout/search_food_item_layout">
         <action
             android:id="@+id/action_searchFoodFragment_to_confirmOderFragment"
             app:destination="@id/confirmOderFragment"
@@ -116,9 +117,9 @@
             app:argType="com.example.mpos.data.table_info.model.json.TableDetail"
             app:nullable="true" />
 
-        <argument android:name="list"
-            app:argType="com.example.mpos.ui.searchfood.model.FoodItemList"
-            />
+        <argument
+            android:name="list"
+            app:argType="com.example.mpos.ui.searchfood.model.FoodItemList" />
         <argument
             android:name="confirmreq"
             app:argType="com.example.mpos.data.cofirmDining.ConfirmDiningRequest"
@@ -133,7 +134,7 @@
         android:id="@+id/scanQrCodeFragment"
         android:name="com.example.mpos.ui.scan.ScanQrCodeFragment"
         android:label="scan_qr_layout"
-        tools:layout="@layout/scan_qr_layout" >
+        tools:layout="@layout/scan_qr_layout">
         <argument
             android:name="item"
             app:argType="integer" />
@@ -155,8 +156,7 @@
         <argument
             android:name="tbl"
             app:argType="com.example.mpos.data.table_info.model.json.TableDetail"
-            app:nullable="true"
-            />
+            app:nullable="true" />
         <argument
             android:name="food"
             app:argType="com.example.mpos.ui.searchfood.model.FoodItemList"
@@ -182,7 +182,7 @@
         android:id="@+id/costDashBoardFragment"
         android:name="com.example.mpos.ui.cost.CostDashBoardFragment"
         android:label="cost_cal_dashbord_layout"
-        tools:layout="@layout/cost_cal_dashbord_layout" >
+        tools:layout="@layout/cost_cal_dashbord_layout">
         <action
             android:id="@+id/action_costDashBoardFragment_to_searchFoodFragment"
             app:destination="@id/searchFoodFragment" />
@@ -205,7 +205,7 @@
         android:id="@+id/splashScreenFragment"
         android:name="com.example.mpos.ui.splash.SplashScreenFragment"
         android:label="splash_src_layout"
-        tools:layout="@layout/splash_src_layout" >
+        tools:layout="@layout/splash_src_layout">
         <action
             android:id="@+id/action_splashScreenFragment_to_testingConnectionFragment"
             app:destination="@id/testingConnectionFragment"
@@ -238,7 +238,7 @@
         android:id="@+id/loginScreenFragment"
         android:name="com.example.mpos.ui.login.LoginScreenFragment"
         android:label="login_screen_fragment"
-        tools:layout="@layout/login_screen_fragment" >
+        tools:layout="@layout/login_screen_fragment">
         <action
             android:id="@+id/action_loginScreenFragment_to_tableManagementOrCostEstimate"
             app:destination="@id/tableManagementOrCostEstimate"
@@ -263,5 +263,27 @@
         android:id="@+id/dealsFragment"
         android:name="com.example.mpos.ui.deals.DealsFragment"
         android:label="deals_fragment_layout"
-        tools:layout="@layout/deals_fragment_layout" />
+        tools:layout="@layout/deals_fragment_layout">
+        <action
+            android:id="@+id/action_dealsFragment_to_costDashBoardFragment"
+            app:destination="@id/costDashBoardFragment"
+            app:popUpTo="@id/costDashBoardFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="list"
+            app:argType="com.example.mpos.ui.searchfood.model.FoodItemList" />
+        <argument
+            android:name="tbl"
+            app:argType="com.example.mpos.data.table_info.model.json.TableDetail"
+            app:nullable="true" />
+        <argument
+            android:name="confirm"
+            app:argType="com.example.mpos.data.cofirmDining.ConfirmDiningRequest"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_dealsFragment_to_confirmOderFragment"
+            app:destination="@id/confirmOderFragment"
+            app:popUpTo="@id/confirmOderFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

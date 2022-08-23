@@ -51,9 +51,9 @@ class ConfirmOrderFragmentViewModel constructor(
     val event: LiveData<Events<Map<String, Boolean>>>
         get() = _event
 
-    private val _viewDealsList = MutableLiveData<MutableList<ItemMasterFoodItem>>()
+    /*private val _viewDealsList = MutableLiveData<MutableList<ItemMasterFoodItem>>()
     val viewDeals: LiveData<MutableList<ItemMasterFoodItem>>
-        get() = _viewDealsList
+        get() = _viewDealsList*/
 
 
     private val _orderDining = MutableLiveData<ApisResponse<out Any?>>()
@@ -154,18 +154,9 @@ class ConfirmOrderFragmentViewModel constructor(
             Log.i(TAG, "deleteSwipe: $food")
             if (it is ApisResponse.Success) {
                 it.data?.let { list ->
-                    getOrderItem(food, true)
                     val item = mutableListOf<ItemMasterFoodItem>()
                     item.addAll(list)
                     item.remove(food)
-                    if (food.isDeal) {
-                        Log.i(
-                            "DELETE_DEALS",
-                            "deleteSwipe:$food is delete or not ${
-                                DealsStoreInstance.getInstance().deleteItem(food)
-                            }"
-                        )
-                    }
                     if (item.isNotEmpty()) {
                         Log.i(TAG, "deleteSwipe:TEST $item")
                         _listOfOrder.postValue(ApisResponse.Success(item))
@@ -199,7 +190,7 @@ class ConfirmOrderFragmentViewModel constructor(
     fun getTbl(tbl: TableDetail) = "${tbl.tableNo}:${tbl.guestNumber}P"
 
 
-    fun getOrderItem(foodItem: ItemMasterFoodItem, flag: Boolean = false) {
+/*    fun getOrderItem(foodItem: ItemMasterFoodItem, flag: Boolean = false) {
         _viewDealsList.value?.let { myList ->
             val item = myList.find { res -> res.itemMaster.id == foodItem.itemMaster.id }
             if (item != null) {
@@ -215,7 +206,7 @@ class ConfirmOrderFragmentViewModel constructor(
         } ?: if (!flag) {
             _viewDealsList.postValue(mutableListOf(foodItem))
         }
-    }
+    }*/
 
 
     fun getGrandTotal(list: List<ItemMasterFoodItem>?) {
