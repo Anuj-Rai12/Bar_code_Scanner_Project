@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -42,7 +43,6 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     OnBottomSheetClickListener {
-
     private lateinit var binding: CostCalDashbordLayoutBinding
 
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
@@ -118,7 +118,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 return@setOnClickListener
             }
             if (arrItem.isEmpty()) {
-                costEstimationViewModel.addError("Please Add Items to Screen!!")
+                costEstimationViewModel.addError("Please Add Item Menu !!")
                 return@setOnClickListener
             }
             if (setUpCostEstimation()) {
@@ -164,19 +164,10 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         }
 
 
-
-        binding.viewOfferBtn.setOnClickListener {
-            val action =
-                CostDashBoardFragmentDirections.actionCostDashBoardFragmentToDealsFragment()
-            findNavController().navigate(action)
-        }
-
         binding.restItemBtn.setOnClickListener {
             arrItem.clear()
             confirmOrderViewModel.getGrandTotal(null)
             confirmOrderViewModel.removeItemFromListOrder()
-            DealsStoreInstance.getInstance().clear()
-            DealsStoreInstance.getInstance().setResetButtonClick(true)
             initial()
         }
 
@@ -239,6 +230,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         showPb("${it.data}")
                     }
                     is ApisResponse.Success -> {
+                        binding.pbLayout.root.hide()
+                        Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
                         //Add ConfirmOrder Request
                         confirmOrder(
                             ConfirmOrderRequest(
@@ -253,6 +246,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             }
         }
     }
+
 
     private fun getConfirmOrderResponse() {
         confirmOrderViewModel.orderConfirm.observe(viewLifecycleOwner) {
@@ -276,7 +270,14 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                     arrItem.clear()
                     confirmOrderViewModel.getOrderList(null)
                     (it.data as PrintReceiptInfo?)?.let { body ->
-                        if (printBill.isBluetoothDeviceFound())
+                        if (body.itemList.isEmpty()) {
+                            showDialogBox(
+                                "Success",
+                                "All Food Item are added Successfully",
+                                icon = R.drawable.ic_success
+                            ) {}
+                            activity?.msg("Bill List is Empty",Toast.LENGTH_LONG)
+                        } else if (printBill.isBluetoothDeviceFound())
                             printBill.doPrint(body)
                         else
                             showDialogBox(
@@ -291,8 +292,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     }
 
 
-    private fun showErrorDialog(msg: String, ic: Int = R.drawable.ic_error) {
-        showDialogBox("Failed", msg, icon = ic) {}
+    private fun showErrorDialog(msg: String) {
+        showDialogBox("Failed", msg, icon = R.drawable.ic_error) {}
     }
 
 
@@ -359,39 +360,19 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private fun setInitialValue() {
         val list = mutableListOf<ItemMasterFoodItem>()
-        if (DealsStoreInstance.getInstance().isDealsSelected()) {
-            Log.i(
-                "TESTING_ARGS",
-                "setInitialValue: ITEM_SELECTED-> ${DealsStoreInstance.getInstance().getItem()}"
-            )
-            list.addAll(DealsStoreInstance.getInstance().getItem())
-        }
         if (args.list != null) {
-            Log.i("TESTING_ARGS", "setInitialValue: ARR_ITEM -> $arrItem")
             if (arrItem.isNotEmpty()) {
-                /*if (!args.list?.foodList?.containsAll(arrItem)!!) {
-                    //     list.clear()
-                    //       list.addAll(arrItem)
-                }*/
+                if (!args.list?.foodList?.containsAll(arrItem)!!) {
+                    list.addAll(arrItem)
+                }
             }
-            Log.i("TESTING_ARGS", "setInitialValue:ARGS ${args.list?.foodList}")
-            if (!list.containsAll(args.list?.foodList!!) && !DealsStoreInstance.getInstance()
-                    .isResetButtonClick()
-            )
-                list.addAll(args.list?.foodList!!)
-            Log.i("TESTING_ARGS", "setInitialValue: $list")
+            list.addAll(args.list?.foodList!!)
             confirmOrderViewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && arrItem.isNotEmpty()) {
-            if (!list.containsAll(arrItem)) {
-                activity?.msg("Arr Item is No match $arrItem")
-                list.addAll(arrItem)
-            }
-            Log.i("TESTING_ARGS", "setInitialValue: $list")
+            list.addAll(arrItem)
             confirmOrderViewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && list.isEmpty()) {
             confirmOrderViewModel.getOrderList(null)
-        } else if (args.list == null && list.isNotEmpty()) {
-            confirmOrderViewModel.getOrderList(FoodItemList(list))
         }
     }
 

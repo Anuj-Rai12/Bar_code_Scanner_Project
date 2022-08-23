@@ -43,7 +43,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     private lateinit var binding: ConfirmOrderLayoutBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
     private val viewModel: ConfirmOrderFragmentViewModel by viewModels()
-    private var flagForViewDeals: Boolean = false
+    //private var flagForViewDeals: Boolean = false
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ConfirmOderFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
@@ -99,26 +99,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         getGrandTotal()
 
         binding.viewOfferBtn.setOnClickListener {
-            /* if (!flagForViewDeals) {
-                 flagForViewDeals = true
-                 getViewDeals()
-                 confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
-             } else {
-                 flagForViewDeals = false
-                 activity?.msg("No Offer Available")
-                 confirmOderFragmentAdaptor.setCheckBoxType(flagForViewDeals)
-             }*/
-            //DealsStoreInstance.getInstance().setDashBoardSelectedItem(arrItem)
-            val action = ConfirmOderFragmentDirections.actionConfirmOderFragmentToDealsFragment()
-            findNavController().navigate(action)
+
         }
 
         binding.restItemBtn.setOnClickListener {
             arrItem.clear()
             viewModel.getGrandTotal(null)
             viewModel.removeItemFromListOrder()
-            DealsStoreInstance.getInstance().clear()
-            DealsStoreInstance.getInstance().setResetButtonClick(true)
             initial()
         }
 
@@ -159,8 +146,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     viewLifecycleOwner,
                     viewModel
                 ) {
-                    viewModel.getGrandTotal(arrItem)
                     if (it) {
+                        viewModel.getGrandTotal(arrItem)
                         viewModel.fetchPrintResponse(PrintBillRequest(PrintBillRequestBody(args.tbl.receiptNo)))
                     }
                     isOrderIsVisible = false
@@ -180,39 +167,19 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
     private fun setInitialValue() {
         val list = mutableListOf<ItemMasterFoodItem>()
-        if (DealsStoreInstance.getInstance().isDealsSelected()) {
-            Log.i(
-                "TESTING_ARGS",
-                "setInitialValue: ITEM_SELECTED-> ${DealsStoreInstance.getInstance().getItem()}"
-            )
-            list.addAll(DealsStoreInstance.getInstance().getItem())
-        }
         if (args.list != null) {
-            Log.i("TESTING_ARGS", "setInitialValue: ARR_ITEM -> $arrItem")
             if (arrItem.isNotEmpty()) {
                 if (!args.list?.foodList?.containsAll(arrItem)!!) {
-                    //     list.clear()
-                    //       list.addAll(arrItem)
+                    list.addAll(arrItem)
                 }
             }
-            Log.i("TESTING_ARGS", "setInitialValue:ARGS ${args.list?.foodList}")
-            if (!list.containsAll(args.list?.foodList!!) && !DealsStoreInstance.getInstance()
-                    .isResetButtonClick()
-            )
-                list.addAll(args.list?.foodList!!)
-            Log.i("TESTING_ARGS", "setInitialValue: $list")
+            list.addAll(args.list?.foodList!!)
             viewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && arrItem.isNotEmpty()) {
-            if (!list.containsAll(arrItem)) {
-                activity?.msg("Arr Item is No match $arrItem")
-                list.addAll(arrItem)
-            }
-            Log.i("TESTING_ARGS", "setInitialValue: $list")
+            list.addAll(arrItem)
             viewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && list.isEmpty()) {
             viewModel.getOrderList(null)
-        } else if (args.list == null && list.isNotEmpty()) {
-            viewModel.getOrderList(FoodItemList(list))
         }
     }
 
@@ -277,6 +244,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 }
             })
     }
+
 
 
 
@@ -549,8 +517,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor =
                 ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {
-                    if (flagForViewDeals)
-                        viewModel.getOrderItem(it)
+
                 }, itemClickListerForUpdate = { res ->
                     updateQtyDialogBox(res)
                 }, itemClickInstructionLinter = { res ->
