@@ -370,13 +370,17 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private fun setInitialValue() {
         val list = mutableListOf<ItemMasterFoodItem>()
+        Log.i("ARRAY_P", "setInitialValue:ARGS ${args.list?.foodList?.size}  ---> ${args.list}")
+        Log.i("ARRAY_P", "setInitialValue:ARRAY ${arrItem.size} ---> $arrItem")
         if (args.list != null) {
             if (arrItem.isNotEmpty()) {
                 if (!args.list?.foodList?.containsAll(arrItem)!!) {
                     list.addAll(arrItem)
-                }
-            }
-            list.addAll(args.list?.foodList!!)
+                }else
+                    list.addAll(args.list?.foodList!!)
+            }else
+                list.addAll(args.list?.foodList!!)
+
             confirmOrderViewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && arrItem.isNotEmpty()) {
             list.addAll(arrItem)

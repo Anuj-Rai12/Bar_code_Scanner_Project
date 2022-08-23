@@ -178,9 +178,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             if (arrItem.isNotEmpty()) {
                 if (!args.list?.foodList?.containsAll(arrItem)!!) {
                     list.addAll(arrItem)
-                }
-            }
-            list.addAll(args.list?.foodList!!)
+                } else
+                    list.addAll(args.list?.foodList!!)
+            } else
+                list.addAll(args.list?.foodList!!)
+
             viewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && arrItem.isNotEmpty()) {
             list.addAll(arrItem)
