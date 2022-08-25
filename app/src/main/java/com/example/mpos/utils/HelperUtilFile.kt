@@ -122,6 +122,12 @@ object AllStringConst {
 
         const val scanAndFindDeals =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ScanAndFindDeal"
+
+        const val confirmBilling =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ConfirmBilling"
+
+        const val sendBillingEtc =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:SendBillingToEDC"
     }
 
 
