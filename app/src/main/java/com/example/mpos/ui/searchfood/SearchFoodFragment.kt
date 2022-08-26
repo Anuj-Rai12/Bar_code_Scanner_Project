@@ -103,14 +103,29 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         if (flag && listOfFoodItem.isNotEmpty()) {
             DealsStoreInstance.getInstance().setIsResetButtonClick(false)
             listOfFoodItem.addAll(args.list.foodList)
-            val action = args.tbl?.let {
+            val action = if (args.tbl != null) {
                 SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
-                    FoodItemList(listOfFoodItem), it, args.confirmreq
+                    FoodItemList(listOfFoodItem), args.tbl!!, args.confirmreq
                 )
-            } ?: SearchFoodFragmentDirections.actionSearchFoodFragmentToCostDashBoardFragment(
-                FoodItemList(listOfFoodItem),
-                args.confirmreq
+            } else if (args.tbl == null && args.confirmreq == null) {
+                SearchFoodFragmentDirections.actionSearchFoodFragmentToCostDashBoardFragment(
+                    FoodItemList(listOfFoodItem),
+                    args.confirmreq
+                )
+            } else {
+                SearchFoodFragmentDirections.actionSearchFoodFragmentToBillingFragment(
+                    FoodItemList(listOfFoodItem),
+                    args.confirmreq
+                )
+            }
+            /*args.tbl?.let {
+            SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
+                FoodItemList(listOfFoodItem), it, args.confirmreq
             )
+        } ?: SearchFoodFragmentDirections.actionSearchFoodFragmentToCostDashBoardFragment(
+            FoodItemList(listOfFoodItem),
+            args.confirmreq
+        )*/
             findNavController().navigate(action)
         } else if (flag) {
             findNavController().popBackStack()

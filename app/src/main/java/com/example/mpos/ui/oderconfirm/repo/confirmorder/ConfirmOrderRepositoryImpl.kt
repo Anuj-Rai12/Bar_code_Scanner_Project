@@ -18,7 +18,7 @@ class ConfirmOrderRepositoryImpl(
 
 
     override fun saveUserOrderItem(confirmOrderRequest: ConfirmOrderRequest) = flow {
-        emit(ApisResponse.Loading("Adding Order.."))
+        emit(ApisResponse.Loading("Confirming Order.."))
         val res = try {
             val response = api.sendPostRequestApi(confirmOrderRequest)
             if (response.isSuccessful) {

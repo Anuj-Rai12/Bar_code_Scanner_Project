@@ -56,7 +56,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: CostDashBoardFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
-    private var customDiningRequest: ConfirmDiningRequest? = null
+    private val customDiningRequest: ConfirmDiningRequest? = null
     private var receiptNo: String? = null
     private var costEstimation: CostEstimation? = null
 

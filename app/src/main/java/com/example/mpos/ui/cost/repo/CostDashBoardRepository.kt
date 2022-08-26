@@ -44,12 +44,13 @@ class CostDashBoardRepository(retrofit: Retrofit) {
 
 
     fun confirmBilling(request:ConfirmBillingRequest)=flow{
+        emit(ApisResponse.Loading("validating Billing Request"))
         val data = try {
             val response = billingApi.postConfirmBillingApi(request = request)
             if (response.isSuccessful) {
                 response.body()?.let { estimation ->
                     if (!estimation.body?.errorFound.toBoolean() && estimation.body?.returnValue.toBoolean()) {
-                        ApisResponse.Success(null)
+                        ApisResponse.Success("${request.body?.rcptNo}")
                     } else {
                         ApisResponse.Error(
                             estimation.body?.errorText ?: "Cannot Upload the menu item", null
@@ -68,6 +69,7 @@ class CostDashBoardRepository(retrofit: Retrofit) {
 
 
     fun sendBillToEdc(request:ScanBillingToEdcRequest)=flow{
+        emit(ApisResponse.Loading("Sending Bill To EDC.."))
         val data = try {
             val response = billingApi.postSendBillingApi(request = request)
             if (response.isSuccessful) {

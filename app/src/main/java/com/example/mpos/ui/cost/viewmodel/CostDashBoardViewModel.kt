@@ -89,7 +89,7 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
         }
         viewModelScope.launch {
             repository?.sendBillToEdc(request)?.collectLatest {
-                _confirmBillingResponse.postValue(it)
+                _sendBillingToEdc.postValue(it)
             } ?: _events.postValue(Events("Oops Repository is Not Set Up!!"))
         }
 

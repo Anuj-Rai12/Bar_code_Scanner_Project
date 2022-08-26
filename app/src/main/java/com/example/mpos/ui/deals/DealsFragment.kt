@@ -80,14 +80,21 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
         if (isEveryThingSetUp && listOfFoodItem.isNotEmpty()) {
             DealsStoreInstance.getInstance().setIsResetButtonClick(false)
             listOfFoodItem.addAll(args.list.foodList)
-            val action = args.tbl?.let {
+            val action = if (args.tbl != null) {
                 DealsFragmentDirections.actionDealsFragmentToConfirmOderFragment(
-                    FoodItemList(listOfFoodItem), it, args.confirm
+                    FoodItemList(listOfFoodItem), args.tbl!!, args.confirm
                 )
-            } ?: DealsFragmentDirections.actionDealsFragmentToCostDashBoardFragment(
-                FoodItemList(listOfFoodItem),
-                args.confirm
-            )
+            } else if (args.tbl == null && args.confirm == null) {
+                DealsFragmentDirections.actionDealsFragmentToCostDashBoardFragment(
+                    FoodItemList(listOfFoodItem),
+                    args.confirm
+                )
+            } else {
+                DealsFragmentDirections.actionDealsFragmentToBillingFragment(
+                    FoodItemList(listOfFoodItem),
+                    args.confirm
+                )
+            }
             findNavController().navigate(action)
         } else if (isEveryThingSetUp) {
             findNavController().popBackStack()

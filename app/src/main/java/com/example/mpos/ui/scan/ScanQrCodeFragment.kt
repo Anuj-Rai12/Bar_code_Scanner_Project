@@ -68,7 +68,6 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.black)
@@ -246,7 +245,6 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     }
 
 
-
     private fun showSnackBar(msg: String, length: Int = Snackbar.LENGTH_INDEFINITE) {
         binding.root.showSandbar(
             msg,
@@ -288,8 +286,13 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                         args.tbl!!,
                         args.confirmreq
                     )
-                } else {
+                } else if (args.tbl == null && args.confirmreq == null) {
                     ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToCostDashBoardFragment(
+                        FoodItemList(arr),
+                        args.confirmreq
+                    )
+                } else {
+                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToBillingFragment(
                         FoodItemList(arr),
                         args.confirmreq
                     )

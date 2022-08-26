@@ -157,7 +157,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                         .actionTableManagementOrCostEstimateToTableReservationFragment()
                 }
                 BILLING -> {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToBillingFragment()
+                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToBillingFragment(null,null)
                 }
             }
         findNavController().navigate(action)
