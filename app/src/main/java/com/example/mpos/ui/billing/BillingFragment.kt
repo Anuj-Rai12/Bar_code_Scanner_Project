@@ -223,8 +223,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         confirmOrder(
                             ConfirmOrderRequest(
                                 ConfirmOrderBody(
-                                    pair.first,
-                                    true.toString()
+                                    pair.first
                                 )
                             )
                         )
@@ -293,8 +292,11 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     showDialogBox(
                         "Success",
                         "Completed the Billing for All Food Item Successfully",
-                        icon = R.drawable.ic_success
-                    ) {}
+                        icon = R.drawable.ic_success,
+                        isCancel = false
+                    ) {
+                        findNavController().popBackStack()
+                    }
                 }
             }
         }

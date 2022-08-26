@@ -186,9 +186,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private fun initializePrinter() {
         activity?.let {
-            printBill = PrintBill(it) { err ->
+            printBill = PrintBill(it, success = {
+                findNavController().popBackStack()
+            }, error = { err ->
                 costEstimationViewModel.addError(err)
-            }
+            })
         } ?: costEstimationViewModel.addError(
             "Cannot Initialized Printer ${
                 getEmojiByUnicode(
@@ -285,8 +287,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                             showDialogBox(
                                 "Success",
                                 "All Food Item are added Successfully",
-                                icon = R.drawable.ic_success
-                            ) {}
+                                icon = R.drawable.ic_success,
+                                isCancel = false
+                            ) {
+                                findNavController().popBackStack()
+                            }
                             activity?.msg("Bill List is Empty", Toast.LENGTH_LONG)
                         } else if (printBill.isBluetoothDeviceFound())
                             printBill.doPrint(body)
@@ -294,8 +299,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                             showDialogBox(
                                 "Success",
                                 "All Food Item are added Successfully",
-                                icon = R.drawable.ic_success
-                            ) {}
+                                icon = R.drawable.ic_success,
+                                isCancel = false
+                            ) {
+                                findNavController().popBackStack()
+                            }
                     } ?: showErrorDialog("Cannot Print Bill")
                 }
             }

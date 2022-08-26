@@ -14,7 +14,8 @@ import java.lang.StringBuilder
 
 class PrintBill(
     private val activity: Activity,
-    private val error: (msg: String) -> Unit
+    private val error: (msg: String) -> Unit,
+    private val success:()->Unit
 ) {
 
     private val connection = BluetoothPrintersConnections.selectFirstPaired()
@@ -66,6 +67,7 @@ class PrintBill(
                             "[L]" + total + "[R]" + "<b>t\t${responseBody.amtExclGST}</b>" + "\n" +
                             "[C]<u>                                         </u>\n"
                 printer.printFormattedText(text)
+                success.invoke()
             } else {
                 error.invoke(printNotConnected)
             }
