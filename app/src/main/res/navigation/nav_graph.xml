@@ -78,13 +78,6 @@
         android:name="com.example.mpos.ui.oderconfirm.ConfirmOderFragment"
         android:label="confirm_order_layout"
         tools:layout="@layout/confirm_order_layout">
-        <action
-            android:id="@+id/action_confirmOderFragment_to_searchFoodFragment"
-            app:destination="@id/searchFoodFragment"
-            app:enterAnim="@anim/pop_up_anim"
-            app:exitAnim="@anim/exit_anim"
-            app:popEnterAnim="@anim/pop_enter_anim"
-            app:popExitAnim="@anim/pop_exit_anim" />
         <argument
             android:name="list"
             app:argType="com.example.mpos.ui.searchfood.model.FoodItemList"
@@ -96,9 +89,6 @@
             android:name="confirmreq"
             app:argType="com.example.mpos.data.cofirmDining.ConfirmDiningRequest"
             app:nullable="true" />
-        <action
-            android:id="@+id/action_confirmOderFragment_to_dealsFragment"
-            app:destination="@id/dealsFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFoodFragment"
@@ -128,6 +118,11 @@
             android:id="@+id/action_searchFoodFragment_to_costDashBoardFragment"
             app:destination="@id/costDashBoardFragment"
             app:popUpTo="@id/costDashBoardFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_searchFoodFragment_to_billingFragment"
+            app:destination="@id/billingFragment"
+            app:popUpTo="@id/billingFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -170,6 +165,11 @@
             app:destination="@id/costDashBoardFragment"
             app:popUpTo="@id/costDashBoardFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_scanQrCodeFragment_to_billingFragment"
+            app:destination="@id/billingFragment"
+            app:popUpTo="@id/billingFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <action
         android:id="@+id/action_global_scanQrCodeFragment"
@@ -183,12 +183,6 @@
         android:name="com.example.mpos.ui.cost.CostDashBoardFragment"
         android:label="cost_cal_dashbord_layout"
         tools:layout="@layout/cost_cal_dashbord_layout">
-        <action
-            android:id="@+id/action_costDashBoardFragment_to_searchFoodFragment"
-            app:destination="@id/searchFoodFragment" />
-        <action
-            android:id="@+id/action_costDashBoardFragment_to_scanQrCodeFragment"
-            app:destination="@id/scanQrCodeFragment" />
         <argument
             android:name="list"
             app:argType="com.example.mpos.ui.searchfood.model.FoodItemList"
@@ -197,9 +191,6 @@
             android:name="confirm"
             app:argType="com.example.mpos.data.cofirmDining.ConfirmDiningRequest"
             app:nullable="true" />
-        <action
-            android:id="@+id/action_costDashBoardFragment_to_dealsFragment"
-            app:destination="@id/dealsFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
@@ -285,5 +276,26 @@
             app:destination="@id/confirmOderFragment"
             app:popUpTo="@id/confirmOderFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dealsFragment_to_billingFragment"
+            app:destination="@id/billingFragment"
+            app:popUpTo="@id/billingFragment"
+            app:popUpToInclusive="true" />
     </fragment>
+    <action
+        android:id="@+id/action_global_dealsFragment"
+        app:destination="@id/dealsFragment"
+        app:enterAnim="@anim/pop_up_anim"
+        app:exitAnim="@anim/exit_anim"
+        app:popEnterAnim="@anim/pop_enter_anim"
+        app:popExitAnim="@anim/pop_exit_anim"
+        />
+    <action
+        android:id="@+id/action_global_searchFoodFragment"
+        app:destination="@id/searchFoodFragment"
+        app:enterAnim="@anim/pop_up_anim"
+        app:exitAnim="@anim/exit_anim"
+        app:popEnterAnim="@anim/pop_enter_anim"
+        app:popExitAnim="@anim/pop_exit_anim"
+        />
 </navigation>

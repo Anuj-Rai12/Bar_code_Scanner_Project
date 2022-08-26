@@ -101,7 +101,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
         binding.viewOfferBtn.setOnClickListener {
             val action =
-                ConfirmOderFragmentDirections.actionConfirmOderFragmentToDealsFragment(
+                ConfirmOderFragmentDirections.actionGlobalDealsFragment(
                     FoodItemList(arrItem),
                     args.tbl,
                     customDiningRequest
@@ -123,7 +123,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             Log.i(TAG, "Search: CustomerDining $customDiningRequest")
             Log.i(TAG, "Search: FoodItemList ${FoodItemList(arrItem)}")
             val action =
-                ConfirmOderFragmentDirections.actionConfirmOderFragmentToSearchFoodFragment(
+                ConfirmOderFragmentDirections.actionGlobalSearchFoodFragment(
                     args.tbl,
                     FoodItemList(arrItem),
                     customDiningRequest

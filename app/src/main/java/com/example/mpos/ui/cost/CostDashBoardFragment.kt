@@ -142,7 +142,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
         binding.viewOfferBtn.setOnClickListener {
             val action =
-                CostDashBoardFragmentDirections.actionCostDashBoardFragmentToDealsFragment(
+                CostDashBoardFragmentDirections.actionGlobalDealsFragment(
                     FoodItemList(arrItem), null,
                     customDiningRequest
                 )
@@ -159,7 +159,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             Log.i(TAG, "Search: CustomerDining $customDiningRequest")
             Log.i(TAG, "Search: FoodItemList ${FoodItemList(arrItem)}")
             val action =
-                CostDashBoardFragmentDirections.actionCostDashBoardFragmentToSearchFoodFragment(
+                CostDashBoardFragmentDirections.actionGlobalSearchFoodFragment(
                     null,
                     FoodItemList(arrItem),
                     customDiningRequest
