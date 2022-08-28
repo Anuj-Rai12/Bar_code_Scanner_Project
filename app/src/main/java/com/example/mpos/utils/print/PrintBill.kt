@@ -15,7 +15,7 @@ import java.lang.StringBuilder
 class PrintBill(
     private val activity: Activity,
     private val error: (msg: String) -> Unit,
-    private val success:()->Unit
+    private val success: () -> Unit
 ) {
 
     private val connection = BluetoothPrintersConnections.selectFirstPaired()
@@ -49,23 +49,24 @@ class PrintBill(
             if (connection != null) {
                 val printer = EscPosPrinter(connection, 203, 72f, 32)
                 val text =
-                    "[C]<u>                                                  </u>\n" +
+                    "[C]<u>                                               </u>\n" +
                             "[C]" + "<b>${responseBody.headerTxt}<b>\n" +
                             "[C]" + "${responseBody.headerTxt2}\n\n" +
-                            "[C]------------------------------------------\n" +
+                            addDash(printer) +
                             "[L] $orderNo" + responseBody.orderId + "[R]" + responseBody.datetime + "\n" +
-                            "[C]------------------------------------------\n" +
-                            "[L]" + desc + "\t" + "[R]" + qty + "\t" + "[R]" + price + "\t" + "[R]" + "$amt\n" +
+                            addDash(printer) +
+                            "[L]" + "$desc        " + "[R]" + "$qty   "  + "[R]" + "$price   " + "[R]" + "$amt\n" +
+                            addDash(printer) +
                             addTableInfo(list = responseBody.itemList) +
-                            "[C]-------------------------------------------\n" +
-                            "[L]" + totalWithOutGst + "[R]" + "<b>\t${responseBody.amtExclGST}</b>" + "\n" +
-                            "[C]--------------------------------------------\n" +
-                            "[L]" + noOfItem + "[R]" + "<b>\t${responseBody.itemList.size}</b>" + "\n" +
-                            "[C]--------------------------------------------\n" +
-                            "[L]" + totalWithGst + "[R]" + "<b>\t${responseBody.amtInclGST}</b>" + "\n" +
-                            "[C]--------------------------------------------\n" +
-                            "[L]" + total + "[R]" + "<b>t\t${responseBody.amtExclGST}</b>" + "\n" +
-                            "[C]<u>                                         </u>\n"
+                            addDash(printer) +
+                            "[L]" + totalWithOutGst + "[R]" + "\t\t<b>${responseBody.amtExclGST}</b>" + "\n" +
+                            addDash(printer) +
+                            "[L]" + noOfItem + "[R]" + "\t\t<b>${responseBody.itemList.size}</b>" + "\n" +
+                            addDash(printer) +
+                            "[L]" + totalWithGst + "[R]" + "\t\t<b>${responseBody.amtInclGST}</b>" + "\n" +
+                            addDash(printer) +
+                            "[L]" + total + "[R]" + "\t\t<b>${responseBody.amtExclGST}</b>" + "\n" +
+                            addDash(printer, " ")
                 printer.printFormattedText(text)
                 success.invoke()
             } else {
@@ -83,10 +84,36 @@ class PrintBill(
         val stringBuilder = StringBuilder()
         list.forEach { foodItem ->
             stringBuilder.append(
-                "[L]" + foodItem.description + "\t" + "[R]" + foodItem.qty + "\t" + "[R]" + foodItem.price + "\t" + "[R]" + foodItem.amount
+                "[L]" + setString(
+                    foodItem.description,
+                    desc + "\t\t\t"
+                ) + "   " + "[R]" + foodItem.qty + "   " + "[R]" + foodItem.price + "   " + "[R]" + foodItem.amount
                         + "\n"
             )
         }
+        return stringBuilder.toString()
+    }
+
+    private fun setString(mainString: String, other: String): String {
+        return if (mainString.length > other.length) {
+            mainString.substring(0, other.length) + ".."
+        } else {
+            mainString
+        }
+    }
+
+    private fun addDash(escPosPrinter: EscPosPrinter, type: String = "-"): String {
+        val stringBuilder = StringBuilder()
+        stringBuilder.append("[C]")
+        if (type != "-")
+            stringBuilder.append("<u>")
+        for (i in 0 until escPosPrinter.printerCharSizeWidthPx) {
+            stringBuilder.append(type)
+        }
+        if (type != "-")
+            stringBuilder.append("</u>")
+
+        stringBuilder.append("\n")
         return stringBuilder.toString()
     }
 
