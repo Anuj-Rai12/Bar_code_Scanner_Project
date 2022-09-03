@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.motionlyt.model.userinfo.User
 import com.example.motionlyt.ui.auth.repo.LoginRepository
 import com.example.motionlyt.utils.Event
 import com.example.motionlyt.utils.NoInternt
@@ -32,13 +33,26 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun setUserAccount(pass: String, reg: String) {
+    /*fun setUserAccount(pass: String, reg: String) {
         if (!app.isNetworkAvailable()) {
             _event.postValue(Event(NoInternt))
             return
         }
         viewModelScope.launch {
             repository.setRealtimeRegAndPass(password = pass, reg = reg).collectLatest {
+                _userAcc.postValue(it)
+            }
+        }
+    }*/
+
+
+    fun setUserAccount(user: User){
+        if (!app.isNetworkAvailable()) {
+            _event.postValue(Event(NoInternt))
+            return
+        }
+        viewModelScope.launch {
+            repository.createUserInfo(user).collectLatest {
                 _userAcc.postValue(it)
             }
         }

@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             override fun onAnimationEnd(animation: Animation?) {
                 runBlocking {
                     binding.pbLayout.show()
-                    delay(3000)
+                    delay(2000)
                     gotToAppFeature()
                 }
             }

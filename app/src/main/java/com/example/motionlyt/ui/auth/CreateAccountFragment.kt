@@ -8,9 +8,11 @@ import androidx.fragment.app.viewModels
 import com.example.motionlyt.R
 import com.example.motionlyt.databinding.CreateAccountFragmentBinding
 import com.example.motionlyt.dialog.NotesDialog
+import com.example.motionlyt.model.userinfo.User
 import com.example.motionlyt.ui.auth.viewmodel.LoginViewModel
 import com.example.motionlyt.utils.ResponseWrapper
 import com.example.motionlyt.utils.checkInputValue
+import com.example.motionlyt.utils.getDate
 import com.example.motionlyt.utils.showSnackBarMsg
 
 class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
@@ -38,6 +40,7 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
             val regNo = binding.regEd.text.toString()
             val courseName = binding.courseEd.text.toString()
             val pass = binding.passEd.text.toString()
+            val uni = binding.uniEd.text.toString()
             if (checkInputValue(name)) {
                 msg("Please Add your name")
                 return@setOnClickListener
@@ -59,7 +62,11 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
                 msg("Invalid Pass")
                 return@setOnClickListener
             }
-            viewModel.setUserAccount(pass = pass, regNo)
+            if (checkInputValue(uni)) {
+                msg("Please Add your university name")
+                return@setOnClickListener
+            }
+            viewModel.setUserAccount(User(name, regNo, uni, courseName, pass, getDate()))
         }
 
         getCreateUserResponse()
