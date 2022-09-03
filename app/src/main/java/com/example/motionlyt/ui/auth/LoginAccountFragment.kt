@@ -45,7 +45,7 @@ class LoginAccountFragment : Fragment(R.layout.login_account_fragment) {
                 msg("Invalid Password!!")
                 return@setOnClickListener
             }
-            viewModel.isUserIsValid(reg, pass)
+            viewModel.isUserIsValid(reg.trim(), pass.trim())
         }
 
         binding.backBtn.setOnClickListener {

@@ -67,7 +67,7 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
                 msg("Please Add your university name")
                 return@setOnClickListener
             }
-            viewModel.setUserAccount(User(name, regNo, uni, courseName, pass, getDate()))
+            viewModel.setUserAccount(User(name.trim(), regNo.trim(), uni.trim(), courseName.trim(), pass.trim(), getDate()))
         }
 
         getCreateUserResponse()

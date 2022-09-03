@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/note_graph"
+    app:startDestination="@id/uploadFragment">
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.motionlyt.ui.profile.ProfileFragment"
+        android:label="profile_fragment_layout"
+        tools:layout="@layout/profile_fragment_layout" />
+    <fragment
+        android:id="@+id/sharingFragment"
+        android:name="com.example.motionlyt.ui.share.SharingFragment"
+        android:label="share_layout_fragment"
+        tools:layout="@layout/share_layout_fragment" />
+    <fragment
+        android:id="@+id/uploadFragment"
+        android:name="com.example.motionlyt.ui.upload.UploadFragment"
+        android:label="upload_fragment_layout"
+        tools:layout="@layout/upload_fragment_layout" />
+</navigation>

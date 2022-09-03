@@ -7,10 +7,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.example.motionlyt.databinding.ActivityMainBinding
 import com.example.motionlyt.datastore.NotesSharedPreference
-import com.example.motionlyt.utils.changeStatusBarColor
-import com.example.motionlyt.utils.checkInputValue
-import com.example.motionlyt.utils.hide
-import com.example.motionlyt.utils.show
+import com.example.motionlyt.utils.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
@@ -41,9 +38,11 @@ class MainActivity : AppCompatActivity() {
                     delay(2000)
                     val reg = notesSharedPreference.getReg()
                     val uni = notesSharedPreference.getUniName()
-                    if (reg == null || uni == null || checkInputValue(reg) || checkInputValue(uni)){
+                    setLogCat("DB","reg is $reg")
+                    setLogCat("DB","uni is $uni")
+                    if (reg == null || uni == null || checkInputValue(reg) || checkInputValue(uni)) {
                         gotToAppFeature()
-                    }else{
+                    } else {
                        gotNoteFeature()
                     }
                 }
@@ -66,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, NoteActivity::class.java))
         this@MainActivity.finishAffinity()
     }
+
     override fun onResume() {
         super.onResume()
         this.hide()

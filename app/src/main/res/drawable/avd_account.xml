@@ -1,0 +1,18 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="32dp"
+            android:height="32dp"
+            android:viewportWidth="32"
+            android:viewportHeight="32">
+            <path
+                android:name="path"
+                android:pathData="M 10 9 C 10 7.409 10.633 5.882 11.757 4.757 C 12.882 3.633 14.409 3 16 3 C 17.591 3 19.118 3.633 20.243 4.757 C 21.367 5.882 22 7.409 22 9 C 22 10.591 21.367 12.118 20.243 13.243 C 19.118 14.367 17.591 15 16 15 C 14.409 15 12.882 14.367 11.757 13.243 C 10.633 12.118 10 10.591 10 9 Z M 26 29 L 6 29 C 5.205 29 4.441 28.684 3.879 28.121 C 3.316 27.559 3 26.795 3 26 C 3 23.614 3.949 21.323 5.636 19.636 C 7.323 17.949 9.614 17 12 17 L 20 17 C 22.386 17 24.677 17.949 26.364 19.636 C 28.051 21.323 29 23.614 29 26 C 29 26.795 28.684 27.559 28.121 28.121 C 27.559 28.684 26.795 29 26 29 Z"
+                android:fillColor="#595bd4"
+                android:strokeWidth="1"/>
+        </vector>
+    </aapt:attr>
+</animated-vector>
