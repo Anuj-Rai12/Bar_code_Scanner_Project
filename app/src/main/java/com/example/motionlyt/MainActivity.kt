@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.motionlyt.databinding.ActivityMainBinding
 
+
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -15,10 +16,4 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onBackPressed() {
-        if (binding.root.currentState == R.id.start)
-            binding.root.transitionToEnd()
-        else
-            super.onBackPressed()
-    }
 }
