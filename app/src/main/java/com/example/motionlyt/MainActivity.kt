@@ -5,6 +5,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.example.motionlyt.databinding.ActivityMainBinding
+import com.example.motionlyt.dialog.NotesDialog
 import com.example.motionlyt.utils.changeStatusBarColor
 import com.example.motionlyt.utils.hide
 import com.example.motionlyt.utils.toastMsg
@@ -16,7 +17,6 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

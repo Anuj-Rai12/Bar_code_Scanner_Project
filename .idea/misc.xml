@@ -6,8 +6,10 @@
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/ic_baseline_pause_24.xml" value="0.1455" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/ic_close.xml" value="0.1455" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/ic_notes.xml" value="0.151" />
+        <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/round_box_dialog.xml" value="0.151" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/activity_main.xml" value="0.2234375" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/activity_main_scene.xml" value="0.22239583333333332" />
+        <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/pb_loading_dialog.xml" value="0.4" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/print_activity.xml" value="0.22239583333333332" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/menu/mnu_layout.xml" value="0.2234375" />
       </map>
