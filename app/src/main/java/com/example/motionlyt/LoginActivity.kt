@@ -1,5 +1,6 @@
 package com.example.motionlyt
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
@@ -10,33 +11,36 @@ import com.example.motionlyt.utils.changeStatusBarColor
 import com.example.motionlyt.utils.hide
 import com.example.motionlyt.utils.toastMsg
 
-class LoginActivity:AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     private val binding by lazy {
         LoginActivityBinding.inflate(layoutInflater)
     }
     private val extras by lazy {
         intent.extras
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         extras?.let {
-            it.getString(AppFeatureActivity.intentKey)?.let {key->
-             when(AppFeatureActivity.Companion.LoginType.valueOf(key)){
-                 AppFeatureActivity.Companion.LoginType.SIGNIN -> {
-                     val fragmentObj = CreateAccountFragment()
-                     val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-                     transaction.add(R.id.fg_1, fragmentObj)
-                     transaction.commit()
-                 }
-                 AppFeatureActivity.Companion.LoginType.LOGIN -> {
-                     val fragmentObj = LoginAccountFragment()
-                     val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-                     transaction.add(R.id.fg_1, fragmentObj)
-                     transaction.commit()
-                 }
-             }
+            it.getString(AppFeatureActivity.intentKey)?.let { key ->
+                when (AppFeatureActivity.Companion.LoginType.valueOf(key)) {
+                    AppFeatureActivity.Companion.LoginType.SIGNIN -> {
+                        val fragmentObj = CreateAccountFragment()
+                        val transaction: FragmentTransaction =
+                            supportFragmentManager.beginTransaction()
+                        transaction.add(R.id.fg_1, fragmentObj)
+                        transaction.commit()
+                    }
+                    AppFeatureActivity.Companion.LoginType.LOGIN -> {
+                        val fragmentObj = LoginAccountFragment()
+                        val transaction: FragmentTransaction =
+                            supportFragmentManager.beginTransaction()
+                        transaction.add(R.id.fg_1, fragmentObj)
+                        transaction.commit()
+                    }
+                }
             }
         }
 
@@ -46,8 +50,9 @@ class LoginActivity:AppCompatActivity() {
         super.onBackPressed()
     }
 
-    fun goToNote(){
-        toastMsg("Ok")
+    fun goToNote() {
+        startActivity(Intent(this, NoteActivity::class.java))
+        finishAffinity()
     }
 
 

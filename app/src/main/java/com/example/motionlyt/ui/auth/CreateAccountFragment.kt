@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.motionlyt.LoginActivity
 import com.example.motionlyt.R
 import com.example.motionlyt.databinding.CreateAccountFragmentBinding
 import com.example.motionlyt.dialog.NotesDialog
@@ -90,7 +91,7 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
                 }
                 is ResponseWrapper.Success -> {
                     dialog.dismiss()
-                    msg("Success!!")
+                    (activity as LoginActivity?)?.goToNote()
                 }
             }
         }

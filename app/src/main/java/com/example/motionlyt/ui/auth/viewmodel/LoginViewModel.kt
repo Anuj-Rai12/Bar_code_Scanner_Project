@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = LoginRepository()
+    private val repository = LoginRepository(application)
     private val app = application
     private val _event = MutableLiveData<Event<String>>()
     val event: LiveData<Event<String>>

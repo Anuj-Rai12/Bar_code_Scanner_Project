@@ -6,7 +6,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.example.motionlyt.databinding.ActivityMainBinding
+import com.example.motionlyt.datastore.NotesSharedPreference
 import com.example.motionlyt.utils.changeStatusBarColor
+import com.example.motionlyt.utils.checkInputValue
 import com.example.motionlyt.utils.hide
 import com.example.motionlyt.utils.show
 import kotlinx.coroutines.delay
@@ -16,6 +18,10 @@ import kotlinx.coroutines.runBlocking
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val notesSharedPreference by lazy {
+        NotesSharedPreference.getInstance(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +39,13 @@ class MainActivity : AppCompatActivity() {
                 runBlocking {
                     binding.pbLayout.show()
                     delay(2000)
-                    gotToAppFeature()
+                    val reg = notesSharedPreference.getReg()
+                    val uni = notesSharedPreference.getUniName()
+                    if (reg == null || uni == null || checkInputValue(reg) || checkInputValue(uni)){
+                        gotToAppFeature()
+                    }else{
+                       gotNoteFeature()
+                    }
                 }
             }
 
@@ -49,6 +61,11 @@ class MainActivity : AppCompatActivity() {
         this@MainActivity.finishAffinity()
     }
 
+
+    private fun gotNoteFeature() {
+        startActivity(Intent(this, NoteActivity::class.java))
+        this@MainActivity.finishAffinity()
+    }
     override fun onResume() {
         super.onResume()
         this.hide()

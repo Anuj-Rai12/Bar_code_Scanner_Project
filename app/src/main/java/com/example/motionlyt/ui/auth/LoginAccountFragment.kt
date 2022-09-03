@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.motionlyt.LoginActivity
 import com.example.motionlyt.R
 import com.example.motionlyt.databinding.LoginAccountFragmentBinding
 import com.example.motionlyt.dialog.NotesDialog
@@ -71,7 +72,7 @@ class LoginAccountFragment : Fragment(R.layout.login_account_fragment) {
                 }
                 is ResponseWrapper.Success -> {
                     dialog.dismiss()
-                    msg("Success!!")
+                    (activity as LoginActivity?)?.goToNote()
                 }
             }
         }

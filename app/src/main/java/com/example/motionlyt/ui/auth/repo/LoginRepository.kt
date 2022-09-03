@@ -1,8 +1,12 @@
 package com.example.motionlyt.ui.auth.repo
 
+import android.content.Context
+import com.example.motionlyt.datastore.NotesSharedPreference
+import com.example.motionlyt.model.userinfo.LogInUser
 import com.example.motionlyt.model.userinfo.User
 import com.example.motionlyt.utils.ResponseWrapper
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers.IO
@@ -10,7 +14,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 
-class LoginRepository {
+class LoginRepository(context: Context) {
+
+    private val notesSharedPreference by lazy {
+        NotesSharedPreference.getInstance(context)
+    }
 
     private val db = Firebase.database
     private val parent = "UserInfo/"
@@ -25,8 +33,9 @@ class LoginRepository {
                 .document("Information").set(user).await()
 
             val ref = db.reference.child("$parent${user.reg}")
-            ref.setValue(user.password).await()
-
+            ref.setValue(LogInUser(pass = user.password, uni = user.uni)).await()
+            notesSharedPreference.setReg(user.reg)
+            notesSharedPreference.setUniName(user.uni)
             ResponseWrapper.Success(null)
 
         } catch (e: Exception) {
@@ -60,8 +69,10 @@ class LoginRepository {
             val res = db.reference.child("$parent$reg")
             val result = res.get().await()
             if (result.exists()) {
-                (result.value as String?)?.let { pass ->
-                    if (password == pass) {
+                (result.getValue<LogInUser>())?.let { user ->
+                    if (password == user.pass) {
+                        notesSharedPreference.setReg(reg)
+                        notesSharedPreference.setUniName(user.uni!!)
                         ResponseWrapper.Success(null)
                     } else {
                         ResponseWrapper.Error(
