@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cbn_bg="@color/white"
+        android:background="@android:color/transparent"
         app:cbn_fabBg="@color/app_main_color"
         app:cbn_selectedColor="@color/white"
         app:cbn_unSelectedColor="@color/app_main_color"
