@@ -88,7 +88,6 @@
             android:fontFamily="@font/comfortaa"
             android:hint="Password"
             android:textColorHint="#acacac"
-            android:inputType="number"
             android:padding="10dp"
             android:singleLine="true"
             android:textColor="@color/black" />

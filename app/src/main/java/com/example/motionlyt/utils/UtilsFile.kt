@@ -32,6 +32,8 @@ fun AppCompatActivity.hide() {
     this.supportActionBar!!.hide()
 }
 
+fun getEmojiByUnicode(unicode: Int) = String(Character.toChars(unicode))
+
 fun View.hide() {
     this.isVisible = false
 }

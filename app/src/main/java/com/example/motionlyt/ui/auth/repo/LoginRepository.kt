@@ -54,9 +54,32 @@ class LoginRepository {
     }.flowOn(IO)
 
 
-    fun checkUserIsValid() {
-
-    }
+    fun checkUserIsValid(reg: String, password: String) = flow {
+        emit(ResponseWrapper.Loading("Validating User"))
+        val data = try {
+            val res = db.reference.child("$parent$reg")
+            val result = res.get().await()
+            if (result.exists()) {
+                (result.value as String?)?.let { pass ->
+                    if (password == pass) {
+                        ResponseWrapper.Success(null)
+                    } else {
+                        ResponseWrapper.Error(
+                            "Invalid Password!!",
+                            null
+                        )
+                    }
+                } ?: ResponseWrapper.Error("Failed to get User Information", null)
+            } else {
+                ResponseWrapper.Error(
+                    "Invalid Registration number!!", null
+                )
+            }
+        } catch (e: Exception) {
+            ResponseWrapper.Error(null, e)
+        }
+        emit(data)
+    }.flowOn(IO)
 
 
     /*fun setRealtimeRegAndPass(reg: String, password: String) = flow {

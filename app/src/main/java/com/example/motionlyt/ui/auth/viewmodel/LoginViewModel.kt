@@ -27,6 +27,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     val userAcc: LiveData<ResponseWrapper<out Any?>>
         get() = _userAcc
 
+    private val _isUserValid = MutableLiveData<ResponseWrapper<out String?>>()
+    val userValid: LiveData<ResponseWrapper<out String?>>
+        get() = _isUserValid
+
+
+
     init {
         if (!application.isNetworkAvailable()) {
             _event.postValue(Event(NoInternt))
@@ -44,6 +50,19 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }*/
+
+
+    fun isUserIsValid(reg:String,pass:String){
+        if (!app.isNetworkAvailable()) {
+            _event.postValue(Event(NoInternt))
+            return
+        }
+        viewModelScope.launch {
+            repository.checkUserIsValid(reg,pass).collectLatest {
+                _isUserValid.postValue(it)
+            }
+        }
+    }
 
 
     fun setUserAccount(user: User){

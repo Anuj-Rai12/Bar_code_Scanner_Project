@@ -96,7 +96,7 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
         }
     }
 
-    private fun msg(msg: String) = binding.regEd.showSnackBarMsg(msg)
+    private fun msg(msg: String) = binding.root.showSnackBarMsg(msg)
 
     private fun showErrorDialog(msg: String) {
         dialog.showNormalTxt("Error!!", msg) {}
