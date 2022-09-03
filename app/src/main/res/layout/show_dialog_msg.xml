@@ -67,4 +67,25 @@
         android:textColor="#2A73CC"
         />
 
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/layout_btn"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="logout"
+        android:layout_marginEnd="30dp"
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:fontFamily="@font/comfortaa_bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/dis_btn"
+        app:layout_constraintTop_toBottomOf="@id/desc_txt"
+        android:textAllCaps="false"
+        android:textColor="#D50000"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

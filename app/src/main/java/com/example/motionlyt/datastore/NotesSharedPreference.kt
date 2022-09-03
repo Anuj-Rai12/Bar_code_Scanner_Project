@@ -3,7 +3,7 @@ package com.example.motionlyt.datastore
 import android.content.Context
 import android.content.SharedPreferences
 
-class NotesSharedPreference(context: Context) {
+class NotesSharedPreference(private val context: Context) {
 
     private val uni = "University"
     private val reg = "RegistrationNum"
@@ -34,19 +34,22 @@ class NotesSharedPreference(context: Context) {
     }
 
 
-
     //Set Reg
-    fun setUniName(college:String) {
+    fun setUniName(college: String) {
         val editor = loginPreference.edit()
         editor.putString(uni, college)
         editor.apply()
     }
 
-    fun setReg(regNo:String) {
+    fun setReg(regNo: String) {
         val editor = loginPreference.edit()
         editor.putString(reg, regNo)
         editor.apply()
     }
 
+
+    fun removeAll() {
+        loginPreference.edit().clear().apply()
+    }
 
 }

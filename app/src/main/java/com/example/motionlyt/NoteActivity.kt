@@ -1,11 +1,13 @@
 package com.example.motionlyt
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.example.motionlyt.databinding.NotesActivityBinding
+import com.example.motionlyt.datastore.NotesSharedPreference
 import com.example.motionlyt.utils.changeStatusBarColor
 import com.example.motionlyt.utils.hide
 import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
@@ -39,6 +41,13 @@ class NoteActivity : AppCompatActivity() {
         )
         binding.bottomNavView.setMenuItems(menuItem, 1)
         binding.bottomNavView.setupWithNavController(navHostFragment)
+    }
+
+
+    fun logout() {
+        NotesSharedPreference.getInstance(this).removeAll()
+        startActivity(Intent(this, AppFeatureActivity::class.java))
+        this@NoteActivity.finishAffinity()
     }
 
     override fun onResume() {
