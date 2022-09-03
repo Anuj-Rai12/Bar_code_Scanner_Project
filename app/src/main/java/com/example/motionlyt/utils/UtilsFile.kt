@@ -36,7 +36,7 @@ fun View.hide() {
     this.isVisible = false
 }
 fun checkInputValue(string: String) = string.isNullOrEmpty() || string.isBlank()
-
+const val NoInternt="Not Internet Connection found!!"
 fun getDate(format: String = "yyyy-MM-dd"): String? {
     val current = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern(format)

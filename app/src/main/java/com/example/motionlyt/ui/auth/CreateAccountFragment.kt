@@ -4,14 +4,18 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.motionlyt.R
 import com.example.motionlyt.databinding.CreateAccountFragmentBinding
 import com.example.motionlyt.dialog.NotesDialog
+import com.example.motionlyt.ui.auth.viewmodel.LoginViewModel
+import com.example.motionlyt.utils.ResponseWrapper
 import com.example.motionlyt.utils.checkInputValue
 import com.example.motionlyt.utils.showSnackBarMsg
 
 class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
     private lateinit var binding: CreateAccountFragmentBinding
+    private val viewModel: LoginViewModel by viewModels()
     private val dialog by lazy {
         NotesDialog(requireActivity())
     }
@@ -19,6 +23,13 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = CreateAccountFragmentBinding.bind(view)
+
+        viewModel.event.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { err ->
+                msg(err)
+            }
+        }
+
         binding.backBtn.setOnClickListener {
             activity?.onBackPressed()
         }
@@ -26,6 +37,7 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
             val name = binding.nameEd.text.toString()
             val regNo = binding.regEd.text.toString()
             val courseName = binding.courseEd.text.toString()
+            val pass = binding.passEd.text.toString()
             if (checkInputValue(name)) {
                 msg("Please Add your name")
                 return@setOnClickListener
@@ -41,10 +53,34 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
                 return@setOnClickListener
             }
 
-            msg("Success")
-
+            if (checkInputValue(pass) || pass
+                    .length <= 6
+            ) {
+                msg("Invalid Pass")
+                return@setOnClickListener
+            }
+            viewModel.setUserAccount(pass = pass, regNo)
         }
 
+        getCreateUserResponse()
+    }
+
+    private fun getCreateUserResponse() {
+        viewModel.userAcc.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResponseWrapper.Error -> {
+                    dialog.dismiss()
+                    msg("${it.exception?.localizedMessage}")
+                }
+                is ResponseWrapper.Loading -> {
+                    dialog.showDialogLoading("${it.data}")
+                }
+                is ResponseWrapper.Success -> {
+                    dialog.dismiss()
+                    msg("Success!!")
+                }
+            }
+        }
     }
 
     private fun msg(msg: String) = binding.regEd.showSnackBarMsg(msg)
