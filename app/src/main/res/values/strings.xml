@@ -3,4 +3,5 @@
     <string name="title_sample">Hey Are you got it?</string>
     <string name="login_acc">Login\nto your account.</string>
     <string name="create_acc">Create your\naccount.</string>
+    <string name="add_file">Add your files,</string>
 </resources>
