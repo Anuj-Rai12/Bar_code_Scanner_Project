@@ -5,10 +5,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.example.motionlyt.databinding.ActivityMainBinding
-import com.example.motionlyt.dialog.NotesDialog
 import com.example.motionlyt.utils.changeStatusBarColor
 import com.example.motionlyt.utils.hide
-import com.example.motionlyt.utils.toastMsg
+import com.example.motionlyt.utils.showSnackBarMsg
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
@@ -32,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             override fun onAnimationEnd(animation: Animation?) {
                 runBlocking {
                     delay(3000)
-                    toastMsg("Success")
+                    binding.root.showSnackBarMsg("Success")
                 }
             }
 
