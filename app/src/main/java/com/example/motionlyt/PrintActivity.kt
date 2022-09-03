@@ -109,10 +109,10 @@ class PrintActivity : AppCompatActivity() {
             if (connection != null) {
                 val printer = EscPosPrinter(connection, 203, 72f, 32)
                 val text =
-                    "[C]----------------------------------\n" +
+                            "[C]<u>                                                  </u>\n" +
                             "[C]" + "<b>MITHAI SHOP/SHOWROOM<b>\n" +
                             "[C]" + "AMRITSAR\n\n" +
-                            "[C]------------------------------------\n" +
+                            "[C---------------------------------------------------\n" +
                             "[L] Order No .: " + "G1" + "[R]" + "08/10/2022 11:39:40 PM" + "\n" +
                             "[C]------------------------------------------------------------------------\n" +
                             "[L]" + "Description" + "[R]" + "QTY" + "[R]" + "Price" + "[R]" + "Amount\n" +
@@ -123,12 +123,12 @@ class PrintActivity : AppCompatActivity() {
                             "[C]-----------------------------------------------------------------------\n" +
                             "[L]" + "Total Amt Excel. Of GST" + "[R]" + "<b>10,000</b>" + "\n" +
                             "[C]-------------------------------------------------------\n" +
-                            "[L]" + "No. of Items " + "[R]" + "<b>3.00</br>" + "\n" +
+                            "[L]" + "No. of Items " + "[R]" + "<b>3.00</b>" + "\n" +
                             "[C]--------------------------------------------------------\n" +
                             "[L]" + "Total Amt Inc. Of GST" + "[R]" + "<b>10,000</b>" + "\n" +
                             "[C]-------------------------------------------------------\n" +
                             "[L]" + "Total " + "[R]" + "<b>279.00</b>" + "\n" +
-                            "[C]------------------------------------------------------\n"
+                            "[C]<u>                                                        </u>\n"
                 printer.printFormattedText(text)
             } else {
                 showError("Please Enable Bluetooth or\n Check POS print is Connected Or NOT?")
