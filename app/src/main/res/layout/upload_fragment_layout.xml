@@ -33,6 +33,7 @@
 
 
         <ImageView
+            android:id="@+id/no_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
@@ -40,6 +41,17 @@
             android:src="@drawable/ic_add"
             android:background="#f5f5f5"
             app:tint="#acacac" />
+
+
+        <ImageView
+            android:id="@+id/item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            android:layout_margin="1dp"
+            android:src="@drawable/ic_notes"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
