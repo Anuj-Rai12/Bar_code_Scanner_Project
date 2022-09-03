@@ -11,13 +11,15 @@ import kotlinx.coroutines.tasks.await
 class LoginRepository {
 
     private val db = Firebase.database
+    private val parent="UserInfo/"
+
+
 
 
     fun setRealtimeRegAndPass(reg: String, password: String) = flow {
         emit(ResponseWrapper.Loading("Creating User"))
-        kotlinx.coroutines.delay(4000)
         val data = try {
-            val ref = db.getReference(reg)
+            val ref = db.reference.child("$parent$reg")
             ref.setValue(password).await()
             ResponseWrapper.Success(null)
         } catch (e: Exception) {
