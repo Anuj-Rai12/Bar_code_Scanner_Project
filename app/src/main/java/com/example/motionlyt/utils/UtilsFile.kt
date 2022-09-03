@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.motionlyt.R
 import com.google.android.material.snackbar.Snackbar
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 fun Activity.toastMsg(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
@@ -17,6 +19,7 @@ fun Activity.toastMsg(msg: String) {
 fun Activity.changeStatusBarColor(color: Int = R.color.white) {
     this.window?.statusBarColor = getColorInt(color)
 }
+
 fun Activity.getColorInt(color: Int): Int {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         resources.getColor(color, null)
@@ -31,6 +34,13 @@ fun AppCompatActivity.hide() {
 
 fun View.hide() {
     this.isVisible = false
+}
+fun checkInputValue(string: String) = string.isNullOrEmpty() || string.isBlank()
+
+fun getDate(format: String = "yyyy-MM-dd"): String? {
+    val current = LocalDateTime.now()
+    val formatter = DateTimeFormatter.ofPattern(format)
+    return current.format(formatter)
 }
 
 fun View.show() {
@@ -47,7 +57,7 @@ fun setLogCat(title: String = "TAG", msg: String) {
 }
 
 
-fun View.showSnackBarMsg(msg: String, length: Int = Snackbar.LENGTH_SHORT, anchor: View?=null) {
+fun View.showSnackBarMsg(msg: String, length: Int = Snackbar.LENGTH_SHORT, anchor: View? = null) {
     Snackbar.make(this, msg, length)
         .setAnchorView(anchor)
         .show()

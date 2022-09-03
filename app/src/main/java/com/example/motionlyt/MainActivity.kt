@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.motionlyt.databinding.ActivityMainBinding
 import com.example.motionlyt.utils.changeStatusBarColor
 import com.example.motionlyt.utils.hide
+import com.example.motionlyt.utils.show
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onAnimationEnd(animation: Animation?) {
                 runBlocking {
+                    binding.pbLayout.show()
                     delay(3000)
                     gotToAppFeature()
                 }
@@ -50,6 +52,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         this.hide()
+        binding.pbLayout.hide()
         this.changeStatusBarColor()
     }
 }

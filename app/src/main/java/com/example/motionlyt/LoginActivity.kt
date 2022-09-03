@@ -8,6 +8,7 @@ import com.example.motionlyt.ui.auth.CreateAccountFragment
 import com.example.motionlyt.ui.auth.LoginAccountFragment
 import com.example.motionlyt.utils.changeStatusBarColor
 import com.example.motionlyt.utils.hide
+import com.example.motionlyt.utils.toastMsg
 
 class LoginActivity:AppCompatActivity() {
     private val binding by lazy {
@@ -45,9 +46,14 @@ class LoginActivity:AppCompatActivity() {
         super.onBackPressed()
     }
 
+    fun goToNote(){
+        toastMsg("Ok")
+    }
+
+
     override fun onResume() {
         super.onResume()
         this.hide()
-        this.changeStatusBarColor()
+        this.changeStatusBarColor(R.color.semi_white_color_two)
     }
 }
