@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@color/white">
+
+
+    <ImageView
+        android:id="@+id/feature_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:scaleType="centerInside"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_notes" />
+
+    <TextView
+        android:id="@+id/header_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/comfortaa_bold"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="26sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feature_icon"
+        tools:text="dgfdkhdklj jklhfklghklf jkghkflghk\n anfsfidjf" />
+
+    <TextView
+        android:id="@+id/header_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="20dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/comfortaa_bold"
+        android:gravity="center"
+        android:maxLines="3"
+        tools:text="Terms and Condition"
+        android:textColor="#979fa3"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/header_text"
+        app:layout_constraintRight_toRightOf="@id/header_text"
+        app:layout_constraintTop_toBottomOf="@id/header_text" />
+
+
+    <!--<TextView
+        android:id="@+id/txt_of_course_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:text="dgfdkhdklj jklhfklghklf jkghkflghk"
+        android:textAlignment="center"
+        android:textColor="@color/activeBlue"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/course_info_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/app_tutorial_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/txt_of_course_info"
+        app:layout_constraintRight_toRightOf="@id/txt_of_course_info"
+        app:layout_constraintTop_toBottomOf="@id/txt_of_course_info" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

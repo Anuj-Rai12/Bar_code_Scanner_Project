@@ -1,5 +1,6 @@
 package com.example.motionlyt
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -7,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.motionlyt.databinding.ActivityMainBinding
 import com.example.motionlyt.utils.changeStatusBarColor
 import com.example.motionlyt.utils.hide
-import com.example.motionlyt.utils.showSnackBarMsg
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             override fun onAnimationEnd(animation: Animation?) {
                 runBlocking {
                     delay(3000)
-                    binding.root.showSnackBarMsg("Success")
+                    gotToAppFeature()
                 }
             }
 
@@ -40,6 +40,11 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.imageIcon.animation = animation
+    }
+
+    private fun gotToAppFeature() {
+        startActivity(Intent(this, AppFeatureActivity::class.java))
+        this@MainActivity.finishAffinity()
     }
 
     override fun onResume() {
