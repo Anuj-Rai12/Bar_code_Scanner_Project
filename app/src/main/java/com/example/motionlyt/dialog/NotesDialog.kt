@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Window
 import com.example.motionlyt.databinding.PbLoadingDialogBinding
+import com.example.motionlyt.databinding.ShowDialogMsgBinding
 
 class NotesDialog(private val context: Activity) {
 
@@ -22,6 +23,31 @@ class NotesDialog(private val context: Activity) {
         dialog.setCancelable(false)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         binding.titleTxt.text = msg
+        dialog.show()
+        return this
+    }
+
+
+    fun showNormalTxt(
+        title: String,
+        msg: String,
+        isCancel:Boolean=true,
+        icon: Int? = null,
+        cancel: () -> Unit
+    ): NotesDialog {
+        val binding = ShowDialogMsgBinding.inflate(context.layoutInflater)
+        dialog.setContentView(binding.root)
+        dialog.setCancelable(isCancel)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        binding.titleTxt.text = title
+        binding.descTxt.text = msg
+        icon?.let {
+            binding.icImg.setImageResource(it)
+        }
+        binding.disBtn.setOnClickListener {
+            cancel.invoke()
+            dialog.dismiss()
+        }
         dialog.show()
         return this
     }

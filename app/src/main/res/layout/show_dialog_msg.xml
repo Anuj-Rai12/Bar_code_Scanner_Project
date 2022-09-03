@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginStart="32dp"
+    android:layout_marginEnd="32dp"
+    android:background="@drawable/round_box_dialog"
+    android:padding="20dp">
+
+    <ImageButton
+        android:id="@+id/ic_img"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_notes"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title_txt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/comfortaa_bold"
+        android:maxLines="1"
+        android:text="Tittle"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/ic_img"
+        app:layout_constraintLeft_toRightOf="@id/ic_img"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ic_img" />
+
+    <TextView
+        android:id="@+id/desc_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:fontFamily="@font/comfortaa_bold"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toLeftOf="@id/ic_img"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ic_img"
+        tools:text="Hello World! fdkgjkdf hjkghglfjk fghjklghflhjfghjkfghjkghljkhjkgfhklgfhkflhjfkghkfhlkgjhflgjhfhjghjfghklfghjghflkghf" />
+
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dis_btn"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="ok"
+        android:fontFamily="@font/comfortaa_bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/desc_txt"
+        android:textAllCaps="false"
+        android:textColor="#2A73CC"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

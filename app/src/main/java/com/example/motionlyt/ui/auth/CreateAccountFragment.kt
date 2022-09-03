@@ -28,7 +28,7 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
 
         viewModel.event.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { err ->
-                msg(err)
+                dialog.showNormalTxt("Error!!", err) {}
             }
         }
 
@@ -77,7 +77,13 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
             when (it) {
                 is ResponseWrapper.Error -> {
                     dialog.dismiss()
-                    msg("${it.exception?.localizedMessage}")
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { err ->
+                            showErrorDialog(err)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
                 }
                 is ResponseWrapper.Loading -> {
                     dialog.showDialogLoading("${it.data}")
@@ -91,4 +97,8 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
     }
 
     private fun msg(msg: String) = binding.regEd.showSnackBarMsg(msg)
+
+    private fun showErrorDialog(msg: String) {
+        dialog.showNormalTxt("Error!!", msg) {}
+    }
 }
