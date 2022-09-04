@@ -9,6 +9,7 @@ import com.example.motionlyt.R
 import com.example.motionlyt.databinding.MyFileFragmentLayoutBinding
 import com.example.motionlyt.dialog.NotesDialog
 import com.example.motionlyt.model.data.FileData
+import com.example.motionlyt.ui.share.SharingFragment
 import com.example.motionlyt.ui.share.adaptor.FileDataAdaptor
 import com.example.motionlyt.ui.share.viewmodel.ShareViewModel
 import com.example.motionlyt.utils.ResponseWrapper
@@ -68,10 +69,11 @@ class MyFileFragment : Fragment(R.layout.my_file_fragment_layout) {
         super.onResume()
         viewModel.getFileUpload()
     }
+
     private fun setRecycle() {
         binding.recycleView.apply {
             this@MyFileFragment.adaptor = FileDataAdaptor {
-
+                (parentFragment as SharingFragment?)?.getUser(it)
             }
             adapter = this@MyFileFragment.adaptor
         }

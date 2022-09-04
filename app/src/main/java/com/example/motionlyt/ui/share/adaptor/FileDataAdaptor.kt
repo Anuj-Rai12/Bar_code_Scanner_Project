@@ -18,7 +18,7 @@ class FileDataAdaptor(private val itemClicked: listner) :
             binding.shareItBtn.setOnClickListener {
                 itemClicked.invoke(data)
             }
-            binding.fileSize.text = data.size
+            binding.fileSize.text = data.type + "\t" + data.size
             binding.dateUpload.text = data.date
             binding.fileName.text = data.fileName
         }
