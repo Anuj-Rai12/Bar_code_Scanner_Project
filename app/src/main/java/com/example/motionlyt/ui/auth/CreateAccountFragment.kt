@@ -29,7 +29,7 @@ class CreateAccountFragment : Fragment(R.layout.create_account_fragment) {
 
         viewModel.event.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { err ->
-                dialog.showNormalTxt("Error!!", err) {}
+                showErrorDialog(err)
             }
         }
 
