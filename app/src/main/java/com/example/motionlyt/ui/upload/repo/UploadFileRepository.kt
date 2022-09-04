@@ -42,11 +42,11 @@ class UploadFileRepository(context: Context) {
             val downloadUrl = res.downloadUrl.await()
             val meta = res.metadata.await()
             val videoType = FileData(
-                fileName = meta.name,
-                fileUrl = downloadUrl.toString(),
-                date = getDate(),
-                type = meta.contentType,
-                size = getMbOrKbSize(meta.sizeBytes).first
+                meta.name,
+                downloadUrl.toString(),
+                getDate(),
+                meta.contentType,
+                getMbOrKbSize(meta.sizeBytes).first
             )
             fireStore.collection(uni)
                 .document(notesSharedPreference.getUniName()!!)
