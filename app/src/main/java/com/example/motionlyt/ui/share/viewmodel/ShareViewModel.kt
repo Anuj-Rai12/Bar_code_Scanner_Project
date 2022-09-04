@@ -48,4 +48,18 @@ class ShareViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+
+    fun getListOfUser() {
+        if (!app.isNetworkAvailable()) {
+            _event.postValue(Event(NoInternt))
+            return
+        }
+
+        viewModelScope.launch {
+            repo.getUserFriends().collectLatest {
+                _fileUpload.postValue(it)
+            }
+        }
+    }
+
 }
