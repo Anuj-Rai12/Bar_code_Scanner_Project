@@ -9,7 +9,6 @@ import com.example.motionlyt.databinding.AppFeatureActivityBinding
 import com.example.motionlyt.ui.splash.AppFeatureDescription
 import com.example.motionlyt.utils.changeStatusBarColor
 import com.example.motionlyt.utils.hide
-import com.example.motionlyt.utils.showSnackBarMsg
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
