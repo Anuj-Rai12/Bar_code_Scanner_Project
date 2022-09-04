@@ -22,8 +22,8 @@ class SharingFragment : Fragment(R.layout.share_layout_fragment) {
         super.onViewCreated(view, savedInstanceState)
         binding = ShareLayoutFragmentBinding.bind(view)
         setAdaptor()
-        viewPagerAdaptor.setFragment(SharedFragment())
         viewPagerAdaptor.setFragment(MyFileFragment())
+        viewPagerAdaptor.setFragment(SharedFragment())
         viewPagerAdaptor.setFragment(HallOfInstitute())
 
         TabLayoutMediator(

@@ -16,6 +16,8 @@
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/ic_logout.xml" value="0.151" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/ic_more.xml" value="0.151" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/ic_notes.xml" value="0.151" />
+        <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/ic_share.xml" value="0.1355" />
+        <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/ic_share_item.xml" value="0.1355" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/ic_upload.xml" value="0.151" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/round_box_dialog.xml" value="0.151" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/tab__box_bg_layout.xml" value="0.1355" />
@@ -25,11 +27,15 @@
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/drawable/tab_layout.xml" value="0.151" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/activity_main.xml" value="0.2234375" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/activity_main_scene.xml" value="0.22239583333333332" />
+        <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/all_shared_fragment.xml" value="0.2234375" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/app_feature_activity.xml" value="0.176" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/app_feature_desc.xml" value="0.22239583333333332" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/create_account_fragment.xml" value="0.22239583333333332" />
+        <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/file_item_layout.xml" value="0.4" />
+        <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/hall_of_instruition_fragment.xml" value="0.22239583333333332" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/login_account_fragment.xml" value="0.4" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/login_activity.xml" value="0.22239583333333332" />
+        <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/my_file_fragment_layout.xml" value="0.22239583333333332" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/notes_activity.xml" value="0.22239583333333332" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/pb_loading_dialog.xml" value="0.4" />
         <entry key="..\:/Android Sample Projects/motionLyt/app/src/main/res/layout/print_activity.xml" value="0.22239583333333332" />
