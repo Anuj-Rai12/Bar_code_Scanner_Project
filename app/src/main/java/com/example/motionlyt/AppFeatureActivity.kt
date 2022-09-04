@@ -27,22 +27,22 @@ class AppFeatureActivity : AppCompatActivity() {
         viewPagerAdaptor.setFragment(
             AppFeatureDescription(
                 R.drawable.ic_notes,
-                "Share your app",
-                "Share your file in any text\n testing appliction"
+                "Store your Notes",
+                "you can store and manage your notes easily with our app"
             )
         )
         viewPagerAdaptor.setFragment(
             AppFeatureDescription(
-                R.drawable.ic_notes,
-                "Share your app",
-                "Share your file in any text"
+                R.drawable.ic_website_maintenance,
+                "Share your Files",
+                "we support every format of file"
             )
         )
         viewPagerAdaptor.setFragment(
             AppFeatureDescription(
-                R.drawable.ic_notes,
-                "Share your app",
-                "Share your file in any text"
+                R.drawable.ic_cryptocurrency,
+                "View your Upload File",
+                "You can view or share your File on with your friends and Directly Show to All."
             )
         )
         TabLayoutMediator(

@@ -25,6 +25,9 @@ class ShareWithFriendsActivity : AppCompatActivity() {
         NotesDialog(this)
     }
 
+
+    private val getArr = mutableListOf<User>()
+
     private lateinit var fileDataAdaptor: FriendsAdaptor
 
 
@@ -55,6 +58,13 @@ class ShareWithFriendsActivity : AppCompatActivity() {
             }
         }
 
+        binding.layoutBtn.setOnClickListener {
+            if (binding.layoutBtn.text == "all") {
+
+            } else {
+
+            }
+        }
 
         getResponse()
 
@@ -75,9 +85,11 @@ class ShareWithFriendsActivity : AppCompatActivity() {
                 is ResponseWrapper.Success -> {
                     dialog.dismiss()
                     val list = it.data as MutableList<User>
-                    if (list.isEmpty()){
+                    if (list.isEmpty()) {
                         showErrorDialog("No Data Found!!")
-                    }else{
+                    } else {
+                        getArr.clear()
+                        getArr.addAll(list)
                         fileDataAdaptor.submitList(list)
                     }
                 }

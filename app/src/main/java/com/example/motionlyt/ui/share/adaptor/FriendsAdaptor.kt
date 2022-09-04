@@ -45,6 +45,28 @@ class FriendsAdaptor :
                 flag = !flag
             }
 
+
+
+            binding.isCheckEd.setOnClickListener {
+                if (!flag) {
+                    binding.isCheckEd.show()
+                    binding.isCheckEd.isChecked = true
+                    val mutableList = mutableListOf<User>()
+                    _userList.value?.let {mutableList.addAll(it)  }
+                    mutableList.add(data)
+                    _userList.postValue(mutableList)
+                } else {
+                    binding.isCheckEd.hide()
+                    _userList.value?.let { dt ->
+                        if (dt.contains(data)) {
+                            dt.remove(data)
+                        }
+                        _userList.postValue(dt)
+                    }
+                }
+                flag = !flag
+            }
+
             binding.textView.text = data.name + "\n" + data.joindate
 
             binding.userProfileTxt.text = data.name?.first()?.uppercaseChar().toString()
