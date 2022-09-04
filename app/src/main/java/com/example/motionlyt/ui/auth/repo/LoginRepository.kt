@@ -31,7 +31,6 @@ class LoginRepository(context: Context) {
         val data = try {
             fireStore.collection(uni).document(user.uni!!).collection(user.reg!!)
                 .document("Information").set(user).await()
-
             val ref = db.reference.child("$parent${user.reg}")
             ref.setValue(LogInUser(pass = user.password, uni = user.uni)).await()
             notesSharedPreference.setReg(user.reg)
@@ -93,16 +92,5 @@ class LoginRepository(context: Context) {
     }.flowOn(IO)
 
 
-    /*fun setRealtimeRegAndPass(reg: String, password: String) = flow {
-        emit(ResponseWrapper.Loading("Creating User"))
-        val data = try {
-            val ref = db.reference.child("$parent$reg")
-            ref.setValue(password).await()
-            ResponseWrapper.Success(null)
-        } catch (e: Exception) {
-            ResponseWrapper.Error(null, e)
-        }
-        emit(data)
-    }.flowOn(IO)*/
-
 }
+
