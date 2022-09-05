@@ -1,16 +1,19 @@
 package com.example.motionlyt
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.text.NumberFormat
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
 import com.example.motionlyt.databinding.PrintActivityBinding
 import com.karumi.dexter.Dexter
@@ -30,6 +33,23 @@ class PrintActivity : AppCompatActivity() {
 
     private val local = Locale("en", "IN")
 
+
+    var myActivityResultLauncher = registerForActivityResult(
+        StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == RESULT_OK) {
+            //Printing is ok
+            toastMsg("Data Got Painted")
+        } else {
+            val data = result.data
+            if (data != null) {
+                val errorMessage = data.getStringExtra("errorMessage")
+                showError(errorMessage ?: "Unknown Error")
+            }
+        }
+    }
+
+
     @RequiresApi(Build.VERSION_CODES.N)
     private val numeric = NumberFormat.getCurrencyInstance(local)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,9 +67,47 @@ class PrintActivity : AppCompatActivity() {
                 getPermission(getRequestPermission())
                 return@setOnClickListener
             }
-            doPrint()
+            val connection = BluetoothPrintersConnections.selectFirstPaired()
+            if (connection==null){
+                showError("Please Enable Bluetooth or\n Check POS print is Connected Or NOT?")
+                return@setOnClickListener
+            }
+
+            val billTxt = doPrint()
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                val intent = Intent("pe.diegoveloper.printing")
+                intent.type = "text/plain"
+                intent.putExtra(Intent.EXTRA_TEXT, "your text to print here")
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                myActivityResultLauncher.launch(intent)
+            } else {
+                val intent = Intent("pe.diegoveloper.printing")
+                intent.type = "text/plain"
+                intent.putExtra(Intent.EXTRA_TEXT, billTxt)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivityForResult(intent, 1101)
+            }
         }
     }
+
+
+    @SuppressLint("MissingSuperCall")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //super.onActivityResult(requestCode, resultCode, data)
+        // super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1101) {
+            if (resultCode == RESULT_OK) {
+                //Printing is ok
+                toastMsg("Data Got Painted")
+            } else {
+                if (data != null) {
+                    val errorMessage = data.getStringExtra("errorMessage")
+                    showError(errorMessage ?: "Unknown Error")
+                }
+            }
+        }
+    }
+
 
     private fun getPermission(list: List<String>) {
         Dexter.withContext(this).withPermissions(list).withListener(object : PermissionListener,
@@ -103,7 +161,7 @@ class PrintActivity : AppCompatActivity() {
     }
 
 
-    private fun doPrint() {
+    /*private fun doPrint() {
         try {
             val connection = BluetoothPrintersConnections.selectFirstPaired()
             if (connection != null) {
@@ -137,7 +195,7 @@ class PrintActivity : AppCompatActivity() {
             Log.e("APP", "Can't print", e)
             showError(e.localizedMessage ?: "Unknown Error")
         }
-    }
+    }*/
 
     private fun showError(msg: String) {
         AlertDialog.Builder(this).setTitle("Failed")
