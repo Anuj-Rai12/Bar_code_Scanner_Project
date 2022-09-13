@@ -116,9 +116,9 @@ class PrintActivity : AppCompatActivity() {
                             "[L] Order No .: " + "G1" + "[R]" + "08/10/2022 11:39:40 PM" + "\n" +
                             "[C]------------------------------------------------------------------------\n" +
                             "[L]" + "Description" + "[R]" + "QTY" + "[R]" + "Price" + "[R]" + "Amount\n" +
-                            "[L]" + "Samosa" + "[R]" + "1" + "[R]" + "1,000" + "[R]" + "1,000\n" +
-                            "[L]" + "Pizza" + "[R]" + "2" + "[R]" + "1,500" + "[R]" + "2,000\n" +
-                            "[L]" + "Noodle" + "[R]" + "3" + "[R]" + "500" + "[R]" + "1,500\n" +
+                            "[L]" + "Neque porro quisquam est qui dolorem ipsum quia " + "[R]" + "1" + "[R]" + "1,000" + "[R]" + "1,000\n" +
+                            "[L]" + "Neque porro quisquam est qui dolorem ipsum quia " + "[R]" + "2" + "[R]" + "1,500" + "[R]" + "2,000\n" +
+                            "[L]" + "Neque porro quisquam est qui dolorem ipsum quia " + "[R]" + "3" + "[R]" + "500" + "[R]" + "1,500\n" +
                             "[L]" + "Burger" + "[R]" + "5" + "[R]" + "700" + "[R]" + "6,000\n" +
                             "[C]-----------------------------------------------------------------------\n" +
                             "[L]" + "Total Amt Excel. Of GST" + "[R]" + "<b>10,000</b>" + "\n" +
