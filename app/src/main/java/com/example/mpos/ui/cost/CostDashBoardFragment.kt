@@ -1,5 +1,6 @@
 package com.example.mpos.ui.cost
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.os.Bundle
@@ -111,6 +112,14 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         getPosItemRequest()
         getConfirmOrderResponse()
         (activity as MainActivity?)?.getPermissionForBlueTooth()
+        val flag = activity?.checkBlueConnectPermission()
+        if (flag == false) {
+            (activity as MainActivity?)?.requestPermission(
+                Manifest.permission.BLUETOOTH_CONNECT,
+                BLUE_CONNECT,
+                "Bluetooth"
+            )
+        }
         binding.confirmOrderBtn.setOnClickListener {
             if (!this::printBill.isInitialized) {
                 initializePrinter()

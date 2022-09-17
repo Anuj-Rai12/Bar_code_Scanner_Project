@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
 
-    private fun requestPermission(
+     fun requestPermission(
         manifest: String = Manifest.permission.CAMERA,
         code: Int = CAMERA_INT,
         name: String = "Camera"

@@ -3,6 +3,8 @@ package com.example.mpos.ui.oderconfirm
 import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -413,7 +415,14 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         icon = R.drawable.ic_success,
                         isCancel = false
                     ) {
-                        findNavController().popBackStack()
+                        var isTrue=true
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            if (isTrue){
+                                findNavController().popBackStack()
+                                isTrue=false
+                            }
+                        }
                     }
                 }
             }

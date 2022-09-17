@@ -63,6 +63,8 @@ class TableManagementViewModel(application: Application) : AndroidViewModel(appl
                 if (checkFieldValue(it.storeNo.toString()) || checkFieldValue(it.userID.toString())) {
                     _event.postValue(Events("Internal Error \nTry Login Again"))
                 } else {
+                    RestaurantSingletonCls.getInstance().setUserID(it.userID ?: "")
+                    RestaurantSingletonCls.getInstance().setStoreId(it.storeNo ?: "")
                     repositoryImpl.getTblInformation(storeId = it.storeNo!!, staffID = it.userID!!)
                         .collectLatest { res ->
                             _tblInfo.postValue(res)
