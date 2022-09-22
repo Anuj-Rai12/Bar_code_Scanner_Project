@@ -16,6 +16,7 @@
         android:fontFamily="@font/roboto_medium"
         android:textColor="@color/light_grey_color"
         android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/btn_click_check_box"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,6 +29,7 @@
         android:layout_height="24dp"
         android:background="@drawable/ic_check_box"
         android:backgroundTint="@color/white"
+        tools:backgroundTint="@color/black"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

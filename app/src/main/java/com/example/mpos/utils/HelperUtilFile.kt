@@ -3,6 +3,7 @@ package com.example.mpos.utils
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Build
 import android.text.InputType
@@ -18,6 +19,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.mpos.R
+import com.example.mpos.adaptor.AlertDialogListAdapter
 import com.example.mpos.data.cofirmDining.ConfirmDiningBody
 import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.item_master_sync.json.ItemMaster
@@ -687,6 +689,35 @@ fun Activity.showDialogBoxToGetUrl(scan: () -> Unit, done: (String) -> Unit) {
         scan.invoke()
         dialog.dismiss()
     }
+}
+
+
+fun Activity.dialogOption(list: List<String>, fragment: Fragment) {
+    val materialDialogs = MaterialAlertDialogBuilder(
+        this,
+        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+    )
+    val adaptor = AlertDialogListAdapter(this)
+    adaptor.addItem(list)
+
+    materialDialogs.setAdapter(adaptor) { dialog, which ->
+        if (list[which] == list.last()) {
+            dialog.dismiss()
+            showDialogForDeleteInfo("${getEmojiByUnicode(0x1F5D1)} Swipe to delete")
+        } else if (list[which] == "About User\n") {
+            dialog.dismiss()
+            val userID = RestaurantSingletonCls.getInstance().getUserId()
+            val storeID = RestaurantSingletonCls.getInstance().getStoreId()
+            fragment.showDialogBox(
+                title = "About User",
+                desc = "Store ID :$storeID\nUser ID :$userID"
+            ){}
+        }else{
+            materialDialogs.show()
+        }
+    }
+    materialDialogs.show()
+
 }
 
 

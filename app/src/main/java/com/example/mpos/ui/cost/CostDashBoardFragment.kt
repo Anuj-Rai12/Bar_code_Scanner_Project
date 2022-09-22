@@ -160,7 +160,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.showDialogForDeleteInfo("${getEmojiByUnicode(0x1F5D1)} Swipe to delete")
+            activity?.dialogOption(listOf("Option\n","About User\n","Help\n"),this)
         }
 
         binding.searchBoxTxt.setOnClickListener {

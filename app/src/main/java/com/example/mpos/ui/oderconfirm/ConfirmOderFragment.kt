@@ -135,7 +135,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.showDialogForDeleteInfo("${getEmojiByUnicode(0x1F5D1)} Swipe to delete")
+            activity?.dialogOption(listOf("Option\n","About User\n","Help\n"),this)
         }
 
         binding.infoBtn.setOnLongClickListener {
