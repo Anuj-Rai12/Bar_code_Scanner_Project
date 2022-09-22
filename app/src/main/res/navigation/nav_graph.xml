@@ -60,6 +60,12 @@
         <argument
             android:name="information"
             app:argType="com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse" />
+        <action
+            android:id="@+id/action_tableManagementOrCostEstimate_to_restaurantEstimationFragments"
+            app:destination="@id/restaurantEstimationFragments" />
+        <action
+            android:id="@+id/action_tableManagementOrCostEstimate_to_showRoomFragment"
+            app:destination="@id/showRoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/tableManagementFragment"
@@ -309,4 +315,14 @@
         app:exitAnim="@anim/exit_anim"
         app:popEnterAnim="@anim/pop_enter_anim"
         app:popExitAnim="@anim/pop_exit_anim" />
+    <fragment
+        android:id="@+id/showRoomFragment"
+        android:name="com.example.mpos.ui.showroom.ShowRoomFragment"
+        android:label="show_room_fragment"
+        tools:layout="@layout/show_room_fragment" />
+    <fragment
+        android:id="@+id/restaurantEstimationFragments"
+        android:name="com.example.mpos.ui.resturant_estimation.RestaurantEstimationFragments"
+        android:label="restaurant_estimation_fragment"
+        tools:layout="@layout/restaurant_estimation_fragment" />
 </navigation>

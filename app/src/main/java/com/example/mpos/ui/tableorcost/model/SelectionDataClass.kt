@@ -29,12 +29,24 @@ data class SelectionDataClass(
             title = "Bill Payment",
             type = RestaurantSelection.BILLING.name
         )
+        val showRoom = SelectionDataClass(
+            image = R.drawable.showroom_estimation,
+            title = "Showroom Estimation",
+            type = RestaurantSelection.SHOWROOMESTIMATE.name
+        )
+        val restaurant = SelectionDataClass(
+            image = R.drawable.restaurant_estimation,
+            title = "Restaurant Estimation",
+            type = RestaurantSelection.RESTAURANTESTIMATE.name
+        )
 
         enum class RestaurantSelection {
             TABLEMGT,
             TABLERESERVATION,
             ESTIMATION,
             BILLING,
+            SHOWROOMESTIMATE,
+            RESTAURANTESTIMATE,
         }
 
     }

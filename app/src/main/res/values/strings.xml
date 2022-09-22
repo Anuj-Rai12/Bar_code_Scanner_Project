@@ -16,6 +16,8 @@
     <string name="item_table">Table Management</string>
     <string name="item_cost">Cost Estimate</string>
     <string name="item_cost_estimate">Estimation</string>
+    <string name="restaurants_estimate">Restaurant Estimation</string>
+    <string name="show_room_frag">Showroom Estimation</string>
     <string name="item_billing_estimate">Billing</string>
     <string name="table_reservation">Table Reservation</string>
     <string name="open_table">Open</string>
