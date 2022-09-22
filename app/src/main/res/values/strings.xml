@@ -18,6 +18,8 @@
     <string name="item_cost_estimate">Estimation</string>
     <string name="restaurants_estimate">Restaurant Estimation</string>
     <string name="show_room_frag">Showroom Estimation</string>
+    <string name="show_room_billing_frag">Showroom Billing</string>
+    <string name="restaurant_billing_frag">Restaurant Billing</string>
     <string name="item_billing_estimate">Billing</string>
     <string name="table_reservation">Table Reservation</string>
     <string name="open_table">Open</string>

@@ -107,8 +107,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                 RESTAURANTESTIMATE -> {
                     list.add(SelectionDataClass.restaurant)
                 }
-                else -> {
-                    list.add(SelectionDataClass(R.drawable.logofile, item, item))
+                SHOWROOMBILLING -> {
+                    list.add(SelectionDataClass.showroomBilling)
+                }
+                RESTAURANTBILLING -> {
+                    list.add(SelectionDataClass.restaurantBilling)
                 }
             }
         }
@@ -171,19 +174,21 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                         null
                     )
                 }
-                SHOWROOMESTIMATE ->{
+                SHOWROOMESTIMATE -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToShowRoomFragment()
                 }
                 RESTAURANTESTIMATE -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToRestaurantEstimationFragments()
                 }
-                else -> {
-                    activity?.msg("currently under maintenance")
-                    null
+                SHOWROOMBILLING -> {
+                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToShowRoomBillingFragment()
+                }
+                RESTAURANTBILLING -> {
+                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToRestaurantBillingFragment()
                 }
             }
 
-        action?.let { findNavController().navigate(it) }
+        findNavController().navigate(action)
     }
 
 }

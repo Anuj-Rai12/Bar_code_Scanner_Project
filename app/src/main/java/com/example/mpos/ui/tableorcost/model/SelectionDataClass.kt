@@ -40,6 +40,18 @@ data class SelectionDataClass(
             type = RestaurantSelection.RESTAURANTESTIMATE.name
         )
 
+        val restaurantBilling = SelectionDataClass(
+            image = R.drawable.ic_receipt_bill,
+            title = "Restaurant Billing",
+            type = RestaurantSelection.RESTAURANTBILLING.name
+        )
+
+        val showroomBilling = SelectionDataClass(
+            image = R.drawable.ic_receipt_bill,
+            title = "Showroom Billing",
+            type = RestaurantSelection.SHOWROOMBILLING.name
+        )
+
         enum class RestaurantSelection {
             TABLEMGT,
             TABLERESERVATION,
@@ -47,6 +59,8 @@ data class SelectionDataClass(
             BILLING,
             SHOWROOMESTIMATE,
             RESTAURANTESTIMATE,
+            SHOWROOMBILLING,
+            RESTAURANTBILLING
         }
 
     }

@@ -66,6 +66,12 @@
         <action
             android:id="@+id/action_tableManagementOrCostEstimate_to_showRoomFragment"
             app:destination="@id/showRoomFragment" />
+        <action
+            android:id="@+id/action_tableManagementOrCostEstimate_to_restaurantBillingFragment"
+            app:destination="@id/restaurantBillingFragment" />
+        <action
+            android:id="@+id/action_tableManagementOrCostEstimate_to_showRoomBillingFragment"
+            app:destination="@id/showRoomBillingFragment" />
     </fragment>
     <fragment
         android:id="@+id/tableManagementFragment"
@@ -325,4 +331,14 @@
         android:name="com.example.mpos.ui.resturant_estimation.RestaurantEstimationFragments"
         android:label="restaurant_estimation_fragment"
         tools:layout="@layout/restaurant_estimation_fragment" />
+    <fragment
+        android:id="@+id/restaurantBillingFragment"
+        android:name="com.example.mpos.ui.restaturantbilling.RestaurantBillingFragment"
+        android:label="restaurant_billing_fragment"
+        tools:layout="@layout/restaurant_billing_fragment" />
+    <fragment
+        android:id="@+id/showRoomBillingFragment"
+        android:name="com.example.mpos.ui.showroombilling.ShowRoomBillingFragment"
+        android:label="show_room_billing_fragment"
+        tools:layout="@layout/show_room_billing_fragment" />
 </navigation>
