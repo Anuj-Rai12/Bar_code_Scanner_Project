@@ -40,6 +40,7 @@ import com.example.mpos.utils.*
 import com.example.mpos.utils.print.PrintBill
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import java.util.*
 
 
 class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
@@ -439,6 +440,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             itemMasterFoodItem.itemMaster,
             type = "Instruction",
             value = itemMasterFoodItem.free_txt,
+            isDecimal = false,
             cancel = {},
             res = {},
             instruction = { free_txt ->
@@ -555,7 +557,9 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     }
 
     private fun updateQtyDialogBox(itemMasterFoodItem: ItemMasterFoodItem) {
-        showQtyDialog(true, itemMasterFoodItem.itemMaster, cancel = {}, res = {
+        showQtyDialog(true, itemMasterFoodItem.itemMaster, isDecimal =
+        itemMasterFoodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
+            .toBoolean(), cancel = {}, res = {
             confirmOrderViewModel.addUpdateQty(
                 food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
                 itemRemoved = itemMasterFoodItem
@@ -587,9 +591,9 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             uOM = barcode.uOM,
             decimalAllowed = barcode.decimalAllowed
         )
-        itemMaster.foodQty = barcode.qty
-        itemMaster.foodAmt =
-            ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty
+        itemMaster.foodQty = barcode.qty.toDouble()
+        val amt=(ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
+        itemMaster.foodAmt = "%.4f".format(amt).toDouble()
         val mutableList = mutableListOf<ItemMasterFoodItem>()
         if (arrItem.isNotEmpty()) {
             mutableList.addAll(arrItem)

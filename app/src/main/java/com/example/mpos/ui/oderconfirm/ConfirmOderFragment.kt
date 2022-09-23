@@ -39,6 +39,7 @@ import com.example.mpos.use_case.AlphaNumericString
 import com.example.mpos.utils.*
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import java.util.*
 
 
 class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomSheetClickListener {
@@ -135,7 +136,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("Option\n","About User\n","Help\n"),this)
+            activity?.dialogOption(listOf("Option\n", "About User\n", "Help\n"), this)
         }
 
         binding.infoBtn.setOnLongClickListener {
@@ -415,12 +416,12 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         icon = R.drawable.ic_success,
                         isCancel = false
                     ) {
-                        var isTrue=true
+                        var isTrue = true
                         val handler = Handler(Looper.getMainLooper())
                         handler.post {
-                            if (isTrue){
+                            if (isTrue) {
                                 findNavController().popBackStack()
-                                isTrue=false
+                                isTrue = false
                             }
                         }
                     }
@@ -562,16 +563,23 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt),
                     itemRemoved = itemMasterFoodItem
                 )
-            })
+            }, isDecimal = false
+        )
     }
 
     private fun updateQtyDialogBox(itemMasterFoodItem: ItemMasterFoodItem) {
-        showQtyDialog(true, itemMasterFoodItem.itemMaster, cancel = {}, res = {
-            viewModel.addUpdateQty(
-                food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
-                itemRemoved = itemMasterFoodItem
-            )
-        }, instruction = { })
+        showQtyDialog(true,
+            itemMasterFoodItem.itemMaster,
+            cancel = {},
+            res = {
+                viewModel.addUpdateQty(
+                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                    itemRemoved = itemMasterFoodItem
+                )
+            },
+            instruction = { },
+            isDecimal = itemMasterFoodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
+                .toBoolean())
     }
 
 
@@ -599,9 +607,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             uOM = barcode.uOM,
             decimalAllowed = barcode.decimalAllowed
         )
-        itemMaster.foodQty = barcode.qty
-        itemMaster.foodAmt =
-            ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty
+        itemMaster.foodQty = barcode.qty.toDouble()
+        val amt=(ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
+        itemMaster.foodAmt = "%.4f".format(amt).toDouble()
+
         val mutableList = mutableListOf<ItemMasterFoodItem>()
         if (arrItem.isNotEmpty()) {
             mutableList.addAll(arrItem)

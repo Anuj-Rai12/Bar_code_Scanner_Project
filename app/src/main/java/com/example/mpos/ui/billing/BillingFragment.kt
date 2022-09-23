@@ -39,6 +39,7 @@ import com.example.mpos.use_case.AlphaNumericString
 import com.example.mpos.utils.*
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import java.util.*
 
 class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomSheetClickListener {
     private lateinit var binding: BillingFragmentLayoutBinding
@@ -129,7 +130,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("Option\n","About User\n","Help\n"),this)
+            activity?.dialogOption(listOf("Option\n", "About User\n", "Help\n"), this)
         }
 
         binding.searchBoxTxt.setOnClickListener {
@@ -159,7 +160,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             confirmOrderViewModel.removeItemFromListOrder()
             initial()
         }
-        
+
     }
 
     private fun setUpCostEstimation(): Boolean {
@@ -318,12 +319,19 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
     }
 
     private fun updateQtyDialogBox(itemMasterFoodItem: ItemMasterFoodItem) {
-        showQtyDialog(true, itemMasterFoodItem.itemMaster, cancel = {}, res = {
-            confirmOrderViewModel.addUpdateQty(
-                food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
-                itemRemoved = itemMasterFoodItem
-            )
-        }, instruction = {})
+        showQtyDialog(true,
+            itemMasterFoodItem.itemMaster,
+            isDecimal = itemMasterFoodItem.itemMaster.decimalAllowed.lowercase(
+                Locale.getDefault()
+            ).toBoolean(),
+            cancel = {},
+            res = {
+                confirmOrderViewModel.addUpdateQty(
+                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                    itemRemoved = itemMasterFoodItem
+                )
+            },
+            instruction = {})
     }
 
 
@@ -343,7 +351,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     food = food,
                     itemRemoved = itemMasterFoodItem
                 )
-            })
+            }, isDecimal = false)
     }
 
 
@@ -540,9 +548,9 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             uOM = barcode.uOM,
             decimalAllowed = barcode.decimalAllowed
         )
-        itemMaster.foodQty = barcode.qty
-        itemMaster.foodAmt =
-            ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty
+        itemMaster.foodQty = barcode.qty.toDouble()
+        val amt=(ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
+        itemMaster.foodAmt = "%.4f".format(amt).toDouble()
         val mutableList = mutableListOf<ItemMasterFoodItem>()
         if (arrItem.isNotEmpty()) {
             mutableList.addAll(arrItem)

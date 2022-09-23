@@ -25,13 +25,13 @@ data class ItemMaster(
     @SerializedName("decimalAllowed") val decimalAllowed: String,
     ) : Parcelable {
     @IgnoredOnParcel
-    var foodQty: Int = 1
+    var foodQty: Double = 1.0
 
     @IgnoredOnParcel
     var foodAmt = try {
-        salePrice.toInt()
+        salePrice.toDouble()
     } catch (e: Exception) {
         Log.i("ItemMaster", "error: ${e.localizedMessage}")
-        0
+        0.0
     }
 }

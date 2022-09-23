@@ -21,8 +21,8 @@ data class FoodItem(
 @Parcelize
 data class ItemMasterFoodItem(
     val itemMaster: ItemMaster,
-    var foodQty: Int,
-    var foodAmt: Int,
+    var foodQty: Double,
+    var foodAmt: Double,
     val bg: Int = listOfBg.first(),
     val free_txt: String = "",
     val isDeal: Boolean = false
@@ -37,7 +37,7 @@ data class FoodItemList(
 
 @Parcelize
 data class OfferDesc(
-    val price: Int,
+    val price: Double,
     val title: String,
     var selected: Boolean = true
 ) : Parcelable

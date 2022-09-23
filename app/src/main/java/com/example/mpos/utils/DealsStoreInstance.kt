@@ -39,7 +39,7 @@ class DealsStoreInstance {
                 deals.price.toString(),
                 decimalAllowed = false.toString()
             ),
-            foodQty = 1,
+            foodQty = 1.0,
             foodAmt = deals.price,
             bg = listOfBg.last(),
             isDeal = true

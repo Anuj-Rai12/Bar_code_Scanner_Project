@@ -16,8 +16,8 @@ import java.util.*
 class ConfirmOrderUseCase {
 
 
-    fun calGrandTotal(item: List<ItemMasterFoodItem>?): Int {
-        var grandTotal = 0
+    fun calGrandTotal(item: List<ItemMasterFoodItem>?): Double {
+        var grandTotal = 0.0
         item?.let {
             it.forEach { food ->
                 grandTotal += food.foodAmt

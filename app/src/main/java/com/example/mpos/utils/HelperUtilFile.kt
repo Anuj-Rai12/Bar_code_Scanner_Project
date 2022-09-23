@@ -611,6 +611,7 @@ fun Fragment.showQtyDialog(
     itemMaster: ItemMaster,
     value: String = "",
     type: String = "Quantity",
+    isDecimal: Boolean,
     cancel: (Boolean) -> Unit,
     res: (ItemMaster) -> Unit,
     instruction: (String) -> Unit
@@ -629,6 +630,10 @@ fun Fragment.showQtyDialog(
         binding.qtyEd.setText(value)
     if (type != "Quantity") {
         binding.qtyEd.inputType = InputType.TYPE_CLASS_TEXT
+    } else {
+        if (isDecimal) {
+            binding.qtyEd.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED or InputType.TYPE_NUMBER_FLAG_DECIMAL
+        }
     }
     binding.btnDone.setOnClickListener {
         val qty = binding.qtyEd.text.toString()
@@ -637,13 +642,24 @@ fun Fragment.showQtyDialog(
             return@setOnClickListener
         }
         if (type == "Quantity") {
-            if (!qty.isDigitsOnly()) {
+
+            try {
+                if (isDecimal) {
+                    qty.toDouble()
+                }
+            } catch (e: Exception) {
+                activity?.msg("Please Enter the Correct $type")
+                return@setOnClickListener
+            }
+
+            if (!isDecimal && !qty.isDigitsOnly()) {
                 activity?.msg("Please Enter Correct $type")
                 return@setOnClickListener
             }
-            itemMaster.foodQty = qty.toInt()
-            itemMaster.foodAmt =
-                ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * qty.toInt()
+            itemMaster.foodQty = qty.toDouble()
+            val amt=(ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * qty.toDouble())
+            itemMaster.foodAmt ="%.4f".format(amt).toDouble()
+
             res.invoke(itemMaster)
         } else {
             instruction.invoke(qty)
@@ -711,8 +727,8 @@ fun Activity.dialogOption(list: List<String>, fragment: Fragment) {
             fragment.showDialogBox(
                 title = "About User",
                 desc = "Store ID :$storeID\nUser ID :$userID"
-            ){}
-        }else{
+            ) {}
+        } else {
             materialDialogs.show()
         }
     }

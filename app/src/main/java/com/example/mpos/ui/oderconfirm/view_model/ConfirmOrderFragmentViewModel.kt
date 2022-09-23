@@ -213,7 +213,7 @@ class ConfirmOrderFragmentViewModel constructor(
     fun getGrandTotal(list: List<ItemMasterFoodItem>?) {
         viewModelScope.launch {
             val res = async(IO) {
-                var total = 0
+                var total = 0.0
                 list?.let {
                     total = useCase.calGrandTotal(it)
                 }

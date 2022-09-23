@@ -276,9 +276,9 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                     uOM = barcode.uOM,
                     decimalAllowed = barcode.decimalAllowed
                 )
-                itemMaster.foodQty = barcode.qty
-                itemMaster.foodAmt =
-                    ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty
+                itemMaster.foodQty = barcode.qty.toDouble()
+                val amt=(ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
+                itemMaster.foodAmt = "%.4f".format(amt).toDouble()
                 Log.i("QR", "sendData: $itemMaster")
                 arr.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
                 val action = if (args.tbl != null) {

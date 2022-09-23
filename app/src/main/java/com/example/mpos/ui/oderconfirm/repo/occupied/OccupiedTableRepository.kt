@@ -46,7 +46,7 @@ class OccupiedTableRepository(retrofit: Retrofit) {
         occupiedTable.forEach {
             mutableList.add(
                 ItemMasterFoodItem(
-                    foodAmt = it.foodAmt.toInt(), itemMaster = ItemMaster(
+                    foodAmt = it.foodAmt, itemMaster = ItemMaster(
                         0,
                         barcode = it.itemMaster.barcode,
                         itemDescription = it.itemMaster.itemDescription,

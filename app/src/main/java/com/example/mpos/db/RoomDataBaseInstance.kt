@@ -9,7 +9,7 @@ import com.example.mpos.data.table_info.model.json.TableDetail
 
 @Database(
     entities = [ItemMaster::class, TableDetail::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class RoomDataBaseInstance : RoomDatabase() {

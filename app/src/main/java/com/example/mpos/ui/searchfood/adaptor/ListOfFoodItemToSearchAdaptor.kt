@@ -29,13 +29,13 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             }
         }
 
-        fun setPrice(salePrice: String): Int {
+        fun setPrice(salePrice: String): Double {
             val data = salePrice.split(',')
             val str = StringBuilder()
             data.forEach {
                 str.append(it)
             }
-            return str.toString().toFloat().toInt()
+            return str.toString().toDouble()
         }
     }
 
@@ -65,7 +65,7 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 listOf(
                     OfferDesc(
                         title = "No offer",
-                        price = 0,
+                        price = 0.0,
                         selected = false
                     )
                 )
@@ -92,8 +92,9 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                         foodItem.foodAmt += it.price
                     }
                 }*/
-                foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1
-                foodItem.foodAmt = foodItem.foodQty * setPrice(foodItem.salePrice)
+                foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1.0
+                val amt=(setPrice(foodItem.salePrice) * foodItem.foodQty)
+                foodItem.foodAmt = "%.4f".format(amt).toDouble()
                 itemClickListerForListOfFood(
                     ItemMasterFoodItem(
                         foodItem,
@@ -108,8 +109,9 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             binding.btnWithoutOffer.setOnClickListener {
                 //foodItem.addWithOffer = false
                 //foodItem.offerDesc = null
-                foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1
-                foodItem.foodAmt = setPrice(foodItem.salePrice) * foodItem.foodQty
+                foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1.0
+                val amt=(setPrice(foodItem.salePrice) * foodItem.foodQty)
+                foodItem.foodAmt = "%.4f".format(amt).toDouble()
                 itemClickListerForListOfFood(
                     ItemMasterFoodItem(
                         foodItem,
