@@ -37,7 +37,7 @@ import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.use_case.AlphaNumericString
 import com.example.mpos.utils.*
-import com.example.mpos.utils.print.PrintBill
+import com.example.mpos.utils.print.recpit.PrintViewModel
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
@@ -49,12 +49,13 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
 
-    private lateinit var printBill: PrintBill
+    private val printBillViewModel: PrintViewModel by viewModels()
+
     private val confirmOrderViewModel: ConfirmOrderFragmentViewModel by viewModels()
     private val costEstimationViewModel: CostDashBoardViewModel by viewModels()
 
 
-    //private var flagForViewDeals: Boolean = false
+    private var isPrinterConnected: Boolean = false
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: CostDashBoardFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
@@ -95,8 +96,6 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             }
         }
 
-        initializePrinter()
-
         binding.foodMnuBtn.setOnClickListener {
             val mnuBottom = MenuBottomSheetFragment("Order Menu")
             mnuBottom.onBottomSheetClickListener = this
@@ -112,6 +111,10 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         getCostEstimationResponse()
         getPosItemRequest()
         getConfirmOrderResponse()
+
+
+        getPrintConnectResponse()
+        getBillPrintResponse()
         (activity as MainActivity?)?.getPermissionForBlueTooth()
         val flag = activity?.checkBlueConnectPermission()
         if (flag == false) {
@@ -122,31 +125,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             )
         }
         binding.confirmOrderBtn.setOnClickListener {
-            if (!this::printBill.isInitialized) {
-                initializePrinter()
-                activity?.msg("Failed to Set Up Try Again!!")
-                return@setOnClickListener
-            }
             if (arrItem.isEmpty()) {
                 costEstimationViewModel.addError("Please Add Item Menu !!")
                 return@setOnClickListener
             }
-            if (setUpCostEstimation()) {
-                if (!printBill.isBluetoothDeviceFound()) {
-                    showDialogBox(
-                        "Error",
-                        printBill.printNotConnectedToProceed,
-                        btn = "Yes",
-                        cancel = "No"
-                    ) {
-                        costEstimationViewModel.getCostEstimation(costEstimation!!)
-                    }
-                } else {
-                    costEstimationViewModel.getCostEstimation(costEstimation!!)
-                }
-            } else {
-                costEstimationViewModel.addError("Oops cannot setUp a Process!!")
-            }
+            printBillViewModel.isPrintConnected()
         }
 
 
@@ -161,7 +144,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("Option\n","About User\n","Help\n"),this)
+            activity?.dialogOption(listOf("Option\n", "About User\n", "Help\n"), this)
         }
 
         binding.searchBoxTxt.setOnClickListener {
@@ -194,21 +177,70 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     }
 
-    private fun initializePrinter() {
-        activity?.let {
-            printBill = PrintBill(it, success = {
-                findNavController().popBackStack()
-            }, error = { err ->
-                costEstimationViewModel.addError(err)
-            })
-        } ?: costEstimationViewModel.addError(
-            "Cannot Initialized Printer ${
-                getEmojiByUnicode(
-                    0x1F5A8
-                )
-            }"
-        )
+    private fun getBillPrintResponse() {
+        printBillViewModel.doPrinting.observe(viewLifecycleOwner){
+            when(it){
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    showPb("${it.data}")
+                }
+                is ApisResponse.Success -> {
+                    hidePb()
+                    showDialogBox(
+                        "Success",
+                        "All Food Item are added Successfully",
+                        icon = R.drawable.ic_success,
+                        isCancel = false
+                    ) {
+                        findNavController().popBackStack()
+                    }
+                }
+            }
+        }
     }
+
+    private fun getPrintConnectResponse() {
+        printBillViewModel.isPrinterConnected.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    isPrinterConnected=false
+                    if (setUpCostEstimation()) {
+                        showDialogBox(
+                            "Error",
+                            it.data!!,
+                            btn = "Yes",
+                            cancel = "No"
+                        ) {
+                            costEstimationViewModel.getCostEstimation(costEstimation!!)
+                        }
+                    } else
+                        costEstimationViewModel.addError("Failed to Cost Estimated")
+                }
+                is ApisResponse.Loading -> {
+                    showPb("${it.data}")
+                }
+                is ApisResponse.Success -> {
+                    hidePb()
+                    isPrinterConnected=true
+                    if (setUpCostEstimation()) {
+                        costEstimationViewModel.getCostEstimation(costEstimation!!)
+                    } else
+                        costEstimationViewModel.addError("Failed to Cost Estimated")
+                }
+            }
+        }
+    }
+
 
     private fun getCostEstimationResponse() {
         costEstimationViewModel.costEstimationResponse.observe(viewLifecycleOwner) {
@@ -303,8 +335,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                                 findNavController().popBackStack()
                             }
                             activity?.msg("Bill List is Empty", Toast.LENGTH_LONG)
-                        } else if (printBill.isBluetoothDeviceFound())
-                            printBill.doPrint(body)
+                        } else if (isPrinterConnected)
+                            printBillViewModel.doPrint(body)
                         else
                             showDialogBox(
                                 "Success",
@@ -429,7 +461,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                     updateQtyDialogBox(res)
                 }, itemClickInstructionLinter = { res ->
                     updateFreeTxt(res)
-                }, itemClickAmountLinter = {res->
+                }, itemClickAmountLinter = { res ->
                     updateAmount(res)
                 })
             adapter = confirmOderFragmentAdaptor
@@ -609,7 +641,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             decimalAllowed = barcode.decimalAllowed
         )
         itemMaster.foodQty = barcode.qty.toDouble()
-        val amt=(ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
+        val amt =
+            (ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
         itemMaster.foodAmt = "%.4f".format(amt).toDouble()
         val mutableList = mutableListOf<ItemMasterFoodItem>()
         if (arrItem.isNotEmpty()) {

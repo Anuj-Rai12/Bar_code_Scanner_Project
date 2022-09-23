@@ -1,15 +1,23 @@
 package com.example.mpos.utils.print
+/*
 
 import android.app.Activity
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.dantsu.escposprinter.EscPosPrinter
+import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.data.confirmOrder.response.json.ItemList
+import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.getEmojiByUnicode
 import com.example.mpos.utils.msg
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import java.lang.StringBuilder
 
 class PrintBill(
@@ -27,6 +35,14 @@ class PrintBill(
 
     private val printNotConnected =
         "Please Enable Bluetooth or\nCheck POS print is Connected Or Not?"
+
+    private val line = "------------------------------------------------\n"
+
+    private val underLine = "<u>                                                </u>\n"
+
+    private val header = "${createNewString("Description", 25)}${createNewString("Qty", 7)}" +
+            "${createNewString("Price", 8)}${createNewString("Amount", 10)}\n"
+
 
     private val orderNo = "Order No.:"
     private val desc = "Description"
@@ -55,7 +71,7 @@ class PrintBill(
                             addDash(printer) +
                             "[L] $orderNo" + responseBody.orderId + "[R]" + responseBody.datetime + "\n" +
                             addDash(printer) +
-                            "[L]" + "$desc        " + "[R]" + "$qty   "  + "[R]" + "$price   " + "[R]" + "$amt\n" +
+                            "[L]" + "$desc        " + "[R]" + "$qty   " + "[R]" + "$price   " + "[R]" + "$amt\n" +
                             addDash(printer) +
                             addTableInfo(list = responseBody.itemList) +
                             addDash(printer) +
@@ -80,6 +96,89 @@ class PrintBill(
         }
     }
 
+
+    private fun createNewString(msg: String, size: Int): String {
+        val spaceStr = StringBuilder()
+        if (msg.length > size) {
+            var space = 2
+            spaceStr.append(msg.substring(0, size - 2))
+            while (space != 0) {
+                spaceStr.append(" ")
+                space -= 1
+            }
+            return spaceStr.toString()
+        }
+
+        var space = size - msg.length
+        spaceStr.append(msg)
+        while (space != 0) {
+            spaceStr.append(" ")
+            space -= 1
+        }
+
+        return spaceStr.toString()
+    }
+
+
+    private fun doPrintTest(responseBody: PrintReceiptInfo) = flow {
+        emit("Printing")
+        try {
+            val connection: BluetoothConnection? = BluetoothPrintersConnections.selectFirstPaired()
+            connection?.let {
+                val printer = EscPosPrinter(connection, 203, 80f, 32)
+                val stringBuilder = StringBuilder()
+
+                stringBuilder.append(
+                    "[C]$underLine" +
+                            "[L][C]${responseBody.headerTxt}\n" +
+                            "[L][C]" + "${responseBody.headerTxt2}\n" +
+                            "[C]$line" +
+                            "[L] Order No .: " + "[R]${responseBody.orderId}  " + "[R]" + responseBody.datetime + "\n" +
+                            "[C]$line" +
+                            "[L]" + header +
+                            "[C]$line" +
+                            setTable(responseBody.itemList) +
+                            "[C]$line" +
+                            "[L]" + "${
+                        createNewString(
+                            "Total Amt Excel. Of GST",
+                            40
+                        )
+                    }${createNewString(responseBody.amtExclGST, 10)}\n" +
+                            "[C]$line" +
+                            "[L]" + "${
+                        createNewString(
+                            "No. of Items ",
+                            40
+                        )
+                    }${createNewString(responseBody.itemList.size.toString(), 10)}\n" +
+                            "[C]$line" +
+                            "[L]" + "${
+                        createNewString(
+                            "Total Amt Inc. Of GST",
+                            40
+                        )
+                    }${createNewString(responseBody.amtInclGST, 10)}\n" +
+                            "[C]$line" +
+                            "[L]" + "${createNewString("Total", 40)}${
+                        createNewString(
+                            responseBody.amtInclGST,
+                            10
+                        )
+                    }\n" +
+                            "[C]$underLine"
+                )
+
+
+                printer.printFormattedText(stringBuilder.toString())
+                printer.disconnectPrinter()
+                emit("Success")
+            } ?: emit("Please connect to Printer")
+        } catch (e: Exception) {
+            emit("Error ${e.localizedMessage!!}")
+        }
+    }.flowOn(Dispatchers.IO)
+
     private fun addTableInfo(list: List<ItemList>): String {
         val stringBuilder = StringBuilder()
         list.forEach { foodItem ->
@@ -93,6 +192,24 @@ class PrintBill(
         }
         return stringBuilder.toString()
     }
+
+
+    private fun setTable(list: List<ItemList>): String {
+        val stringBuilder = StringBuilder()
+        list.forEach { item ->
+            val value =
+                "[L]${createNewString(item.description, 25)}${
+                    createNewString(
+                        "${item.qty}.00",
+                        7
+                    )
+                }" +
+                        "${createNewString(item.price, 8)}${createNewString(item.amount, 10)}\n"
+            stringBuilder.append(value)
+        }
+        return stringBuilder.toString()
+    }
+
 
     private fun setString(mainString: String, other: String): String {
         return if (mainString.length > other.length) {
@@ -117,4 +234,4 @@ class PrintBill(
         return stringBuilder.toString()
     }
 
-}
+}*/

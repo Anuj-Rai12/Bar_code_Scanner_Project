@@ -160,8 +160,7 @@ fun View.showSandbar(
 }
 
 
-fun genToken(value: String): String =
-    Base64.encodeToString(value.toByteArray(), Base64.NO_WRAP)
+fun genToken(value: String): String = Base64.encodeToString(value.toByteArray(), Base64.NO_WRAP)
 
 fun <T> serializeToJson(bmp: T): String? {
     val gson = Gson()
@@ -247,16 +246,14 @@ fun Activity.changeStatusBarColor(color: Int = R.color.light_blue_bg_two) {
 fun View.changeViewColor(color: Int) {
     this.setBackgroundColor(
         this.context.resources.getColor(
-            color,
-            null
+            color, null
         )
     )
 }
 
 val listOfBg by lazy {
     arrayOf(
-        R.drawable.food_item_one_selcetion_layout,
-        R.drawable.food_item_two_selection_layout
+        R.drawable.food_item_one_selcetion_layout, R.drawable.food_item_two_selection_layout
     )
 }
 
@@ -274,18 +271,14 @@ fun Activity.checkBlueAdminPermission() =
 
 fun Activity.checkBlueConnectPermission() =
     (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && EasyPermissions.hasPermissions(
-        this,
-        Manifest.permission.BLUETOOTH_CONNECT
-    )
-            )
+        this, Manifest.permission.BLUETOOTH_CONNECT
+    ))
 
 
 fun Activity.checkBlueScanPermission() =
     (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && EasyPermissions.hasPermissions(
-        this,
-        Manifest.permission.BLUETOOTH_SCAN
-    )
-            )
+        this, Manifest.permission.BLUETOOTH_SCAN
+    ))
 
 fun makeStringAlphaNumericForm(name: String): String {
     //val name = "12434adfjks%^&$" //"I>télé"; //fbts
@@ -328,14 +321,10 @@ fun Activity.addDialogMaterial(
 
 
     val material = MaterialAlertDialogBuilder(
-        this,
-        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+        this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
     )
 
-    material
-        .setView(binding.root)
-        .setTitle(title)
-        .setPositiveButton("Done") { dialog, _ ->
+    material.setView(binding.root).setTitle(title).setPositiveButton("Done") { dialog, _ ->
             val customerName = binding.customerNameEd.text?.toString()
             val customerNumber = binding.customerNumberEd.text?.toString()
             val coverNumber = binding.coverNumEd.text.toString()
@@ -377,20 +366,15 @@ fun Activity.addDialogMaterial(
             msg("Saved")
             listener.invoke(confirmDiningRequest, true)
             dialog.dismiss()
-        }.setCancelable(false)
-        .setNegativeButton("Cancel") { dialog, _ ->
+        }.setCancelable(false).setNegativeButton("Cancel") { dialog, _ ->
             cancel.invoke()
             dialog.dismiss()
-        }
-        .create().show()
+        }.create().show()
 }
 
 
 fun Activity.addReservation(
-    title: String,
-    fragmentManager: FragmentManager,
-    cancel: () -> Unit,
-    listener: AddReservation
+    title: String, fragmentManager: FragmentManager, cancel: () -> Unit, listener: AddReservation
 ) {
     val binding = ConfirmOrderDialogLayoutBinding.inflate(layoutInflater)
 
@@ -398,13 +382,9 @@ fun Activity.addReservation(
     var isDatePickerClick = false
 
     val material = MaterialAlertDialogBuilder(
-        this,
-        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+        this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
     )
-    material
-        .setView(binding.root)
-        .setCancelable(false)
-        .setTitle(title)
+    material.setView(binding.root).setCancelable(false).setTitle(title)
         .setPositiveButton("Done") { dialog, _ ->
             val cover = binding.coverNumEd.text.toString()
             val phone = binding.customerNumberEd.text.toString()
@@ -499,21 +479,14 @@ fun Activity.addReservation(
 
 
 fun Activity.timePicker(
-    fragmentManager: FragmentManager,
-    timeListener: (txt: String) -> Unit,
-    cancel: () -> Unit
+    fragmentManager: FragmentManager, timeListener: (txt: String) -> Unit, cancel: () -> Unit
 ) {
 
     //val isSystem24Hour = is24HourFormat(this)
     //val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
 
-    val timePicker = MaterialTimePicker
-        .Builder()
-        .setTimeFormat(TimeFormat.CLOCK_24H)
-        .setTitleText("Select Booking Time")
-        .setHour(10)
-        .setMinute(56)
-        .build()
+    val timePicker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H)
+        .setTitleText("Select Booking Time").setHour(10).setMinute(56).build()
 
     timePicker.addOnPositiveButtonClickListener {
         val time = if (timePicker.hour < 12) {
@@ -540,17 +513,11 @@ fun Activity.timePicker(
 
 
 fun Activity.calenderPicker(
-    fragmentManager: FragmentManager,
-    cancel: () -> Unit,
-    dateListener: (txt: String) -> Unit
+    fragmentManager: FragmentManager, cancel: () -> Unit, dateListener: (txt: String) -> Unit
 ) {
     val constraint = CalendarConstraints.Builder().setValidator(DateValidatorPointForward.now())
-    val datePicker = MaterialDatePicker
-        .Builder
-        .datePicker()
-        .setTitleText("Select Booking Date")
-        .setCalendarConstraints(constraint.build())
-        .build()
+    val datePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select Booking Date")
+        .setCalendarConstraints(constraint.build()).build()
 
 
     datePicker.addOnCancelListener {
@@ -584,14 +551,10 @@ fun Fragment.showDialogBox(
     listener: () -> Unit
 ) {
     val material = MaterialAlertDialogBuilder(
-        requireActivity(),
-        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog_simple
+        requireActivity(), R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog_simple
     )
 
-    val dialog = material.setTitle(title)
-        .setMessage(desc)
-        .setIcon(icon)
-        .setCancelable(isCancel)
+    val dialog = material.setTitle(title).setMessage(desc).setIcon(icon).setCancelable(isCancel)
         .setPositiveButton(btn) { dialog, _ ->
             listener.invoke()
             dialog.dismiss()
@@ -617,17 +580,13 @@ fun Fragment.showQtyDialog(
     amount: (ItemMaster) -> Unit
 ) {
     val materialDialogs = MaterialAlertDialogBuilder(
-        requireActivity(),
-        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+        requireActivity(), R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
     )
 
     val binding = QtyIncrementLayoutBinding.inflate(layoutInflater)
-    val dialog = materialDialogs.setView(binding.root)
-        .setCancelable(isCancelable)
-        .show()
+    val dialog = materialDialogs.setView(binding.root).setCancelable(isCancelable).show()
     binding.qtyEdLayout.hint = "Please Enter $type"
-    if (!checkFieldValue(value))
-        binding.qtyEd.setText(value)
+    if (!checkFieldValue(value)) binding.qtyEd.setText(value)
     if (type != "Quantity" && type != "Amount") {
         binding.qtyEd.inputType = InputType.TYPE_CLASS_TEXT
     } else {
@@ -648,14 +607,24 @@ fun Fragment.showQtyDialog(
                 try {
                     if (isDecimal) {
                         qty.toDouble()
+                        if (qty.toDouble() <= 0.0) {
+                            activity?.msg("$type should not be Zero")
+                            return@setOnClickListener
+                        }
                     }
                 } catch (e: Exception) {
                     activity?.msg("Please Enter the Correct $type")
                     return@setOnClickListener
                 }
 
+
                 if (!isDecimal && !qty.isDigitsOnly()) {
                     activity?.msg("Please Enter Correct $type")
+                    return@setOnClickListener
+                }
+
+                if (!isDecimal && qty.toInt() <= 0) {
+                    activity?.msg("$type should not be Zero")
                     return@setOnClickListener
                 }
                 itemMaster.foodQty = "%.2f".format(qty.toDouble()).toDouble()
@@ -671,9 +640,13 @@ fun Fragment.showQtyDialog(
                     activity?.msg("Please Enter the Correct $type")
                     return@setOnClickListener
                 }
+                if (amt <= 0.0) {
+                    activity?.msg("$type should not be Zero")
+                    return@setOnClickListener
+                }
+
                 amt = "%.4f".format(amt).toDouble()
-                val itemQty =
-                    (amt / ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice))
+                val itemQty = (amt / ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice))
                 itemMaster.foodQty = "%.2f".format(itemQty).toDouble()
                 itemMaster.foodAmt = amt
                 amount.invoke(itemMaster)
@@ -694,14 +667,11 @@ fun Fragment.showQtyDialog(
 
 fun Activity.showDialogBoxToGetUrl(scan: () -> Unit, done: (String) -> Unit) {
     val materialDialogs = MaterialAlertDialogBuilder(
-        this,
-        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+        this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
     )
 
     val binding = QtyIncrementLayoutBinding.inflate(layoutInflater)
-    val dialog = materialDialogs.setView(binding.root)
-        .setCancelable(false)
-        .show()
+    val dialog = materialDialogs.setView(binding.root).setCancelable(false).show()
 
     binding.qtyEdLayout.hint = "Please Add Url"
     binding.qtyEd.inputType = InputType.TYPE_CLASS_TEXT
@@ -728,8 +698,7 @@ fun Activity.showDialogBoxToGetUrl(scan: () -> Unit, done: (String) -> Unit) {
 
 fun Activity.dialogOption(list: List<String>, fragment: Fragment) {
     val materialDialogs = MaterialAlertDialogBuilder(
-        this,
-        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+        this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
     )
     val adaptor = AlertDialogListAdapter(this)
     adaptor.addItem(list)
@@ -743,8 +712,7 @@ fun Activity.dialogOption(list: List<String>, fragment: Fragment) {
             val userID = RestaurantSingletonCls.getInstance().getUserId()
             val storeID = RestaurantSingletonCls.getInstance().getStoreId()
             fragment.showDialogBox(
-                title = "About User",
-                desc = "Store ID :$storeID\nUser ID :$userID"
+                title = "About User", desc = "Store ID :$storeID\nUser ID :$userID"
             ) {}
         } else {
             materialDialogs.show()
@@ -757,14 +725,11 @@ fun Activity.dialogOption(list: List<String>, fragment: Fragment) {
 
 fun Activity.showDialogForDeleteInfo(title: String) {
     val materialDialogs = MaterialAlertDialogBuilder(
-        this,
-        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+        this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
     )
 
     val binding = QtyIncrementLayoutBinding.inflate(layoutInflater)
-    materialDialogs
-        .setView(binding.root)
-        .show()
+    materialDialogs.setView(binding.root).show()
     binding.qtyEd.hide()
     binding.btnDone.hide()
     binding.btnCancel.hide()

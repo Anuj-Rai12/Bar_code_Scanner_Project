@@ -8,5 +8,5 @@ data class ItemList(
     @SerializedName("description") val description: String,
     @SerializedName("itemcode") val itemCode: String,
     @SerializedName("price") val price: String,
-    @SerializedName("Qty") val qty: Long
+    @SerializedName("Qty") val qty: Double
 )
