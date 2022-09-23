@@ -273,7 +273,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                     itemDescription = barcode.itemDescription,
                     itemCode = barcode.itemCode,
                     itemName = barcode.itemName,
-                    uOM = barcode.uOM
+                    uOM = barcode.uOM,
+                    decimalAllowed = barcode.decimalAllowed
                 )
                 itemMaster.foodQty = barcode.qty
                 itemMaster.foodAmt =

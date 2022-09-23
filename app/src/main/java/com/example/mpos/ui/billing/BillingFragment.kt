@@ -537,7 +537,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             itemDescription = barcode.itemDescription,
             itemCode = barcode.itemCode,
             itemName = barcode.itemName,
-            uOM = barcode.uOM
+            uOM = barcode.uOM,
+            decimalAllowed = barcode.decimalAllowed
         )
         itemMaster.foodQty = barcode.qty
         itemMaster.foodAmt =

@@ -22,7 +22,7 @@ data class ItemMaster(
     @SerializedName("ItemName") val itemName: String,
     @SerializedName("SalePrice") val salePrice: String,
     @SerializedName("UOM") val uOM: String,
-
+    @SerializedName("decimalAllowed") val decimalAllowed: String,
     ) : Parcelable {
     @IgnoredOnParcel
     var foodQty: Int = 1

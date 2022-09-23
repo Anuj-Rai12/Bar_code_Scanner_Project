@@ -36,7 +36,8 @@ class DealsStoreInstance {
                 deals.description,
                 deals.description,
                 deals.price.toString(),
-                deals.price.toString()
+                deals.price.toString(),
+                decimalAllowed = false.toString()
             ),
             foodQty = 1,
             foodAmt = deals.price,

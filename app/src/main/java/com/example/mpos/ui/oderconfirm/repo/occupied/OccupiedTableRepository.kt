@@ -54,7 +54,8 @@ class OccupiedTableRepository(retrofit: Retrofit) {
                         salePrice = ListOfFoodItemToSearchAdaptor.setPrice(it.itemMaster.salePrice).toString(),
                         uOM = it.itemMaster.uOM,
                         itemCategory = it.itemMaster.itemCategory,
-                        itemName = it.itemMaster.itemName
+                        itemName = it.itemMaster.itemName,
+                        decimalAllowed = false.toString()
                     ), foodQty = it.foodQty
                 )
             )
