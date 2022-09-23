@@ -544,6 +544,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     updateQtyDialogBox(res)
                 }, itemClickInstructionLinter = { res ->
                     updateFreeTxt(res)
+                }, itemClickAmountLinter = { res ->
+                    updateAmount(res)
                 })
             adapter = confirmOderFragmentAdaptor
         }
@@ -563,12 +565,27 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt),
                     itemRemoved = itemMasterFoodItem
                 )
-            }, isDecimal = false
-        )
+            }, isDecimal = false, amount = {})
+    }
+
+    private fun updateAmount(itemMasterFoodItem: ItemMasterFoodItem) {
+        showQtyDialog(true,
+            itemMasterFoodItem.itemMaster,
+            type = "Amount",
+            isDecimal = true,
+            cancel = {},
+            res = {},
+            instruction = {}, amount = {
+                viewModel.addUpdateQty(
+                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                    itemRemoved = itemMasterFoodItem
+                )
+            })
     }
 
     private fun updateQtyDialogBox(itemMasterFoodItem: ItemMasterFoodItem) {
-        showQtyDialog(true,
+        showQtyDialog(
+            true,
             itemMasterFoodItem.itemMaster,
             cancel = {},
             res = {
@@ -579,7 +596,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             },
             instruction = { },
             isDecimal = itemMasterFoodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
-                .toBoolean())
+                .toBoolean(), amount = {})
     }
 
 
@@ -608,7 +625,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             decimalAllowed = barcode.decimalAllowed
         )
         itemMaster.foodQty = barcode.qty.toDouble()
-        val amt=(ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
+        val amt =
+            (ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
         itemMaster.foodAmt = "%.4f".format(amt).toDouble()
 
         val mutableList = mutableListOf<ItemMasterFoodItem>()

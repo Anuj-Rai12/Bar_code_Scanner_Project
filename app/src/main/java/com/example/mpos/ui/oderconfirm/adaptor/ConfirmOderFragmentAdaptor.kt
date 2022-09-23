@@ -14,11 +14,13 @@ import com.example.mpos.R
 import com.example.mpos.databinding.ListOfFoodItemSelectedBinding
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.utils.*
+import java.util.*
 
 class ConfirmOderFragmentAdaptor(
     private val itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
     private val itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit,
     private val itemClickInstructionLinter: (foodItem: ItemMasterFoodItem) -> Unit,
+    private val itemClickAmountLinter: (foodItem: ItemMasterFoodItem) -> Unit,
 ) :
     ListAdapter<ItemMasterFoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
 
@@ -55,7 +57,8 @@ class ConfirmOderFragmentAdaptor(
             foodItem: ItemMasterFoodItem,
             itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
             itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit,
-            itemClickInstructionLinter: (foodItem: ItemMasterFoodItem) -> Unit
+            itemClickInstructionLinter: (foodItem: ItemMasterFoodItem) -> Unit,
+            itemClickAmountLinter: (foodItem: ItemMasterFoodItem) -> Unit
         ) {
             binding.apply {
                 foodItemName.apply {
@@ -87,6 +90,13 @@ class ConfirmOderFragmentAdaptor(
                 }
 
 
+                amtOfFoodTv.setOnClickListener {
+                    if (!foodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault()).toBoolean()){
+                        root.showSandbar("Cannot change Amount")
+                        return@setOnClickListener
+                    }
+                    itemClickAmountLinter.invoke(foodItem)
+                }
 
 
                 qtyOfFood.setOnClickListener {
@@ -169,7 +179,7 @@ class ConfirmOderFragmentAdaptor(
             } else {
                 holder.checkBoxView.hide()
             }
-            holder.setData(it, itemClickListerForFoodSelected, itemClickListerForUpdate,itemClickInstructionLinter)
+            holder.setData(it, itemClickListerForFoodSelected, itemClickListerForUpdate,itemClickInstructionLinter,itemClickAmountLinter)
         }
     }
 }

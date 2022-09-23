@@ -41,7 +41,7 @@ class DealsAdaptor<T>(private val list: List<T>) :
                     orderList.add(
                         OfferDesc(
                             title = it.description,
-                            price = data.price.toDouble(),
+                            price = data.price,
                             selected = true
                         )
                     )

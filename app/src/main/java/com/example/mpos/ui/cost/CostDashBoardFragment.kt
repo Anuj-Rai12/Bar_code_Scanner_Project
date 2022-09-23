@@ -429,9 +429,26 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                     updateQtyDialogBox(res)
                 }, itemClickInstructionLinter = { res ->
                     updateFreeTxt(res)
+                }, itemClickAmountLinter = {res->
+                    updateAmount(res)
                 })
             adapter = confirmOderFragmentAdaptor
         }
+    }
+
+    private fun updateAmount(itemMasterFoodItem: ItemMasterFoodItem) {
+        showQtyDialog(true,
+            itemMasterFoodItem.itemMaster,
+            type = "Amount",
+            isDecimal = true,
+            cancel = {},
+            res = {},
+            instruction = {}, amount = {
+                confirmOrderViewModel.addUpdateQty(
+                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                    itemRemoved = itemMasterFoodItem
+                )
+            })
     }
 
     private fun updateFreeTxt(itemMasterFoodItem: ItemMasterFoodItem) {
@@ -451,7 +468,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                     food = food,
                     itemRemoved = itemMasterFoodItem
                 )
-            })
+            }, amount = {})
     }
 
     private fun setCallBack() {
@@ -564,7 +581,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
                 itemRemoved = itemMasterFoodItem
             )
-        }, instruction = {})
+        }, instruction = {}, amount = {})
     }
 
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {

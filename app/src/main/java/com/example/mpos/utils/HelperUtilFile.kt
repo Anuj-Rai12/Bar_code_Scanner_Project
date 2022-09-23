@@ -3,7 +3,6 @@ package com.example.mpos.utils
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Build
 import android.text.InputType
@@ -614,7 +613,8 @@ fun Fragment.showQtyDialog(
     isDecimal: Boolean,
     cancel: (Boolean) -> Unit,
     res: (ItemMaster) -> Unit,
-    instruction: (String) -> Unit
+    instruction: (String) -> Unit,
+    amount: (ItemMaster) -> Unit
 ) {
     val materialDialogs = MaterialAlertDialogBuilder(
         requireActivity(),
@@ -628,41 +628,59 @@ fun Fragment.showQtyDialog(
     binding.qtyEdLayout.hint = "Please Enter $type"
     if (!checkFieldValue(value))
         binding.qtyEd.setText(value)
-    if (type != "Quantity") {
+    if (type != "Quantity" && type != "Amount") {
         binding.qtyEd.inputType = InputType.TYPE_CLASS_TEXT
     } else {
         if (isDecimal) {
-            binding.qtyEd.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            binding.qtyEd.inputType =
+                InputType.TYPE_NUMBER_FLAG_SIGNED or InputType.TYPE_NUMBER_FLAG_DECIMAL
         }
     }
     binding.btnDone.setOnClickListener {
-        val qty = binding.qtyEd.text.toString()
-        if (checkFieldValue(qty)) {
+        val txt = binding.qtyEd.text.toString()
+        if (checkFieldValue(txt)) {
             activity?.msg("Please Enter $type")
             return@setOnClickListener
         }
-        if (type == "Quantity") {
-
-            try {
-                if (isDecimal) {
-                    qty.toDouble()
+        when (type) {
+            "Quantity" -> {
+                val qty = binding.qtyEd.text.toString()
+                try {
+                    if (isDecimal) {
+                        qty.toDouble()
+                    }
+                } catch (e: Exception) {
+                    activity?.msg("Please Enter the Correct $type")
+                    return@setOnClickListener
                 }
-            } catch (e: Exception) {
-                activity?.msg("Please Enter the Correct $type")
-                return@setOnClickListener
-            }
 
-            if (!isDecimal && !qty.isDigitsOnly()) {
-                activity?.msg("Please Enter Correct $type")
-                return@setOnClickListener
-            }
-            itemMaster.foodQty = qty.toDouble()
-            val amt=(ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * qty.toDouble())
-            itemMaster.foodAmt ="%.4f".format(amt).toDouble()
+                if (!isDecimal && !qty.isDigitsOnly()) {
+                    activity?.msg("Please Enter Correct $type")
+                    return@setOnClickListener
+                }
+                itemMaster.foodQty = "%.2f".format(qty.toDouble()).toDouble()
+                val amt =
+                    (ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
+                itemMaster.foodAmt = "%.4f".format(amt).toDouble()
 
-            res.invoke(itemMaster)
-        } else {
-            instruction.invoke(qty)
+                res.invoke(itemMaster)
+            }
+            "Amount" -> {
+                var amt = binding.qtyEd.text.toString().toDoubleOrNull()
+                if (amt == null) {
+                    activity?.msg("Please Enter the Correct $type")
+                    return@setOnClickListener
+                }
+                amt = "%.4f".format(amt).toDouble()
+                val itemQty =
+                    (amt / ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice))
+                itemMaster.foodQty = "%.2f".format(itemQty).toDouble()
+                itemMaster.foodAmt = amt
+                amount.invoke(itemMaster)
+            }
+            else -> {
+                instruction.invoke(txt)
+            }
         }
         dialog.dismiss()
     }

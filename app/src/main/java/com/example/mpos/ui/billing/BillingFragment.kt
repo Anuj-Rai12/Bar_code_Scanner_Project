@@ -313,9 +313,26 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     updateQtyDialogBox(res)
                 }, itemClickInstructionLinter = { res ->
                     updateFreeTxt(res)
+                }, itemClickAmountLinter = {res->
+                    updateAmount(res)
                 })
             adapter = confirmOderFragmentAdaptor
         }
+    }
+
+    private fun updateAmount(itemMasterFoodItem: ItemMasterFoodItem) {
+        showQtyDialog(true,
+            itemMasterFoodItem.itemMaster,
+            type = "Amount",
+            isDecimal = true,
+            cancel = {},
+            res = {},
+            instruction = {}, amount = {
+                confirmOrderViewModel.addUpdateQty(
+                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                    itemRemoved = itemMasterFoodItem
+                )
+            })
     }
 
     private fun updateQtyDialogBox(itemMasterFoodItem: ItemMasterFoodItem) {
@@ -331,7 +348,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     itemRemoved = itemMasterFoodItem
                 )
             },
-            instruction = {})
+            instruction = {}, amount = {})
     }
 
 
@@ -351,8 +368,12 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     food = food,
                     itemRemoved = itemMasterFoodItem
                 )
-            }, isDecimal = false)
+            }, isDecimal = false,amount = {})
     }
+
+
+
+
 
 
     @SuppressLint("NotifyDataSetChanged")
