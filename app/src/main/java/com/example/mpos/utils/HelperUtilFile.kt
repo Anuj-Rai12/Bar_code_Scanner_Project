@@ -129,6 +129,9 @@ object AllStringConst {
 
         const val sendBillingEtc =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:SendBillingToEDC"
+
+        const val checkStatusBillingEDC="urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CheckStatusBillingEDC"
+
     }
 
 

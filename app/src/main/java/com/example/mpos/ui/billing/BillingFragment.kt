@@ -20,6 +20,8 @@ import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequestBody
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequestBody
+import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
+import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequestBody
 import com.example.mpos.data.cofirmDining.ConfirmDiningBody
 import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
@@ -99,6 +101,10 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         getPosItemRequest()
         getConfirmOrderResponse()
         getSendBillToEdcResponse()
+
+
+        //Check Bill Status
+        getCheckBillResponse()
 
         binding.foodMnuBtn.setOnClickListener {
             val mnuBottom = MenuBottomSheetFragment("Order Menu")
@@ -268,6 +274,33 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             }
         }
     }
+
+
+    private fun getCheckBillResponse() {
+        viewModel.checkBillingStatus.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> showPb("${it.data}")
+                is ApisResponse.Success -> {
+                    hidePb()
+                    arrItem.clear()
+                    confirmOrderViewModel.getOrderList(null)
+                    activity?.msg("Working on Print Status")
+                }
+            }
+        }
+    }
+
+
 
 
     private fun getSendBillToEdcResponse() {
