@@ -100,7 +100,7 @@ class CostDashBoardRepository(retrofit: Retrofit) {
                     if (res.body?.returnValue.toBoolean()){
                         ApisResponse.Success(null)
                     }else{
-                        ApisResponse.Error("Cannot Find status for Receipt ${request.body?.mPosDoc}",null)
+                        ApisResponse.Success("Invoice is Generated Successfully for Receipt ${request.body?.mPosDoc}")
                     }
                 } ?: ApisResponse.Error(MenuRepository.nullError, null)
             } else {
@@ -111,6 +111,9 @@ class CostDashBoardRepository(retrofit: Retrofit) {
         }
         emit(data)
     }.flowOn(IO)
+
+
+
 
 
 }

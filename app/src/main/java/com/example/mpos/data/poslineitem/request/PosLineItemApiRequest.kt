@@ -43,9 +43,9 @@ data class MunItemContainer @JvmOverloads constructor(
 
 
 @Root(name = "MPOSLineInsert", strict = true)
-@org.simpleframework.xml.Order(
+@Order(
     elements = ["ItemNo", "RcptNo",
-        "Qty", "SalesType", "TransDate", "TransTime", "StoreNo", "P_FreeText", "P_Price"]
+        "Qty", "SalesType", "TransDate", "TransTime", "StoreNo", "P_FreeText", "P_Price","DealLine","ParentItemCrossSelling"]
 )
 data class MenuItem @JvmOverloads constructor(
 
@@ -90,6 +90,10 @@ data class MenuItem @JvmOverloads constructor(
     @param:Element(name = "DealLine")
     val dealLine: String? = null,
 
+
+    @field:Element(name = "ParentItemCrossSelling")
+    @param:Element(name = "ParentItemCrossSelling")
+    val ParentItemCrossSelling: String = "", //for now it will empty
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
     val xmlns: String = AllStringConst._xmlsList

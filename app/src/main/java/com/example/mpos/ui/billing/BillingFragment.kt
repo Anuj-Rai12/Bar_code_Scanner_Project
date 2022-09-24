@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -61,6 +63,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
     private var confirmBillingRequest: ConfirmBillingRequest? = null
 
 
+    private var isOptionMnuVisible: Boolean = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
@@ -106,6 +110,15 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         //Check Bill Status
         getCheckBillResponse()
 
+        binding.option.setOnClickListener {
+            if (isOptionMnuVisible) {
+                hideOptionMnu()
+            } else {
+                showOptionMenu()
+            }
+            isOptionMnuVisible = !isOptionMnuVisible
+        }
+
         binding.foodMnuBtn.setOnClickListener {
             val mnuBottom = MenuBottomSheetFragment("Order Menu")
             mnuBottom.onBottomSheetClickListener = this
@@ -135,6 +148,31 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
             activity?.dialogOption(listOf("Option\n", "About User\n", "Help\n"), this)
+        }
+
+
+        binding.foodMnuBtn.setOnLongClickListener {
+            activity?.msg("Food Menu")
+            return@setOnLongClickListener true
+        }
+
+        binding.checkStatusIc.setOnLongClickListener {
+            activity?.msg("Check Bill Status")
+            return@setOnLongClickListener true
+        }
+
+        binding.checkStatusIc.setOnClickListener {
+            if (receiptNo != null) {
+                viewModel.checkBillingStatus(
+                    CheckBillingStatusRequest(
+                        CheckBillingStatusRequestBody(
+                            mPosDoc = receiptNo!!
+                        )
+                    )
+                )
+            } else {
+                viewModel.addError("Cannot find Receipt No")
+            }
         }
 
         binding.searchBoxTxt.setOnClickListener {
@@ -292,15 +330,23 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    arrItem.clear()
-                    confirmOrderViewModel.getOrderList(null)
-                    activity?.msg("Working on Print Status")
+                    it.data?.let { res ->
+                        showDialogBox(
+                            "Success",
+                            res,
+                            icon = R.drawable.ic_success,
+                            isCancel = false
+                        ) {
+                            findNavController().popBackStack()
+                        }
+                    } ?: run {
+                        //Run Print Invoice API
+                    }
+
                 }
             }
         }
     }
-
-
 
 
     private fun getSendBillToEdcResponse() {
@@ -325,9 +371,9 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         "Success",
                         "Completed the Billing for All Food Item Successfully",
                         icon = R.drawable.ic_success,
-                        isCancel = false
+                        isCancel = true
                     ) {
-                        findNavController().popBackStack()
+                        //findNavController().popBackStack()
                     }
                 }
             }
@@ -551,6 +597,57 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         binding.pbLayout.root.hide()
     }
 
+
+    private fun showOptionMenu() {
+        activity?.let {
+            val enterAnim = AnimationUtils.loadAnimation(activity, R.anim.enter_anim)
+            enterAnim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {}
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    binding.option.setImageResource(R.drawable.ic_close_24)
+                }
+
+                override fun onAnimationRepeat(animation: Animation?) {
+                }
+            })
+            binding.foodMnuBtn.show()
+            binding.checkStatusIc.show()
+            binding.foodMnuBtn.animation = enterAnim
+            binding.checkStatusIc.animation = enterAnim
+        } ?: run {
+            binding.foodMnuBtn.show()
+            binding.checkStatusIc.show()
+            binding.option.setImageResource(R.drawable.ic_close_24)
+        }
+    }
+
+
+    private fun hideOptionMnu() {
+        activity?.let {
+            val enterAnim = AnimationUtils.loadAnimation(activity, R.anim.pop_exit_anim)
+            enterAnim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {}
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    binding.option.setImageResource(R.drawable.option_menu)
+                }
+
+                override fun onAnimationRepeat(animation: Animation?) {
+                }
+            })
+            binding.foodMnuBtn.hide()
+            binding.checkStatusIc.hide()
+            binding.foodMnuBtn.animation = enterAnim
+            binding.checkStatusIc.animation = enterAnim
+        } ?: run {
+            binding.foodMnuBtn.hide()
+            binding.checkStatusIc.hide()
+            binding.option.setImageResource(R.drawable.option_menu)
+        }
+    }
+
+
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
         binding.root.showSandbar(
             msg, length, requireActivity().getColorInt(color)
@@ -558,6 +655,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             return@showSandbar "OK"
         }
     }
+
 
     override fun <T> onItemClicked(response: T) {
         val barcode = response as BarcodeJsonResponse
