@@ -73,7 +73,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                     null,
                     FoodItemList(arrItem),
                     customDiningRequest,
-                    WhereToGoFromScan.SHOWROOMESTIMATE.name
+                    WhereToGoFromScan.RESTAURANTESTIMATE.name
                 )
             findNavController().navigate(action)
         }
@@ -155,7 +155,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                     null,
                     FoodItemList(arrItem),
                     customDiningRequest,
-                    WhereToGoFromSearch.SHOWROOMESTIMATE.name
+                    WhereToGoFromSearch.RESTAURANTESTIMATE.name
                 )
             findNavController().navigate(action)
         }
