@@ -20,6 +20,9 @@ import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequestBody
+import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
+import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
+import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequestBody
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequestBody
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
@@ -41,6 +44,7 @@ import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.use_case.AlphaNumericString
 import com.example.mpos.utils.*
+import com.example.mpos.utils.print.recpit.PrintViewModel
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
@@ -52,8 +56,9 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private val confirmOrderViewModel: ConfirmOrderFragmentViewModel by viewModels()
     private val viewModel: CostDashBoardViewModel by viewModels()
+    private val printBillViewModel: PrintViewModel by viewModels()
 
-
+    private var isPrinterConnected: Boolean = false
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: CostDashBoardFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
@@ -108,8 +113,10 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
 
         //Check Bill Status
+        getPrintConnectResponse()
         getCheckBillResponse()
-
+        getPrintInvoiceResponse()
+        getBillPrintResponse()
         binding.option.setOnClickListener {
             if (isOptionMnuVisible) {
                 hideOptionMnu()
@@ -129,7 +136,6 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 viewModel.addError("Please Add Item Menu !!")
                 return@setOnClickListener
             }
-
             if (setUpCostEstimation()) {
                 viewModel.confirmBilling(confirmBillingRequest!!)
             } else {
@@ -163,13 +169,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
         binding.checkStatusIc.setOnClickListener {
             if (receiptNo != null) {
-                viewModel.checkBillingStatus(
-                    CheckBillingStatusRequest(
-                        CheckBillingStatusRequestBody(
-                            mPosDoc = receiptNo!!
-                        )
-                    )
-                )
+                printBillViewModel.isPrintConnected()
             } else {
                 viewModel.addError("Cannot find Receipt No")
             }
@@ -217,6 +217,108 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             )
         )
         return true
+    }
+
+
+
+    private fun getBillPrintResponse() {
+        printBillViewModel.doPrinting.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    showPb("${it.data}")
+                }
+                is ApisResponse.Success -> {
+                    hidePb()
+                    showDialogBox(
+                        "Success",
+                        "${it.data}",
+                        icon = R.drawable.ic_success,
+                        isCancel = false
+                    ) {
+                        findNavController().popBackStack()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getPrintInvoiceResponse() {
+        viewModel.printBillInvoice.observe(viewLifecycleOwner){
+            when(it){
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    showPb("${it.data}")
+                }
+                is ApisResponse.Success -> {
+                    hidePb()
+                    (it.data as PrintInvoice?)?.let { printInvoice ->
+                        Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
+                    printBillViewModel.doPrintInvoice(printInvoice)
+                    }?:run{
+                        showDialogBox(
+                            "Success", "Invoice Generate Successfully", icon = R.drawable.ic_success, isCancel = false
+                        ) {
+                            findNavController().popBackStack()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getPrintConnectResponse() {
+        printBillViewModel.isPrinterConnected.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    isPrinterConnected = false
+                    showDialogBox(
+                        "Error", it.data!!, btn = "Yes", cancel = "No"
+                    ) {
+                        viewModel.checkBillingStatus(
+                            CheckBillingStatusRequest(
+                                CheckBillingStatusRequestBody(
+                                    mPosDoc = receiptNo!!
+                                )
+                            )
+                        )
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    showPb("${it.data}")
+                }
+                is ApisResponse.Success -> {
+                    hidePb()
+                    isPrinterConnected = true
+                    viewModel.checkBillingStatus(
+                        CheckBillingStatusRequest(
+                            CheckBillingStatusRequestBody(
+                                mPosDoc = receiptNo!!
+                            )
+                        )
+                    )
+                }
+            }
+        }
     }
 
 
@@ -330,19 +432,19 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    it.data?.let { res ->
+                    if (it.data is String){
                         showDialogBox(
-                            "Success",
-                            res,
-                            icon = R.drawable.ic_success,
-                            isCancel = false
+                            "Success", it.data, icon = R.drawable.ic_success, isCancel = false
                         ) {
                             findNavController().popBackStack()
                         }
-                    } ?: run {
-                        //Run Print Invoice API
+                    }else{
+                        val pair=it.data as Pair<*,*>
+                        viewModel.getPrintBillInvoiceResponse(PrintInvoiceRequest(
+                            PrintInvoiceRequestBody(pair.first as String)
+                        ))
+                        activity?.msg("Print Invoice")
                     }
-
                 }
             }
         }

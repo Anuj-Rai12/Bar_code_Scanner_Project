@@ -133,6 +133,8 @@ object AllStringConst {
         const val checkStatusBillingEDC =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CheckStatusBillingEDC"
 
+        const val printBillInvoice =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:PrintFinalInvoice"
     }
 
 

@@ -2,6 +2,8 @@ package com.example.mpos.api.billing
 
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingResponse
+import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
+import com.example.mpos.data.billing.printInvoice.response.PrintInvoiceResponse
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcResponse
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
@@ -32,5 +34,10 @@ interface BillingApi {
     suspend fun checkBillStatusApi(
         @Body request: CheckBillingStatusRequest
     ): Response<CheckBillingStatusResponse>
+
+
+    @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.printBillInvoice}")
+    @POST(AllStringConst.End_point)
+    suspend fun getPrintBillInvoiceResponse(@Body request: PrintInvoiceRequest): Response<PrintInvoiceResponse>
 
 }

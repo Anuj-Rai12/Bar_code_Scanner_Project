@@ -12,7 +12,7 @@ data class CheckBillingStatusResponse(
     @param:Element(name = "CheckStatusBillingEDC_Result", required = false)
     @field:Path("Soap:Body")
     @param:Path("Soap:Body")
-    val body: CheckBillingStatusResponseBody? = null,
+    val body: CheckBillingStatusResponseBody? = null
 )
 
 @Root(name = "CheckStatusBillingEDC_Result", strict = false)
@@ -20,7 +20,7 @@ data class CheckBillingStatusResponseBody @JvmOverloads constructor(
 
     @field:Element(name = "return_value")
     @param:Element(name = "return_value")
-    val returnValue: String? = null,
+    val returnValue: String? = null
 
 )
 

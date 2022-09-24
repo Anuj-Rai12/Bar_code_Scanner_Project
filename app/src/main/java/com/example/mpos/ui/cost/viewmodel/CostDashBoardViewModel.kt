@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
+import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
 import com.example.mpos.data.costestimation.request.CostEstimation
@@ -17,6 +18,7 @@ import com.example.mpos.utils.isNetworkAvailable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.Serializable
 
 class CostDashBoardViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -39,9 +41,13 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
         get() = _sendBillingToEdc
 
 
+    private val _printBillInvoice = MutableLiveData<ApisResponse<out Any?>>()
+    val printBillInvoice: LiveData<ApisResponse<out Any?>>
+        get() = _printBillInvoice
 
-    private val _checkBillingStatus = MutableLiveData<ApisResponse<out String?>>()
-    val checkBillingStatus: LiveData<ApisResponse<out String?>>
+
+    private val _checkBillingStatus = MutableLiveData<ApisResponse<out Serializable?>>()
+    val checkBillingStatus: LiveData<ApisResponse<out Serializable?>>
         get() = _checkBillingStatus
 
     private val _confirmBillingResponse = MutableLiveData<ApisResponse<out String?>>()
@@ -113,6 +119,20 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
             } ?: _events.postValue(Events("Oops Repository is Not Set Up!!"))
         }
 
+    }
+
+
+
+    fun getPrintBillInvoiceResponse(request:PrintInvoiceRequest){
+        if (!app.isNetworkAvailable()) {
+            _events.postValue(Events("No Internet Connection Found!!"))
+            return
+        }
+        viewModelScope.launch {
+            repository?.getPrintInvoice(request)?.collectLatest {
+                _printBillInvoice.postValue(it)
+            } ?: _events.postValue(Events("Oops Repository is Not Set Up!!"))
+        }
     }
 
 

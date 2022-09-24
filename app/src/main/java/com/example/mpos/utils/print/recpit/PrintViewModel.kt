@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.utils.ApisResponse
 import kotlinx.coroutines.cancel
@@ -46,7 +47,13 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-
+    fun doPrintInvoice(response:PrintInvoice){
+        viewModelScope.launch {
+            repo.doPrintInvoice(response).collectLatest {
+                _doPrinting.postValue(it)
+            }
+        }
+    }
 
     override fun onCleared() {
         viewModelScope.cancel()

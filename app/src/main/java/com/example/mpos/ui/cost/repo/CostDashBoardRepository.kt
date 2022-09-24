@@ -3,12 +3,15 @@ package com.example.mpos.ui.cost.repo
 import com.example.mpos.api.billing.BillingApi
 import com.example.mpos.api.confirmDining.ConfirmDiningApi
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
+import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
+import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
 import com.example.mpos.data.costestimation.request.CostEstimation
 import com.example.mpos.ui.menu.repo.MenuRepository
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.buildApi
+import com.example.mpos.utils.deserializeFromJson
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -93,13 +96,14 @@ class CostDashBoardRepository(retrofit: Retrofit) {
 
 
     fun checkBillStatus(request: CheckBillingStatusRequest) = flow {
+        emit(ApisResponse.Loading("Checking Receipt status.."))
         val data = try {
             val response = billingApi.checkBillStatusApi(request = request)
             if (response.isSuccessful) {
                 response.body()?.let { res ->
-                    if (res.body?.returnValue.toBoolean()){
-                        ApisResponse.Success(null)
-                    }else{
+                    if (res.body?.returnValue.toBoolean()) {
+                        ApisResponse.Success(Pair(request.body?.mPosDoc,true))
+                    } else {
                         ApisResponse.Success("Invoice is Generated Successfully for Receipt ${request.body?.mPosDoc}")
                     }
                 } ?: ApisResponse.Error(MenuRepository.nullError, null)
@@ -113,7 +117,28 @@ class CostDashBoardRepository(retrofit: Retrofit) {
     }.flowOn(IO)
 
 
-
+    fun getPrintInvoice(request: PrintInvoiceRequest) = flow {
+        emit(ApisResponse.Loading("Loading Print Bill Invoice"))
+        val data = try {
+            val response = billingApi.getPrintBillInvoiceResponse(request = request)
+            if (response.isSuccessful) {
+                response.body()?.let { res ->
+                    if (!res.body?.returnValue.isNullOrEmpty()) {
+                        deserializeFromJson<PrintInvoice>(res.body?.returnValue)?.let {
+                            ApisResponse.Success(it)
+                        } ?: ApisResponse.Error("Cannot Generate Invoice Body", null)
+                    } else {
+                        ApisResponse.Success(null)
+                    }
+                } ?: ApisResponse.Error(MenuRepository.nullError, null)
+            } else {
+                ApisResponse.Error(MenuRepository.err, null)
+            }
+        } catch (e: Exception) {
+            ApisResponse.Error(null, e)
+        }
+        emit(data)
+    }.flowOn(IO)
 
 
 }
