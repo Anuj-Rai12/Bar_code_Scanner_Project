@@ -169,6 +169,16 @@
             app:destination="@id/restaurantEstimationFragments"
             app:popUpTo="@id/restaurantEstimationFragments"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_searchFoodFragment_to_showRoomBillingFragment"
+            app:destination="@id/showRoomBillingFragment"
+            app:popUpTo="@id/showRoomBillingFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_searchFoodFragment_to_restaurantBillingFragment"
+            app:destination="@id/restaurantBillingFragment"
+            app:popUpTo="@id/restaurantBillingFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/scanQrCodeFragment"
@@ -227,6 +237,16 @@
             android:id="@+id/action_scanQrCodeFragment_to_restaurantEstimationFragments"
             app:destination="@id/restaurantEstimationFragments"
             app:popUpTo="@id/restaurantEstimationFragments"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_scanQrCodeFragment_to_showRoomBillingFragment"
+            app:destination="@id/showRoomBillingFragment"
+            app:popUpTo="@id/showRoomBillingFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_scanQrCodeFragment_to_restaurantBillingFragment"
+            app:destination="@id/restaurantBillingFragment"
+            app:popUpTo="@id/restaurantBillingFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <action
@@ -396,10 +416,28 @@
         android:id="@+id/restaurantBillingFragment"
         android:name="com.example.mpos.ui.restaturantbilling.RestaurantBillingFragment"
         android:label="restaurant_billing_fragment"
-        tools:layout="@layout/restaurant_billing_fragment" />
+        tools:layout="@layout/restaurant_billing_fragment">
+        <argument
+            android:name="list"
+            app:argType="com.example.mpos.ui.searchfood.model.FoodItemList"
+            app:nullable="true" />
+        <argument
+            android:name="confirm"
+            app:argType="com.example.mpos.data.cofirmDining.ConfirmDiningRequest"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/showRoomBillingFragment"
         android:name="com.example.mpos.ui.showroombilling.ShowRoomBillingFragment"
         android:label="show_room_billing_fragment"
-        tools:layout="@layout/show_room_billing_fragment" />
+        tools:layout="@layout/show_room_billing_fragment">
+        <argument
+            android:name="list"
+            app:argType="com.example.mpos.ui.searchfood.model.FoodItemList"
+            app:nullable="true" />
+        <argument
+            android:name="confirm"
+            app:argType="com.example.mpos.data.cofirmDining.ConfirmDiningRequest"
+            app:nullable="true" />
+    </fragment>
 </navigation>

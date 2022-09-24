@@ -12,6 +12,7 @@
         android:id="@+id/food_mnu_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/circle_shape"
         android:contentDescription="Food menu"
         android:elevation="5dp"
@@ -19,6 +20,45 @@
         android:minHeight="48dp"
         android:padding="10dp"
         android:src="@drawable/ic_food_mnu"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/check_status_ic"
+        app:layout_constraintLeft_toLeftOf="@id/check_status_ic"
+        app:layout_constraintRight_toRightOf="@id/check_status_ic"
+        app:tint="#019DE2"
+        tools:visibility="visible" />
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/check_status_ic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/circle_shape"
+        android:contentDescription="Check Bill Status"
+        android:elevation="5dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:src="@drawable/check_status_ic"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/option"
+        app:layout_constraintLeft_toLeftOf="@id/option"
+        app:layout_constraintRight_toRightOf="@id/option"
+        app:tint="@color/dark_green_color"
+        tools:visibility="visible" />
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/circle_shape"
+        android:contentDescription="Menu Option"
+        android:elevation="5dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:src="@drawable/option_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/confirm_order_btn"
         app:layout_constraintRight_toRightOf="parent"

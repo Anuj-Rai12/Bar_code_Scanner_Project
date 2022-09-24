@@ -188,10 +188,16 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                 }
                 //Need to do Work
                 SHOWROOMBILLING -> {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToShowRoomBillingFragment()
+                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToShowRoomBillingFragment(
+                        null,
+                        null
+                    )
                 }
                 RESTAURANTBILLING -> {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToRestaurantBillingFragment()
+                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToRestaurantBillingFragment(
+                        null,
+                        null
+                    )
                 }
             }
 

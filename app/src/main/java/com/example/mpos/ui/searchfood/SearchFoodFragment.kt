@@ -134,23 +134,19 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
                     )
                 }
                 WhereToGoFromSearch.SHOWROOMBILLING -> {
-                    null
+                    SearchFoodFragmentDirections.actionSearchFoodFragmentToShowRoomBillingFragment(
+                        FoodItemList(listOfFoodItem),
+                        args.confirmreq
+                    )
                 }
                 WhereToGoFromSearch.RESTARURANTBILLING -> {
-                    null
+                    SearchFoodFragmentDirections.actionSearchFoodFragmentToRestaurantBillingFragment(
+                        FoodItemList(listOfFoodItem),
+                        args.confirmreq
+                    )
                 }
             }
-            /*args.tbl?.let {
-            SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
-                FoodItemList(listOfFoodItem), it, args.confirmreq
-            )
-        } ?: SearchFoodFragmentDirections.actionSearchFoodFragmentToCostDashBoardFragment(
-            FoodItemList(listOfFoodItem),
-            args.confirmreq
-        )*/
-            action?.let { findNavController().navigate(it) } ?: run {
-                activity?.msg("Cannot go from Search Fragment")
-            }
+             findNavController().navigate(action)
         } else if (flag) {
             findNavController().popBackStack()
         }

@@ -316,8 +316,18 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                             args.confirmreq
                         )
                     }
-                    WhereToGoFromScan.SHOWROOMBILLING -> null
-                    WhereToGoFromScan.RESTARURANTBILLING -> null
+                    WhereToGoFromScan.SHOWROOMBILLING -> {
+                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToShowRoomBillingFragment(
+                            FoodItemList(arr),
+                            args.confirmreq
+                        )
+                    }
+                    WhereToGoFromScan.RESTARURANTBILLING -> {
+                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToRestaurantBillingFragment(
+                            FoodItemList(arr),
+                            args.confirmreq
+                        )
+                    }
                 }
 
                 action?.let { findNavController().navigate(it) } ?: run {

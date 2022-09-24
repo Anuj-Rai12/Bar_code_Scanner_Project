@@ -33,7 +33,6 @@ import com.example.mpos.data.confirmOrder.ConfirmOrderBody
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.BillingFragmentLayoutBinding
-import com.example.mpos.ui.cost.CostDashBoardFragmentArgs
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
@@ -60,7 +59,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private var isPrinterConnected: Boolean = false
     private lateinit var callback: ItemTouchHelper.SimpleCallback
-    private val args: CostDashBoardFragmentArgs by navArgs()
+    private val args: BillingFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
     private val customDiningRequest: ConfirmDiningRequest =
         ConfirmDiningRequest(ConfirmDiningBody())
