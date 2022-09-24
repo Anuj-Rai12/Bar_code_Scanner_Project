@@ -48,7 +48,8 @@ import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
 
-class ShowRoomBillingFragment :Fragment(R.layout.show_room_billing_fragment) ,OnBottomSheetClickListener{
+class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
+    OnBottomSheetClickListener {
     private lateinit var binding: ShowRoomBillingFragmentBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
 
@@ -145,7 +146,10 @@ class ShowRoomBillingFragment :Fragment(R.layout.show_room_billing_fragment) ,On
 
         binding.viewOfferBtn.setOnClickListener {
             val action = ShowRoomBillingFragmentDirections.actionGlobalDealsFragment(
-                FoodItemList(arrItem), null, customDiningRequest
+                FoodItemList(arrItem),
+                null,
+                customDiningRequest,
+                WhereToGoFromSearch.SHOWROOMBILLING.name
             )
             findNavController().navigate(action)
         }
@@ -219,7 +223,6 @@ class ShowRoomBillingFragment :Fragment(R.layout.show_room_billing_fragment) ,On
     }
 
 
-
     private fun getBillPrintResponse() {
         printBillViewModel.doPrinting.observe(viewLifecycleOwner) {
             when (it) {
@@ -239,10 +242,7 @@ class ShowRoomBillingFragment :Fragment(R.layout.show_room_billing_fragment) ,On
                 is ApisResponse.Success -> {
                     hidePb()
                     showDialogBox(
-                        "Success",
-                        "${it.data}",
-                        icon = R.drawable.ic_success,
-                        isCancel = false
+                        "Success", "${it.data}", icon = R.drawable.ic_success, isCancel = false
                     ) {
                         findNavController().popBackStack()
                     }
@@ -252,8 +252,8 @@ class ShowRoomBillingFragment :Fragment(R.layout.show_room_billing_fragment) ,On
     }
 
     private fun getPrintInvoiceResponse() {
-        viewModel.printBillInvoice.observe(viewLifecycleOwner){
-            when(it){
+        viewModel.printBillInvoice.observe(viewLifecycleOwner) {
+            when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -272,9 +272,12 @@ class ShowRoomBillingFragment :Fragment(R.layout.show_room_billing_fragment) ,On
                     (it.data as PrintInvoice?)?.let { printInvoice ->
                         Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
                         printBillViewModel.doPrintInvoice(printInvoice)
-                    }?:run{
+                    } ?: run {
                         showDialogBox(
-                            "Success", "Invoice Generate Successfully", icon = R.drawable.ic_success, isCancel = false
+                            "Success",
+                            "Invoice Generate Successfully",
+                            icon = R.drawable.ic_success,
+                            isCancel = false
                         ) {
                             findNavController().popBackStack()
                         }
@@ -431,18 +434,18 @@ class ShowRoomBillingFragment :Fragment(R.layout.show_room_billing_fragment) ,On
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    if (it.data is String){
+                    if (it.data is String) {
                         showDialogBox(
                             "Success", it.data, icon = R.drawable.ic_success, isCancel = false
                         ) {
                             findNavController().popBackStack()
                         }
-                    }else{
-                        val pair=it.data as Pair<*,*>
+                    } else {
+                        val pair = it.data as Pair<*, *>
                         viewModel.getPrintBillInvoiceResponse(
                             PrintInvoiceRequest(
-                            PrintInvoiceRequestBody(pair.first as String)
-                        )
+                                PrintInvoiceRequestBody(pair.first as String)
+                            )
                         )
                         activity?.msg("Print Invoice")
                     }

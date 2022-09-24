@@ -146,6 +146,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         binding.viewOfferBtn.setOnClickListener {
             val action = BillingFragmentDirections.actionGlobalDealsFragment(
                 FoodItemList(arrItem), null, customDiningRequest
+            ,WhereToGoFromSearch.BILLPAYMENT.name
             )
             findNavController().navigate(action)
         }

@@ -137,6 +137,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                 RestaurantEstimationFragmentsDirections.actionGlobalDealsFragment(
                     FoodItemList(arrItem), null,
                     customDiningRequest
+                ,WhereToGoFromSearch.RESTAURANTESTIMATE.name
                 )
             findNavController().navigate(action)
         }

@@ -137,7 +137,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             val action =
                 CostDashBoardFragmentDirections.actionGlobalDealsFragment(
                     FoodItemList(arrItem), null,
-                    customDiningRequest
+                    customDiningRequest,
+                    WhereToGoFromSearch.COSTESTIMATE.name
                 )
             findNavController().navigate(action)
         }

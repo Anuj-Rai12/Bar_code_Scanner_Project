@@ -145,7 +145,8 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
         binding.viewOfferBtn.setOnClickListener {
             val action = RestaurantBillingFragmentDirections.actionGlobalDealsFragment(
-                FoodItemList(arrItem), null, customDiningRequest
+                FoodItemList(arrItem), null, customDiningRequest,
+                WhereToGoFromSearch.RESTARURANTBILLING.name
             )
             findNavController().navigate(action)
         }

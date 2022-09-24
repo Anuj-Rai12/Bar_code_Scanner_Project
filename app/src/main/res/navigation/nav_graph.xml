@@ -368,6 +368,29 @@
             app:destination="@id/billingFragment"
             app:popUpTo="@id/billingFragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_dealsFragment_to_showRoomEstimationFragment"
+            app:destination="@id/showRoomEstimationFragment"
+            app:popUpTo="@id/showRoomEstimationFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dealsFragment_to_restaurantEstimationFragments"
+            app:destination="@id/restaurantEstimationFragments"
+            app:popUpTo="@id/restaurantEstimationFragments"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dealsFragment_to_restaurantBillingFragment"
+            app:destination="@id/restaurantBillingFragment"
+            app:popUpTo="@id/restaurantBillingFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dealsFragment_to_showRoomBillingFragment"
+            app:destination="@id/showRoomBillingFragment"
+            app:popUpTo="@id/showRoomBillingFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <action
         android:id="@+id/action_global_dealsFragment"

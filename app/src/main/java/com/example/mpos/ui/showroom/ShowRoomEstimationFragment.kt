@@ -136,6 +136,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
                 ShowRoomEstimationFragmentDirections.actionGlobalDealsFragment(
                     FoodItemList(arrItem), null,
                     customDiningRequest
+                ,WhereToGoFromSearch.SHOWROOMESTIMATE.name
                 )
             findNavController().navigate(action)
         }

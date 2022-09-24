@@ -80,7 +80,51 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
         if (isEveryThingSetUp && listOfFoodItem.isNotEmpty()) {
             DealsStoreInstance.getInstance().setIsResetButtonClick(false)
             listOfFoodItem.addAll(args.list.foodList)
-            val action = if (args.tbl != null) {
+            val action=when(WhereToGoFromSearch.valueOf(args.type)){
+                WhereToGoFromSearch.TABLEMANGMENT -> {
+                    DealsFragmentDirections.actionDealsFragmentToConfirmOderFragment(
+                        FoodItemList(listOfFoodItem), args.tbl!!, args.confirm
+                    )
+                }
+                WhereToGoFromSearch.COSTESTIMATE -> {
+                    DealsFragmentDirections.actionDealsFragmentToCostDashBoardFragment(
+                        FoodItemList(listOfFoodItem),
+                        args.confirm
+                    )
+                }
+                WhereToGoFromSearch.SHOWROOMESTIMATE -> {
+                    DealsFragmentDirections.actionDealsFragmentToShowRoomEstimationFragment(
+                        FoodItemList(listOfFoodItem),
+                        args.confirm
+                    )
+                }
+                WhereToGoFromSearch.RESTAURANTESTIMATE -> {
+                    DealsFragmentDirections.actionDealsFragmentToRestaurantEstimationFragments(
+                        FoodItemList(listOfFoodItem),
+                        args.confirm
+                    )
+                }
+                WhereToGoFromSearch.BILLPAYMENT -> {
+                    DealsFragmentDirections.actionDealsFragmentToBillingFragment(
+                        FoodItemList(listOfFoodItem),
+                        args.confirm
+                    )
+                }
+                WhereToGoFromSearch.SHOWROOMBILLING -> {
+                    DealsFragmentDirections.actionDealsFragmentToShowRoomBillingFragment(
+                        FoodItemList(listOfFoodItem),
+                        args.confirm
+                    )
+                }
+
+                WhereToGoFromSearch.RESTARURANTBILLING -> {
+                    DealsFragmentDirections.actionDealsFragmentToRestaurantBillingFragment(
+                        FoodItemList(listOfFoodItem),
+                        args.confirm
+                    )
+                }
+            }
+            /*val action = if (args.tbl != null) {
                 DealsFragmentDirections.actionDealsFragmentToConfirmOderFragment(
                     FoodItemList(listOfFoodItem), args.tbl!!, args.confirm
                 )
@@ -94,7 +138,7 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
                     FoodItemList(listOfFoodItem),
                     args.confirm
                 )
-            }
+            }*/
             findNavController().navigate(action)
         } else if (isEveryThingSetUp) {
             findNavController().popBackStack()
