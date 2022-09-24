@@ -130,7 +130,8 @@ object AllStringConst {
         const val sendBillingEtc =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:SendBillingToEDC"
 
-        const val checkStatusBillingEDC="urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CheckStatusBillingEDC"
+        const val checkStatusBillingEDC =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CheckStatusBillingEDC"
 
     }
 
@@ -141,25 +142,12 @@ object AllStringConst {
 }
 
 enum class WhereToGoFromSearch {
-    TABLEMANGMENT,
-    COSTESTIMATE,
-    SHOWROOMESTIMATE,
-    RESTAURANTESTIMATE,
-    BILLPAYMENT,
-    SHOWROOMBILLING,
-    RESTARURANTBILLING
+    TABLEMANGMENT, COSTESTIMATE, SHOWROOMESTIMATE, RESTAURANTESTIMATE, BILLPAYMENT, SHOWROOMBILLING, RESTARURANTBILLING
 }
 
 
-enum class WhereToGoFromScan{
-    TESTINGCONNECTION,
-    TABLEMANGMENT,
-    COSTESTIMATE,
-    SHOWROOMESTIMATE,
-    RESTAURANTESTIMATE,
-    BILLPAYMENT,
-    SHOWROOMBILLING,
-    RESTARURANTBILLING
+enum class WhereToGoFromScan {
+    TESTINGCONNECTION, TABLEMANGMENT, COSTESTIMATE, SHOWROOMESTIMATE, RESTAURANTESTIMATE, BILLPAYMENT, SHOWROOMBILLING, RESTARURANTBILLING
 }
 
 
@@ -728,20 +716,18 @@ fun Activity.dialogOption(list: List<String>, fragment: Fragment) {
     )
     val adaptor = AlertDialogListAdapter(this)
     adaptor.addItem(list)
-
+    materialDialogs.setTitle("Options")
     materialDialogs.setAdapter(adaptor) { dialog, which ->
         if (list[which] == list.last()) {
             dialog.dismiss()
             showDialogForDeleteInfo("${getEmojiByUnicode(0x1F5D1)} Swipe to delete")
-        } else if (list[which] == "About User\n") {
+        } else if (list[which] == "About User") {
             dialog.dismiss()
             val userID = RestaurantSingletonCls.getInstance().getUserId()
             val storeID = RestaurantSingletonCls.getInstance().getStoreId()
             fragment.showDialogBox(
                 title = "About User", desc = "Store ID :$storeID\nUser ID :$userID"
             ) {}
-        } else {
-            materialDialogs.show()
         }
     }
     materialDialogs.show()

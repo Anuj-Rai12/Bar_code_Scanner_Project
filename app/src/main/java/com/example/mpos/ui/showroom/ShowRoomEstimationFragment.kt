@@ -142,7 +142,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("Option\n", "About User\n", "Help\n"), this)
+            activity?.dialogOption(listOf("About User", "Help"), this)
         }
 
         binding.searchBoxTxt.setOnClickListener {

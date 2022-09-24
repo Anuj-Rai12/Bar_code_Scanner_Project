@@ -147,7 +147,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("Option\n", "About User\n", "Help\n"), this)
+            activity?.dialogOption(listOf("About User", "Help"), this)
         }
 
 

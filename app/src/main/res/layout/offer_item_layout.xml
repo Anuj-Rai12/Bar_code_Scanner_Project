@@ -23,15 +23,34 @@
         tools:text="Add a 200ml Pepsi Can for ₹15/-" />
 
 
+    <TextView
+        android:id="@+id/txt_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="14dp"
+        android:fontFamily="@font/roboto_medium"
+        android:textAlignment="textStart"
+        android:textColor="@color/light_grey_color"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text=" helo gkfl klgjkl gjfkdlgjkl hjdklhkld hjklfdhjkl hjdklhldk hdjklhkl hjdfl gkld; hkgl;hkl; khl;ghkl; hkgl;hkgl; hkglhkl;fghkl;gh;flghlg;hkf" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btn_click_check_box"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@drawable/ic_check_box"
         android:backgroundTint="@color/white"
-        tools:backgroundTint="@color/black"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:backgroundTint="@color/black" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
