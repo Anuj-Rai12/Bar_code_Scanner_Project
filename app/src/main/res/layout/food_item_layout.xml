@@ -80,10 +80,11 @@
         android:gravity="center|start"
         android:textColor="@color/light_grey_color"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/linearLayout_for_item_count"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout_for_item_count"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintHorizontal_weight=".5"
         app:layout_constraintStart_toEndOf="@+id/food_price_tv"
         app:layout_constraintTop_toBottomOf="@id/food_item_tv"
         tools:text=" +1 Pepsi @15/-"
@@ -114,21 +115,23 @@
             android:backgroundTint="@color/light_red_color"
             android:contentDescription="@string/hint_btn_minus"
             android:padding="3dp"
+            android:layout_gravity="center"
             android:scaleType="fitXY"
             android:src="@drawable/ic_remove_icon" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/total_food_item_qty_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:background="@drawable/black_underline_border"
             android:paddingStart="8dp"
             android:paddingTop="3dp"
             android:paddingEnd="9dp"
+            android:gravity="center"
             android:paddingBottom="5dp"
             android:textColor="@color/light_grey_color"
-            tools:text="2" />
+            tools:text="2gkjgkjkfjhfghjghfhjgfghfh" />
 
         <ImageButton
             android:id="@+id/btn_add_count"
@@ -156,7 +159,7 @@
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/food_price_tv"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout_for_item_count"
         tools:visibility="visible" />
 
 
