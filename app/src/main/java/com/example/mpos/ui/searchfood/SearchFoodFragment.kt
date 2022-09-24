@@ -122,7 +122,10 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
                     )
                 }
                 WhereToGoFromSearch.RESTAURANTESTIMATE -> {
-                    null
+                    SearchFoodFragmentDirections.actionSearchFoodFragmentToRestaurantEstimationFragments(
+                        FoodItemList(listOfFoodItem),
+                        args.confirmreq
+                    )
                 }
                 WhereToGoFromSearch.BILLPAYMENT -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToBillingFragment(
@@ -145,7 +148,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
             FoodItemList(listOfFoodItem),
             args.confirmreq
         )*/
-            action?.let { findNavController().navigate(it) }?: run {
+            action?.let { findNavController().navigate(it) } ?: run {
                 activity?.msg("Cannot go from Search Fragment")
             }
         } else if (flag) {
