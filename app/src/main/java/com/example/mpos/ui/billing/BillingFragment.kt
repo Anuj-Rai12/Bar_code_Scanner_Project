@@ -64,13 +64,13 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = BillingFragmentLayoutBinding.bind(view)
         binding.qrCodeScan.setOnClickListener {
-            val action = BillingFragmentDirections
-                .actionGlobalScanQrCodeFragment(
-                    Url_Text,
-                    null,
-                    FoodItemList(arrItem),
-                    customDiningRequest
-                )
+            val action = BillingFragmentDirections.actionGlobalScanQrCodeFragment(
+                Url_Text,
+                null,
+                FoodItemList(arrItem),
+                customDiningRequest,
+                WhereToGoFromScan.BILLPAYMENT.name
+            )
             findNavController().navigate(action)
         }
         viewModel.event.observe(viewLifecycleOwner) {
@@ -120,11 +120,9 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
 
         binding.viewOfferBtn.setOnClickListener {
-            val action =
-                BillingFragmentDirections.actionGlobalDealsFragment(
-                    FoodItemList(arrItem), null,
-                    customDiningRequest
-                )
+            val action = BillingFragmentDirections.actionGlobalDealsFragment(
+                FoodItemList(arrItem), null, customDiningRequest
+            )
             findNavController().navigate(action)
         }
 
@@ -137,12 +135,12 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             //New Fragment
             Log.i(TAG, "Search: CustomerDining $customDiningRequest")
             Log.i(TAG, "Search: FoodItemList ${FoodItemList(arrItem)}")
-            val action =
-                BillingFragmentDirections.actionGlobalSearchFoodFragment(
-                    null,
-                    FoodItemList(arrItem),
-                    customDiningRequest
-                )
+            val action = BillingFragmentDirections.actionGlobalSearchFoodFragment(
+                null,
+                FoodItemList(arrItem),
+                customDiningRequest,
+                WhereToGoFromSearch.BILLPAYMENT.name
+            )
             findNavController().navigate(action)
         }
 
@@ -308,14 +306,16 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor =
-                ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {
-                }, itemClickListerForUpdate = { res ->
-                    updateQtyDialogBox(res)
-                }, itemClickInstructionLinter = { res ->
-                    updateFreeTxt(res)
-                }, itemClickAmountLinter = {res->
-                    updateAmount(res)
-                })
+                ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {},
+                    itemClickListerForUpdate = { res ->
+                        updateQtyDialogBox(res)
+                    },
+                    itemClickInstructionLinter = { res ->
+                        updateFreeTxt(res)
+                    },
+                    itemClickAmountLinter = { res ->
+                        updateAmount(res)
+                    })
             adapter = confirmOderFragmentAdaptor
         }
     }
@@ -327,7 +327,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             isDecimal = true,
             cancel = {},
             res = {},
-            instruction = {}, amount = {
+            instruction = {},
+            amount = {
                 confirmOrderViewModel.addUpdateQty(
                     food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
                     itemRemoved = itemMasterFoodItem
@@ -348,13 +349,13 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     itemRemoved = itemMasterFoodItem
                 )
             },
-            instruction = {}, amount = {})
+            instruction = {},
+            amount = {})
     }
 
 
     private fun updateFreeTxt(itemMasterFoodItem: ItemMasterFoodItem) {
-        showQtyDialog(
-            true,
+        showQtyDialog(true,
             itemMasterFoodItem.itemMaster,
             type = "Instruction",
             value = itemMasterFoodItem.free_txt,
@@ -365,22 +366,18 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 val food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt)
                 Log.i(TAG, "updateQtyDialogBox: $food")
                 confirmOrderViewModel.addUpdateQty(
-                    food = food,
-                    itemRemoved = itemMasterFoodItem
+                    food = food, itemRemoved = itemMasterFoodItem
                 )
-            }, isDecimal = false,amount = {})
+            },
+            isDecimal = false,
+            amount = {})
     }
-
-
-
-
 
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getData() {
         confirmOrderViewModel.listOfOrder.observe(viewLifecycleOwner) {
-            if (it != null)
-                confirmOrderViewModel.getGrandTotal(it.data)
+            if (it != null) confirmOrderViewModel.getGrandTotal(it.data)
             else {
                 confirmOrderViewModel.getGrandTotal(null)
             }
@@ -403,8 +400,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
     }
 
     private fun setCallBack() {
-        callback = object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -433,48 +429,26 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             ) {
 
                 RecyclerViewSwipeDecorator.Builder(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-                    .addSwipeLeftBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.color_red
-                        )
+                    c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
+                ).addSwipeLeftBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.color_red
                     )
-                    .addSwipeLeftLabel("Delete")
-                    .setSwipeLeftLabelColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.white
-                        )
+                ).addSwipeLeftLabel("Delete").setSwipeLeftLabelColor(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.white
                     )
-                    .setSwipeLeftLabelTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
-                    .addSwipeLeftActionIcon(R.drawable.ic_round_delete)
-                    .setSwipeLeftActionIconTint(
+                ).setSwipeLeftLabelTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+                    .addSwipeLeftActionIcon(R.drawable.ic_round_delete).setSwipeLeftActionIconTint(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.white
+                            requireContext(), R.color.white
                         )
-                    )
-                    .create()
-                    .decorate()
+                    ).create().decorate()
 
 
 
                 super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
+                    c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
                 )
             }
 
@@ -529,8 +503,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         if (args.list != null) {
             if (arrItem.isNotEmpty()) {
                 list.addAll(arrItem)
-            } else
-                list.addAll(args.list?.foodList!!)
+            } else list.addAll(args.list?.foodList!!)
 
             confirmOrderViewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && arrItem.isNotEmpty()) {
@@ -547,9 +520,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
         binding.root.showSandbar(
-            msg,
-            length,
-            requireActivity().getColorInt(color)
+            msg, length, requireActivity().getColorInt(color)
         ) {
             return@showSandbar "OK"
         }
@@ -570,7 +541,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             decimalAllowed = barcode.decimalAllowed
         )
         itemMaster.foodQty = barcode.qty.toDouble()
-        val amt=(ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
+        val amt =
+            (ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
         itemMaster.foodAmt = "%.4f".format(amt).toDouble()
         val mutableList = mutableListOf<ItemMasterFoodItem>()
         if (arrItem.isNotEmpty()) {

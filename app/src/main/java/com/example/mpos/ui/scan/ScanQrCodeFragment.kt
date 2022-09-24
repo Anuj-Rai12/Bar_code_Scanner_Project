@@ -223,7 +223,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
 
     private fun sendData(first: Barcode) {
         activity?.msg("Qr Code Detected")
-        if (args.item == Url_Text) {
+        val type = WhereToGoFromScan.TESTINGCONNECTION.name
+        if (args.item == Url_Text && args.type != type) {
             first.rawValue?.let {
                 viewModel.checkForItemItem(it)
             } ?: activity?.msg("Oops SomeThing Went Wrong")
@@ -277,28 +278,51 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                     decimalAllowed = barcode.decimalAllowed
                 )
                 itemMaster.foodQty = barcode.qty.toDouble()
-                val amt=(ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
+                val amt =
+                    (ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
                 itemMaster.foodAmt = "%.4f".format(amt).toDouble()
                 Log.i("QR", "sendData: $itemMaster")
                 arr.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
-                val action = if (args.tbl != null) {
-                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
-                        FoodItemList(arr),
-                        args.tbl!!,
-                        args.confirmreq
-                    )
-                } else if (args.tbl == null && args.confirmreq == null) {
-                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToCostDashBoardFragment(
-                        FoodItemList(arr),
-                        args.confirmreq
-                    )
-                } else {
-                    ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToBillingFragment(
-                        FoodItemList(arr),
-                        args.confirmreq
-                    )
+                val action = when (WhereToGoFromScan.valueOf(args.type)) {
+                    WhereToGoFromScan.TESTINGCONNECTION -> null
+                    WhereToGoFromScan.TABLEMANGMENT -> {
+                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
+                            FoodItemList(arr),
+                            args.tbl!!,
+                            args.confirmreq
+                        )
+                    }
+                    WhereToGoFromScan.COSTESTIMATE -> {
+                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToCostDashBoardFragment(
+                            FoodItemList(arr),
+                            args.confirmreq
+                        )
+                    }
+                    WhereToGoFromScan.SHOWROOMESTIMATE -> {
+                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToShowRoomEstimationFragment(
+                            FoodItemList(arr),
+                            args.confirmreq
+                        )
+                    }
+                    WhereToGoFromScan.RESTAURANTESTIMATE -> {
+                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToRestaurantEstimationFragments(
+                            FoodItemList(arr),
+                            args.confirmreq
+                        )
+                    }
+                    WhereToGoFromScan.BILLPAYMENT -> {
+                        ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToBillingFragment(
+                            FoodItemList(arr),
+                            args.confirmreq
+                        )
+                    }
+                    WhereToGoFromScan.SHOWROOMBILLING -> null
+                    WhereToGoFromScan.RESTARURANTBILLING -> null
                 }
-                findNavController().navigate(action)
+
+                action?.let { findNavController().navigate(it) } ?: run {
+                    showErrorDialog("Cannot Go Back")
+                }
             }
         }
     }

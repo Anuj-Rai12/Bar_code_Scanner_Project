@@ -1,4 +1,4 @@
-package com.example.mpos.ui.cost
+package com.example.mpos.ui.showroom
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -26,7 +26,7 @@ import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.data.costestimation.request.ConfirmEstimationBody
 import com.example.mpos.data.costestimation.request.CostEstimation
 import com.example.mpos.data.item_master_sync.json.ItemMaster
-import com.example.mpos.databinding.CostCalDashbordLayoutBinding
+import com.example.mpos.databinding.ShowRoomFragmentBinding
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
@@ -42,11 +42,9 @@ import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
 
+class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBottomSheetClickListener {
 
-class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
-    OnBottomSheetClickListener {
-    private lateinit var binding: CostCalDashbordLayoutBinding
-
+    private lateinit var binding: ShowRoomFragmentBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
 
     private val printBillViewModel: PrintViewModel by viewModels()
@@ -57,7 +55,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private var isPrinterConnected: Boolean = false
     private lateinit var callback: ItemTouchHelper.SimpleCallback
-    private val args: CostDashBoardFragmentArgs by navArgs()
+    private val args: ShowRoomEstimationFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
     private val customDiningRequest: ConfirmDiningRequest? = null
     private var receiptNo: String? = null
@@ -67,15 +65,15 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
-        binding = CostCalDashbordLayoutBinding.bind(view)
+        binding = ShowRoomFragmentBinding.bind(view)
         binding.qrCodeScan.setOnClickListener {
-            val action = CostDashBoardFragmentDirections
+            val action = ShowRoomEstimationFragmentDirections
                 .actionGlobalScanQrCodeFragment(
                     Url_Text,
                     null,
                     FoodItemList(arrItem),
                     customDiningRequest
-                ,WhereToGoFromScan.COSTESTIMATE.name)
+                ,WhereToGoFromScan.SHOWROOMESTIMATE.name)
             findNavController().navigate(action)
         }
 
@@ -135,7 +133,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
         binding.viewOfferBtn.setOnClickListener {
             val action =
-                CostDashBoardFragmentDirections.actionGlobalDealsFragment(
+                ShowRoomEstimationFragmentDirections.actionGlobalDealsFragment(
                     FoodItemList(arrItem), null,
                     customDiningRequest
                 )
@@ -152,10 +150,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             Log.i(TAG, "Search: CustomerDining $customDiningRequest")
             Log.i(TAG, "Search: FoodItemList ${FoodItemList(arrItem)}")
             val action =
-                CostDashBoardFragmentDirections.actionGlobalSearchFoodFragment(
+                ShowRoomEstimationFragmentDirections.actionGlobalSearchFoodFragment(
                     null,
                     FoodItemList(arrItem),
-                    customDiningRequest,WhereToGoFromSearch.COSTESTIMATE.name
+                    customDiningRequest,
+                    WhereToGoFromSearch.SHOWROOMESTIMATE.name
                 )
             findNavController().navigate(action)
         }

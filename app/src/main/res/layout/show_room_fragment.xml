@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/semi_white_color"
-    tools:context="com.example.mpos.ui.showroom.ShowRoomFragment">
+    tools:context="com.example.mpos.ui.showroom.ShowRoomEstimationFragment">
 
 
     <androidx.appcompat.widget.AppCompatImageButton

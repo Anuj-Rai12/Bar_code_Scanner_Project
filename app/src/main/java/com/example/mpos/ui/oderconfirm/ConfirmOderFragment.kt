@@ -67,7 +67,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     args.tbl,
                     FoodItemList(arrItem),
                     customDiningRequest
-                )
+                ,WhereToGoFromScan.TABLEMANGMENT.name)
             findNavController().navigate(action)
         }
 
@@ -129,7 +129,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 ConfirmOderFragmentDirections.actionGlobalSearchFoodFragment(
                     args.tbl,
                     FoodItemList(arrItem),
-                    customDiningRequest
+                    customDiningRequest,
+                    WhereToGoFromSearch.TABLEMANGMENT.name
                 )
             findNavController().navigate(action)
         }

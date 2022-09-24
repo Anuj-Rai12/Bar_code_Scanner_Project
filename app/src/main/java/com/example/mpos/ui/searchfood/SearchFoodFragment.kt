@@ -103,20 +103,39 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
         if (flag && listOfFoodItem.isNotEmpty()) {
             DealsStoreInstance.getInstance().setIsResetButtonClick(false)
             listOfFoodItem.addAll(args.list.foodList)
-            val action = if (args.tbl != null) {
-                SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
-                    FoodItemList(listOfFoodItem), args.tbl!!, args.confirmreq
-                )
-            } else if (args.tbl == null && args.confirmreq == null) {
-                SearchFoodFragmentDirections.actionSearchFoodFragmentToCostDashBoardFragment(
-                    FoodItemList(listOfFoodItem),
-                    args.confirmreq
-                )
-            } else {
-                SearchFoodFragmentDirections.actionSearchFoodFragmentToBillingFragment(
-                    FoodItemList(listOfFoodItem),
-                    args.confirmreq
-                )
+            val action = when (WhereToGoFromSearch.valueOf(args.type)) {
+                WhereToGoFromSearch.TABLEMANGMENT -> {
+                    SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
+                        FoodItemList(listOfFoodItem), args.tbl!!, args.confirmreq
+                    )
+                }
+                WhereToGoFromSearch.COSTESTIMATE -> {
+                    SearchFoodFragmentDirections.actionSearchFoodFragmentToCostDashBoardFragment(
+                        FoodItemList(listOfFoodItem),
+                        args.confirmreq
+                    )
+                }
+                WhereToGoFromSearch.SHOWROOMESTIMATE -> {
+                    SearchFoodFragmentDirections.actionSearchFoodFragmentToShowRoomEstimationFragment(
+                        FoodItemList(listOfFoodItem),
+                        args.confirmreq
+                    )
+                }
+                WhereToGoFromSearch.RESTAURANTESTIMATE -> {
+                    null
+                }
+                WhereToGoFromSearch.BILLPAYMENT -> {
+                    SearchFoodFragmentDirections.actionSearchFoodFragmentToBillingFragment(
+                        FoodItemList(listOfFoodItem),
+                        args.confirmreq
+                    )
+                }
+                WhereToGoFromSearch.SHOWROOMBILLING -> {
+                    null
+                }
+                WhereToGoFromSearch.RESTARURANTBILLING -> {
+                    null
+                }
             }
             /*args.tbl?.let {
             SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
@@ -126,7 +145,9 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
             FoodItemList(listOfFoodItem),
             args.confirmreq
         )*/
-            findNavController().navigate(action)
+            action?.let { findNavController().navigate(it) }?: run {
+                activity?.msg("Cannot go from Search Fragment")
+            }
         } else if (flag) {
             findNavController().popBackStack()
         }

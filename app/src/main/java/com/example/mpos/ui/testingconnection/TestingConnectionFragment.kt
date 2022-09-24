@@ -101,7 +101,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                         null,
                         null,
                         null
-                    )
+                    ,WhereToGoFromScan.TESTINGCONNECTION.name)
                 findNavController().navigate(action)
             }
         }
