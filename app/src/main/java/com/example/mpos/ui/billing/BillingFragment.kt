@@ -1,5 +1,6 @@
 package com.example.mpos.ui.billing
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.os.Bundle
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mpos.MainActivity
 import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
@@ -116,6 +118,18 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         getCheckBillResponse()
         getPrintInvoiceResponse()
         getBillPrintResponse()
+
+        (activity as MainActivity?)?.getPermissionForBlueTooth()
+        val flag = activity?.checkBlueConnectPermission()
+        if (flag == false) {
+            (activity as MainActivity?)?.requestPermission(
+                Manifest.permission.BLUETOOTH_CONNECT,
+                BLUE_CONNECT,
+                "Bluetooth"
+            )
+        }
+
+
         binding.option.setOnClickListener {
             if (isOptionMnuVisible) {
                 hideOptionMnu()
@@ -145,8 +159,10 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
         binding.viewOfferBtn.setOnClickListener {
             val action = BillingFragmentDirections.actionGlobalDealsFragment(
-                FoodItemList(arrItem), null, customDiningRequest
-            ,WhereToGoFromSearch.BILLPAYMENT.name
+                FoodItemList(arrItem),
+                null,
+                customDiningRequest,
+                WhereToGoFromSearch.BILLPAYMENT.name
             )
             findNavController().navigate(action)
         }
@@ -220,7 +236,6 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
     }
 
 
-
     private fun getBillPrintResponse() {
         printBillViewModel.doPrinting.observe(viewLifecycleOwner) {
             when (it) {
@@ -253,8 +268,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
     }
 
     private fun getPrintInvoiceResponse() {
-        viewModel.printBillInvoice.observe(viewLifecycleOwner){
-            when(it){
+        viewModel.printBillInvoice.observe(viewLifecycleOwner) {
+            when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -272,10 +287,13 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     hidePb()
                     (it.data as PrintInvoice?)?.let { printInvoice ->
                         Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
-                    printBillViewModel.doPrintInvoice(printInvoice)
-                    }?:run{
+                        printBillViewModel.doPrintInvoice(printInvoice)
+                    } ?: run {
                         showDialogBox(
-                            "Success", "Invoice Generate Successfully", icon = R.drawable.ic_success, isCancel = false
+                            "Success",
+                            "Invoice Generate Successfully",
+                            icon = R.drawable.ic_success,
+                            isCancel = false
                         ) {
                             findNavController().popBackStack()
                         }
@@ -432,19 +450,13 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    if (it.data is String){
-                        showDialogBox(
-                            "Success", it.data, icon = R.drawable.ic_success, isCancel = false
-                        ) {
-                            findNavController().popBackStack()
-                        }
-                    }else{
-                        val pair=it.data as Pair<*,*>
-                        viewModel.getPrintBillInvoiceResponse(PrintInvoiceRequest(
-                            PrintInvoiceRequestBody(pair.first as String)
-                        ))
-                        activity?.msg("Print Invoice")
-                    }
+                    arrItem.clear()
+                    confirmOrderViewModel.getOrderList(null)
+                    viewModel.getPrintBillInvoiceResponse(
+                        PrintInvoiceRequest(
+                            PrintInvoiceRequestBody("${it.data}")
+                        )
+                    )
                 }
             }
         }
@@ -467,8 +479,6 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    arrItem.clear()
-                    confirmOrderViewModel.getOrderList(null)
                     showDialogBox(
                         "Success",
                         "Completed the Billing for All Food Item Successfully",

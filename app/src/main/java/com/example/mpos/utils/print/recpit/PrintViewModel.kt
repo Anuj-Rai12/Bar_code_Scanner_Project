@@ -15,16 +15,14 @@ import kotlinx.coroutines.launch
 class PrintViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    private val _isPrinterConnected=MutableLiveData<ApisResponse<String>>()
-    val isPrinterConnected: LiveData<ApisResponse<String>>
+    private val _isPrinterConnected=MutableLiveData<ApisResponse<out String>>()
+    val isPrinterConnected: LiveData<ApisResponse<out String>>
     get() = _isPrinterConnected
 
     private val _doPrinting=MutableLiveData<ApisResponse<out String>>()
     val doPrinting: LiveData<ApisResponse<out String>>
         get() = _doPrinting
 
-
-    private val app=application
 
     private val repo=PrintRepository()
 

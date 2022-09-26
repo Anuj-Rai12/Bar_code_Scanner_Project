@@ -1,5 +1,6 @@
 package com.example.mpos.ui.showroombilling
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.os.Bundle
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mpos.MainActivity
 import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
@@ -99,6 +101,21 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 }
             }
         }
+
+
+
+        (activity as MainActivity?)?.getPermissionForBlueTooth()
+        val flag = activity?.checkBlueConnectPermission()
+        if (flag == false) {
+            (activity as MainActivity?)?.requestPermission(
+                Manifest.permission.BLUETOOTH_CONNECT,
+                BLUE_CONNECT,
+                "Bluetooth"
+            )
+        }
+
+
+
         setInitialValue()
         getGrandTotal()
         getData()
@@ -434,21 +451,13 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    if (it.data is String) {
-                        showDialogBox(
-                            "Success", it.data, icon = R.drawable.ic_success, isCancel = false
-                        ) {
-                            findNavController().popBackStack()
-                        }
-                    } else {
-                        val pair = it.data as Pair<*, *>
-                        viewModel.getPrintBillInvoiceResponse(
-                            PrintInvoiceRequest(
-                                PrintInvoiceRequestBody(pair.first as String)
-                            )
+                    arrItem.clear()
+                    confirmOrderViewModel.getOrderList(null)
+                    viewModel.getPrintBillInvoiceResponse(
+                        PrintInvoiceRequest(
+                            PrintInvoiceRequestBody("${it.data}")
                         )
-                        activity?.msg("Print Invoice")
-                    }
+                    )
                 }
             }
         }
@@ -471,8 +480,6 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    arrItem.clear()
-                    confirmOrderViewModel.getOrderList(null)
                     showDialogBox(
                         "Success",
                         "Completed the Billing for All Food Item Successfully",

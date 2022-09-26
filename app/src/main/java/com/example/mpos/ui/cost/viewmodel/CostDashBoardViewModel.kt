@@ -18,7 +18,6 @@ import com.example.mpos.utils.isNetworkAvailable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.Serializable
 
 class CostDashBoardViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -46,8 +45,8 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
         get() = _printBillInvoice
 
 
-    private val _checkBillingStatus = MutableLiveData<ApisResponse<out Serializable?>>()
-    val checkBillingStatus: LiveData<ApisResponse<out Serializable?>>
+    private val _checkBillingStatus = MutableLiveData<ApisResponse<out String?>>()
+    val checkBillingStatus: LiveData<ApisResponse<out String?>>
         get() = _checkBillingStatus
 
     private val _confirmBillingResponse = MutableLiveData<ApisResponse<out String?>>()

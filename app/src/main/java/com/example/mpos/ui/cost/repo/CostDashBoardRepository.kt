@@ -102,9 +102,9 @@ class CostDashBoardRepository(retrofit: Retrofit) {
             if (response.isSuccessful) {
                 response.body()?.let { res ->
                     if (res.body?.returnValue.toBoolean()) {
-                        ApisResponse.Success(Pair(request.body?.mPosDoc,true))
+                        ApisResponse.Success(request.body?.mPosDoc)
                     } else {
-                        ApisResponse.Success("Invoice is Generated Successfully for Receipt ${request.body?.mPosDoc}")
+                        ApisResponse.Error("Cannot get Status Report on this receipt number ${request.body?.mPosDoc}",null)
                     }
                 } ?: ApisResponse.Error(MenuRepository.nullError, null)
             } else {
