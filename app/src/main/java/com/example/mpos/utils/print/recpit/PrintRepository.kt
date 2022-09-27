@@ -32,6 +32,7 @@ class PrintRepository {
 
 
     private val line = "------------------------------------------------\n"
+    private val doubleLine = "================================================\n"
 
     private val underLine = "<u>                                                </u>\n"
 
@@ -197,7 +198,7 @@ class PrintRepository {
                 val printer = EscPosPrinter(connection, 203, 80f, 32)
                 val stringBuilder = StringBuilder()
                 stringBuilder.append(
-                    "[C]$line" +
+                    "[C]$underLine" +
                             "[L][C]${responseBody.headerTxt1}\n" +
                             "[L][C]" + "${responseBody.headerTxt2}\n" +
                             "[L][C]" + "${responseBody.headerTxt3}\n" +
@@ -205,39 +206,39 @@ class PrintRepository {
                             "[L][C]" + "${responseBody.headerTxt5}\n" +
                             "[L][C]" + "${responseBody.headerTxt6}\n" +
                             "[L][C]" + "${responseBody.headerTxt7}\n" +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             "[L][C]" + "${responseBody.billTypeTxt}\n" +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             "[L][C]" + "${responseBody.billType}\n" +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             "[L] ${responseBody.subHeaderTxt1}" + "\n" +
                             "[L] ${responseBody.subHeaderTxt2}" + "\n" +
                             "[L] ${responseBody.subHeaderTxt3}" + "\n" +
                             "[L] ${responseBody.subHeaderTxt4}" + "\n" +
                             "[L] ${responseBody.subHeaderTxt5}" + "\n" +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             "[L]" + header +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             setBillInvoiceTable(responseBody.childitemList) +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             "[L]" + createNewString("Total", 40) +
                             "${createNewString(responseBody.baseAmount, 10)}\n" +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             "[L]" + headerGst +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             setGstTable(responseBody.gstDetails) +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             "[L]" + createNewString("Amount Including GST", 40) +
                             "${createNewString(responseBody.amtIncGST, 10)}\n" +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             "[L]" + createNewString("Rounding Amt", 40) +
                             "${createNewString(responseBody.roundAmt, 10)}\n" +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             "[L]" + createNewString("Rounding Total", 40) +
                             "${createNewString(getRoundingTotal(responseBody.amtIncGST, responseBody.roundAmt), 10)}\n" +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             setTenderTable(responseBody.paymentDetails) +
-                            "[C]$line" +
+                            "[C]$doubleLine" +
                             "[L]${responseBody.footerTxt1}\n" +
                             "[L]${responseBody.footerTxt2}\n" +
                             "[L]${responseBody.footerTxt3}\n" +
@@ -245,7 +246,7 @@ class PrintRepository {
                             "[L]${responseBody.footerTxt5}\n" +
                             "[L]${responseBody.footerTxt6}\n" +
                             "[L]${responseBody.footerTxt7}\n" +
-                            "[C]$line"
+                            "[C]$underLine"
                 )
 
                 printer.printFormattedText(stringBuilder.toString())

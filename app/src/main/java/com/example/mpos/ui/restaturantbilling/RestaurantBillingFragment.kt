@@ -284,6 +284,8 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 }
                 is ApisResponse.Success -> {
                     hidePb()
+                    arrItem.clear()
+                    confirmOrderViewModel.getOrderList(null)
                     (it.data as PrintInvoice?)?.let { printInvoice ->
                         Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
                         printBillViewModel.doPrintInvoice(printInvoice)
@@ -446,8 +448,6 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    arrItem.clear()
-                    confirmOrderViewModel.getOrderList(null)
                     viewModel.getPrintBillInvoiceResponse(
                         PrintInvoiceRequest(
                             PrintInvoiceRequestBody("${it.data}")

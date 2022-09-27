@@ -1,5 +1,6 @@
 package com.example.mpos.ui.cost.repo
 
+import android.util.Log
 import com.example.mpos.api.billing.BillingApi
 import com.example.mpos.api.confirmDining.ConfirmDiningApi
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
@@ -12,6 +13,7 @@ import com.example.mpos.ui.menu.repo.MenuRepository
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.buildApi
 import com.example.mpos.utils.deserializeFromJson
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -128,13 +130,20 @@ class CostDashBoardRepository(retrofit: Retrofit) {
                             ApisResponse.Success(it)
                         } ?: ApisResponse.Error("Cannot Generate Invoice Body", null)
                     } else {
-                        ApisResponse.Success(null)
+                        ApisResponse.Error("No Invoice is Found for the Receipt ${request.body?.mPosDoc}",null)
                     }
                 } ?: ApisResponse.Error(MenuRepository.nullError, null)
             } else {
                 ApisResponse.Error(MenuRepository.err, null)
             }
-        } catch (e: Exception) {
+        }catch (e:JsonSyntaxException){
+            ApisResponse.Error("Response is Not Match with Pint Invoice Syntax", null)
+        }
+        catch (e:RuntimeException){
+            ApisResponse.Error("Cannot Fetch Invoice Response as it is Empty", null)
+        }
+        catch (e: Exception) {
+            Log.e("PRINT_INVOICE", "getPrintInvoice: ${e.javaClass.canonicalName}")
             ApisResponse.Error(null, e)
         }
         emit(data)
