@@ -160,7 +160,7 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
                     }
                     is ApisResponse.Loading -> {
                         binding.pbLayoutInclude.root.show()
-                        binding.pbLayoutInclude.titleTxt.text="${it.data}"
+                        binding.pbLayoutInclude.titleTxt.text = "${it.data}"
                     }
                     is ApisResponse.Success -> {
                         binding.pbLayoutInclude.root.hide()
@@ -219,7 +219,10 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
             showSnackBar("Oops Something Went Wong ", R.color.color_red)
             return
         }
-        barCodeViewModel.checkForItemItem(itemList.itemCode)
+        barCodeViewModel.checkForItemItem(
+            itemCode = itemList.itemCode,
+            msg = RestaurantSingletonCls.getInstance().getScreenType()!!
+        )
     }
 
     override fun onResume() {

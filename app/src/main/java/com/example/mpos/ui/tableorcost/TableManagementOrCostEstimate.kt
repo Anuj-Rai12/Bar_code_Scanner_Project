@@ -152,6 +152,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
     }
 
     private fun screenNav(selection: SelectionDataClass) {
+        RestaurantSingletonCls.getInstance().setScreenType(selection.type)
         val action =
             when (valueOf(selection.type)) {
                 TABLEMGT -> {

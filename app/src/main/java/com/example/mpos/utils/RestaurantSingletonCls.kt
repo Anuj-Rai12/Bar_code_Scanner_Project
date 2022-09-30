@@ -1,10 +1,14 @@
 package com.example.mpos.utils
 
+import android.util.Log
+
 
 class RestaurantSingletonCls {
     private var storeId: String? = null
     private var userId: String? = null
     private var restaurantName: String? = null
+
+    private var screenType:String?=null
 
     companion object {
         private var INSTANCE: RestaurantSingletonCls? = null
@@ -20,6 +24,14 @@ class RestaurantSingletonCls {
 
     fun getUserId() = userId
 
+    fun setScreenType(str:String){
+        screenType=str
+    }
+
+    fun getScreenType(): String? {
+        Log.i("Screen_Type", "getScreenType: $screenType")
+        return screenType
+    }
 
     fun setStoreId(store: String) {
         storeId = store

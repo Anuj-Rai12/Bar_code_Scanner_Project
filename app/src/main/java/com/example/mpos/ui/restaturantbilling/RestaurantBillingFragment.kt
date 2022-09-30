@@ -50,7 +50,8 @@ import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
 
-class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment),OnBottomSheetClickListener {
+class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment),
+    OnBottomSheetClickListener {
     private lateinit var binding: RestaurantBillingFragmentBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
 
@@ -64,7 +65,11 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
     private val args: RestaurantBillingFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
     private val customDiningRequest: ConfirmDiningRequest =
-        ConfirmDiningRequest(ConfirmDiningBody())
+        ConfirmDiningRequest(
+            ConfirmDiningBody(
+                screenType = RestaurantSingletonCls.getInstance().getScreenType()!!
+            )
+        )
     private var receiptNo: String? = null
     private var confirmBillingRequest: ConfirmBillingRequest? = null
 
@@ -234,7 +239,6 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
     }
 
 
-
     private fun getBillPrintResponse() {
         printBillViewModel.doPrinting.observe(viewLifecycleOwner) {
             when (it) {
@@ -267,8 +271,8 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
     }
 
     private fun getPrintInvoiceResponse() {
-        viewModel.printBillInvoice.observe(viewLifecycleOwner){
-            when(it){
+        viewModel.printBillInvoice.observe(viewLifecycleOwner) {
+            when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -289,9 +293,12 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                     (it.data as PrintInvoice?)?.let { printInvoice ->
                         Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
                         printBillViewModel.doPrintInvoice(printInvoice)
-                    }?:run{
+                    } ?: run {
                         showDialogBox(
-                            "Success", "Invoice Generate Successfully", icon = R.drawable.ic_success, isCancel = false
+                            "Success",
+                            "Invoice Generate Successfully",
+                            icon = R.drawable.ic_success,
+                            isCancel = false
                         ) {
                             findNavController().popBackStack()
                         }

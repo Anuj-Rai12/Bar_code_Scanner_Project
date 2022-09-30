@@ -376,7 +376,8 @@ fun Activity.addDialogMaterial(
                 waiterName = "",
                 waiterID = "",
                 errorText = "",
-                contactNo = "0000000000"
+                contactNo = "0000000000",
+                screenType = RestaurantSingletonCls.getInstance().getScreenType()!!
             )
         )
         msg("Saved")

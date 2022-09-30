@@ -226,7 +226,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
         val type = WhereToGoFromScan.TESTINGCONNECTION.name
         if (args.item == Url_Text && args.type != type) {
             first.rawValue?.let {
-                viewModel.checkForItemItem(it)
+                viewModel.checkForItemItem(it,args.type)
             } ?: activity?.msg("Oops SomeThing Went Wrong")
         } else {
             val handler = Handler(Looper.getMainLooper())

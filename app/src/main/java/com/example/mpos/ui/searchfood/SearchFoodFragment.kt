@@ -104,49 +104,57 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
             DealsStoreInstance.getInstance().setIsResetButtonClick(false)
             listOfFoodItem.addAll(args.list.foodList)
             val action = when (WhereToGoFromSearch.valueOf(args.type)) {
+
                 WhereToGoFromSearch.TABLEMANGMENT -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
                         FoodItemList(listOfFoodItem), args.tbl!!, args.confirmreq
                     )
                 }
+
                 WhereToGoFromSearch.COSTESTIMATE -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToCostDashBoardFragment(
                         FoodItemList(listOfFoodItem),
                         args.confirmreq
                     )
                 }
+
                 WhereToGoFromSearch.SHOWROOMESTIMATE -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToShowRoomEstimationFragment(
                         FoodItemList(listOfFoodItem),
                         args.confirmreq
                     )
                 }
+
                 WhereToGoFromSearch.RESTAURANTESTIMATE -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToRestaurantEstimationFragments(
                         FoodItemList(listOfFoodItem),
                         args.confirmreq
                     )
                 }
+
                 WhereToGoFromSearch.BILLPAYMENT -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToBillingFragment(
                         FoodItemList(listOfFoodItem),
                         args.confirmreq
                     )
                 }
+
                 WhereToGoFromSearch.SHOWROOMBILLING -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToShowRoomBillingFragment(
                         FoodItemList(listOfFoodItem),
                         args.confirmreq
                     )
                 }
+
                 WhereToGoFromSearch.RESTARURANTBILLING -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToRestaurantBillingFragment(
                         FoodItemList(listOfFoodItem),
                         args.confirmreq
                     )
                 }
+
             }
-             findNavController().navigate(action)
+            findNavController().navigate(action)
         } else if (flag) {
             findNavController().popBackStack()
         }

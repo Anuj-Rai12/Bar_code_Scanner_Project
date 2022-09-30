@@ -8,6 +8,8 @@ import org.simpleframework.xml.Root
 
 @Root(name = AllStringConst.Envelope, strict = false)
 data class BarCodeRequest @JvmOverloads constructor(
+
+
     @field:Element(name = "ScanAndFindITEM", required = false)
     @param:Element(name = "ScanAndFindITEM", required = false)
     @field:Path("Body")
@@ -30,6 +32,13 @@ data class BarCodeRequestBody(
     @field:Element(name = "barcodeInput")
     @param:Element(name = "barcodeInput")
     val barcodeInput: String? = null,
+
+
+
+    @field:Element(name = "screenType")
+    @param:Element(name = "screenType")
+    val screenType: String,
+
 
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")

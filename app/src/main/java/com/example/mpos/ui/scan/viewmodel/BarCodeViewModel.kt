@@ -48,7 +48,7 @@ class BarCodeViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun checkForItemItem(itemCode: String) {
+    fun checkForItemItem(itemCode: String,msg:String) {
         if (!app.isNetworkAvailable()) {
             _event.postValue(Events(ApisResponse.Error("No Internet Connection found", null)))
             return
@@ -58,7 +58,13 @@ class BarCodeViewModel(application: Application) : AndroidViewModel(application)
             return
         }
         val response =
-            BarCodeRequest(body = BarCodeRequestBody(storeNo = storeNo, barcodeInput = itemCode))
+            BarCodeRequest(
+                body = BarCodeRequestBody(
+                    storeNo = storeNo,
+                    barcodeInput = itemCode,
+                    screenType = msg
+                )
+            )
         viewModelScope.launch {
             repository.getBarCodeResponse(response).collectLatest {
                 _barCodeResponse.postValue((Events(it)))

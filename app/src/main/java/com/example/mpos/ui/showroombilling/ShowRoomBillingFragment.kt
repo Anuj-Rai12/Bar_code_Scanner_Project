@@ -65,7 +65,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
     private val args: ShowRoomBillingFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
     private val customDiningRequest: ConfirmDiningRequest =
-        ConfirmDiningRequest(ConfirmDiningBody())
+        ConfirmDiningRequest(ConfirmDiningBody(screenType = RestaurantSingletonCls.getInstance().getScreenType()!!))
     private var receiptNo: String? = null
     private var confirmBillingRequest: ConfirmBillingRequest? = null
 

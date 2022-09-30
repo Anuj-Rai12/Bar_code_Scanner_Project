@@ -95,4 +95,9 @@ data class ConfirmDiningBody(
     @param:Element(name = "staffID")
     val staffID: String? = null,//User Name Log In
 
+    @field:Element(name = "screenType")
+    @param:Element(name = "screenType")
+    val screenType: String,
+
+
 ) : Parcelable

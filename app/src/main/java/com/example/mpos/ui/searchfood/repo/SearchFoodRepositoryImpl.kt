@@ -30,7 +30,14 @@ class SearchFoodRepositoryImpl constructor(
             dao.getAllItem()
         },
         fetch = {
-            val info = api.getItemMasterSync(ItemMasterSyncRequest(TableInformation(stateNo)))
+            val info = api.getItemMasterSync(
+                ItemMasterSyncRequest(
+                    TableInformation(
+                        storeNo = stateNo,
+                        screenType = RestaurantSingletonCls.getInstance().getScreenType()!!
+                    )
+                )
+            )
             info.body()?.apkLoginResult?.value?.let {
                 return@let deserializeFromJson<ItemMethodSyncJsonResponse>(it)
             }!!.itemMaster

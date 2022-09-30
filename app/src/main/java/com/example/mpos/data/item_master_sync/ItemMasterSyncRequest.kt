@@ -28,6 +28,11 @@ data class TableInformation(
     @param:Element(name = "storeNo")
     val storeNo: String? = null,
 
+
+    @field:Element(name = "screenType")
+    @param:Element(name = "screenType")
+    val screenType: String,
+
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
     val xmlns: String = AllStringConst._xmls
