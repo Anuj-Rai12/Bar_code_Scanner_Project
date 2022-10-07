@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpos.R
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.SearchFoodItemLayoutBinding
+import com.example.mpos.ui.crosselling.CrossSellingDialog
+import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
@@ -22,7 +24,7 @@ import com.example.mpos.utils.*
 import com.google.android.material.snackbar.Snackbar
 
 
-class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
+class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomSheetClickListener {
     private lateinit var binding: SearchFoodItemLayoutBinding
     private lateinit var listOfFoodItemToSearchAdaptor: ListOfFoodItemToSearchAdaptor
     private var listOfFoodItem = mutableListOf<ItemMasterFoodItem>()
@@ -231,4 +233,16 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout) {
             adapter = listOfFoodItemToSearchAdaptor
         }
     }
+
+
+    private fun openCrossSellingDialog(itemMaster: ItemMaster) {
+        val dialog=CrossSellingDialog(activity!!)
+        dialog.itemClicked=this
+        dialog.showCrossSellingDialog(itemMaster.itemName)
+    }
+
+    override fun <T> onItemClicked(response: T) {
+        activity?.msg("got the response \n$response")
+    }
+
 }
