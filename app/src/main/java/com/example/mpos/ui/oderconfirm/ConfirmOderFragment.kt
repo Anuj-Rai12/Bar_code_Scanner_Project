@@ -624,7 +624,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             itemCode = barcode.itemCode,
             itemName = barcode.itemName,
             uOM = barcode.uOM,
-            decimalAllowed = barcode.decimalAllowed
+            decimalAllowed = barcode.decimalAllowed,
+            crossSellingAllow =barcode.crossSellingAllow
         )
         itemMaster.foodQty = barcode.qty.toDouble()
         val amt =

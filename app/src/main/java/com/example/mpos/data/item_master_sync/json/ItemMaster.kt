@@ -23,6 +23,7 @@ data class ItemMaster(
     @SerializedName("SalePrice") val salePrice: String,
     @SerializedName("UOM") val uOM: String,
     @SerializedName("decimalAllowed") val decimalAllowed: String,
+    @SerializedName("CrossSellingAllow") val crossSellingAllow: String,
     ) : Parcelable {
     @IgnoredOnParcel
     var foodQty: Double = 1.0

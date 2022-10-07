@@ -12,5 +12,6 @@ data class BarcodeJsonResponse(
     @SerializedName("SalePrice") val salePrice: String,
     @SerializedName("UOM") val uOM: String,
     @SerializedName("decimalAllowed") val decimalAllowed: String,
+    @SerializedName("CrossSellingAllow") val crossSellingAllow: String,
 
 )

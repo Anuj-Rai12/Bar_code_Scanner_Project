@@ -21,7 +21,8 @@ class CrossSellingDialog(private val activity: Activity) {
                 itemName = "Corona Rita",
                 salePrice = "875",
                 uOM = "PORTION",
-                decimalAllowed = "true"
+                decimalAllowed = "true",
+                crossSellingAllow = "true"
             ), ItemMaster(
                 id = 33,
                 barcode = "100168",
@@ -31,7 +32,8 @@ class CrossSellingDialog(private val activity: Activity) {
                 itemName = "Corona Rita",
                 salePrice = "875",
                 uOM = "PORTION",
-                decimalAllowed = "true"
+                decimalAllowed = "true",
+                crossSellingAllow = "true"
             ), ItemMaster(
                 id = 24,
                 barcode = "100168",
@@ -41,7 +43,8 @@ class CrossSellingDialog(private val activity: Activity) {
                 itemName = "Corona Rita",
                 salePrice = "875",
                 uOM = "PORTION",
-                decimalAllowed = "true"
+                decimalAllowed = "true",
+                crossSellingAllow = "true"
             ), ItemMaster(
                 id = 22,
                 barcode = "100168",
@@ -51,7 +54,8 @@ class CrossSellingDialog(private val activity: Activity) {
                 itemName = "Corona Rita",
                 salePrice = "875",
                 uOM = "PORTION",
-                decimalAllowed = "true"
+                decimalAllowed = "true",
+                crossSellingAllow = "true"
             ), ItemMaster(
                 id = 25,
                 barcode = "100168",
@@ -61,7 +65,8 @@ class CrossSellingDialog(private val activity: Activity) {
                 itemName = "Corona Rita",
                 salePrice = "875",
                 uOM = "PORTION",
-                decimalAllowed = "true"
+                decimalAllowed = "true",
+                crossSellingAllow = "true"
             ), ItemMaster(
                 id = 13,
                 barcode = "100168",
@@ -70,6 +75,7 @@ class CrossSellingDialog(private val activity: Activity) {
                 itemDescription = "item of description is collected",
                 itemName = "Corona Rita",
                 salePrice = "875",
+                crossSellingAllow = "true",
                 uOM = "PORTION",
                 decimalAllowed = "true"
             ), ItemMaster(
@@ -81,7 +87,8 @@ class CrossSellingDialog(private val activity: Activity) {
                 itemName = "Corona Rita",
                 salePrice = "875",
                 uOM = "PORTION",
-                decimalAllowed = "true"
+                decimalAllowed = "true",
+                crossSellingAllow = "true"
             ), ItemMaster(
                 id = 203,
                 barcode = "100168",
@@ -91,7 +98,8 @@ class CrossSellingDialog(private val activity: Activity) {
                 itemName = "Corona Rita",
                 salePrice = "875",
                 uOM = "PORTION",
-                decimalAllowed = "true"
+                decimalAllowed = "true",
+                crossSellingAllow = "true"
             )
         )
     }
@@ -99,8 +107,7 @@ class CrossSellingDialog(private val activity: Activity) {
     fun showCrossSellingDialog(title: String) {
         val binding = CrossSellingDialogBoxBinding.inflate(activity.layoutInflater)
         alertDialog = MaterialAlertDialogBuilder(
-            activity,
-            R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+            activity, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
         ).setView(binding.root).setCancelable(false).show()
 
         binding.itemTitle.text = title

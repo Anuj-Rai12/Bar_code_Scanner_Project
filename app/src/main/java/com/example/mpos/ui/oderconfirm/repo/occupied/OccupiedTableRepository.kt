@@ -41,6 +41,7 @@ class OccupiedTableRepository(retrofit: Retrofit) {
         emit(data)
     }.flowOn(IO)
 
+    //Use to show order history of table
     private fun getFoodItem(occupiedTable: OccupiedTable): ApisResponse.Success<FoodItemList> {
         val mutableList = mutableListOf<ItemMasterFoodItem>()
         occupiedTable.forEach {
@@ -55,7 +56,8 @@ class OccupiedTableRepository(retrofit: Retrofit) {
                         uOM = it.itemMaster.uOM,
                         itemCategory = it.itemMaster.itemCategory,
                         itemName = it.itemMaster.itemName,
-                        decimalAllowed = false.toString()
+                        decimalAllowed = false.toString(),
+                        crossSellingAllow = false.toString()
                     ), foodQty = it.foodQty
                 )
             )
