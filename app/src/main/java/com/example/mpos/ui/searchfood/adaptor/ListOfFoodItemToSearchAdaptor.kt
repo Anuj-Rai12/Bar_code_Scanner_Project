@@ -14,9 +14,12 @@ import com.example.mpos.ui.searchfood.adaptor.offeradaptor.ListOfOfferAdaptor
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.ui.searchfood.model.OfferDesc
 import com.example.mpos.utils.*
+import java.util.*
 
-class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: ItemClickListerForListOfFood) :
-    ListAdapter<ItemMaster, ListOfFoodItemToSearchAdaptor.ListOfFoodItemViewHolder>(diffUtil) {
+class ListOfFoodItemToSearchAdaptor(
+    private val itemClickListerForListOfFood: ItemClickListerForListOfFood,
+    private val itemClickListerCrossSelling: ItemClickListerForListOfFood
+) : ListAdapter<ItemMaster, ListOfFoodItemToSearchAdaptor.ListOfFoodItemViewHolder>(diffUtil) {
 
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<ItemMaster>() {
@@ -48,7 +51,8 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
         @SuppressLint("SetTextI18n")
         fun setData(
             foodItem: ItemMaster,
-            itemClickListerForListOfFood: ItemClickListerForListOfFood
+            itemClickListerForListOfFood: ItemClickListerForListOfFood,
+            itemClickListerCrossSelling: ItemClickListerForListOfFood
         ) {
 
             binding.foodItemTv.text =
@@ -61,12 +65,12 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             /*if (foodItem.offerDesc != null)
                 listOfOfferAdaptor.submitList(foodItem.offerDesc)
             else*/
+
+
             listOfOfferAdaptor.submitList(
                 listOf(
                     OfferDesc(
-                        title = "No offer",
-                        price = 0.0,
-                        selected = false
+                        title = "No offer", price = 0.0, selected = false
                     )
                 )
             )
@@ -84,39 +88,25 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             }
 
             binding.btnWithOffer.setOnClickListener {
-                /*foodItem.addWithOffer = true
-                if (foodItem.foodQty != null && !listOfOfferString.isNullOrEmpty()) {
-                    foodItem.offerDesc = listOfOfferString
-                } else if (foodItem.offerDesc != null && listOfOfferString.isNullOrEmpty()) {
-                    foodItem.offerDesc?.forEach {
-                        foodItem.foodAmt += it.price
-                    }
-                }*/
                 foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1.0
-                val amt=(setPrice(foodItem.salePrice) * foodItem.foodQty)
+                val amt = (setPrice(foodItem.salePrice) * foodItem.foodQty)
                 foodItem.foodAmt = "%.4f".format(amt).toDouble()
                 itemClickListerForListOfFood(
                     ItemMasterFoodItem(
-                        foodItem,
-                        foodAmt = foodItem.foodAmt,
-                        foodQty = foodItem.foodQty
+                        foodItem, foodAmt = foodItem.foodAmt, foodQty = foodItem.foodQty
                     )
                 )
-                //binding.root.changeViewColor(color = R.color.semi_white_color)
                 setInVisible()
             }
-
             binding.btnWithoutOffer.setOnClickListener {
                 //foodItem.addWithOffer = false
                 //foodItem.offerDesc = null
                 foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1.0
-                val amt=(setPrice(foodItem.salePrice) * foodItem.foodQty)
+                val amt = (setPrice(foodItem.salePrice) * foodItem.foodQty)
                 foodItem.foodAmt = "%.4f".format(amt).toDouble()
                 itemClickListerForListOfFood(
                     ItemMasterFoodItem(
-                        foodItem,
-                        foodAmt = foodItem.foodAmt,
-                        foodQty = foodItem.foodQty
+                        foodItem, foodAmt = foodItem.foodAmt, foodQty = foodItem.foodQty
                     )
                 )
                 //binding.root.changeViewColor(color = R.color.semi_white_color)
@@ -125,9 +115,19 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
 
             binding.root.setOnClickListener {
                 //it.changeViewColor(R.color.light_blue_bg)
-                setVisible()
+                setVisible(foodItem)
             }
-
+            binding.crossSellingOffer.setOnClickListener {
+                setInVisible()
+                foodItem.foodQty = if (foodItem.foodQty > 0) foodItem.foodQty else 1.0
+                val amt = (setPrice(foodItem.salePrice) * foodItem.foodQty)
+                foodItem.foodAmt = "%.4f".format(amt).toDouble()
+                itemClickListerCrossSelling(
+                    ItemMasterFoodItem(
+                        foodItem, foodAmt = foodItem.foodAmt, foodQty = foodItem.foodQty
+                    )
+                )
+            }
             binding.btnCloseId.setOnClickListener {
                 //binding.root.changeViewColor(color = R.color.semi_white_color)
                 setInVisible()
@@ -166,7 +166,7 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
             }*/
         }
 
-        private fun setVisible() {
+        private fun setVisible(foodItem: ItemMaster) {
             binding.apply {
                 linearLayoutForItemCount.show()
                 borderBottomFood.show()
@@ -176,6 +176,11 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 //Order-Offer
                 offerTv.hide()
                 offerDetailTv.show()
+                //crossSelling btn
+                val flag = foodItem.decimalAllowed.lowercase(Locale.getDefault()).toBoolean()
+                if (flag) {
+                    crossSellingOffer.show()
+                }
             }
         }
 
@@ -190,6 +195,8 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
                 //OdderOffer
                 offerTv.show()
                 offerDetailTv.hide()
+                //crossSelling btn
+                crossSellingOffer.hide()
             }
         }
 
@@ -205,7 +212,7 @@ class ListOfFoodItemToSearchAdaptor(private val itemClickListerForListOfFood: It
     override fun onBindViewHolder(holder: ListOfFoodItemViewHolder, position: Int) {
         val curr = getItem(position)
         curr?.let {
-            holder.setData(it, itemClickListerForListOfFood)
+            holder.setData(it, itemClickListerForListOfFood,itemClickListerCrossSelling)
         }
     }
 }

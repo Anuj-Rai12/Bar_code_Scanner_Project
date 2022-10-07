@@ -210,25 +210,23 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
         binding.listOfFoodItem.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
-            listOfFoodItemToSearchAdaptor = ListOfFoodItemToSearchAdaptor {
-                val msg = if (!checkFieldValue(it.itemMaster.itemName)) it.itemMaster.itemName
-                else it.itemMaster.itemDescription
+            listOfFoodItemToSearchAdaptor =
+                ListOfFoodItemToSearchAdaptor(itemClickListerForListOfFood = {
+                    val msg = if (!checkFieldValue(it.itemMaster.itemName)) it.itemMaster.itemName
+                    else it.itemMaster.itemDescription
 
-                showSnackBar(msg, R.color.green_color, Snackbar.LENGTH_SHORT)
-                val item = listOfFoodItem.find { res -> res.itemMaster.id == it.itemMaster.id }
-                if (item == null) {
-                    listOfFoodItem.add(it)
-                } else {
-                    listOfFoodItem.remove(item)
-                    listOfFoodItem.add(it)
-                }
-                Log.i(TAG, "setRecycleView: $listOfFoodItem")
-                /*if (listOfFoodItem.contains(it)) {
-                    listOfFoodItem.remove(it)
-                    listOfFoodItem.add(it)
-                } else
-                    listOfFoodItem.add(it)*/
-            }
+                    showSnackBar(msg, R.color.green_color, Snackbar.LENGTH_SHORT)
+                    val item = listOfFoodItem.find { res -> res.itemMaster.id == it.itemMaster.id }
+                    if (item == null) {
+                        listOfFoodItem.add(it)
+                    } else {
+                        listOfFoodItem.remove(item)
+                        listOfFoodItem.add(it)
+                    }
+                    Log.i(TAG, "setRecycleView: $listOfFoodItem")
+                }, itemClickListerCrossSelling = { itemMaster ->
+                    openCrossSellingDialog(itemMaster.itemMaster)
+                })
             flag = true
             adapter = listOfFoodItemToSearchAdaptor
         }
@@ -236,8 +234,8 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
 
 
     private fun openCrossSellingDialog(itemMaster: ItemMaster) {
-        val dialog=CrossSellingDialog(activity!!)
-        dialog.itemClicked=this
+        val dialog = CrossSellingDialog(activity!!)
+        dialog.itemClicked = this
         dialog.showCrossSellingDialog(itemMaster.itemName)
     }
 

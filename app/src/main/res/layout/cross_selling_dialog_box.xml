@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="10dp"
+    android:layout_height="wrap_content"
     android:background="@color/semi_white_color"
-    android:layout_height="wrap_content">
+    android:padding="10dp">
 
 
     <TextView
@@ -55,7 +55,7 @@
         android:id="@+id/border_no_1"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
         android:background="#f2f2f2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -67,6 +67,9 @@
         android:layout_width="match_parent"
         android:layout_height="350dp"
         android:layout_marginTop="5dp"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbarThumbVertical="@color/scroll_bar"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -82,16 +85,17 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="4dp"
         android:text="Clear"
-        android:textSize="13sp"
-        app:strokeColor="@color/dark_red_color"
         android:textAllCaps="false"
-        app:rippleColor="@color/light_red_color"
         android:textColor="@color/black"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/submit_btn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="@id/recycle_view_item"
-        app:layout_constraintTop_toBottomOf="@id/recycle_view_item" />
+        app:layout_constraintTop_toBottomOf="@id/recycle_view_item"
+        app:rippleColor="@color/light_red_color"
+        app:strokeColor="@color/dark_red_color" />
 
 
     <com.google.android.material.button.MaterialButton
@@ -101,16 +105,17 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:text="Submit"
-        android:textSize="13sp"
-        app:strokeColor="@color/dark_green_color"
         android:textAllCaps="false"
-        app:rippleColor="@color/light_green_color"
         android:textColor="@color/black"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/cancel_btn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/clear_btn"
-        app:layout_constraintTop_toTopOf="@id/clear_btn" />
+        app:layout_constraintTop_toTopOf="@id/clear_btn"
+        app:rippleColor="@color/light_green_color"
+        app:strokeColor="@color/dark_green_color" />
 
 
     <com.google.android.material.button.MaterialButton
@@ -119,25 +124,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Cancel"
-        app:rippleColor="@color/light_red_color"
         android:textAllCaps="false"
-        android:textSize="13sp"
-        app:strokeColor="@color/dark_red_color"
         android:textColor="@color/black"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/recycle_view_item"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/submit_btn"
-        app:layout_constraintTop_toTopOf="@id/submit_btn" />
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/cancel_btn"
-        app:layout_constraintRight_toRightOf="@id/cancel_btn"
-        app:layout_constraintTop_toBottomOf="@id/cancel_btn" />
+        app:layout_constraintTop_toTopOf="@id/submit_btn"
+        app:rippleColor="@color/light_red_color"
+        app:strokeColor="@color/dark_red_color" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

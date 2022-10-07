@@ -80,8 +80,8 @@
         android:gravity="center|start"
         android:textColor="@color/light_grey_color"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@id/linearLayout_for_item_count"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/linearLayout_for_item_count"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout_for_item_count"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight=".5"
@@ -110,12 +110,12 @@
             android:id="@+id/btn_minus_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginEnd="4dp"
             android:background="@drawable/circle_shape"
             android:backgroundTint="@color/light_red_color"
             android:contentDescription="@string/hint_btn_minus"
             android:padding="3dp"
-            android:layout_gravity="center"
             android:scaleType="fitXY"
             android:src="@drawable/ic_remove_icon" />
 
@@ -125,10 +125,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:background="@drawable/black_underline_border"
+            android:gravity="center"
             android:paddingStart="8dp"
             android:paddingTop="3dp"
             android:paddingEnd="9dp"
-            android:gravity="center"
             android:paddingBottom="5dp"
             android:textColor="@color/light_grey_color"
             tools:text="2gkjgkjkfjhfghjghfhjgfghfh" />
@@ -231,5 +231,29 @@
         tools:text="@string/btn_without_offer"
         tools:visibility="visible" />
 
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cross_selling_offer"
+        android:layout_width="0dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="17dp"
+        android:background="@drawable/add_with_out_offer_btn_layout"
+        android:fontFamily="@font/roboto_medium"
+        android:paddingStart="16dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="6dp"
+        android:text="Select CrossSelling Item"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/order_offer_list_view"
+        app:layout_constraintRight_toRightOf="@id/order_offer_list_view"
+        app:layout_constraintTop_toBottomOf="@id/btn_without_offer"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
