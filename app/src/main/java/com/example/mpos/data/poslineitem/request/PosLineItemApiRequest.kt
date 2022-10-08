@@ -93,7 +93,7 @@ data class MenuItem @JvmOverloads constructor(
 
     @field:Element(name = "ParentItemCrossSelling")
     @param:Element(name = "ParentItemCrossSelling")
-    val ParentItemCrossSelling: String = "", //for now it will empty
+    val ParentItemCrossSelling: String, //= "", for now it will empty
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
     val xmlns: String = AllStringConst._xmlsList

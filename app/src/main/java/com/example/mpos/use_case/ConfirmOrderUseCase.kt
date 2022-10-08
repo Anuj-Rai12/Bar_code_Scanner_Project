@@ -82,7 +82,8 @@ class ConfirmOrderUseCase {
                 storeNo = storeNo,
                 freeText = itemMasterFoodItem.free_txt,
                 price = itemMasterFoodItem.itemMaster.salePrice,
-                dealLine = itemMasterFoodItem.isDeal.toString().uppercase(Locale.getDefault())
+                dealLine = itemMasterFoodItem.isDeal.toString().uppercase(Locale.getDefault()),
+                ParentItemCrossSelling = itemMasterFoodItem.itemMaster.crossSellingAllow
             )
             list.add(menuItem)
         }
