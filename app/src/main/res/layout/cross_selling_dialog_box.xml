@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/semi_white_color"
+    android:backgroundTint="@color/semi_white_color"
+    android:background="@drawable/round_dialog_bg"
     android:padding="10dp">
 
 
@@ -12,7 +13,7 @@
         android:id="@+id/item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/roboto"
         android:text="Hello my dialog Box"
         android:textColor="@color/black"
@@ -64,15 +65,15 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view_item"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="350dp"
         android:layout_marginTop="5dp"
         android:overScrollMode="ifContentScrolls"
         android:scrollbarThumbVertical="@color/scroll_bar"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/border_no_1"
+        app:layout_constraintRight_toRightOf="@id/border_no_1"
         app:layout_constraintTop_toBottomOf="@id/border_no_1"
         tools:listitem="@layout/cross_selling_item" />
 

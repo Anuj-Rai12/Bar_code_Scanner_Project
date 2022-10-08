@@ -1,6 +1,9 @@
 package com.example.mpos.ui.crosselling
 
 import android.app.Activity
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AlertDialog
 import com.example.mpos.R
 import com.example.mpos.data.item_master_sync.json.ItemMaster
@@ -106,10 +109,9 @@ class CrossSellingDialog(private val activity: Activity) {
     var itemClicked: OnBottomSheetClickListener? = null
     fun showCrossSellingDialog(title: String) {
         val binding = CrossSellingDialogBoxBinding.inflate(activity.layoutInflater)
-        alertDialog = MaterialAlertDialogBuilder(
-            activity, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
-        ).setView(binding.root).setCancelable(false).show()
-
+        alertDialog =
+            AlertDialog.Builder(activity).setView(binding.root).setCancelable(false).show()
+        alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         binding.itemTitle.text = title
         binding.cancelBtn.setOnClickListener {
             alertDialog?.dismiss()
@@ -119,6 +121,7 @@ class CrossSellingDialog(private val activity: Activity) {
         }
         binding.recycleViewItem.adapter = crossAdaptor
         crossAdaptor.submitList(sampleData)
+        alertDialog?.show()
     }
 
 }
