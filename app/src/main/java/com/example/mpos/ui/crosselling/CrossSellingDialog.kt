@@ -1,15 +1,12 @@
 package com.example.mpos.ui.crosselling
 
 import android.app.Activity
-import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AlertDialog
-import com.example.mpos.R
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.CrossSellingDialogBoxBinding
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class CrossSellingDialog(private val activity: Activity) {
     private var alertDialog: AlertDialog? = null
