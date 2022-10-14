@@ -13,6 +13,7 @@ import com.example.mpos.ui.menu.repo.MenuRepository
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.buildApi
 import com.example.mpos.utils.deserializeFromJson
+import com.example.mpos.utils.print.recpit.PrintRepository
 import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
@@ -113,6 +114,7 @@ class CostDashBoardRepository(retrofit: Retrofit) {
                 ApisResponse.Error(MenuRepository.err, null)
             }
         } catch (e: Exception) {
+            PrintRepository.setCashAnalytics(e)
             ApisResponse.Error(null, e)
         }
         emit(data)
@@ -137,12 +139,15 @@ class CostDashBoardRepository(retrofit: Retrofit) {
                 ApisResponse.Error(MenuRepository.err, null)
             }
         }catch (e:JsonSyntaxException){
+            PrintRepository.setCashAnalytics(e)
             ApisResponse.Error("Response is Not Match with Pint Invoice Syntax", null)
         }
         catch (e:RuntimeException){
+            PrintRepository.setCashAnalytics(e)
             ApisResponse.Error("Cannot Fetch Invoice Response as it is Empty", null)
         }
         catch (e: Exception) {
+            PrintRepository.setCashAnalytics(e)
             Log.e("PRINT_INVOICE", "getPrintInvoice: ${e.javaClass.canonicalName}")
             ApisResponse.Error(null, e)
         }
