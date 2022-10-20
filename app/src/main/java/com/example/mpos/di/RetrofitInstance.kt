@@ -32,9 +32,9 @@ class RetrofitInstance(
 
 
     private val client = OkHttpClient.Builder().apply {
-        connectTimeout(30, TimeUnit.SECONDS)
-        readTimeout(30, TimeUnit.SECONDS)
-        writeTimeout(30, TimeUnit.SECONDS)
+        connectTimeout(70, TimeUnit.SECONDS)
+        readTimeout(70, TimeUnit.SECONDS)
+        writeTimeout(70, TimeUnit.SECONDS)
             .addInterceptor {
                 val operation = it.request().newBuilder()
                     .addHeader("Authorization", auth)
