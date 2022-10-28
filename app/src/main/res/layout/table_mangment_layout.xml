@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,98 +7,104 @@
     android:background="@color/semi_white_color"
     tools:context="com.example.mpos.ui.tablemange.TableManagementFragment">
 
-    <TextView
-        android:id="@+id/table_Id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="12sp"
-        android:fontFamily="@font/roboto_medium"
-        android:text="@string/item_table"
-        android:textColor="@color/light_grey_color"
-        android:textSize="22sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_Container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/logo_file_id4"
-        android:layout_width="31dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="12dp"
-        android:contentDescription="@string/app_title"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logofile" />
+        <TextView
+            android:id="@+id/table_Id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="12sp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/item_table"
+            android:textColor="@color/light_grey_color"
+            android:textSize="22sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-
-    <TextView
-        android:id="@+id/table_info_detail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="@font/roboto_medium"
-        android:maxLines="2"
-        android:text="@string/item_table"
-        android:textColor="@color/light_grey_color"
-        android:textSize="14sp"
-        app:layout_constraintLeft_toLeftOf="@id/table_Id"
-        app:layout_constraintRight_toLeftOf="@id/logo_file_id4"
-        app:layout_constraintTop_toBottomOf="@id/table_Id" />
+        <ImageView
+            android:id="@+id/logo_file_id4"
+            android:layout_width="31dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@string/app_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logofile" />
 
 
-    <ImageView
-        android:id="@+id/setting_btn_ic3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:contentDescription="@string/btn_setting"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        <TextView
+            android:id="@+id/table_info_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="2"
+            android:text="@string/item_table"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="@id/table_Id"
+            app:layout_constraintRight_toLeftOf="@id/logo_file_id4"
+            app:layout_constraintTop_toBottomOf="@id/table_Id" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/total_table_recycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:overScrollMode="never"
-        app:spanCount="3"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/table_info_detail"
-        app:layout_constraintRight_toRightOf="@id/logo_file_id4"
-        app:layout_constraintTop_toBottomOf="@id/table_info_detail"
-        tools:listitem="@layout/table_type_item_layout" />
+        <ImageView
+            android:id="@+id/setting_btn_ic3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:contentDescription="@string/btn_setting"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
 
-    <include
-        android:id="@+id/pb_layout"
-        layout="@layout/progress_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/table_info_detail"
-        app:layout_constraintRight_toRightOf="@id/table_info_detail"
-        app:layout_constraintTop_toBottomOf="@id/table_info_detail"
-        tools:visibility="visible" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/total_table_recycler"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/table_info_detail"
+            app:layout_constraintRight_toRightOf="@id/logo_file_id4"
+            app:layout_constraintTop_toBottomOf="@id/table_info_detail"
+            app:spanCount="3"
+            tools:listitem="@layout/table_type_item_layout" />
 
 
-    <TextView
-        android:id="@+id/setting_txt3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:fontFamily="@font/roboto"
-        android:text="@string/btn_setting"
-        android:textColor="@color/light_grey_color"
-        android:textSize="14sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/setting_btn_ic3"
-        app:layout_constraintLeft_toRightOf="@id/setting_btn_ic3"
-        app:layout_constraintTop_toTopOf="@id/setting_btn_ic3" />
+        <include
+            android:id="@+id/pb_layout"
+            layout="@layout/progress_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/table_info_detail"
+            app:layout_constraintRight_toRightOf="@id/table_info_detail"
+            app:layout_constraintTop_toBottomOf="@id/table_info_detail"
+            tools:visibility="visible" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/setting_txt3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:fontFamily="@font/roboto"
+            android:text="@string/btn_setting"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/setting_btn_ic3"
+            app:layout_constraintLeft_toRightOf="@id/setting_btn_ic3"
+            app:layout_constraintTop_toTopOf="@id/setting_btn_ic3" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

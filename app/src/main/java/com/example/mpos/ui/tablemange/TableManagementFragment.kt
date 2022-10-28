@@ -49,6 +49,9 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout),
         }
         setRecycleView()
         setUpData()
+        binding.root.setOnRefreshListener {
+            viewModel.fetchTbl()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -56,6 +59,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout),
         viewModel.tblInfo.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
+                    binding.root.isRefreshing=false
                     hideOrShowProgress(null)
                     val exp = it.exception?.localizedMessage
                     val error = exp?.let {
@@ -74,6 +78,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout),
                     }
                 }
                 is ApisResponse.Success -> {
+                    binding.root.isRefreshing=false
                     hideOrShowProgress(null)
                     displayData(it.data)
                 }
