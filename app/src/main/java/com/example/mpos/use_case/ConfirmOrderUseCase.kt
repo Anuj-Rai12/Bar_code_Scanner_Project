@@ -23,7 +23,7 @@ class ConfirmOrderUseCase {
                 grandTotal += food.foodAmt
             }
         }
-        return grandTotal
+        return "%.2f".format(grandTotal).toDouble()
     }
 
 
