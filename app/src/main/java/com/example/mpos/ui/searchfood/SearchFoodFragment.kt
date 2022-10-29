@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpos.R
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.SearchFoodItemLayoutBinding
 import com.example.mpos.ui.crosselling.CrossSellingDialog
@@ -68,10 +69,36 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
                 viewModel.getInitialData()
             }
         }
-
+        getCrossSellingResponse()
         setRecycleView()
         setData()
 
+    }
+
+    private fun getCrossSellingResponse() {
+        viewModel.crossSellingResponse.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    binding.pbLayout.root.hide()
+                    if (it.data!=null){
+                        showDialogBox("Failed","${it.data}", icon = R.drawable.ic_error){}
+                    }else{
+                        it.exception?.localizedMessage?.let {exp->
+                            showDialogBox("Failed",exp, icon = R.drawable.ic_error){}
+                        }
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.pbLayout.root.show()
+                    binding.pbLayout.titleTxt.text=it.data as String
+                }
+                is ApisResponse.Success -> {
+                    binding.pbLayout.root.hide()
+                    val res=it.data as CrossSellingJsonResponse
+                    openCrossSellingDialog(res)
+                }
+            }
+        }
     }
 
     private fun onBackPress() {
@@ -224,8 +251,8 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
                         listOfFoodItem.add(it)
                     }
                     Log.i(TAG, "setRecycleView: $listOfFoodItem")
-                }, itemClickListerCrossSelling = { itemMaster ->
-                    openCrossSellingDialog(itemMaster.itemMaster)
+                }, itemClickListerCrossSelling = { //itemMaster ->
+                    viewModel.getCrossSellingItem("100004")//itemMaster.itemMaster.itemCode)
                 })
             flag = true
             adapter = listOfFoodItemToSearchAdaptor
@@ -233,14 +260,12 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
     }
 
 
-    private fun openCrossSellingDialog(itemMaster: ItemMaster) {
+    private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
         val dialog = CrossSellingDialog(activity!!)
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(itemMaster.itemName)
+        dialog.showCrossSellingDialog(response)
     }
 
-    override fun <T> onItemClicked(response: T) {
-        activity?.msg("got the response \n$response")
-    }
+    override fun <T> onItemClicked(response: T) {}
 
 }

@@ -4,120 +4,48 @@ import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AlertDialog
-import com.example.mpos.data.item_master_sync.json.ItemMaster
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.databinding.CrossSellingDialogBoxBinding
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 
 class CrossSellingDialog(private val activity: Activity) {
     private var alertDialog: AlertDialog? = null
-    private val sampleData by lazy {
-        listOf(
-            ItemMaster(
-                id = 23,
-                barcode = "100168",
-                itemCategory = "ALCOHOLIC",
-                itemCode = "100168",
-                itemDescription = "item of description is collected",
-                itemName = "Corona Rita",
-                salePrice = "875",
-                uOM = "PORTION",
-                decimalAllowed = "true",
-                crossSellingAllow = "true"
-            ), ItemMaster(
-                id = 33,
-                barcode = "100168",
-                itemCategory = "ALCOHOLIC",
-                itemCode = "100168",
-                itemDescription = "item of description is collected",
-                itemName = "Corona Rita",
-                salePrice = "875",
-                uOM = "PORTION",
-                decimalAllowed = "true",
-                crossSellingAllow = "true"
-            ), ItemMaster(
-                id = 24,
-                barcode = "100168",
-                itemCategory = "ALCOHOLIC",
-                itemCode = "100168",
-                itemDescription = "item of description is collected",
-                itemName = "Corona Rita",
-                salePrice = "875",
-                uOM = "PORTION",
-                decimalAllowed = "true",
-                crossSellingAllow = "true"
-            ), ItemMaster(
-                id = 22,
-                barcode = "100168",
-                itemCategory = "ALCOHOLIC",
-                itemCode = "100168",
-                itemDescription = "item of description is collected",
-                itemName = "Corona Rita",
-                salePrice = "875",
-                uOM = "PORTION",
-                decimalAllowed = "true",
-                crossSellingAllow = "true"
-            ), ItemMaster(
-                id = 25,
-                barcode = "100168",
-                itemCategory = "ALCOHOLIC",
-                itemCode = "100168",
-                itemDescription = "item of description is collected",
-                itemName = "Corona Rita",
-                salePrice = "875",
-                uOM = "PORTION",
-                decimalAllowed = "true",
-                crossSellingAllow = "true"
-            ), ItemMaster(
-                id = 13,
-                barcode = "100168",
-                itemCategory = "ALCOHOLIC",
-                itemCode = "100168",
-                itemDescription = "item of description is collected",
-                itemName = "Corona Rita",
-                salePrice = "875",
-                crossSellingAllow = "true",
-                uOM = "PORTION",
-                decimalAllowed = "true"
-            ), ItemMaster(
-                id = 253,
-                barcode = "100168",
-                itemCategory = "ALCOHOLIC",
-                itemCode = "100168",
-                itemDescription = "item of description is collected",
-                itemName = "Corona Rita",
-                salePrice = "875",
-                uOM = "PORTION",
-                decimalAllowed = "true",
-                crossSellingAllow = "true"
-            ), ItemMaster(
-                id = 203,
-                barcode = "100168",
-                itemCategory = "ALCOHOLIC",
-                itemCode = "100168",
-                itemDescription = "item of description is collected",
-                itemName = "Corona Rita",
-                salePrice = "875",
-                uOM = "PORTION",
-                decimalAllowed = "true",
-                crossSellingAllow = "true"
-            )
-        )
-    }
+
     var itemClicked: OnBottomSheetClickListener? = null
-    fun showCrossSellingDialog(title: String) {
+
+    fun showCrossSellingDialog(response: CrossSellingJsonResponse) {
+        var totalItemSelected = 0
         val binding = CrossSellingDialogBoxBinding.inflate(activity.layoutInflater)
+
         alertDialog =
             AlertDialog.Builder(activity).setView(binding.root).setCancelable(false).show()
         alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        binding.itemTitle.text = title
+
+        binding.itemTitle.text = response.description
+
+        binding.itemItemSelected.text =
+            "Selection Max ${response.maxSelection}: Min ${response.minSelection}"
+
+        binding.totalCountOfSelectItem.text = "Total Size $totalItemSelected"
         binding.cancelBtn.setOnClickListener {
             alertDialog?.dismiss()
         }
         val crossAdaptor = CrossSellingAdaptor {
+            totalItemSelected++
+            binding.totalCountOfSelectItem.text = "Total Size $totalItemSelected"
             itemClicked?.onItemClicked(it)
         }
+        binding.clearBtn.setOnClickListener {
+            totalItemSelected = 0
+            binding.totalCountOfSelectItem.text = "Total Size $totalItemSelected"
+            crossAdaptor.notifyDataSetChanged()
+            crossAdaptor.isFlagReset = true
+        }
+        binding.submitBtn.setOnClickListener {
+            alertDialog?.dismiss()
+        }
         binding.recycleViewItem.adapter = crossAdaptor
-        crossAdaptor.submitList(sampleData)
+        crossAdaptor.submitList(response.childItemList)
         alertDialog?.show()
     }
 

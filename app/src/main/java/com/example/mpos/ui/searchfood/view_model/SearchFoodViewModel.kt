@@ -20,8 +20,9 @@ class SearchFoodViewModel constructor(
 ) : AndroidViewModel(application) {
 
     private lateinit var repository: SearchFoodRepositoryImpl
-
+    private val app = application
     private val userSoredData = UserSoredData(application)
+
     private val _fdInfo = MutableLiveData<ApisResponse<out Any?>>()
     val fdInfo: LiveData<ApisResponse<out Any?>>
         get() = _fdInfo
@@ -29,6 +30,12 @@ class SearchFoodViewModel constructor(
     private val _event = MutableLiveData<Events<String>>()
     val events: LiveData<Events<String>>
         get() = _event
+
+
+    private val _crossSellingResponse = MutableLiveData<ApisResponse<out Any?>>()
+    val crossSellingResponse: LiveData<ApisResponse<out Any?>>
+        get() = _crossSellingResponse
+
 
     init {
         if (!application.isNetworkAvailable()) {
@@ -67,6 +74,22 @@ class SearchFoodViewModel constructor(
         }
     }
 
+    fun getCrossSellingItem(itemCode: String) {
+        if (!this::repository.isInitialized) {
+            _event.postValue(Events("Unknown Error"))
+            return
+        }
+        if (!app.isNetworkAvailable()) {
+            _event.postValue(Events("No Internet Connection found"))
+            return
+        }
+        viewModelScope.launch {
+            repository.getCrossSellingResponse(itemCode).collectLatest {
+                _crossSellingResponse.postValue(it)
+            }
+        }
+    }
+
 
     fun getInitialData() {
         viewModelScope.launch {
@@ -80,7 +103,7 @@ class SearchFoodViewModel constructor(
     fun searchQuery(src: String) {
         viewModelScope.launch {
             repository.getSearchFoodItem(src).collectLatest { res ->
-                if (res.data?.isNullOrEmpty() == true) {
+                if (res.data.isNullOrEmpty()) {
                     _fdInfo.postValue(ApisResponse.Success(null))
                 } else {
                     _fdInfo.postValue(res)

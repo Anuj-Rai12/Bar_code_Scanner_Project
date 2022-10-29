@@ -177,8 +177,10 @@ class ListOfFoodItemToSearchAdaptor(
                 offerTv.hide()
                 offerDetailTv.show()
                 //crossSelling btn
-                val flag = foodItem.decimalAllowed.lowercase(Locale.getDefault()).toBoolean()
-                if (flag) {
+                val crossSelling=foodItem.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
+                if (crossSelling) {
+                    crossSellingOffer.show()
+                }else{//Remove this else block
                     crossSellingOffer.show()
                 }
             }

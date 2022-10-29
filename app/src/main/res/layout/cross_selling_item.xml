@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto"
         android:text="item is selected"
-        android:textColor="@color/light_grey_color"
+        android:textColor="@color/black"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -29,15 +29,14 @@
 
 
     <TextView
-        android:id="@+id/qty_of_item"
+        android:id="@+id/qty_of_item_and_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/roboto"
-        android:text="Qty : 2"
-        android:textColor="@color/light_grey_color"
+        android:text="Qty : 1"
+        android:textColor="@color/black"
         android:textSize="15sp"
-        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/food_title"
         app:layout_constraintTop_toBottomOf="@id/food_title" />
 
