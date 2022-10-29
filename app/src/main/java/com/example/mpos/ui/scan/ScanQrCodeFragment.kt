@@ -19,24 +19,30 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.data.login.model.TestingBarcodeConnection
 import com.example.mpos.databinding.ScanQrLayoutBinding
+import com.example.mpos.ui.crosselling.CrossSellingDialog
+import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.scan.utils.LuminosityAnalyzer
 import com.example.mpos.ui.scan.viewmodel.BarCodeViewModel
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
+import com.example.mpos.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.mpos.utils.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
 
 
-class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
+class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClickListener {
     private lateinit var binding: ScanQrLayoutBinding
     private var imageCapture: ImageCapture? = null
     private var flagList: Boolean = false
@@ -44,6 +50,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
     private val args: ScanQrCodeFragmentArgs by navArgs()
     private var showDialog = true
     private val viewModel: BarCodeViewModel by viewModels()
+
+    private val searchViewModel: SearchFoodViewModel by viewModels()
 
     private val option = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
@@ -82,9 +90,44 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
             }
         }
 
+        searchViewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { res ->
+                showErrorDialog(res)
+            }
+        }
+
         barCodeResult()
+        getCrossSellingResponse()
         startCamera()
     }
+
+    private fun getCrossSellingResponse() {
+        searchViewModel.crossSellingResponse.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    if (it.data != null) {
+                        showErrorDialog("${it.data}")
+                    } else {
+                        it.exception?.localizedMessage?.let { exp ->
+                            showErrorDialog(exp)
+                        }
+                    }
+                    showLoadingSrc(false)
+                    showScannerScreen(true)
+                }
+                is ApisResponse.Loading -> {
+                    showLoadingSrc(true,"${it.data}")
+                    showScannerScreen(false)
+                }
+                is ApisResponse.Success -> {
+                    showLoadingSrc(false)
+                    val res = it.data as CrossSellingJsonResponse
+                    openCrossSellingDialog(res)
+                }
+            }
+        }
+    }
+
 
     private fun barCodeResult() {
         viewModel.barCodeResponse.observe(viewLifecycleOwner) { event ->
@@ -108,12 +151,13 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                         showLoadingSrc(false)
                         showScannerScreen(false)
                         (it.data as BarcodeJsonResponse?)?.let { res ->
-                            goToNextScreenConfirmScr(res)
-                        } ?: showDialogBox(
-                            "Failed!!",
-                            "Some thing Went Wrong",
-                            icon = R.drawable.ic_error
-                        ) {}
+                            val flag = res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
+                            if (flag) {
+                                searchViewModel.getCrossSellingItem("100003")//res.itemCode
+                            } else {
+                                goToNextScreenConfirmScr(res)
+                            }
+                        } ?: showErrorDialog("Some thing Went Wrong")
                     }
                 }
             }
@@ -226,7 +270,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
         val type = WhereToGoFromScan.TESTINGCONNECTION.name
         if (args.item == Url_Text && args.type != type) {
             first.rawValue?.let {
-                viewModel.checkForItemItem(it,args.type)
+                viewModel.checkForItemItem(it, args.type)
             } ?: activity?.msg("Oops SomeThing Went Wrong")
         } else {
             val handler = Handler(Looper.getMainLooper())
@@ -276,7 +320,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
                     itemName = barcode.itemName,
                     uOM = barcode.uOM,
                     decimalAllowed = barcode.decimalAllowed,
-                    crossSellingAllow =barcode.crossSellingAllow
+                    crossSellingAllow = barcode.crossSellingAllow
                 )
                 itemMaster.foodQty = barcode.qty.toDouble()
                 val amt =
@@ -337,5 +381,13 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout) {
             }
         }
     }
+
+    private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
+        val dialog = CrossSellingDialog(activity!!)
+        dialog.itemClicked = this
+        dialog.showCrossSellingDialog(response)
+    }
+
+    override fun <T> onItemClicked(response: T) {}
 
 }

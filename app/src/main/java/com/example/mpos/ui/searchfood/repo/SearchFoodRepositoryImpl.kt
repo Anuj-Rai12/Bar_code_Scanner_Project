@@ -67,6 +67,7 @@ class SearchFoodRepositoryImpl constructor(
 
     override fun getCrossSellingResponse(itemCode: String) = flow {
         emit(ApisResponse.Loading("Checking CrossSelling Item.."))
+        kotlinx.coroutines.delay(4000)
         //U+1F615 😕
         val data = try {
             val api =
