@@ -7,13 +7,16 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.data.mnu.response.json.ItemList
 import com.example.mpos.data.mnu.response.json.MenuDataResponse
 import com.example.mpos.databinding.MnuBottomSheetFramgmentLayoutBinding
+import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.menu.tabs.MnuTabFragment
 import com.example.mpos.ui.menu.viewmodel.BottomSheetViewModel
 import com.example.mpos.ui.scan.viewmodel.BarCodeViewModel
+import com.example.mpos.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.mpos.utils.*
 import com.example.mpos.viewpager.ViewPagerAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -21,15 +24,19 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
+import java.util.*
 
 
-class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFragment() {
+class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFragment(),
+    OnBottomSheetClickListener {
 
 
     private var bottomSheetBehavior: BottomSheetBehavior<View>? = null
     private lateinit var binding: MnuBottomSheetFramgmentLayoutBinding
     private val viewModel: BottomSheetViewModel by viewModels()
     private val barCodeViewModel: BarCodeViewModel by viewModels()
+    private val searchViewModel: SearchFoodViewModel by viewModels()
+
     private lateinit var viewPagerAdaptor: ViewPagerAdapter
 
     var onBottomSheetClickListener: OnBottomSheetClickListener? = null
@@ -58,6 +65,11 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
                 showErrorDialog(msg = res)
             }
         }
+        searchViewModel.events.observe(this) {
+            it.getContentIfNotHandled()?.let { res ->
+                showErrorDialog(msg = res)
+            }
+        }
 
         barCodeViewModel.events.observe(this) {
             it.getContentIfNotHandled()?.let { res ->
@@ -71,12 +83,39 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         setTab()
         setCallBack()
         barCodeResult()
+        getCrossSellingResponse()
         binding.cancelBtn.setOnClickListener {
             dismiss()
         }
 
 
         return bottomSheet
+    }
+
+    private fun getCrossSellingResponse() {
+        searchViewModel.crossSellingResponse.observe(this) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    binding.pbLayoutInclude.root.hide()
+                    if (it.data != null) {
+                        showErrorDialog("${it.data}")
+                    } else {
+                        it.exception?.localizedMessage?.let { exp ->
+                            showErrorDialog(exp)
+                        }
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.pbLayoutInclude.root.show()
+                    binding.pbLayoutInclude.titleTxt.text = "${it.data}"
+                }
+                is ApisResponse.Success -> {
+                    binding.pbLayoutInclude.root.hide()
+                    val res = it.data as CrossSellingJsonResponse
+                    openCrossSellingDialog(res)
+                }
+            }
+        }
     }
 
 
@@ -135,9 +174,7 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
 
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
         binding.root.showSandbar(
-            msg,
-            length,
-            requireActivity().getColorInt(color)
+            msg, length, requireActivity().getColorInt(color)
         ) {
             return@showSandbar "OK"
         }
@@ -165,11 +202,15 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
                     is ApisResponse.Success -> {
                         binding.pbLayoutInclude.root.hide()
                         (it.data as BarcodeJsonResponse?)?.let { res ->
-                            onBottomSheetClickListener?.onItemClicked(res)
+                            val flag =true
+                                //res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
+                            if (flag) {
+                                searchViewModel.getCrossSellingItem("100003")
+                            } else {
+                                onBottomSheetClickListener?.onItemClicked(res)
+                            }
                         } ?: showDialogBox(
-                            "Failed!!",
-                            "Some thing Went Wrong",
-                            icon = R.drawable.ic_error
+                            "Failed!!", "Some thing Went Wrong", icon = R.drawable.ic_error
                         ) {}
                     }
                 }
@@ -182,29 +223,28 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
     }
 
     private fun setCallBack() {
-        bottomSheetBehavior?.addBottomSheetCallback(
-            object :
-                BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior?.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
 
-                override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    when (newState) {
-                        BottomSheetBehavior.STATE_COLLAPSED -> {
-                            binding.appBarLayout.hide()
-                            binding.imageUp.show()
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.appBarLayout.hide()
+                        binding.imageUp.show()
 
-                        }
-                        BottomSheetBehavior.STATE_EXPANDED -> {
-                            binding.appBarLayout.show()
-                            binding.imageUp.hide()
-                        }
-                        BottomSheetBehavior.STATE_HIDDEN -> {
-                            dismiss()
-                        }
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        binding.appBarLayout.show()
+                        binding.imageUp.hide()
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        dismiss()
                     }
                 }
+            }
 
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-            })
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
     }
 
 
@@ -229,5 +269,14 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         super.onResume()
         viewModel.fetchMenuDetail()
     }
+
+    private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
+        val dialog = CrossSellingDialog(activity!!)
+        dialog.itemClicked = this
+        dialog.showCrossSellingDialog(response)
+    }
+
+    override fun <T> onItemClicked(response: T) {}
+
 
 }
