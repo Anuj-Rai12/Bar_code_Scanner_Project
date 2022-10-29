@@ -28,11 +28,11 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
             binding.itemSuccessClick.hide()
             binding.root.setOnClickListener {
                 if (!isClicked) {
-                    itemClicked.invoke(data)
                     binding.itemSuccessClick.show()
                 } else {
                     binding.itemSuccessClick.hide()
                 }
+                itemClicked.invoke(data)
                 isClicked = !isClicked
             }
         }

@@ -4,9 +4,11 @@ import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AlertDialog
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingItems
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.databinding.CrossSellingDialogBoxBinding
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
+import com.example.mpos.utils.showSandbar
 
 class CrossSellingDialog(private val activity: Activity) {
     private var alertDialog: AlertDialog? = null
@@ -14,7 +16,8 @@ class CrossSellingDialog(private val activity: Activity) {
     var itemClicked: OnBottomSheetClickListener? = null
 
     fun showCrossSellingDialog(response: CrossSellingJsonResponse) {
-        var totalItemSelected = 0
+        val itemSelected = mutableListOf<CrossSellingItems>()
+
         val binding = CrossSellingDialogBoxBinding.inflate(activity.layoutInflater)
 
         alertDialog =
@@ -26,22 +29,41 @@ class CrossSellingDialog(private val activity: Activity) {
         binding.itemItemSelected.text =
             "Selection Max ${response.maxSelection}: Min ${response.minSelection}"
 
-        binding.totalCountOfSelectItem.text = "Total Size $totalItemSelected"
+        binding.totalCountOfSelectItem.text = "Total Size 0"
         binding.cancelBtn.setOnClickListener {
             alertDialog?.dismiss()
         }
         val crossAdaptor = CrossSellingAdaptor {
-            totalItemSelected++
-            binding.totalCountOfSelectItem.text = "Total Size $totalItemSelected"
-            itemClicked?.onItemClicked(it)
+            if (itemSelected.contains(it)) {
+                itemSelected.remove(it)
+            } else {
+                itemSelected.add(it)
+            }
+            binding.totalCountOfSelectItem.text = "Total Size ${itemSelected.size}"
         }
         binding.clearBtn.setOnClickListener {
-            totalItemSelected = 0
-            binding.totalCountOfSelectItem.text = "Total Size $totalItemSelected"
+            itemSelected.clear()
+            binding.totalCountOfSelectItem.text = "Total Size ${itemSelected.size}"
             crossAdaptor.notifyDataSetChanged()
             crossAdaptor.isFlagReset = true
         }
         binding.submitBtn.setOnClickListener {
+            if (itemSelected.size > response.maxSelection.toLong()) {
+                binding.root.showSandbar("Cannot select more then ${response.maxSelection} items")
+                return@setOnClickListener
+            }
+            if (itemSelected.size < response.minSelection.toLong()) {
+                binding.root.showSandbar("Please select at-least ${response.minSelection} items")
+                return@setOnClickListener
+            }
+            val cross = CrossSellingJsonResponse(
+                childItemList = itemSelected,
+                description = response.description,
+                maxSelection = response.maxSelection,
+                minSelection = response.minSelection,
+                parentItem = response.parentItem
+            )
+            itemClicked?.onItemClicked(cross)
             alertDialog?.dismiss()
         }
         binding.recycleViewItem.adapter = crossAdaptor
