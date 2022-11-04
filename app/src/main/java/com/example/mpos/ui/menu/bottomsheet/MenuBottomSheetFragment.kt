@@ -43,6 +43,11 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
 
     private var menuResponse: MenuDataResponse? = null
 
+
+    //Cross Item
+    private var mnuCrossSellingJsonResponse: BarcodeJsonResponse? = null
+
+
     companion object {
         const val NAME = "MENU_BOTTOM_SHEET"
     }
@@ -202,12 +207,12 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
                     is ApisResponse.Success -> {
                         binding.pbLayoutInclude.root.hide()
                         (it.data as BarcodeJsonResponse?)?.let { res ->
-                            val flag =true
-                                //res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
+                            mnuCrossSellingJsonResponse = res
+                            val flag = res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
                             if (flag) {
                                 searchViewModel.getCrossSellingItem("100003")
                             } else {
-                                onBottomSheetClickListener?.onItemClicked(res)
+                                onBottomSheetClickListener?.onItemClicked(Pair(res, null))
                             }
                         } ?: showDialogBox(
                             "Failed!!", "Some thing Went Wrong", icon = R.drawable.ic_error
@@ -276,7 +281,14 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         dialog.showCrossSellingDialog(response)
     }
 
-    override fun <T> onItemClicked(response: T) {}
+    override fun <T> onItemClicked(response: T) {
+        val res = response as CrossSellingJsonResponse
+        if (mnuCrossSellingJsonResponse != null) {
+            onBottomSheetClickListener?.onItemClicked(Pair(mnuCrossSellingJsonResponse, res))
+        } else {
+            showErrorDialog("Cannot find Menu Response")
+        }
+    }
 
 
 }

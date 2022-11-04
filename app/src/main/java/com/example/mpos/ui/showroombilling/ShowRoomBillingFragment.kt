@@ -33,6 +33,7 @@ import com.example.mpos.data.cofirmDining.ConfirmDiningBody
 import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.ShowRoomBillingFragmentBinding
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
@@ -771,7 +772,8 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
 
     override fun <T> onItemClicked(response: T) {
-        val barcode = response as BarcodeJsonResponse
+        val barcode = (response as Pair<*, *>).first as BarcodeJsonResponse
+        val crossSellingItems = (response as Pair<*, *>).second as CrossSellingJsonResponse?
         Log.i(TAG, "onItemClicked: $response")
         val itemMaster = ItemMaster(
             barcode = barcode.barcode,
@@ -783,7 +785,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
             itemName = barcode.itemName,
             uOM = barcode.uOM,
             decimalAllowed = barcode.decimalAllowed,
-            crossSellingAllow =barcode.crossSellingAllow
+            crossSellingAllow = barcode.crossSellingAllow
         )
         itemMaster.foodQty = barcode.qty.toDouble()
         val amt =
@@ -793,7 +795,16 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
         if (arrItem.isNotEmpty()) {
             mutableList.addAll(arrItem)
         }
-        mutableList.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
+        mutableList.add(
+            ItemMasterFoodItem(
+                itemMaster = itemMaster,
+                foodQty = itemMaster.foodQty,
+                foodAmt = itemMaster.foodAmt,
+                crossSellingItems = crossSellingItems,
+                bg = if (crossSellingItems != null) listOfBg[2]
+                else listOfBg.first()
+            )
+        )
         confirmOrderViewModel.getOrderList(FoodItemList(mutableList))
         activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
     }

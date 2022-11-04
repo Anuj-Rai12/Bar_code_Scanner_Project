@@ -1,6 +1,8 @@
 package com.example.mpos.ui.searchfood.model
 
 import android.os.Parcelable
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingItems
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.utils.listOfBg
 import kotlinx.parcelize.Parcelize
@@ -25,7 +27,8 @@ data class ItemMasterFoodItem(
     var foodAmt: Double,
     val bg: Int = listOfBg.first(),
     val free_txt: String = "",
-    val isDeal: Boolean = false
+    val isDeal: Boolean = false,
+    val crossSellingItems: CrossSellingJsonResponse?=null
 ) : Parcelable
 
 

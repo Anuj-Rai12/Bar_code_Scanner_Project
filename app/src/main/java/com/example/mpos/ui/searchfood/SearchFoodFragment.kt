@@ -33,6 +33,8 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
     private val viewModel: SearchFoodViewModel by viewModels()
     private val args: SearchFoodFragmentArgs by navArgs()
 
+    private var crossSellingItemMaster: ItemMasterFoodItem? = null
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean("flag", flag)
@@ -80,21 +82,21 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
             when (it) {
                 is ApisResponse.Error -> {
                     binding.pbLayout.root.hide()
-                    if (it.data!=null){
-                        showDialogBox("Failed","${it.data}", icon = R.drawable.ic_error){}
-                    }else{
-                        it.exception?.localizedMessage?.let {exp->
-                            showDialogBox("Failed",exp, icon = R.drawable.ic_error){}
+                    if (it.data != null) {
+                        showDialogBox("Failed", "${it.data}", icon = R.drawable.ic_error) {}
+                    } else {
+                        it.exception?.localizedMessage?.let { exp ->
+                            showDialogBox("Failed", exp, icon = R.drawable.ic_error) {}
                         }
                     }
                 }
                 is ApisResponse.Loading -> {
                     binding.pbLayout.root.show()
-                    binding.pbLayout.titleTxt.text=it.data as String
+                    binding.pbLayout.titleTxt.text = it.data as String
                 }
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
-                    val res=it.data as CrossSellingJsonResponse
+                    val res = it.data as CrossSellingJsonResponse
                     openCrossSellingDialog(res)
                 }
             }
@@ -244,14 +246,14 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
 
                     showSnackBar(msg, R.color.green_color, Snackbar.LENGTH_SHORT)
                     val item = listOfFoodItem.find { res -> res.itemMaster.id == it.itemMaster.id }
-                    if (item == null) {
-                        listOfFoodItem.add(it)
-                    } else {
+                    if (item != null) {
                         listOfFoodItem.remove(item)
-                        listOfFoodItem.add(it)
                     }
+                    listOfFoodItem.add(it)
+
                     Log.i(TAG, "setRecycleView: $listOfFoodItem")
-                }, itemClickListerCrossSelling = { //itemMaster ->
+                }, itemClickListerCrossSelling = { itemMaster ->
+                    crossSellingItemMaster = itemMaster
                     viewModel.getCrossSellingItem("100004")//itemMaster.itemMaster.itemCode)
                 })
             flag = true
@@ -266,6 +268,31 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
         dialog.showCrossSellingDialog(response)
     }
 
-    override fun <T> onItemClicked(response: T) {}
+    override fun <T> onItemClicked(response: T) {
+        val res = response as CrossSellingJsonResponse
+        crossSellingItemMaster?.let {
+            val msg = if (!checkFieldValue(it.itemMaster.itemName)) it.itemMaster.itemName
+            else it.itemMaster.itemDescription
+
+            showSnackBar(msg, R.color.green_color, Snackbar.LENGTH_SHORT)
+            val item = listOfFoodItem.find { res -> res.itemMaster.id == it.itemMaster.id }
+            if (item != null) {
+                listOfFoodItem.remove(item)
+            }
+            listOfFoodItem.add(
+                ItemMasterFoodItem(
+                    itemMaster = it.itemMaster,
+                    foodQty = it.foodQty,
+                    foodAmt = it.foodAmt,
+                    bg = listOfBg[2],
+                    free_txt = it.free_txt,
+                    isDeal = it.isDeal,
+                    crossSellingItems = res
+                )
+            )
+            crossSellingItemMaster = null
+        } ?: activity?.msg("Cannot Add Item")
+
+    }
 
 }

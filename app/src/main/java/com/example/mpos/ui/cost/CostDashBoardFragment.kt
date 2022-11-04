@@ -25,6 +25,7 @@ import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.data.costestimation.request.ConfirmEstimationBody
 import com.example.mpos.data.costestimation.request.CostEstimation
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.CostCalDashbordLayoutBinding
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
@@ -69,13 +70,13 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = CostCalDashbordLayoutBinding.bind(view)
         binding.qrCodeScan.setOnClickListener {
-            val action = CostDashBoardFragmentDirections
-                .actionGlobalScanQrCodeFragment(
-                    Url_Text,
-                    null,
-                    FoodItemList(arrItem),
-                    customDiningRequest
-                ,WhereToGoFromScan.COSTESTIMATE.name)
+            val action = CostDashBoardFragmentDirections.actionGlobalScanQrCodeFragment(
+                Url_Text,
+                null,
+                FoodItemList(arrItem),
+                customDiningRequest,
+                WhereToGoFromScan.COSTESTIMATE.name
+            )
             findNavController().navigate(action)
         }
 
@@ -119,9 +120,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         val flag = activity?.checkBlueConnectPermission()
         if (flag == false) {
             (activity as MainActivity?)?.requestPermission(
-                Manifest.permission.BLUETOOTH_CONNECT,
-                BLUE_CONNECT,
-                "Bluetooth"
+                Manifest.permission.BLUETOOTH_CONNECT, BLUE_CONNECT, "Bluetooth"
             )
         }
         binding.confirmOrderBtn.setOnClickListener {
@@ -134,12 +133,12 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
 
         binding.viewOfferBtn.setOnClickListener {
-            val action =
-                CostDashBoardFragmentDirections.actionGlobalDealsFragment(
-                    FoodItemList(arrItem), null,
-                    customDiningRequest,
-                    WhereToGoFromSearch.COSTESTIMATE.name
-                )
+            val action = CostDashBoardFragmentDirections.actionGlobalDealsFragment(
+                FoodItemList(arrItem),
+                null,
+                customDiningRequest,
+                WhereToGoFromSearch.COSTESTIMATE.name
+            )
             findNavController().navigate(action)
         }
 
@@ -152,12 +151,12 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             //New Fragment
             Log.i(TAG, "Search: CustomerDining $customDiningRequest")
             Log.i(TAG, "Search: FoodItemList ${FoodItemList(arrItem)}")
-            val action =
-                CostDashBoardFragmentDirections.actionGlobalSearchFoodFragment(
-                    null,
-                    FoodItemList(arrItem),
-                    customDiningRequest,WhereToGoFromSearch.COSTESTIMATE.name
-                )
+            val action = CostDashBoardFragmentDirections.actionGlobalSearchFoodFragment(
+                null,
+                FoodItemList(arrItem),
+                customDiningRequest,
+                WhereToGoFromSearch.COSTESTIMATE.name
+            )
             findNavController().navigate(action)
         }
 
@@ -179,8 +178,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     }
 
     private fun getBillPrintResponse() {
-        printBillViewModel.doPrinting.observe(viewLifecycleOwner){
-            when(it){
+        printBillViewModel.doPrinting.observe(viewLifecycleOwner) {
+            when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -214,29 +213,24 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
-                    isPrinterConnected=false
+                    isPrinterConnected = false
                     if (setUpCostEstimation()) {
                         showDialogBox(
-                            "Error",
-                            it.data!!,
-                            btn = "Yes",
-                            cancel = "No"
+                            "Error", it.data!!, btn = "Yes", cancel = "No"
                         ) {
                             costEstimationViewModel.getCostEstimation(costEstimation!!)
                         }
-                    } else
-                        costEstimationViewModel.addError("Failed to Cost Estimated")
+                    } else costEstimationViewModel.addError("Failed to Cost Estimated")
                 }
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    isPrinterConnected=true
+                    isPrinterConnected = true
                     if (setUpCostEstimation()) {
                         costEstimationViewModel.getCostEstimation(costEstimation!!)
-                    } else
-                        costEstimationViewModel.addError("Failed to Cost Estimated")
+                    } else costEstimationViewModel.addError("Failed to Cost Estimated")
                 }
             }
         }
@@ -292,8 +286,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         confirmOrder(
                             ConfirmOrderRequest(
                                 ConfirmOrderBody(
-                                    pair.first,
-                                    true.toString()
+                                    pair.first, true.toString()
                                 )
                             )
                         )
@@ -336,17 +329,15 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                                 findNavController().popBackStack()
                             }
                             activity?.msg("Bill List is Empty", Toast.LENGTH_LONG)
-                        } else if (isPrinterConnected)
-                            printBillViewModel.doPrint(body)
-                        else
-                            showDialogBox(
-                                "Success",
-                                "All Food Item are added Successfully",
-                                icon = R.drawable.ic_success,
-                                isCancel = false
-                            ) {
-                                findNavController().popBackStack()
-                            }
+                        } else if (isPrinterConnected) printBillViewModel.doPrint(body)
+                        else showDialogBox(
+                            "Success",
+                            "All Food Item are added Successfully",
+                            icon = R.drawable.ic_success,
+                            isCancel = false
+                        ) {
+                            findNavController().popBackStack()
+                        }
                     } ?: showErrorDialog("Cannot Print Bill")
                 }
             }
@@ -389,8 +380,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     @SuppressLint("NotifyDataSetChanged")
     private fun getData() {
         confirmOrderViewModel.listOfOrder.observe(viewLifecycleOwner) {
-            if (it != null)
-                confirmOrderViewModel.getGrandTotal(it.data)
+            if (it != null) confirmOrderViewModel.getGrandTotal(it.data)
             else {
                 confirmOrderViewModel.getGrandTotal(null)
             }
@@ -432,10 +422,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             if (arrItem.isNotEmpty()) {
                 if (!args.list?.foodList?.containsAll(arrItem)!!) {
                     list.addAll(arrItem)
-                } else
-                    list.addAll(arrItem)
-            } else
-                list.addAll(args.list?.foodList!!)
+                } else list.addAll(arrItem)
+            } else list.addAll(args.list?.foodList!!)
 
             confirmOrderViewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && arrItem.isNotEmpty()) {
@@ -457,14 +445,16 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor =
-                ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {
-                }, itemClickListerForUpdate = { res ->
-                    updateQtyDialogBox(res)
-                }, itemClickInstructionLinter = { res ->
-                    updateFreeTxt(res)
-                }, itemClickAmountLinter = { res ->
-                    updateAmount(res)
-                })
+                ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {},
+                    itemClickListerForUpdate = { res ->
+                        updateQtyDialogBox(res)
+                    },
+                    itemClickInstructionLinter = { res ->
+                        updateFreeTxt(res)
+                    },
+                    itemClickAmountLinter = { res ->
+                        updateAmount(res)
+                    })
             adapter = confirmOderFragmentAdaptor
         }
     }
@@ -476,7 +466,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             isDecimal = true,
             cancel = {},
             res = {},
-            instruction = {}, amount = {
+            instruction = {},
+            amount = {
                 confirmOrderViewModel.addUpdateQty(
                     food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
                     itemRemoved = itemMasterFoodItem
@@ -485,8 +476,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     }
 
     private fun updateFreeTxt(itemMasterFoodItem: ItemMasterFoodItem) {
-        showQtyDialog(
-            true,
+        showQtyDialog(true,
             itemMasterFoodItem.itemMaster,
             type = "Instruction",
             value = itemMasterFoodItem.free_txt,
@@ -498,15 +488,14 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 val food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt)
                 Log.i(TAG, "updateQtyDialogBox: $food")
                 confirmOrderViewModel.addUpdateQty(
-                    food = food,
-                    itemRemoved = itemMasterFoodItem
+                    food = food, itemRemoved = itemMasterFoodItem
                 )
-            }, amount = {})
+            },
+            amount = {})
     }
 
     private fun setCallBack() {
-        callback = object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -535,48 +524,26 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             ) {
 
                 RecyclerViewSwipeDecorator.Builder(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-                    .addSwipeLeftBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.color_red
-                        )
+                    c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
+                ).addSwipeLeftBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.color_red
                     )
-                    .addSwipeLeftLabel("Delete")
-                    .setSwipeLeftLabelColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.white
-                        )
+                ).addSwipeLeftLabel("Delete").setSwipeLeftLabelColor(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.white
                     )
-                    .setSwipeLeftLabelTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
-                    .addSwipeLeftActionIcon(R.drawable.ic_round_delete)
-                    .setSwipeLeftActionIconTint(
+                ).setSwipeLeftLabelTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+                    .addSwipeLeftActionIcon(R.drawable.ic_round_delete).setSwipeLeftActionIconTint(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.white
+                            requireContext(), R.color.white
                         )
-                    )
-                    .create()
-                    .decorate()
+                    ).create().decorate()
 
 
 
                 super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
+                    c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
                 )
             }
 
@@ -607,28 +574,32 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     }
 
     private fun updateQtyDialogBox(itemMasterFoodItem: ItemMasterFoodItem) {
-        showQtyDialog(true, itemMasterFoodItem.itemMaster, isDecimal =
-        itemMasterFoodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
-            .toBoolean(), cancel = {}, res = {
-            confirmOrderViewModel.addUpdateQty(
-                food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
-                itemRemoved = itemMasterFoodItem
-            )
-        }, instruction = {}, amount = {})
+        showQtyDialog(true,
+            itemMasterFoodItem.itemMaster,
+            isDecimal = itemMasterFoodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
+                .toBoolean(),
+            cancel = {},
+            res = {
+                confirmOrderViewModel.addUpdateQty(
+                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                    itemRemoved = itemMasterFoodItem
+                )
+            },
+            instruction = {},
+            amount = {})
     }
 
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
         binding.root.showSandbar(
-            msg,
-            length,
-            requireActivity().getColorInt(color)
+            msg, length, requireActivity().getColorInt(color)
         ) {
             return@showSandbar "OK"
         }
     }
 
     override fun <T> onItemClicked(response: T) {
-        val barcode = response as BarcodeJsonResponse
+        val barcode = (response as Pair<*, *>).first as BarcodeJsonResponse
+        val crossSellingItems = (response as Pair<*, *>).second as CrossSellingJsonResponse?
         Log.i(TAG, "onItemClicked: $response")
         val itemMaster = ItemMaster(
             barcode = barcode.barcode,
@@ -640,7 +611,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             itemName = barcode.itemName,
             uOM = barcode.uOM,
             decimalAllowed = barcode.decimalAllowed,
-            crossSellingAllow =barcode.crossSellingAllow
+            crossSellingAllow = barcode.crossSellingAllow
         )
         itemMaster.foodQty = barcode.qty.toDouble()
         val amt =
@@ -650,7 +621,16 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         if (arrItem.isNotEmpty()) {
             mutableList.addAll(arrItem)
         }
-        mutableList.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
+        mutableList.add(
+            ItemMasterFoodItem(
+                itemMaster = itemMaster,
+                foodQty = itemMaster.foodQty,
+                foodAmt = itemMaster.foodAmt,
+                crossSellingItems = crossSellingItems,
+                bg = if (crossSellingItems != null) listOfBg[2]
+                else listOfBg.first()
+            )
+        )
         confirmOrderViewModel.getOrderList(FoodItemList(mutableList))
         activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
     }

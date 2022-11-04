@@ -53,6 +53,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
 
     private val searchViewModel: SearchFoodViewModel by viewModels()
 
+    private var crossSellingBarcodeJsonResponse: BarcodeJsonResponse? = null
+
     private val option = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
             Barcode.FORMAT_QR_CODE,
@@ -116,7 +118,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                     showScannerScreen(true)
                 }
                 is ApisResponse.Loading -> {
-                    showLoadingSrc(true,"${it.data}")
+                    showLoadingSrc(true, "${it.data}")
                     showScannerScreen(false)
                 }
                 is ApisResponse.Success -> {
@@ -151,7 +153,9 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                         showLoadingSrc(false)
                         showScannerScreen(false)
                         (it.data as BarcodeJsonResponse?)?.let { res ->
-                            val flag = res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
+                            crossSellingBarcodeJsonResponse = res
+                            val flag =true
+                                //res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
                             if (flag) {
                                 searchViewModel.getCrossSellingItem("100003")//res.itemCode
                             } else {
@@ -301,7 +305,10 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
     }
 
 
-    private fun goToNextScreenConfirmScr(barcode: BarcodeJsonResponse) {
+    private fun goToNextScreenConfirmScr(
+        barcode: BarcodeJsonResponse,
+        crossSellingJsonResponse: CrossSellingJsonResponse? = null
+    ) {
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             if (showDialog) {
@@ -327,7 +334,18 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                     (ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
                 itemMaster.foodAmt = "%.4f".format(amt).toDouble()
                 Log.i("QR", "sendData: $itemMaster")
-                arr.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
+                arr.add(
+                    ItemMasterFoodItem(
+                        itemMaster = itemMaster,
+                        foodQty = itemMaster.foodQty,
+                        foodAmt = itemMaster.foodAmt,
+                        crossSellingItems = crossSellingJsonResponse,
+                        bg = if (crossSellingJsonResponse != null)
+                            listOfBg[2]
+                        else
+                            listOfBg.first()
+                    )
+                )
                 val action = when (WhereToGoFromScan.valueOf(args.type)) {
                     WhereToGoFromScan.TESTINGCONNECTION -> null
                     WhereToGoFromScan.TABLEMANGMENT -> {
@@ -388,6 +406,11 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
         dialog.showCrossSellingDialog(response)
     }
 
-    override fun <T> onItemClicked(response: T) {}
+    override fun <T> onItemClicked(response: T) {
+        val res = response as CrossSellingJsonResponse
+        crossSellingBarcodeJsonResponse?.let {
+            goToNextScreenConfirmScr(it,res)
+        }?:showErrorDialog("Cannot find BarcodeResponse")
+    }
 
 }

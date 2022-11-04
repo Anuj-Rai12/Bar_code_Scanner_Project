@@ -25,6 +25,7 @@ import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.data.costestimation.request.ConfirmEstimationBody
 import com.example.mpos.data.costestimation.request.CostEstimation
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.ShowRoomFragmentBinding
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
@@ -627,7 +628,8 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
     }
 
     override fun <T> onItemClicked(response: T) {
-        val barcode = response as BarcodeJsonResponse
+        val barcode = (response as Pair<*, *>).first as BarcodeJsonResponse
+        val crossSellingItems = (response as Pair<*, *>).second as CrossSellingJsonResponse?
         Log.i(TAG, "onItemClicked: $response")
         val itemMaster = ItemMaster(
             barcode = barcode.barcode,
@@ -639,7 +641,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
             itemName = barcode.itemName,
             uOM = barcode.uOM,
             decimalAllowed = barcode.decimalAllowed,
-            crossSellingAllow =barcode.crossSellingAllow
+            crossSellingAllow = barcode.crossSellingAllow
         )
         itemMaster.foodQty = barcode.qty.toDouble()
         val amt =
@@ -649,7 +651,16 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
         if (arrItem.isNotEmpty()) {
             mutableList.addAll(arrItem)
         }
-        mutableList.add(ItemMasterFoodItem(itemMaster, itemMaster.foodQty, itemMaster.foodAmt))
+        mutableList.add(
+            ItemMasterFoodItem(
+                itemMaster = itemMaster,
+                foodQty = itemMaster.foodQty,
+                foodAmt = itemMaster.foodAmt,
+                crossSellingItems = crossSellingItems,
+                bg = if (crossSellingItems != null) listOfBg[2]
+                else listOfBg.first()
+            )
+        )
         confirmOrderViewModel.getOrderList(FoodItemList(mutableList))
         activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
     }
