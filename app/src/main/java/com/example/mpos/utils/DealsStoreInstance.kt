@@ -42,7 +42,7 @@ class DealsStoreInstance {
             ),
             foodQty = 1.0,
             foodAmt = deals.price,
-            bg = listOfBg.last(),
+            bg = listOfBg[1],
             isDeal = true
         )
     }
