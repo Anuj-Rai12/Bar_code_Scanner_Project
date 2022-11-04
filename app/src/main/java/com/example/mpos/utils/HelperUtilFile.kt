@@ -272,7 +272,9 @@ fun View.changeViewColor(color: Int) {
 
 val listOfBg by lazy {
     arrayOf(
-        R.drawable.food_item_one_selcetion_layout, R.drawable.food_item_two_selection_layout
+        R.drawable.food_item_one_selcetion_layout,
+        R.drawable.food_item_two_selection_layout,
+        R.drawable.food_item_three_selection_layout
     )
 }
 
