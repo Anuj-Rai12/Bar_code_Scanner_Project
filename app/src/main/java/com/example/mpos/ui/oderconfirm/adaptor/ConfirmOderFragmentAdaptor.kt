@@ -1,6 +1,8 @@
 package com.example.mpos.ui.oderconfirm.adaptor
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.graphics.PorterDuff
 import android.os.Build
 import android.view.LayoutInflater
@@ -11,7 +13,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.R
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.databinding.ListOfFoodItemSelectedBinding
+import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.utils.*
 import java.util.*
@@ -21,8 +25,8 @@ class ConfirmOderFragmentAdaptor(
     private val itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit,
     private val itemClickInstructionLinter: (foodItem: ItemMasterFoodItem) -> Unit,
     private val itemClickAmountLinter: (foodItem: ItemMasterFoodItem) -> Unit,
-) :
-    ListAdapter<ItemMasterFoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
+    private val context: Context?
+) : ListAdapter<ItemMasterFoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
 
     private var showCheckBox: Boolean = false
     private var showQtyBox: Boolean = true
@@ -30,15 +34,13 @@ class ConfirmOderFragmentAdaptor(
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<ItemMasterFoodItem>() {
             override fun areItemsTheSame(
-                oldItem: ItemMasterFoodItem,
-                newItem: ItemMasterFoodItem
+                oldItem: ItemMasterFoodItem, newItem: ItemMasterFoodItem
             ): Boolean {
                 return oldItem.itemMaster.id == oldItem.itemMaster.id
             }
 
             override fun areContentsTheSame(
-                oldItem: ItemMasterFoodItem,
-                newItem: ItemMasterFoodItem
+                oldItem: ItemMasterFoodItem, newItem: ItemMasterFoodItem
             ): Boolean {
                 return oldItem == newItem
             }
@@ -68,7 +70,7 @@ class ConfirmOderFragmentAdaptor(
                         else foodItem.itemMaster.itemDescription
                 }
                 btnClickViewDetail.setOnClickListener {
-                    if (foodItem.isDeal){
+                    if (foodItem.isDeal) {
                         return@setOnClickListener
                     }
                     if (showCheckBox || foodItem.free_txt.isEmpty()) {
@@ -91,7 +93,9 @@ class ConfirmOderFragmentAdaptor(
 
 
                 amtOfFoodTv.setOnClickListener {
-                    if (!foodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault()).toBoolean()){
+                    if (!foodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
+                            .toBoolean()
+                    ) {
                         root.showSandbar("Cannot change Amount")
                         return@setOnClickListener
                     }
@@ -100,20 +104,58 @@ class ConfirmOderFragmentAdaptor(
 
 
                 qtyOfFood.setOnClickListener {
-                    if (foodItem.isDeal){
+                    if (foodItem.isDeal) {
                         return@setOnClickListener
                     }
-                    if (showQtyBox)
-                        itemClickListerForUpdate(foodItem)
+                    if (showQtyBox) itemClickListerForUpdate(foodItem)
                 }
                 foodItemName.setOnClickListener {
-                    if (foodItem.isDeal){
+                    if (foodItem.isDeal) {
                         return@setOnClickListener
                     }
-                    if (showQtyBox){
+                    if (showQtyBox) {
                         itemClickInstructionLinter(foodItem)
                     }
                 }
+
+
+                //Showing CrossSelling Items
+                binding.qtyOfFood.setOnLongClickListener {
+                    val flag = foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
+                        .toBoolean()
+                    if (flag) {
+                        showCrossSellingItem(foodItem.crossSellingItems!!)
+                    }
+                    return@setOnLongClickListener true
+                }
+
+                binding.foodItemName.setOnLongClickListener {
+                    val flag = foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
+                        .toBoolean()
+                    if (flag) {
+                        showCrossSellingItem(foodItem.crossSellingItems!!)
+                    }
+                    return@setOnLongClickListener true
+                }
+
+                binding.rateOfFood.setOnLongClickListener {
+                    val flag = foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
+                        .toBoolean()
+                    if (flag) {
+                        showCrossSellingItem(foodItem.crossSellingItems!!)
+                    }
+                    return@setOnLongClickListener true
+                }
+
+                binding.amtOfFoodTv.setOnLongClickListener {
+                    val flag = foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
+                        .toBoolean()
+                    if (flag) {
+                        showCrossSellingItem(foodItem.crossSellingItems!!)
+                    }
+                    return@setOnLongClickListener true
+                }
+
                 qtyOfFood.apply {
                     setBg(foodItem.bg)
                     text = foodItem.foodQty.toString()
@@ -130,14 +172,20 @@ class ConfirmOderFragmentAdaptor(
         }
 
 
+        private fun showCrossSellingItem(response: CrossSellingJsonResponse) {
+            context?.let {
+                val dialog = CrossSellingDialog(context as Activity)
+                dialog.displayCrossSellingItem(response)
+            }
+        }
+
         fun getTintColor(it: AppCompatImageButton, col: Int) {
             val color = it.context.getColorInt(col)
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
                 it.background.setColorFilter(color, PorterDuff.Mode.SRC_IN)
             } else {
                 it.setColorFilter(
-                    color,
-                    PorterDuff.Mode.MULTIPLY
+                    color, PorterDuff.Mode.MULTIPLY
                 )
             }
         }
@@ -149,9 +197,7 @@ class ConfirmOderFragmentAdaptor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectedFoodItemViewHolder {
         val binding = ListOfFoodItemSelectedBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         )
         return SelectedFoodItemViewHolder(binding)
     }
@@ -174,12 +220,18 @@ class ConfirmOderFragmentAdaptor(
         curr?.let {
             if (showCheckBox) {
                 holder.checkBoxView.setImageResource(R.drawable.ic_check_box)
-                holder.getTintColor(holder.checkBoxView,R.color.light_grey_black_color)
+                holder.getTintColor(holder.checkBoxView, R.color.light_grey_black_color)
                 holder.checkBoxView.show()
             } else {
                 holder.checkBoxView.hide()
             }
-            holder.setData(it, itemClickListerForFoodSelected, itemClickListerForUpdate,itemClickInstructionLinter,itemClickAmountLinter)
+            holder.setData(
+                it,
+                itemClickListerForFoodSelected,
+                itemClickListerForUpdate,
+                itemClickInstructionLinter,
+                itemClickAmountLinter
+            )
         }
     }
 }

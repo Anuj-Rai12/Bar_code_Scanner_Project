@@ -67,8 +67,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     Url_Text,
                     args.tbl,
                     FoodItemList(arrItem),
-                    customDiningRequest
-                ,WhereToGoFromScan.TABLEMANGMENT.name)
+                    customDiningRequest, WhereToGoFromScan.TABLEMANGMENT.name
+                )
             findNavController().navigate(action)
         }
 
@@ -108,8 +108,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 ConfirmOderFragmentDirections.actionGlobalDealsFragment(
                     FoodItemList(arrItem),
                     args.tbl,
-                    customDiningRequest
-                ,WhereToGoFromSearch.TABLEMANGMENT.name
+                    customDiningRequest, WhereToGoFromSearch.TABLEMANGMENT.name
                 )
             findNavController().navigate(action)
         }
@@ -208,7 +207,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             ev.getContentIfNotHandled()?.let {
                 when (it) {
                     is ApisResponse.Error -> {
-                        binding.pbLayout.root.hide()
+                        hidePb()
                         if (it.data == null) {
                             it.exception?.localizedMessage?.let { res ->
                                 showErrorDialog(res)
@@ -218,10 +217,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         }
                     }
                     is ApisResponse.Loading -> {
-                        binding.pbLayout.root.show()
+                        showPb("${it.data}")
                     }
                     is ApisResponse.Success -> {
-                        binding.pbLayout.root.hide()
+                        hidePb()
                         if (it.data?.startsWith("01")!!) {
                             activity?.msg(
                                 "order Printed ${getEmojiByUnicode(0x1F5A8)}",
@@ -313,16 +312,15 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 is ApisResponse.Error -> {
                     Log.i("getConfirmDinningResponse", " Error ${it.exception}")
                     oopsSomeThingWentWrong()
-                    binding.pbLayout.root.hide()
+                    hidePb()
                 }
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmDinningResponse", " Loading ${it.data}")
-                    binding.pbLayout.root.show()
-                    binding.pbLayout.titleTxt.text = it.data.toString()
+                    showPb(it.data.toString())
                 }
                 is ApisResponse.Success -> {
                     Log.i("getConfirmDinningResponse", " Success ${it.data}")
-                    binding.pbLayout.root.hide()
+                    hidePb()
                     (it.data as ConfirmDiningSuccessResponse?)?.let { res ->
                         val error = res.body?.errorFound?.toBoolean()
                         val errorBdy = res.body?.errorText.toString()
@@ -367,7 +365,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             pair.second.let {
                 when (it) {
                     is ApisResponse.Error -> {
-                        binding.pbLayout.root.hide()
+                        hidePb()
                         if (it.data == null) {
                             it.exception?.localizedMessage?.let { msg ->
                                 showErrorDialog(msg)
@@ -377,11 +375,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         }
                     }
                     is ApisResponse.Loading -> {
-                        binding.pbLayout.titleTxt.text = "${it.data}"
-                        binding.pbLayout.root.show()
+                        showPb("${it.data}")
                     }
                     is ApisResponse.Success -> {
-                        binding.pbLayout.root.hide()
+                        hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
                         //Add ConfirmOrder Request
                         confirmOrder(ConfirmOrderRequest(ConfirmOrderBody(pair.first)))
@@ -397,7 +394,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             when (it) {
                 is ApisResponse.Error -> {
                     //Log.i("getConfirmOrderResponse", " Error ${it.exception}")
-                    binding.pbLayout.root.hide()
+                    hidePb()
                     if (it.data == null) {
                         it.exception?.localizedMessage?.let { err ->
                             showErrorDialog(err)
@@ -408,11 +405,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 }
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmOrderResponse", " Loading ${it.data}")
-                    binding.pbLayout.root.show()
-                    binding.pbLayout.titleTxt.text = it.data.toString()
+                    showPb(it.data.toString())
                 }
                 is ApisResponse.Success -> {
-                    binding.pbLayout.root.hide()
+                    hidePb()
                     showDialogBox(
                         "Successfully Inserted",
                         "${it.data}",
@@ -549,7 +545,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     updateFreeTxt(res)
                 }, itemClickAmountLinter = { res ->
                     updateAmount(res)
-                })
+                }, context = requireActivity())
             adapter = confirmOderFragmentAdaptor
         }
     }
@@ -651,5 +647,18 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         )
         viewModel.getOrderList(FoodItemList(mutableList))
         activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
+    }
+
+    private fun showPb(msg: String) {
+        binding.pbLayout.root.show()
+        binding.confirmOrderBtn.isEnabled = false
+        binding.confirmOrderBtn.isClickable = false
+        binding.pbLayout.titleTxt.text = msg
+    }
+
+    private fun hidePb() {
+        binding.pbLayout.root.hide()
+        binding.confirmOrderBtn.isEnabled = true
+        binding.confirmOrderBtn.isClickable = true
     }
 }

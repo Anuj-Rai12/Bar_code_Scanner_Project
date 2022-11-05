@@ -287,7 +287,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                         showPb("${it.data}")
                     }
                     is ApisResponse.Success -> {
-                        binding.pbLayout.root.hide()
+                        hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
                         //Add ConfirmOrder Request
                         confirmOrder(
@@ -362,11 +362,15 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
 
     private fun showPb(msg: String) {
         binding.pbLayout.root.show()
+        binding.confirmOrderBtn.isEnabled = false
+        binding.confirmOrderBtn.isClickable = false
         binding.pbLayout.titleTxt.text = msg
     }
 
     private fun hidePb() {
         binding.pbLayout.root.hide()
+        binding.confirmOrderBtn.isEnabled = true
+        binding.confirmOrderBtn.isClickable = true
     }
 
 
@@ -465,7 +469,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                     updateFreeTxt(res)
                 }, itemClickAmountLinter = { res ->
                     updateAmount(res)
-                })
+                }, context = requireActivity())
             adapter = confirmOderFragmentAdaptor
         }
     }

@@ -387,7 +387,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         showPb("${it.data}")
                     }
                     is ApisResponse.Success -> {
-                        binding.pbLayout.root.hide()
+                        hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
                         //Add ConfirmOrder Request
                         confirmOrder(
@@ -511,7 +511,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     },
                     itemClickAmountLinter = { res ->
                         updateAmount(res)
-                    })
+                    },context=requireActivity())
             adapter = confirmOderFragmentAdaptor
         }
     }
@@ -685,6 +685,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun showPb(msg: String) {
         binding.pbLayout.root.show()
+        binding.confirmOrderBtn.isEnabled = false
+        binding.confirmOrderBtn.isClickable = false
         binding.pbLayout.titleTxt.text = msg
     }
 
@@ -712,6 +714,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun hidePb() {
         binding.pbLayout.root.hide()
+        binding.confirmOrderBtn.isEnabled = true
+        binding.confirmOrderBtn.isClickable = true
     }
 
 

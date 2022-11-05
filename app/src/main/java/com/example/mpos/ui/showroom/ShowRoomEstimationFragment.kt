@@ -286,7 +286,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
                         showPb("${it.data}")
                     }
                     is ApisResponse.Success -> {
-                        binding.pbLayout.root.hide()
+                        hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
                         //Add ConfirmOrder Request
                         confirmOrder(
@@ -362,10 +362,14 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
     private fun showPb(msg: String) {
         binding.pbLayout.root.show()
         binding.pbLayout.titleTxt.text = msg
+        binding.confirmOrderBtn.isClickable=false
+        binding.confirmOrderBtn.isEnabled=false
     }
 
     private fun hidePb() {
         binding.pbLayout.root.hide()
+        binding.confirmOrderBtn.isClickable=true
+        binding.confirmOrderBtn.isEnabled=true
     }
 
 
@@ -464,7 +468,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
                     updateFreeTxt(res)
                 }, itemClickAmountLinter = { res ->
                     updateAmount(res)
-                })
+                }, context = requireActivity())
             adapter = confirmOderFragmentAdaptor
         }
     }

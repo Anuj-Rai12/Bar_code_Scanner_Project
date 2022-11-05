@@ -11,7 +11,6 @@ import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.searchfood.adaptor.offeradaptor.ListOfOfferAdaptor
 import com.example.mpos.ui.searchfood.model.OfferDesc
 import com.example.mpos.utils.Rs_Symbol
-import com.example.mpos.utils.hide
 import com.example.mpos.utils.show
 
 class DealsAdaptor<T>(private val list: List<T>) :

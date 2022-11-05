@@ -66,7 +66,11 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
     private val args: ShowRoomBillingFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
     private val customDiningRequest: ConfirmDiningRequest =
-        ConfirmDiningRequest(ConfirmDiningBody(screenType = RestaurantSingletonCls.getInstance().getScreenType()!!))
+        ConfirmDiningRequest(
+            ConfirmDiningBody(
+                screenType = RestaurantSingletonCls.getInstance().getScreenType()!!
+            )
+        )
     private var receiptNo: String? = null
     private var confirmBillingRequest: ConfirmBillingRequest? = null
 
@@ -384,7 +388,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                         showPb("${it.data}")
                     }
                     is ApisResponse.Success -> {
-                        binding.pbLayout.root.hide()
+                        hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
                         //Add ConfirmOrder Request
                         confirmOrder(
@@ -508,7 +512,8 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                     },
                     itemClickAmountLinter = { res ->
                         updateAmount(res)
-                    })
+                    }, context = requireActivity()
+                )
             adapter = confirmOderFragmentAdaptor
         }
     }
@@ -683,6 +688,8 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
     private fun showPb(msg: String) {
         binding.pbLayout.root.show()
         binding.pbLayout.titleTxt.text = msg
+        binding.confirmOrderBtn.isClickable=false
+        binding.confirmOrderBtn.isEnabled=false
     }
 
     private fun setInitialValue() {
@@ -709,6 +716,8 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
     private fun hidePb() {
         binding.pbLayout.root.hide()
+        binding.confirmOrderBtn.isClickable=true
+        binding.confirmOrderBtn.isEnabled = true
     }
 
 

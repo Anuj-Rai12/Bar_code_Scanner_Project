@@ -11,6 +11,7 @@ import com.example.mpos.databinding.CrossSellingDialogBoxBinding
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.utils.checkFieldValue
+import com.example.mpos.utils.hide
 import com.example.mpos.utils.showSandbar
 
 class CrossSellingDialog(private val activity: Activity) {
@@ -41,10 +42,8 @@ class CrossSellingDialog(private val activity: Activity) {
                 itemSelected.remove(it)
             } else {
                 itemSelected.add(it)
-                totalItem += if (checkFieldValue(it.price) || !it.price.isDigitsOnly())
-                    0.0
-                else
-                    "%.4f".format(ListOfFoodItemToSearchAdaptor.setPrice(it.price)).toDouble()
+                totalItem += if (checkFieldValue(it.price) || !it.price.isDigitsOnly()) 0.0
+                else "%.4f".format(ListOfFoodItemToSearchAdaptor.setPrice(it.price)).toDouble()
             }
             binding.totalCountOfSelectItem.text = "Total Size ${itemSelected.size}"
         }
@@ -75,6 +74,38 @@ class CrossSellingDialog(private val activity: Activity) {
         }
         binding.recycleViewItem.adapter = crossAdaptor
         crossAdaptor.submitList(response.childItemList)
+        alertDialog?.show()
+    }
+
+
+    fun displayCrossSellingItem(response: CrossSellingJsonResponse) {
+        val binding = CrossSellingDialogBoxBinding.inflate(activity.layoutInflater)
+
+        alertDialog =
+            AlertDialog.Builder(activity).setView(binding.root).setCancelable(false).show()
+        alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        binding.itemTitle.text = response.description
+        binding.itemItemSelected.text = "Total Item Selected ${response.childItemList}"
+        binding.totalCountOfSelectItem.hide()
+
+        val crossAdaptor = CrossSellingAdaptor {}
+        binding.recycleViewItem.adapter = crossAdaptor
+        crossAdaptor.submitList(response.childItemList)
+        crossAdaptor.notifyDataSetChanged()
+        crossAdaptor.isFlagReset = true
+        binding.recycleViewItem.isEnabled = false
+
+
+        binding.submitBtn.hide()
+        binding.cancelBtn.hide()
+        binding.clearBtn.text = "Cancel"
+
+        binding.cancelBtn.setOnClickListener {
+            alertDialog?.dismiss()
+        }
+
+
         alertDialog?.show()
     }
 

@@ -280,7 +280,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         showPb("${it.data}")
                     }
                     is ApisResponse.Success -> {
-                        binding.pbLayout.root.hide()
+                        hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
                         //Add ConfirmOrder Request
                         confirmOrder(
@@ -352,11 +352,15 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private fun showPb(msg: String) {
         binding.pbLayout.root.show()
+        binding.confirmOrderBtn.isEnabled = false
+        binding.confirmOrderBtn.isClickable = false
         binding.pbLayout.titleTxt.text = msg
     }
 
     private fun hidePb() {
         binding.pbLayout.root.hide()
+        binding.confirmOrderBtn.isEnabled = true
+        binding.confirmOrderBtn.isClickable = true
     }
 
 
@@ -454,7 +458,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                     },
                     itemClickAmountLinter = { res ->
                         updateAmount(res)
-                    })
+                    },context=requireActivity())
             adapter = confirmOderFragmentAdaptor
         }
     }
