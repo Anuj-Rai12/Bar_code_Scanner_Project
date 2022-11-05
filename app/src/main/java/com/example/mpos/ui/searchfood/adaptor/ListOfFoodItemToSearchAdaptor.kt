@@ -181,7 +181,7 @@ class ListOfFoodItemToSearchAdaptor(
                 if (crossSelling) {
                     crossSellingOffer.show()
                 }else{//Remove this else block
-                    crossSellingOffer.show()
+                    crossSellingOffer.hide()
                 }
             }
         }

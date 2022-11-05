@@ -210,7 +210,7 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
                             mnuCrossSellingJsonResponse = res
                             val flag = res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
                             if (flag) {
-                                searchViewModel.getCrossSellingItem("100003")
+                                searchViewModel.getCrossSellingItem(res.itemCode)
                             } else {
                                 onBottomSheetClickListener?.onItemClicked(Pair(res, null))
                             }
@@ -281,8 +281,9 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         dialog.showCrossSellingDialog(response)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T> onItemClicked(response: T) {
-        val res = response as CrossSellingJsonResponse
+        val res = response as Pair<Double, CrossSellingJsonResponse>
         if (mnuCrossSellingJsonResponse != null) {
             onBottomSheetClickListener?.onItemClicked(Pair(mnuCrossSellingJsonResponse, res))
         } else {

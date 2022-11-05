@@ -42,7 +42,7 @@
             android:paddingEnd="3dp"
             android:paddingBottom="10dp"
             android:textAlignment="center"
-            android:textColor="@color/light_grey_color"
+            android:textColor="@color/black"
             android:textSize="11sp"
             tools:text="Chloe samosa" />
 
@@ -59,7 +59,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="10dp"
             android:textAlignment="center"
-            android:textColor="@color/light_grey_color"
+            android:textColor="@color/black"
             android:textSize="11sp"
             tools:text="1343567" />
 
@@ -76,7 +76,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="10dp"
             android:textAlignment="center"
-            android:textColor="@color/light_grey_color"
+            android:textColor="@color/black"
             android:textSize="11sp"
             tools:text="156 gfh hdhj" />
 
@@ -93,7 +93,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="10dp"
             android:textAlignment="center"
-            android:textColor="@color/light_grey_color"
+            android:textColor="@color/black"
             android:textSize="11sp"
             tools:text="156 hkl;fd kl;j " />
 

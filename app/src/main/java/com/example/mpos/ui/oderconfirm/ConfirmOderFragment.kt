@@ -613,9 +613,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T> onItemClicked(response: T) {
         val barcode = (response as Pair<*, *>).first as BarcodeJsonResponse
-        val crossSellingItems = (response as Pair<*, *>).second as CrossSellingJsonResponse?
+        val crossSellingItems =
+            (response as Pair<*, *>).second as Pair<Double, CrossSellingJsonResponse>?
         Log.i(TAG, "onItemClicked: $response")
         val itemMaster = ItemMaster(
             barcode = barcode.barcode,
@@ -632,7 +634,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         itemMaster.foodQty = barcode.qty.toDouble()
         val amt =
             (ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)
-        itemMaster.foodAmt = "%.4f".format(amt).toDouble()
+        itemMaster.foodAmt = "%.4f".format(amt).toDouble() + (crossSellingItems?.first ?: 0.0)
         val mutableList = mutableListOf<ItemMasterFoodItem>()
         if (arrItem.isNotEmpty()) {
             mutableList.addAll(arrItem)
@@ -642,8 +644,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 itemMaster = itemMaster,
                 foodQty = itemMaster.foodQty,
                 foodAmt = itemMaster.foodAmt,
-                crossSellingItems = crossSellingItems,
-                bg = if (crossSellingItems != null) listOfBg[2]
+                crossSellingItems = crossSellingItems?.second,
+                bg = if (crossSellingItems?.second != null) listOfBg[2]
                 else listOfBg.first()
             )
         )

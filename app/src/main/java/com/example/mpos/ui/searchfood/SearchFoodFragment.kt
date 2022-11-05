@@ -268,8 +268,9 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
         dialog.showCrossSellingDialog(response)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T> onItemClicked(response: T) {
-        val res = response as CrossSellingJsonResponse
+        val res = response as Pair<Double, CrossSellingJsonResponse>
         crossSellingItemMaster?.let {
             val msg = if (!checkFieldValue(it.itemMaster.itemName)) it.itemMaster.itemName
             else it.itemMaster.itemDescription
@@ -283,11 +284,11 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
                 ItemMasterFoodItem(
                     itemMaster = it.itemMaster,
                     foodQty = it.foodQty,
-                    foodAmt = it.foodAmt,
+                    foodAmt = it.foodAmt + res.first,
                     bg = listOfBg[2],
                     free_txt = it.free_txt,
                     isDeal = it.isDeal,
-                    crossSellingItems = res
+                    crossSellingItems = res.second
                 )
             )
             crossSellingItemMaster = null

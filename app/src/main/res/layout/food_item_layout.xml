@@ -235,7 +235,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/cross_selling_offer"
         android:layout_width="0dp"
-        android:layout_height="27dp"
+        android:layout_height="32dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="17dp"
@@ -243,7 +243,7 @@
         android:fontFamily="@font/roboto_medium"
         android:paddingStart="16dp"
         android:paddingTop="5dp"
-        android:paddingBottom="6dp"
+        android:paddingBottom="5dp"
         android:text="Select CrossSelling Item"
         android:textAlignment="center"
         android:textAllCaps="false"

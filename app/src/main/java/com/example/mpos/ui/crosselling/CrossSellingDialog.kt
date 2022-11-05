@@ -4,10 +4,13 @@ import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AlertDialog
+import androidx.core.text.isDigitsOnly
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingItems
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.databinding.CrossSellingDialogBoxBinding
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
+import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
+import com.example.mpos.utils.checkFieldValue
 import com.example.mpos.utils.showSandbar
 
 class CrossSellingDialog(private val activity: Activity) {
@@ -17,7 +20,7 @@ class CrossSellingDialog(private val activity: Activity) {
 
     fun showCrossSellingDialog(response: CrossSellingJsonResponse) {
         val itemSelected = mutableListOf<CrossSellingItems>()
-
+        var totalItem = 0.0
         val binding = CrossSellingDialogBoxBinding.inflate(activity.layoutInflater)
 
         alertDialog =
@@ -38,6 +41,10 @@ class CrossSellingDialog(private val activity: Activity) {
                 itemSelected.remove(it)
             } else {
                 itemSelected.add(it)
+                totalItem += if (checkFieldValue(it.price) || !it.price.isDigitsOnly())
+                    0.0
+                else
+                    "%.4f".format(ListOfFoodItemToSearchAdaptor.setPrice(it.price)).toDouble()
             }
             binding.totalCountOfSelectItem.text = "Total Size ${itemSelected.size}"
         }
@@ -63,7 +70,7 @@ class CrossSellingDialog(private val activity: Activity) {
                 minSelection = response.minSelection,
                 parentItem = response.parentItem
             )
-            itemClicked?.onItemClicked(cross)
+            itemClicked?.onItemClicked(Pair(totalItem, cross))
             alertDialog?.dismiss()
         }
         binding.recycleViewItem.adapter = crossAdaptor

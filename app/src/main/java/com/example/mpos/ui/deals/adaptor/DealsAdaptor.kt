@@ -54,9 +54,7 @@ class DealsAdaptor<T>(private val list: List<T>) :
                 binding.btnWithOffer.show()
             } else if (data is ScanAndFindDealsJsonItem) {
                 binding.foodItemTv.text = data.itemName
-                binding.offerTv.text = "on Offer"
-                binding.offerDetailTv.text = "QTY ${data.qty}"
-                binding.offerDetailTv.show()
+                binding.offerTv.text = "on Offer\n\nQTY ${data.qty}"
                 binding.foodPriceTv.text = "$Rs_Symbol ${data.salePrice}"
                 listOfOfferAdaptor.submitList(listOf())
             }
