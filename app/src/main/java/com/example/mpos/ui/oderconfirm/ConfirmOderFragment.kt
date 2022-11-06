@@ -38,6 +38,7 @@ import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.use_case.AlphaNumericString
 import com.example.mpos.utils.*
+import com.example.mpos.utils.print.recpit.PrintRepository
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
@@ -408,7 +409,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     showPb(it.data.toString())
                 }
                 is ApisResponse.Success -> {
-                    hidePb()
                     showDialogBox(
                         "Successfully Inserted",
                         "${it.data}",
@@ -418,12 +418,17 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         var isTrue = true
                         val handler = Handler(Looper.getMainLooper())
                         handler.post {
-                            if (isTrue) {
-                                findNavController().popBackStack()
-                                isTrue = false
+                            try {
+                                if (isTrue) {
+                                    findNavController().popBackStack()
+                                    isTrue = false
+                                }
+                            }catch (e:Exception){
+                                PrintRepository.setCashAnalytics(e)
                             }
                         }
                     }
+                    hidePb()
                 }
             }
         }

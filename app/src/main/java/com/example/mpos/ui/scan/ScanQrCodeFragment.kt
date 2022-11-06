@@ -64,6 +64,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
             Barcode.FORMAT_CODE_128,
             Barcode.FORMAT_CODE_39,
             Barcode.FORMAT_EAN_8,
+            Barcode.FORMAT_ITF,
+            Barcode.FORMAT_DATA_MATRIX,
             Barcode.FORMAT_EAN_13,
             Barcode.FORMAT_PDF417,
             Barcode.FORMAT_UPC_A,
@@ -73,8 +75,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
 
 
     private val scanner by lazy {
-        BarcodeScanning.getClient(option)
-        //  BarcodeScanning.getClient()
+        //BarcodeScanning.getClient(option)
+        BarcodeScanning.getClient()
     }
 
 
@@ -154,7 +156,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                         showScannerScreen(false)
                         (it.data as BarcodeJsonResponse?)?.let { res ->
                             crossSellingBarcodeJsonResponse = res
-                            val flag = res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
+                            val flag =
+                                res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
                             if (flag) {
                                 searchViewModel.getCrossSellingItem(res.itemCode)
                             } else {

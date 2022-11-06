@@ -5,6 +5,7 @@ import com.example.mpos.data.poslineitem.request.MenuItem
 import com.example.mpos.data.poslineitem.request.MunItemContainer
 import com.example.mpos.data.poslineitem.request.PosLineItemApiRequest
 import com.example.mpos.data.poslineitem.request.RequestBody
+import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.utils.AllStringConst
 import com.example.mpos.utils.TAG
@@ -86,6 +87,23 @@ class ConfirmOrderUseCase {
                 ParentItemCrossSelling = itemMasterFoodItem.itemMaster.crossSellingAllow
             )
             list.add(menuItem)
+            itemMasterFoodItem.crossSellingItems?.childItemList?.forEach { crossSellingItems ->
+                val crossSellingItem = MenuItem(
+                    itemNo = itemMasterFoodItem.crossSellingItems.parentItem,
+                    receiptNo = receipt,
+                    qty = "1.0",
+                    saleType = AllStringConst.API.RESTAURANT.name,
+                    date = getDate("MM/dd/yy") ?: "10/20/22",
+                    time = time,
+                    storeNo = storeNo,
+                    freeText = itemMasterFoodItem.free_txt,
+                    price = "%.4f".format(ListOfFoodItemToSearchAdaptor.setPrice(crossSellingItems.price)).toDouble().toString(),
+                    dealLine = false.toString().uppercase(Locale.getDefault()),
+                    ParentItemCrossSelling = true.toString(),
+                )
+                list.add(crossSellingItem)
+            }
+
         }
         return PosLineItemApiRequest(RequestBody(MunItemContainer(list)))
     }
