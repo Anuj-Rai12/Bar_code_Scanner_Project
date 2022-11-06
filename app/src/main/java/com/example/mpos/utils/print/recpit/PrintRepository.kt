@@ -108,7 +108,7 @@ class PrintRepository {
                                 .toString(),
                             10
                         )
-                    }\n" +
+                    }\n" +"[C]<barcode type='128' width='40' text='above'>${responseBody.orderId}</barcode>\n"+
                             "[C]$underLine"
                 )
 
