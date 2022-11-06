@@ -12,6 +12,7 @@ import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.utils.checkFieldValue
 import com.example.mpos.utils.hide
+import com.example.mpos.utils.show
 import com.example.mpos.utils.showSandbar
 
 class CrossSellingDialog(private val activity: Activity) {
@@ -86,22 +87,21 @@ class CrossSellingDialog(private val activity: Activity) {
         alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         binding.itemTitle.text = response.description
-        binding.itemItemSelected.text = "Total Item Selected ${response.childItemList}"
-        binding.totalCountOfSelectItem.hide()
+        binding.itemItemSelected.text = "Total Item Selected ${response.childItemList.size}"
 
         val crossAdaptor = CrossSellingAdaptor {}
         binding.recycleViewItem.adapter = crossAdaptor
         crossAdaptor.submitList(response.childItemList)
+        crossAdaptor.isFlagReset=true
+        crossAdaptor.isEnable = false
         crossAdaptor.notifyDataSetChanged()
-        crossAdaptor.isFlagReset = true
-        binding.recycleViewItem.isEnabled = false
 
 
         binding.submitBtn.hide()
         binding.cancelBtn.hide()
         binding.clearBtn.text = "Cancel"
 
-        binding.cancelBtn.setOnClickListener {
+        binding.clearBtn.setOnClickListener {
             alertDialog?.dismiss()
         }
 

@@ -17,15 +17,16 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
     ListAdapter<CrossSellingItems, CrossSellingAdaptor.CrossSellingItemViewHolder>(diffUtil) {
 
     var isFlagReset: Boolean = false
+    var isEnable = true
 
     inner class CrossSellingItemViewHolder(private val binding: CrossSellingItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private var isClicked: Boolean = false
         val tick = binding.itemSuccessClick
+        val root = binding.root
         fun setData(data: CrossSellingItems, itemClicked: itemClicked) {
             binding.foodTitle.text = data.childTxt
             binding.qtyOfItemAndPrice.text = "Qty : 1 and Price : $Rs_Symbol ${data.price}"
-            binding.itemSuccessClick.hide()
             binding.root.setOnClickListener {
                 if (!isClicked) {
                     binding.itemSuccessClick.show()
@@ -41,13 +42,11 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<CrossSellingItems>() {
             override fun areItemsTheSame(
-                oldItem: CrossSellingItems,
-                newItem: CrossSellingItems
+                oldItem: CrossSellingItems, newItem: CrossSellingItems
             ) = oldItem.itemCode == newItem.itemCode
 
             override fun areContentsTheSame(
-                oldItem: CrossSellingItems,
-                newItem: CrossSellingItems
+                oldItem: CrossSellingItems, newItem: CrossSellingItems
             ) = oldItem == newItem
         }
     }
@@ -61,10 +60,19 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
     override fun onBindViewHolder(holder: CrossSellingItemViewHolder, position: Int) {
         val currItem = getItem(position)
         currItem?.let {
-            if (isFlagReset){
+
+            holder.root.isClickable=isEnable
+            holder.root.isEnabled=isEnable
+
+            if (isFlagReset) {
                 holder.tick.hide()
             }
-                holder.setData(it, itemClicked)
+
+            if (!isEnable && isFlagReset){
+                holder.tick.show()
+            }
+
+            holder.setData(it, itemClicked)
         }
     }
 
