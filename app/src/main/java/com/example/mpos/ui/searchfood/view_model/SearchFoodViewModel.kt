@@ -9,6 +9,7 @@ import com.example.mpos.dataStore.UserSoredData
 import com.example.mpos.db.RoomDataBaseInstance
 import com.example.mpos.di.RetrofitInstance
 import com.example.mpos.ui.searchfood.repo.SearchFoodRepositoryImpl
+import com.example.mpos.ui.testingconnection.repo.ApiRepository
 import com.example.mpos.utils.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
@@ -43,7 +44,13 @@ class SearchFoodViewModel constructor(
         }
         viewModelScope.launch {
             val db = RoomDataBaseInstance.getInstance(application)
+
             userSoredData.readBase.collectLatest {
+                if (checkFieldValue(it.baseUrl) || checkFieldValue(it.storeId) || checkFieldValue(it.userId) ||
+                    checkFieldValue(it.passId)
+                ) {
+                    return@collectLatest
+                }
                 val auth = AllStringConst.getAuthHeader(genToken("${it.userId}:${it.passId}"))
                 val retrofit = RetrofitInstance.getInstance(auth = auth, baseUrl = it.baseUrl)
                 repository = SearchFoodRepositoryImpl(

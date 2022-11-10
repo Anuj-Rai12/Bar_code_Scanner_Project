@@ -33,7 +33,6 @@ import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.mpos.utils.*
 import com.google.android.material.snackbar.Snackbar
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import java.util.*
@@ -55,7 +54,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
 
     private var crossSellingBarcodeJsonResponse: BarcodeJsonResponse? = null
 
-    private val option = BarcodeScannerOptions.Builder()
+   /* private val option = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
             Barcode.FORMAT_QR_CODE,
             Barcode.FORMAT_AZTEC,
@@ -71,7 +70,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
             Barcode.FORMAT_UPC_A,
             Barcode.FORMAT_UPC_E,
         )
-        .build()
+        .build()*/
 
 
     private val scanner by lazy {

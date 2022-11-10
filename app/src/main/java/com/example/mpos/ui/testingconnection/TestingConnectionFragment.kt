@@ -3,8 +3,6 @@ package com.example.mpos.ui.testingconnection
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -23,8 +21,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
     private lateinit var binding: TestingConnectionFragmentBinding
     private val viewModel: TestingConnectionViewModel by viewModels()
     private val args: TestingConnectionFragmentArgs by navArgs()
-    private var isGoneToLoginScreen = false
-    private var isGoneToScanScreen = false
+
     private var isDialogForUrlOpen = false
 
     @SuppressLint("ResourceType")
@@ -89,32 +86,20 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
     }
 
     private fun nextFragForScan() {
-        val handler = Handler(Looper.getMainLooper())
-        handler.post {
-            if (!isGoneToScanScreen) {
-                isGoneToScanScreen = true
-                val action =
-                    TestingConnectionFragmentDirections.actionGlobalScanQrCodeFragment(
-                        Url_barcode,
-                        null,
-                        null,
-                        null, WhereToGoFromScan.TESTINGCONNECTION.name
-                    )
-                findNavController().safeNavigate(action)
-            }
-        }
+        val action =
+            TestingConnectionFragmentDirections.actionGlobalScanQrCodeFragment(
+                Url_barcode,
+                null,
+                null,
+                null, WhereToGoFromScan.TESTINGCONNECTION.name
+            )
+        findNavController().safeNavigate(action)
     }
 
     private fun nextFrag() {
-        val handler = Handler(Looper.getMainLooper())
-        handler.post {
-            if (!isGoneToLoginScreen) {
-                isGoneToLoginScreen = true
-                val action =
-                    TestingConnectionFragmentDirections.actionTestingConnectionFragmentToLoginScreenFragment()
-                findNavController().safeNavigate(action)
-            }
-        }
+        val action =
+            TestingConnectionFragmentDirections.actionTestingConnectionFragmentToLoginScreenFragment()
+        findNavController().safeNavigate(action)
     }
 
 
