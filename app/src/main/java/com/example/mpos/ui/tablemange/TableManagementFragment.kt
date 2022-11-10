@@ -59,7 +59,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout),
         viewModel.tblInfo.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
-                    binding.root.isRefreshing=false
+                    binding.root.isRefreshing = false
                     hideOrShowProgress(null)
                     val exp = it.exception?.localizedMessage
                     val error = exp?.let {
@@ -78,7 +78,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout),
                     }
                 }
                 is ApisResponse.Success -> {
-                    binding.root.isRefreshing=false
+                    binding.root.isRefreshing = false
                     hideOrShowProgress(null)
                     displayData(it.data)
                 }
@@ -126,18 +126,20 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout),
         binding.totalTableRecycler.apply {
             setHasFixedSize(true)
             tableManagementAdaptor = TableManagementAdaptor()
-            tableManagementAdaptor.onClickLister=this@TableManagementFragment
+            tableManagementAdaptor.onClickLister = this@TableManagementFragment
             adapter = tableManagementAdaptor
         }
     }
 
     override fun <T> onItemClicked(response: T) {
-        val res= response as TableDetail
+        val res = response as TableDetail
         Log.i(TAG, "setRecycleView: $res")
         if (res.billPrinted.equals("No", true)) {
             val action = TableManagementFragmentDirections
                 .actionTableManagementFragmentToConfirmOderFragment(null, res, null)
-            findNavController().navigate(action)
+            //findNavController().navigate(action)
+                findNavController().safeNavigate(action)
+
         } else {
             activity?.msg("Cannot Open it already printed ${getEmojiByUnicode(0x1F5A8)}")
             Handler(Looper.getMainLooper()).post {

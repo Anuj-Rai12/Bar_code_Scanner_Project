@@ -54,9 +54,11 @@ class TableManagementViewModel(application: Application) : AndroidViewModel(appl
     fun fetchTbl() {
         if (!app.isNetworkAvailable()) {
             _event.postValue(Events("No Internet Connection"))
+            return
         }
         if (!this::repositoryImpl.isInitialized) {
             _event.postValue(Events("Unknown Error"))
+            return
         }
         viewModelScope.launch {
             userSoredData.read.collectLatest {

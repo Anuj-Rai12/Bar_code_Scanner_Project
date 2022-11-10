@@ -65,12 +65,8 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ShowRoomBillingFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
-    private val customDiningRequest: ConfirmDiningRequest =
-        ConfirmDiningRequest(
-            ConfirmDiningBody(
-                screenType = RestaurantSingletonCls.getInstance().getScreenType()!!
-            )
-        )
+    private var customDiningRequest: ConfirmDiningRequest? =null
+
     private var receiptNo: String? = null
     private var confirmBillingRequest: ConfirmBillingRequest? = null
 
@@ -819,4 +815,16 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
         confirmOrderViewModel.getOrderList(FoodItemList(mutableList))
         activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
     }
+
+    override fun onResume() {
+        super.onResume()
+        customDiningRequest=ConfirmDiningRequest(
+            ConfirmDiningBody(
+                screenType = RestaurantSingletonCls.getInstance().getScreenType()!!
+            )
+        )
+    }
+
+
+
 }

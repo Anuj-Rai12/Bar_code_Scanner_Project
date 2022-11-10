@@ -202,7 +202,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                 }
             }
 
-        findNavController().navigate(action)
+        findNavController().safeNavigate(action)
     }
 
 }
