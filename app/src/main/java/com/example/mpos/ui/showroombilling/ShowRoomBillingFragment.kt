@@ -150,6 +150,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
             mnuBottom.show(parentFragmentManager, MenuBottomSheetFragment.NAME)
         }
         binding.confirmOrderBtn.setOnClickListener {
+            Log.i("confirmOrderBtn", "onViewCreated: I got Clicked")
             if (arrItem.isEmpty()) {
                 viewModel.addError("Please Add Item Menu !!")
                 return@setOnClickListener

@@ -108,10 +108,10 @@ class PrintRepository {
                                 .toString(),
                             10
                         )
-                    }\n" +"[C]<barcode type='128' width='40' text='above'>${responseBody.orderId}</barcode>\n"+
+                    }\n" +"<qrcode size='30'>${responseBody.orderId}</qrcode>"+
                             "[C]$underLine"
                 )
-
+//"[C]<barcode type='128' width='40' text='above'>${responseBody.orderId}</barcode>\n"+
                 printer.printFormattedText(stringBuilder.toString())
                 printer.disconnectPrinter()
                 return@let ApisResponse.Success("Receipt Printed ${getEmojiByUnicode(0x1F5A8)}")
