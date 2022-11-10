@@ -106,7 +106,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
     private fun nextFrag(storeNumber: ApkLoginJsonResponse) {
         val action =
             LoginScreenFragmentDirections.actionLoginScreenFragmentToTableManagementOrCostEstimate(storeNumber)
-        findNavController().navigate(action)
+        findNavController().safeNavigate(action)
     }
 
 

@@ -89,7 +89,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 customDiningRequest,
                 WhereToGoFromScan.RESTARURANTBILLING.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
         viewModel.event.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { msg ->
@@ -168,7 +168,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 FoodItemList(arrItem), null, customDiningRequest,
                 WhereToGoFromSearch.RESTARURANTBILLING.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         binding.infoBtn.setOnClickListener {
@@ -205,7 +205,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 customDiningRequest,
                 WhereToGoFromSearch.RESTARURANTBILLING.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
 

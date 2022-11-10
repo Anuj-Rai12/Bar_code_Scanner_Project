@@ -139,7 +139,7 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
                     args.confirm
                 )
             }*/
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         } else if (isEveryThingSetUp) {
             findNavController().popBackStack()
         }

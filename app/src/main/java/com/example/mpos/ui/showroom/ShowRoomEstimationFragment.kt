@@ -75,7 +75,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
                     FoodItemList(arrItem),
                     customDiningRequest
                 ,WhereToGoFromScan.SHOWROOMESTIMATE.name)
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         confirmOrderViewModel.event.observe(viewLifecycleOwner) {
@@ -139,7 +139,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
                     customDiningRequest
                 ,WhereToGoFromSearch.SHOWROOMESTIMATE.name
                 )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         binding.infoBtn.setOnClickListener {
@@ -158,7 +158,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
                     customDiningRequest,
                     WhereToGoFromSearch.SHOWROOMESTIMATE.name
                 )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
 

@@ -85,7 +85,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 customDiningRequest,
                 WhereToGoFromScan.SHOWROOMBILLING.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
         viewModel.event.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { msg ->
@@ -169,7 +169,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 customDiningRequest,
                 WhereToGoFromSearch.SHOWROOMBILLING.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         binding.infoBtn.setOnClickListener {
@@ -206,7 +206,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 customDiningRequest,
                 WhereToGoFromSearch.SHOWROOMBILLING.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
 

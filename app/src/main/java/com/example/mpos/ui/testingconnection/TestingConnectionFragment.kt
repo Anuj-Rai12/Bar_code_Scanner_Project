@@ -2,13 +2,11 @@ package com.example.mpos.ui.testingconnection
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -30,7 +28,6 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
     private var isDialogForUrlOpen = false
 
     @SuppressLint("ResourceType")
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor()
@@ -86,6 +83,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
             }, done = { res ->
                 isDialogForUrlOpen = false
                 viewModel.scannerUrl = res
+                activity?.msg("${viewModel.scannerUrl}")
             })
         }
     }
@@ -100,9 +98,9 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                         Url_barcode,
                         null,
                         null,
-                        null
-                    ,WhereToGoFromScan.TESTINGCONNECTION.name)
-                findNavController().navigate(action)
+                        null, WhereToGoFromScan.TESTINGCONNECTION.name
+                    )
+                findNavController().safeNavigate(action)
             }
         }
     }
@@ -114,12 +112,12 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                 isGoneToLoginScreen = true
                 val action =
                     TestingConnectionFragmentDirections.actionTestingConnectionFragmentToLoginScreenFragment()
-                findNavController().navigate(action)
+                findNavController().safeNavigate(action)
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     private fun checkApiResponse() {
         viewModel.testingConnection.observe(viewLifecycleOwner) {
             when (it) {
@@ -155,7 +153,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         ) {}
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     private fun showSnackBar(msg: String, length: Int = Snackbar.LENGTH_INDEFINITE) {
         binding.root.showSandbar(
             msg,

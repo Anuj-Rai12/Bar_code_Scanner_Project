@@ -109,7 +109,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                     SplashScreenFragmentDirections.actionSplashScreenFragmentToTableManagementOrCostEstimate(data!!)
                 }
             }
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
     }
 

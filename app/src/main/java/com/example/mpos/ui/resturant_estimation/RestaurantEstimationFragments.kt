@@ -76,7 +76,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                     customDiningRequest,
                     WhereToGoFromScan.RESTAURANTESTIMATE.name
                 )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         confirmOrderViewModel.event.observe(viewLifecycleOwner) {
@@ -140,7 +140,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                     customDiningRequest
                 ,WhereToGoFromSearch.RESTAURANTESTIMATE.name
                 )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         binding.infoBtn.setOnClickListener {
@@ -159,7 +159,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                     customDiningRequest,
                     WhereToGoFromSearch.RESTAURANTESTIMATE.name
                 )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
 

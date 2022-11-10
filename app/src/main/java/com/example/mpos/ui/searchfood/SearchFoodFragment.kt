@@ -185,7 +185,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
                 }
 
             }
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         } else if (flag) {
             findNavController().popBackStack()
         }

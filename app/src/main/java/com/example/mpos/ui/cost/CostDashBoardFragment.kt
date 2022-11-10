@@ -77,7 +77,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 customDiningRequest,
                 WhereToGoFromScan.COSTESTIMATE.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         confirmOrderViewModel.event.observe(viewLifecycleOwner) {
@@ -139,7 +139,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 customDiningRequest,
                 WhereToGoFromSearch.COSTESTIMATE.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         binding.infoBtn.setOnClickListener {
@@ -157,7 +157,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 customDiningRequest,
                 WhereToGoFromSearch.COSTESTIMATE.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
 

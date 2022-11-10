@@ -88,7 +88,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 customDiningRequest,
                 WhereToGoFromScan.BILLPAYMENT.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
         viewModel.event.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { msg ->
@@ -169,7 +169,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 customDiningRequest,
                 WhereToGoFromSearch.BILLPAYMENT.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         binding.infoBtn.setOnClickListener {
@@ -206,7 +206,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 customDiningRequest,
                 WhereToGoFromSearch.BILLPAYMENT.name
             )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
 

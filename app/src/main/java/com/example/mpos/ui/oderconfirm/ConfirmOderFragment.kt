@@ -70,7 +70,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     FoodItemList(arrItem),
                     customDiningRequest, WhereToGoFromScan.TABLEMANGMENT.name
                 )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         viewModel.event.observe(viewLifecycleOwner) {
@@ -111,7 +111,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     args.tbl,
                     customDiningRequest, WhereToGoFromSearch.TABLEMANGMENT.name
                 )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         binding.restItemBtn.setOnClickListener {
@@ -134,7 +134,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     customDiningRequest,
                     WhereToGoFromSearch.TABLEMANGMENT.name
                 )
-            findNavController().navigate(action)
+            findNavController().safeNavigate(action)
         }
 
         binding.infoBtn.setOnClickListener {

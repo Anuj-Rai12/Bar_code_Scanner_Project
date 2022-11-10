@@ -289,7 +289,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToTestingConnectionFragment(
                             barcodeValue
                         )
-                    findNavController().navigate(action)
+                    findNavController().safeNavigate(action)
                 }
             }
         }
@@ -397,7 +397,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                     }
                 }
 
-                action?.let { findNavController().navigate(it) } ?: run {
+                action?.let { findNavController().safeNavigate(it) } ?: run {
                     showErrorDialog("Cannot Go Back")
                 }
             }
