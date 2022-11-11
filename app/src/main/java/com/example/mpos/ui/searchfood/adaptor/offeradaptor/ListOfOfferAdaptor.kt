@@ -80,7 +80,7 @@ class ListOfOfferAdaptor(
                     offer.selected = false
                     false
                 }*/
-                oderOfferListCallBack(offer)
+              //  oderOfferListCallBack(offer)
             }
 
         }
