@@ -250,6 +250,7 @@ class PrintRepository {
                 )
 
                 printer.printFormattedText(stringBuilder.toString())
+                printer.printFormattedText(stringBuilder.toString())
                 printer.disconnectPrinter()
                 return@let ApisResponse.Success("Invoice Printed ${getEmojiByUnicode(0x1F5A8)} Successfully")
             } ?: ApisResponse.Error("Please connect to Printer", null)
