@@ -21,7 +21,7 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
 
     inner class CrossSellingItemViewHolder(private val binding: CrossSellingItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        private var isClicked: Boolean = false
+        var isClicked: Boolean = false
         val tick = binding.itemSuccessClick
         val root = binding.root
         fun setData(data: CrossSellingItems, itemClicked: itemClicked) {
@@ -61,14 +61,15 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
         val currItem = getItem(position)
         currItem?.let {
 
-            holder.root.isClickable=isEnable
-            holder.root.isEnabled=isEnable
+            holder.root.isClickable = isEnable
+            holder.root.isEnabled = isEnable
 
             if (isFlagReset) {
                 holder.tick.hide()
+                holder.isClicked = false
             }
 
-            if (!isEnable && isFlagReset){
+            if (!isEnable && isFlagReset) {
                 holder.tick.show()
             }
 
