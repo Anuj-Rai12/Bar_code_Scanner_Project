@@ -4,10 +4,7 @@ import android.util.Log
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
-import com.example.mpos.data.billing.printInvoice.json.Childitem
-import com.example.mpos.data.billing.printInvoice.json.GstDetail
-import com.example.mpos.data.billing.printInvoice.json.PaymentDetail
-import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
+import com.example.mpos.data.billing.printInvoice.json.*
 import com.example.mpos.data.confirmOrder.response.json.ItemList
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
@@ -81,7 +78,12 @@ class PrintRepository {
                             "[C]$line" +
                             "[L]" +
                             createNewString("Total Amt Excel. Of GST", 40) +
-                            "${createNewString(ListOfFoodItemToSearchAdaptor.setPrice(responseBody.amtExclGST).toString(), 10)}\n" +
+                            "${
+                                createNewString(
+                                    ListOfFoodItemToSearchAdaptor.setPrice(responseBody.amtExclGST)
+                                        .toString(), 10
+                                )
+                            }\n" +
                             "[C]$line" +
                             "[L]" + "${
                         createNewString(
@@ -108,7 +110,7 @@ class PrintRepository {
                                 .toString(),
                             10
                         )
-                    }\n" +"<qrcode size='30'>${responseBody.orderId}</qrcode>"+
+                    }\n" + "<qrcode size='30'>${responseBody.orderId}</qrcode>" +
                             "[C]$underLine"
                 )
 //"[C]<barcode type='128' width='40' text='above'>${responseBody.orderId}</barcode>\n"+
@@ -235,7 +237,14 @@ class PrintRepository {
                             "${createNewString(responseBody.roundAmt, 10)}\n" +
                             "[C]$doubleLine" +
                             "[L]" + createNewString("Rounding Total", 40) +
-                            "${createNewString(getRoundingTotal(responseBody.amtIncGST, responseBody.roundAmt), 10)}\n" +
+                            "${
+                                createNewString(
+                                    getRoundingTotal(
+                                        responseBody.amtIncGST,
+                                        responseBody.roundAmt
+                                    ), 10
+                                )
+                            }\n" +
                             "[C]$doubleLine" +
                             setTenderTable(responseBody.paymentDetails) +
                             "[C]$doubleLine" +
@@ -246,6 +255,7 @@ class PrintRepository {
                             "[L]${responseBody.footerTxt5}\n" +
                             "[L]${responseBody.footerTxt6}\n" +
                             "[L]${responseBody.footerTxt7}\n" +
+                            "<qrcode size='30'>${getScanQr(responseBody.qrPrint)}</qrcode>" +
                             "[C]$underLine"
                 )
 
@@ -261,6 +271,17 @@ class PrintRepository {
         }
         emit(data)
     }.flowOn(IO)
+
+    private fun getScanQr(qrPrint: List<QrPrint>): String {
+        val stringBuilder=StringBuilder()
+        qrPrint.forEach {
+            stringBuilder.append(it.tenderType)
+            stringBuilder.append("\n")
+            stringBuilder.append(it.amt)
+            stringBuilder.append("\n$line")
+        }
+        return  stringBuilder.toString()
+    }
 
     private fun getRoundingTotal(amtIncGST: String, roundAmt: String): String {
         val gst = ListOfFoodItemToSearchAdaptor.setPrice(amtIncGST)
@@ -298,8 +319,15 @@ class PrintRepository {
         list.forEach { item ->
             val value =
                 "[L]${createNewString(item.description, 25)}" +
-                        createNewString("${item.qty}", 7) + createNewString(ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(), 8) +
-                        "${createNewString(ListOfFoodItemToSearchAdaptor.setPrice(item.amount).toString(), 10)}\n"
+                        createNewString("${item.qty}", 7) + createNewString(
+                    ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(),
+                    8
+                ) +
+                        "${
+                            createNewString(
+                                ListOfFoodItemToSearchAdaptor.setPrice(item.amount).toString(), 10
+                            )
+                        }\n"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
@@ -310,9 +338,20 @@ class PrintRepository {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
             val value =
-                "[L]${createNewString(item.description, 25)}${createNewString(item.qty.toString(), 7)}" +
-                        createNewString(ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(), 8) +
-                        "${createNewString(ListOfFoodItemToSearchAdaptor.setPrice(item.amount).toString(), 10)}\n"
+                "[L]${createNewString(item.description, 25)}${
+                    createNewString(
+                        item.qty.toString(),
+                        7
+                    )
+                }" +
+                        createNewString(
+                            ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(), 8
+                        ) +
+                        "${
+                            createNewString(
+                                ListOfFoodItemToSearchAdaptor.setPrice(item.amount).toString(), 10
+                            )
+                        }\n"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
@@ -322,7 +361,7 @@ class PrintRepository {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
             val value =
-                "[L]${createNewString(item.gstPer, 25)}${createNewString(item.cGSTAmt, 7)}"+
+                "[L]${createNewString(item.gstPer, 25)}${createNewString(item.cGSTAmt, 7)}" +
                         createNewString(item.sGSTAmt, 8) +
                         "${createNewString(item.cessAmt, 10)}\n"
             stringBuilder.append(value)

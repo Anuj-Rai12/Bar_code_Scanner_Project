@@ -26,6 +26,7 @@ data class PrintInvoice(
     @SerializedName("HeaderTxt6") val headerTxt6: String,
     @SerializedName("HeaderTxt7") val headerTxt7: String,
     @SerializedName("PaymentDetails") val paymentDetails: List<PaymentDetail>,
+    @SerializedName("QRPrint") val qrPrint: List<QrPrint>,
     @SerializedName("RoundAmt") val roundAmt: String,
     @SerializedName("SubHeaderTxt1") val subHeaderTxt1: String,
     @SerializedName("SubHeaderTxt2") val subHeaderTxt2: String,
