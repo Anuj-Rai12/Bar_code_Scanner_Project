@@ -260,9 +260,17 @@ class PrintRepository {
                 )
 
                 printer.printFormattedText(stringBuilder.toString())
-                printer.printFormattedText(stringBuilder.toString())
                 printer.disconnectPrinter()
-                return@let ApisResponse.Success("Invoice Printed ${getEmojiByUnicode(0x1F5A8)} Successfully")
+                kotlinx.coroutines.delay(3000)
+                val connection2: BluetoothConnection? =
+                    BluetoothPrintersConnections.selectFirstPaired()
+                connection2?.let {
+                    val printer2 = EscPosPrinter(connection, 203, 80f, 32)
+                    printer2.printFormattedText(stringBuilder.toString())
+                    printer2.disconnectPrinter()
+                    ApisResponse.Success("Invoice Printed ${getEmojiByUnicode(0x1F5A8)} Successfully")
+                } ?: ApisResponse.Error("Cannot Print Bill Twice as Printer is Not Connected", null)
+                //return@let ApisResponse.Success("Invoice Printed ${getEmojiByUnicode(0x1F5A8)} Successfully")
             } ?: ApisResponse.Error("Please connect to Printer", null)
         } catch (e: Exception) {
             Log.i("PRINT_ANUJ", "doPrint: ${e.localizedMessage}")
@@ -273,14 +281,14 @@ class PrintRepository {
     }.flowOn(IO)
 
     private fun getScanQr(qrPrint: List<QrPrint>): String {
-        val stringBuilder=StringBuilder()
+        val stringBuilder = StringBuilder()
         qrPrint.forEach {
             stringBuilder.append(it.tenderType)
             stringBuilder.append("\n")
             stringBuilder.append(it.amt)
             stringBuilder.append("\n$line")
         }
-        return  stringBuilder.toString()
+        return stringBuilder.toString()
     }
 
     private fun getRoundingTotal(amtIncGST: String, roundAmt: String): String {
