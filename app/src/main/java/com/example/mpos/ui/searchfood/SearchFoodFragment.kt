@@ -254,7 +254,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
                     Log.i(TAG, "setRecycleView: $listOfFoodItem")
                 }, itemClickListerCrossSelling = { itemMaster ->
                     crossSellingItemMaster = itemMaster
-                    viewModel.getCrossSellingItem("100004")//itemMaster.itemMaster.itemCode)
+                    viewModel.getCrossSellingItem(itemMaster.itemMaster.itemCode)
                 })
             flag = true
             adapter = listOfFoodItemToSearchAdaptor

@@ -56,7 +56,7 @@ class PrintRepository {
     }.flowOn(IO)
 
 
-    fun doPrint(responseBody: PrintReceiptInfo) = flow {
+    fun doPrint(responseBody: PrintReceiptInfo,times:Int) = flow {
         emit(ApisResponse.Loading("Please Wait Printing Receipt ${getEmojiByUnicode(0x1F5A8)}"))
 
         val data = try {
@@ -110,13 +110,17 @@ class PrintRepository {
                                 .toString(),
                             10
                         )
-                    }\n" + "<qrcode size='30'>${responseBody.orderId}</qrcode>" +
+                    }\n" +
                             "[C]$underLine"
                 )
 //"[C]<barcode type='128' width='40' text='above'>${responseBody.orderId}</barcode>\n"+
                 printer.printFormattedText(stringBuilder.toString())
                 printer.disconnectPrinter()
-                return@let ApisResponse.Success("Receipt Printed ${getEmojiByUnicode(0x1F5A8)}")
+                return@let if (times<2){
+                    ApisResponse.Success(Pair(responseBody,times+1))
+                }else{
+                    ApisResponse.Success("Receipt Printed ${getEmojiByUnicode(0x1F5A8)}")
+                }
             } ?: ApisResponse.Error("Please connect to Printer", null)
         } catch (e: Exception) {
             Log.i("PRINT_ANUJ", "doPrint: ${e.localizedMessage}")
@@ -199,6 +203,7 @@ class PrintRepository {
             connection?.let {
                 val printer = EscPosPrinter(connection, 203, 80f, 32)
                 val stringBuilder = StringBuilder()
+                val qrTxt=getScanQr(responseBody.qrPrint)
                 stringBuilder.append(
                     "[C]$underLine" +
                             "[L][C]${responseBody.headerTxt1}\n" +
@@ -255,22 +260,14 @@ class PrintRepository {
                             "[L]${responseBody.footerTxt5}\n" +
                             "[L]${responseBody.footerTxt6}\n" +
                             "[L]${responseBody.footerTxt7}\n" +
-                            "<qrcode size='30'>${getScanQr(responseBody.qrPrint)}</qrcode>" +
+                            "[C]<qrcode size='40'>$qrTxt</qrcode>\n" +
+                            //<qrcode size='30'></qrcode>" +
                             "[C]$underLine"
                 )
 
                 printer.printFormattedText(stringBuilder.toString())
                 printer.disconnectPrinter()
-                kotlinx.coroutines.delay(3000)
-                val connection2: BluetoothConnection? =
-                    BluetoothPrintersConnections.selectFirstPaired()
-                connection2?.let {
-                    val printer2 = EscPosPrinter(connection, 203, 80f, 32)
-                    printer2.printFormattedText(stringBuilder.toString())
-                    printer2.disconnectPrinter()
-                    ApisResponse.Success("Invoice Printed ${getEmojiByUnicode(0x1F5A8)} Successfully")
-                } ?: ApisResponse.Error("Cannot Print Bill Twice as Printer is Not Connected", null)
-                //return@let ApisResponse.Success("Invoice Printed ${getEmojiByUnicode(0x1F5A8)} Successfully")
+                return@let ApisResponse.Success("Invoice Printed ${getEmojiByUnicode(0x1F5A8)} Successfully")
             } ?: ApisResponse.Error("Please connect to Printer", null)
         } catch (e: Exception) {
             Log.i("PRINT_ANUJ", "doPrint: ${e.localizedMessage}")

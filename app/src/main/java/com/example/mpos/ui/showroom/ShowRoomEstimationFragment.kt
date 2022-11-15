@@ -43,7 +43,8 @@ import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
 
-class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBottomSheetClickListener {
+class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
+    OnBottomSheetClickListener {
 
     private lateinit var binding: ShowRoomFragmentBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
@@ -73,8 +74,8 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
                     Url_Text,
                     null,
                     FoodItemList(arrItem),
-                    customDiningRequest
-                ,WhereToGoFromScan.SHOWROOMESTIMATE.name)
+                    customDiningRequest, WhereToGoFromScan.SHOWROOMESTIMATE.name
+                )
             findNavController().safeNavigate(action)
         }
 
@@ -136,8 +137,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
             val action =
                 ShowRoomEstimationFragmentDirections.actionGlobalDealsFragment(
                     FoodItemList(arrItem), null,
-                    customDiningRequest
-                ,WhereToGoFromSearch.SHOWROOMESTIMATE.name
+                    customDiningRequest, WhereToGoFromSearch.SHOWROOMESTIMATE.name
                 )
             findNavController().safeNavigate(action)
         }
@@ -179,8 +179,8 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
     }
 
     private fun getBillPrintResponse() {
-        printBillViewModel.doPrinting.observe(viewLifecycleOwner){
-            when(it){
+        printBillViewModel.doPrinting.observe(viewLifecycleOwner) {
+            when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -196,13 +196,21 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    showDialogBox(
-                        "Success",
-                        "All Food Item are added Successfully",
-                        icon = R.drawable.ic_success,
-                        isCancel = false
-                    ) {
-                        findNavController().popBackStack()
+                    if (it.data is String) {
+                        showDialogBox(
+                            "Success",
+                            "All Food Item are added Successfully",
+                            icon = R.drawable.ic_success,
+                            isCancel = false
+                        ) {
+                            findNavController().popBackStack()
+                        }
+                    } else {
+                        val value = it.data as Pair<*, *>
+                        printBillViewModel.doPrint(
+                            value.first as PrintReceiptInfo,
+                            times = value.second as Int
+                        )
                     }
                 }
             }
@@ -214,7 +222,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
-                    isPrinterConnected=false
+                    isPrinterConnected = false
                     if (setUpCostEstimation()) {
                         showDialogBox(
                             "Error",
@@ -232,7 +240,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    isPrinterConnected=true
+                    isPrinterConnected = true
                     if (setUpCostEstimation()) {
                         costEstimationViewModel.getCostEstimation(costEstimation!!)
                     } else
@@ -337,7 +345,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
                             }
                             activity?.msg("Bill List is Empty", Toast.LENGTH_LONG)
                         } else if (isPrinterConnected)
-                            printBillViewModel.doPrint(body)
+                            printBillViewModel.doPrint(body, 1)
                         else
                             showDialogBox(
                                 "Success",
@@ -362,14 +370,14 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),OnBotto
     private fun showPb(msg: String) {
         binding.pbLayout.root.show()
         binding.pbLayout.titleTxt.text = msg
-        binding.confirmOrderBtn.isClickable=false
-        binding.confirmOrderBtn.isEnabled=false
+        binding.confirmOrderBtn.isClickable = false
+        binding.confirmOrderBtn.isEnabled = false
     }
 
     private fun hidePb() {
         binding.pbLayout.root.hide()
-        binding.confirmOrderBtn.isClickable=true
-        binding.confirmOrderBtn.isEnabled=true
+        binding.confirmOrderBtn.isClickable = true
+        binding.confirmOrderBtn.isEnabled = true
     }
 
 

@@ -137,8 +137,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
             val action =
                 RestaurantEstimationFragmentsDirections.actionGlobalDealsFragment(
                     FoodItemList(arrItem), null,
-                    customDiningRequest
-                ,WhereToGoFromSearch.RESTAURANTESTIMATE.name
+                    customDiningRequest, WhereToGoFromSearch.RESTAURANTESTIMATE.name
                 )
             findNavController().safeNavigate(action)
         }
@@ -197,13 +196,21 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    showDialogBox(
-                        "Success",
-                        "All Food Item are added Successfully",
-                        icon = R.drawable.ic_success,
-                        isCancel = false
-                    ) {
-                        findNavController().popBackStack()
+                    if (it.data is String) {
+                        showDialogBox(
+                            "Success",
+                            "All Food Item are added Successfully",
+                            icon = R.drawable.ic_success,
+                            isCancel = false
+                        ) {
+                            findNavController().popBackStack()
+                        }
+                    } else {
+                        val value = it.data as Pair<*, *>
+                        printBillViewModel.doPrint(
+                            value.first as PrintReceiptInfo,
+                            times = value.second as Int
+                        )
                     }
                 }
             }
@@ -338,7 +345,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                             }
                             activity?.msg("Bill List is Empty", Toast.LENGTH_LONG)
                         } else if (isPrinterConnected)
-                            printBillViewModel.doPrint(body)
+                            printBillViewModel.doPrint(body, 1)
                         else
                             showDialogBox(
                                 "Success",

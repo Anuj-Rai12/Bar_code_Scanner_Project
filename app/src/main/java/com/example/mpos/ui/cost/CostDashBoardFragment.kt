@@ -195,13 +195,18 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    showDialogBox(
-                        "Success",
-                        "All Food Item are added Successfully",
-                        icon = R.drawable.ic_success,
-                        isCancel = false
-                    ) {
-                        findNavController().popBackStack()
+                    if (it.data is String){
+                        showDialogBox(
+                            "Success",
+                            "All Food Item are added Successfully",
+                            icon = R.drawable.ic_success,
+                            isCancel = false
+                        ) {
+                            findNavController().popBackStack()
+                        }
+                    }else{
+                        val value=it.data as Pair<*,*>
+                        printBillViewModel.doPrint(value.first as PrintReceiptInfo, times = value.second as Int)
                     }
                 }
             }
@@ -329,7 +334,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                                 findNavController().popBackStack()
                             }
                             activity?.msg("Bill List is Empty", Toast.LENGTH_LONG)
-                        } else if (isPrinterConnected) printBillViewModel.doPrint(body)
+                        } else if (isPrinterConnected) printBillViewModel.doPrint(body,1)
                         else showDialogBox(
                             "Success",
                             "All Food Item are added Successfully",

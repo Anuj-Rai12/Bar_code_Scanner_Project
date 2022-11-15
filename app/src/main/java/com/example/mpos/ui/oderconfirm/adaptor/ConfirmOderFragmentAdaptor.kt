@@ -93,9 +93,12 @@ class ConfirmOderFragmentAdaptor(
 
 
                 amtOfFoodTv.setOnClickListener {
-                    if (!foodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
+                    val crossSellingFlag =
+                        foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
                             .toBoolean()
-                    ) {
+
+                    if (!foodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
+                            .toBoolean() || crossSellingFlag) {
                         root.showSandbar("Cannot change Amount")
                         return@setOnClickListener
                     }
@@ -104,13 +107,25 @@ class ConfirmOderFragmentAdaptor(
 
 
                 qtyOfFood.setOnClickListener {
-                    if (foodItem.isDeal) {
+                    val decimal = foodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
+                        .toBoolean()
+                    val crossSellingFlag =
+                        foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
+                            .toBoolean()
+
+                    if (foodItem.isDeal || crossSellingFlag || !decimal) {
+                        root.showSandbar("Cannot change Qty")
                         return@setOnClickListener
                     }
                     if (showQtyBox) itemClickListerForUpdate(foodItem)
                 }
                 foodItemName.setOnClickListener {
-                    if (foodItem.isDeal) {
+                    val crossSellingFlag =
+                        foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
+                            .toBoolean()
+
+                    if (foodItem.isDeal || crossSellingFlag) {
+                        root.showSandbar("Cannot change Food Name")
                         return@setOnClickListener
                     }
                     if (showQtyBox) {
@@ -123,6 +138,7 @@ class ConfirmOderFragmentAdaptor(
                 binding.qtyOfFood.setOnLongClickListener {
                     val flag = foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
                         .toBoolean()
+
                     if (flag) {
                         showCrossSellingItem(foodItem.crossSellingItems!!)
                     }

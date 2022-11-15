@@ -11,6 +11,7 @@ import com.example.mpos.utils.ApisResponse
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.Serializable
 
 class PrintViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -19,9 +20,13 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
     val isPrinterConnected: LiveData<ApisResponse<out String>>
     get() = _isPrinterConnected
 
-    private val _doPrinting=MutableLiveData<ApisResponse<out String>>()
-    val doPrinting: LiveData<ApisResponse<out String>>
+    private val _doPrinting=MutableLiveData<ApisResponse<out Serializable>>()
+    val doPrinting: LiveData<ApisResponse<out Serializable>>
         get() = _doPrinting
+
+    private val _doPrintInvoicePrinting=MutableLiveData<ApisResponse<out String>>()
+    val doPrintInvoicePrinting: LiveData<ApisResponse<out String>>
+        get() = _doPrintInvoicePrinting
 
 
     private val repo=PrintRepository()
@@ -37,9 +42,9 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
 
 
 
-    fun doPrint(response:PrintReceiptInfo){
+    fun doPrint(response:PrintReceiptInfo,times:Int){
         viewModelScope.launch {
-            repo.doPrint(response).collectLatest {
+            repo.doPrint(response,times).collectLatest {
                 _doPrinting.postValue(it)
             }
         }
@@ -48,7 +53,7 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
     fun doPrintInvoice(response:PrintInvoice){
         viewModelScope.launch {
             repo.doPrintInvoice(response).collectLatest {
-                _doPrinting.postValue(it)
+                _doPrintInvoicePrinting.postValue(it)
             }
         }
     }

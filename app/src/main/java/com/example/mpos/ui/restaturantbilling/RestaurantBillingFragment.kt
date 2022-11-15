@@ -241,7 +241,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
 
     private fun getBillPrintResponse() {
-        printBillViewModel.doPrinting.observe(viewLifecycleOwner) {
+        printBillViewModel.doPrintInvoicePrinting.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()

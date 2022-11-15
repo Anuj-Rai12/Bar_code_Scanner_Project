@@ -242,7 +242,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
 
     private fun getBillPrintResponse() {
-        printBillViewModel.doPrinting.observe(viewLifecycleOwner) {
+        printBillViewModel.doPrintInvoicePrinting.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
