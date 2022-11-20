@@ -65,6 +65,15 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
     }
 
 
+
+
+    fun init(){
+        _confirmBillingResponse.postValue(null)
+        _sendBillingToEdc.postValue(null)
+        _printBillInvoice.postValue(null)
+        _checkBillingStatus.postValue(null)
+    }
+
     fun getCostEstimation(request: CostEstimation) {
         if (!app.isNetworkAvailable()) {
             _events.postValue(Events("No Internet Connection Found!!"))

@@ -16,23 +16,29 @@ import java.io.Serializable
 class PrintViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    private val _isPrinterConnected=MutableLiveData<ApisResponse<out String>>()
+    private val _isPrinterConnected = MutableLiveData<ApisResponse<out String>>()
     val isPrinterConnected: LiveData<ApisResponse<out String>>
-    get() = _isPrinterConnected
+        get() = _isPrinterConnected
 
-    private val _doPrinting=MutableLiveData<ApisResponse<out Serializable>>()
+    private val _doPrinting = MutableLiveData<ApisResponse<out Serializable>>()
     val doPrinting: LiveData<ApisResponse<out Serializable>>
         get() = _doPrinting
 
-    private val _doPrintInvoicePrinting=MutableLiveData<ApisResponse<out String>>()
+    private val _doPrintInvoicePrinting = MutableLiveData<ApisResponse<out String>>()
     val doPrintInvoicePrinting: LiveData<ApisResponse<out String>>
         get() = _doPrintInvoicePrinting
 
 
-    private val repo=PrintRepository()
+    private val repo = PrintRepository()
 
 
-    fun isPrintConnected(){
+    fun init() {
+        _doPrinting.postValue(null)
+        _doPrintInvoicePrinting.postValue(null)
+        _isPrinterConnected.postValue(null)
+    }
+
+    fun isPrintConnected() {
         viewModelScope.launch {
             repo.isPrintSelected().collectLatest {
                 _isPrinterConnected.postValue(it)
@@ -41,16 +47,15 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-
-    fun doPrint(response:PrintReceiptInfo,times:Int){
+    fun doPrint(response: PrintReceiptInfo, times: Int) {
         viewModelScope.launch {
-            repo.doPrint(response,times).collectLatest {
+            repo.doPrint(response, times).collectLatest {
                 _doPrinting.postValue(it)
             }
         }
     }
 
-    fun doPrintInvoice(response:PrintInvoice){
+    fun doPrintInvoice(response: PrintInvoice) {
         viewModelScope.launch {
             repo.doPrintInvoice(response).collectLatest {
                 _doPrintInvoicePrinting.postValue(it)

@@ -91,6 +91,11 @@ class ConfirmOrderFragmentViewModel constructor(
     val grandTotal: LiveData<String>
         get() = _grandTotal
 
+    fun init(){
+        _postLine.postValue(null)
+        _orderConfirm.postValue(null)
+    }
+
     init {
         if (!application.isNetworkAvailable()) {
             _event.postValue(Events(mapOf("No Internet Connection" to false)))

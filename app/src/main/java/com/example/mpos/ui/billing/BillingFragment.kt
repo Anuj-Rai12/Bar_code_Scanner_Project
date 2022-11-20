@@ -88,6 +88,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 customDiningRequest,
                 WhereToGoFromScan.BILLPAYMENT.name
             )
+            initViewModel()
             findNavController().safeNavigate(action)
         }
         viewModel.event.observe(viewLifecycleOwner) {
@@ -169,6 +170,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 customDiningRequest,
                 WhereToGoFromSearch.BILLPAYMENT.name
             )
+            initViewModel()
             findNavController().safeNavigate(action)
         }
 
@@ -206,6 +208,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 customDiningRequest,
                 WhereToGoFromSearch.BILLPAYMENT.name
             )
+            initViewModel()
             findNavController().safeNavigate(action)
         }
 
@@ -226,6 +229,12 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     }
 
+    private fun initViewModel() {
+        confirmOrderViewModel.init()
+        viewModel.init()
+        printBillViewModel.init()
+    }
+
     private fun setUpCostEstimation(): Boolean {
         receiptNo = AlphaNumericString.getAlphaNumericString(8)
         confirmBillingRequest = ConfirmBillingRequest(
@@ -243,6 +252,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun getBillPrintResponse() {
         printBillViewModel.doPrintInvoicePrinting.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -274,6 +284,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun getPrintInvoiceResponse() {
         viewModel.printBillInvoice.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -290,8 +301,9 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    arrItem.clear()
-                    confirmOrderViewModel.getOrderList(null)
+                    binding.restItemBtn.performClick()
+                    /*arrItem.clear()
+                    confirmOrderViewModel.getOrderList(null)*/
                     (it.data as PrintInvoice?)?.let { printInvoice ->
                         Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
                         printBillViewModel.doPrintInvoice(printInvoice)
@@ -312,6 +324,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun getPrintConnectResponse() {
         printBillViewModel.isPrinterConnected.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -349,6 +362,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun getConfirmBillingResponse() {
         viewModel.confirmBillingResponse.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -371,7 +385,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun getPosItemRequest() {
         confirmOrderViewModel.postLine.observe(viewLifecycleOwner) { pair ->
-            pair.second.let {
+            pair?.second?.let {
                 when (it) {
                     is ApisResponse.Error -> {
                         hidePb()
@@ -406,6 +420,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun getConfirmOrderResponse() {
         confirmOrderViewModel.orderConfirm.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -443,6 +458,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun getCheckBillResponse() {
         viewModel.checkBillingStatus.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -470,6 +486,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun getSendBillToEdcResponse() {
         viewModel.sendBillingToEdc.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -573,7 +590,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
     @SuppressLint("NotifyDataSetChanged")
     private fun getData() {
         confirmOrderViewModel.listOfOrder.observe(viewLifecycleOwner) {
-            if (it != null) confirmOrderViewModel.getGrandTotal(it.data)
+            if (it != null)
+                confirmOrderViewModel.getGrandTotal(it.data)
             else {
                 confirmOrderViewModel.getGrandTotal(null)
             }

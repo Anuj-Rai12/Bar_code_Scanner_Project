@@ -85,6 +85,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 customDiningRequest,
                 WhereToGoFromScan.SHOWROOMBILLING.name
             )
+            initViewModel()
             findNavController().safeNavigate(action)
         }
         viewModel.event.observe(viewLifecycleOwner) {
@@ -170,6 +171,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 customDiningRequest,
                 WhereToGoFromSearch.SHOWROOMBILLING.name
             )
+            initViewModel()
             findNavController().safeNavigate(action)
         }
 
@@ -207,6 +209,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 customDiningRequest,
                 WhereToGoFromSearch.SHOWROOMBILLING.name
             )
+            initViewModel()
             findNavController().safeNavigate(action)
         }
 
@@ -241,9 +244,15 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
         return true
     }
 
+    private fun initViewModel() {
+        confirmOrderViewModel.init()
+        viewModel.init()
+        printBillViewModel.init()
+    }
 
     private fun getBillPrintResponse() {
         printBillViewModel.doPrintInvoicePrinting.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -272,6 +281,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
     private fun getPrintInvoiceResponse() {
         viewModel.printBillInvoice.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -288,8 +298,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    arrItem.clear()
-                    confirmOrderViewModel.getOrderList(null)
+                    binding.restItemBtn.performClick()
                     (it.data as PrintInvoice?)?.let { printInvoice ->
                         Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
                         printBillViewModel.doPrintInvoice(printInvoice)
@@ -310,6 +319,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
     private fun getPrintConnectResponse() {
         printBillViewModel.isPrinterConnected.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -347,6 +357,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
     private fun getConfirmBillingResponse() {
         viewModel.confirmBillingResponse.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -369,7 +380,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
     private fun getPosItemRequest() {
         confirmOrderViewModel.postLine.observe(viewLifecycleOwner) { pair ->
-            pair.second.let {
+            pair?.second?.let {
                 when (it) {
                     is ApisResponse.Error -> {
                         hidePb()
@@ -404,6 +415,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
     private fun getConfirmOrderResponse() {
         confirmOrderViewModel.orderConfirm.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -441,6 +453,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
     private fun getCheckBillResponse() {
         viewModel.checkBillingStatus.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -468,6 +481,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
     private fun getSendBillToEdcResponse() {
         viewModel.sendBillingToEdc.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()

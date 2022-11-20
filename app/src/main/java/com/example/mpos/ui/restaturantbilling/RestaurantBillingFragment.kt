@@ -89,6 +89,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 customDiningRequest,
                 WhereToGoFromScan.RESTARURANTBILLING.name
             )
+            initViewModel()
             findNavController().safeNavigate(action)
         }
         viewModel.event.observe(viewLifecycleOwner) {
@@ -136,6 +137,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
         getCheckBillResponse()
         getPrintInvoiceResponse()
         getBillPrintResponse()
+
         binding.option.setOnClickListener {
             if (isOptionMnuVisible) {
                 hideOptionMnu()
@@ -168,6 +170,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 FoodItemList(arrItem), null, customDiningRequest,
                 WhereToGoFromSearch.RESTARURANTBILLING.name
             )
+            initViewModel()
             findNavController().safeNavigate(action)
         }
 
@@ -205,6 +208,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 customDiningRequest,
                 WhereToGoFromSearch.RESTARURANTBILLING.name
             )
+            initViewModel()
             findNavController().safeNavigate(action)
         }
 
@@ -239,9 +243,16 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
         return true
     }
 
+    private fun initViewModel() {
+        confirmOrderViewModel.init()
+        viewModel.init()
+        printBillViewModel.init()
+    }
+
 
     private fun getBillPrintResponse() {
         printBillViewModel.doPrintInvoicePrinting.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -273,6 +284,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getPrintInvoiceResponse() {
         viewModel.printBillInvoice.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -289,8 +301,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    arrItem.clear()
-                    confirmOrderViewModel.getOrderList(null)
+                    binding.restItemBtn.performClick()
                     (it.data as PrintInvoice?)?.let { printInvoice ->
                         Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
                         printBillViewModel.doPrintInvoice(printInvoice)
@@ -311,6 +322,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getPrintConnectResponse() {
         printBillViewModel.isPrinterConnected.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -348,6 +360,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getConfirmBillingResponse() {
         viewModel.confirmBillingResponse.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -370,7 +383,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getPosItemRequest() {
         confirmOrderViewModel.postLine.observe(viewLifecycleOwner) { pair ->
-            pair.second.let {
+            pair?.second?.let {
                 when (it) {
                     is ApisResponse.Error -> {
                         hidePb()
@@ -405,6 +418,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getConfirmOrderResponse() {
         confirmOrderViewModel.orderConfirm.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -442,6 +456,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getCheckBillResponse() {
         viewModel.checkBillingStatus.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
@@ -469,6 +484,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getSendBillToEdcResponse() {
         viewModel.sendBillingToEdc.observe(viewLifecycleOwner) {
+            if (it!=null)
             when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
