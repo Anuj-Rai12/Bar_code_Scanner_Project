@@ -89,7 +89,7 @@ class ConfirmOrderUseCase {
             list.add(menuItem)
             itemMasterFoodItem.crossSellingItems?.childItemList?.forEach { crossSellingItems ->
                 val crossSellingItem = MenuItem(
-                    itemNo = itemMasterFoodItem.crossSellingItems.parentItem,
+                    itemNo = crossSellingItems.itemCode,
                     receiptNo = receipt,
                     qty = "1.0",
                     saleType = AllStringConst.API.RESTAURANT.name,
@@ -99,7 +99,7 @@ class ConfirmOrderUseCase {
                     freeText = itemMasterFoodItem.free_txt,
                     price = "%.4f".format(ListOfFoodItemToSearchAdaptor.setPrice(crossSellingItems.price)).toDouble().toString(),
                     dealLine = false.toString().uppercase(Locale.getDefault()),
-                    ParentItemCrossSelling = true.toString(),
+                    ParentItemCrossSelling = itemMasterFoodItem.crossSellingItems.parentItem,
                 )
                 list.add(crossSellingItem)
             }

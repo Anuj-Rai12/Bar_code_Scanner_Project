@@ -12,7 +12,6 @@ import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.utils.checkFieldValue
 import com.example.mpos.utils.hide
-import com.example.mpos.utils.show
 import com.example.mpos.utils.showSandbar
 
 class CrossSellingDialog(private val activity: Activity) {
