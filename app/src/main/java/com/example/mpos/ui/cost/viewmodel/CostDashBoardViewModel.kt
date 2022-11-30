@@ -1,6 +1,7 @@
 package com.example.mpos.ui.cost.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,10 +11,12 @@ import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
 import com.example.mpos.data.costestimation.request.CostEstimation
+import com.example.mpos.dataStore.UserSoredData
 import com.example.mpos.di.RetrofitInstance
 import com.example.mpos.ui.cost.repo.CostDashBoardRepository
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.Events
+import com.example.mpos.utils.RestaurantSingletonCls
 import com.example.mpos.utils.isNetworkAvailable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
@@ -23,7 +26,7 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
 
     private val app = application
     private var repository: CostDashBoardRepository? = null
-
+    private val userSoredData = UserSoredData(application)
 
     private val _events = MutableLiveData<Events<String>>()
     val event: LiveData<Events<String>>
@@ -62,12 +65,24 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
                     "UseLess BaseUrl"
                 ).getRetrofit()
             )
+
+
+        viewModelScope.launch {
+            userSoredData.read.collectLatest {
+                Log.i("CONFIRM_ORDER", " COST Dash Bord USERID_CONFIRM_ORDER: USER IS NULL OR EMPTY -> ${RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty()}")
+                Log.i("CONFIRM_ORDER", " COST Dash Bord  USERID_CONFIRM_ORDER: STORE IS NULL OR EMPTY -> ${RestaurantSingletonCls.getInstance().getStoreId().isNullOrEmpty()}")
+
+                if (RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty())
+                    RestaurantSingletonCls.getInstance().setUserID(it.userID!!)
+                if (RestaurantSingletonCls.getInstance().getStoreId().isNullOrEmpty())
+                    RestaurantSingletonCls.getInstance().setStoreId(it.storeNo!!)
+            }
+        }
+
     }
 
 
-
-
-    fun init(){
+    fun init() {
         _confirmBillingResponse.postValue(null)
         _sendBillingToEdc.postValue(null)
         _printBillInvoice.postValue(null)
@@ -130,8 +145,7 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
     }
 
 
-
-    fun getPrintBillInvoiceResponse(request:PrintInvoiceRequest){
+    fun getPrintBillInvoiceResponse(request: PrintInvoiceRequest) {
         if (!app.isNetworkAvailable()) {
             _events.postValue(Events("No Internet Connection Found!!"))
             return

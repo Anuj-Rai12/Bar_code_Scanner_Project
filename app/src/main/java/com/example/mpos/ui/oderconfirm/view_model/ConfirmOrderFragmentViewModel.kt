@@ -115,6 +115,17 @@ class ConfirmOrderFragmentViewModel constructor(
                 posLineRepository = PosLineRepository(retrofit.getRetrofit())
                 printBillRepository = PrintBillRepository(retrofit.getRetrofit())
             }
+
+            userSoredData.read.collectLatest {
+                Log.i("CONFIRM_ORDER", "USERID_CONFIRM_ORDER: USER IS NULL OR EMPTY -> ${RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty()}")
+                Log.i("CONFIRM_ORDER", "USERID_CONFIRM_ORDER: STORE IS NULL OR EMPTY -> ${RestaurantSingletonCls.getInstance().getStoreId().isNullOrEmpty()}")
+
+                if (RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty())
+                RestaurantSingletonCls.getInstance().setUserID(it.userID!!)
+                if (RestaurantSingletonCls.getInstance().getStoreId().isNullOrEmpty())
+                RestaurantSingletonCls.getInstance().setStoreId(it.storeNo!!)
+            }
+
         }
         getGrandTotal(null)
         getTime()

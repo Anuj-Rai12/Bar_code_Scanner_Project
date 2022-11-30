@@ -409,22 +409,24 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     showPb(it.data.toString())
                 }
                 is ApisResponse.Success -> {
-                    showDialogBox(
-                        "Successfully Inserted",
-                        "${it.data}",
-                        icon = R.drawable.ic_success,
-                        isCancel = false
-                    ) {
-                        var isTrue = true
-                        val handler = Handler(Looper.getMainLooper())
-                        handler.post {
-                            try {
-                                if (isTrue) {
-                                    findNavController().popBackStack()
-                                    isTrue = false
+                    if (activity != null && isAdded) {
+                        showDialogBox(
+                            "Successfully Inserted",
+                            "${it.data}",
+                            icon = R.drawable.ic_success,
+                            isCancel = false
+                        ) {
+                            var isTrue = true
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                try {
+                                    if (isTrue) {
+                                        findNavController().popBackStack()
+                                        isTrue = false
+                                    }
+                                } catch (e: Exception) {
+                                    PrintRepository.setCashAnalytics(e)
                                 }
-                            }catch (e:Exception){
-                                PrintRepository.setCashAnalytics(e)
                             }
                         }
                     }
