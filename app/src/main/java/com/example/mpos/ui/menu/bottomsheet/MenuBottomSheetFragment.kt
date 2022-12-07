@@ -52,6 +52,18 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         const val NAME = "MENU_BOTTOM_SHEET"
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.getString("REST_INS")?.let {
+            RestaurantSingletonCls.getInstance().setScreenType(it)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("REST_INS",RestaurantSingletonCls.getInstance().getScreenType())
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheet = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         val view = View.inflate(context, R.layout.mnu_bottom_sheet_framgment_layout, null)
@@ -290,6 +302,5 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
             showErrorDialog("Cannot find Menu Response")
         }
     }
-
 
 }

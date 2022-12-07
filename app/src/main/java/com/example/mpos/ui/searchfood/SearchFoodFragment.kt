@@ -38,11 +38,14 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean("flag", flag)
+        outState.putString("REST_INS",RestaurantSingletonCls.getInstance().getScreenType())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        savedInstanceState?.let { flag = it.getBoolean("flag") }
+        savedInstanceState?.let { flag = it.getBoolean("flag")
+            it.getString("REST_INS")?.let {type-> RestaurantSingletonCls.getInstance().setScreenType(type) }
+        }
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = SearchFoodItemLayoutBinding.bind(view)
         viewModel.fetchResponseApi()

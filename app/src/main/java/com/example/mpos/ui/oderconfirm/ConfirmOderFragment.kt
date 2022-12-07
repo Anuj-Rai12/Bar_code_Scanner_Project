@@ -58,6 +58,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     private var isCustomerDiningRequestVisible: Boolean = true
     private var isOrderIsVisible = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.getString("REST_INS")?.let {
+            RestaurantSingletonCls.getInstance().setScreenType(it)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
@@ -669,5 +676,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         binding.pbLayout.root.hide()
         binding.confirmOrderBtn.isEnabled = true
         binding.confirmOrderBtn.isClickable = true
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("REST_INS",RestaurantSingletonCls.getInstance().getScreenType())
+        super.onSaveInstanceState(outState)
     }
 }
