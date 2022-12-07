@@ -258,6 +258,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             }, listener = { res, flag ->
                 if (flag) {
                     customDiningRequest = res
+                    receiptNo = receiptNo ?: customDiningRequest?.body?.rcptNo
+                    Log.i(TAG, "requestCustomerDining: $customDiningRequest and Receipt Number = $receiptNo")
                     confirmDinningOrder(customDiningRequest!!)
                 } else {
                     requestCustomerDining()

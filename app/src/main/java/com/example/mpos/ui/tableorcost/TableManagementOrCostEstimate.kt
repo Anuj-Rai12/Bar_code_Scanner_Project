@@ -201,8 +201,9 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                     )
                 }
             }
-
-        findNavController().safeNavigate(action)
+        RestaurantSingletonCls.getInstance().getScreenType()?.let {
+            findNavController().safeNavigate(action)
+        }?:binding.root.showSandbar("Cannot Navigate to Screen")
     }
 
 }
