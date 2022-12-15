@@ -772,9 +772,18 @@ fun View.visible() {
     fun getEmojiByUnicode(unicode: Int) = String(Character.toChars(unicode))
 
     fun getDate(format: String = "yyyy-MM-dd"): String? {
-        val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern(format)
-        return current.format(formatter)
+        return if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern(format)
+            current.format(formatter)
+        }else{
+            val sdFormat = SimpleDateFormat(format)
+            val date=sdFormat.format(Date())
+            Log.i("DATE_ANUJ", "getDate: $date")
+            return  date
+
+        }
+
     }
 
     fun Activity.isValidUrl(url: String?): Boolean {
