@@ -112,7 +112,21 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
 
         barCodeResult()
         getCrossSellingResponse()
-        startCamera()
+        startProcess()
+    }
+
+    private fun startProcess() {
+        if (args.selectioncls == null || args.selectioncls!!.isBarcodeVisible) {
+            // if Barcode is True then only show
+            startCamera()
+        } else {
+            // show test box to get input
+            activity?.getDialogInput("Enter Item Code", false, binding.root, { code ->
+                viewModel.checkForItemItem(code, args.type)
+            }, {
+                findNavController().popBackStack()
+            })
+        }
     }
 
     private fun getCrossSellingResponse() {
@@ -188,6 +202,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
             isCancel = false
         ) {
             showScannerScreen(true)
+            startProcess()
             flagList = false
             //  showErrorDialogOnce = true
         }
