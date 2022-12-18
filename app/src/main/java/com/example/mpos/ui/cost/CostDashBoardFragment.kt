@@ -69,13 +69,14 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = CostCalDashbordLayoutBinding.bind(view)
+        binding.tableId2.text=args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = CostDashBoardFragmentDirections.actionGlobalScanQrCodeFragment(
                 Url_Text,
                 null,
                 FoodItemList(arrItem),
                 customDiningRequest,
-                WhereToGoFromScan.COSTESTIMATE.name
+                WhereToGoFromScan.COSTESTIMATE.name, args.selectioncls
             )
             findNavController().safeNavigate(action)
         }
@@ -137,7 +138,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 FoodItemList(arrItem),
                 null,
                 customDiningRequest,
-                WhereToGoFromSearch.COSTESTIMATE.name
+                WhereToGoFromSearch.COSTESTIMATE.name, args.selectioncls
             )
             findNavController().safeNavigate(action)
         }
@@ -155,7 +156,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 null,
                 FoodItemList(arrItem),
                 customDiningRequest,
-                WhereToGoFromSearch.COSTESTIMATE.name
+                WhereToGoFromSearch.COSTESTIMATE.name, args.selectioncls
             )
             findNavController().safeNavigate(action)
         }
@@ -195,7 +196,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    if (it.data is String){
+                    if (it.data is String) {
                         showDialogBox(
                             "Success",
                             "All Food Item are added Successfully",
@@ -204,9 +205,12 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         ) {
                             findNavController().popBackStack()
                         }
-                    }else{
-                        val value=it.data as Pair<*,*>
-                        printBillViewModel.doPrint(value.first as PrintReceiptInfo, times = value.second as Int)
+                    } else {
+                        val value = it.data as Pair<*, *>
+                        printBillViewModel.doPrint(
+                            value.first as PrintReceiptInfo,
+                            times = value.second as Int
+                        )
                     }
                 }
             }
@@ -334,7 +338,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                                 findNavController().popBackStack()
                             }
                             activity?.msg("Bill List is Empty", Toast.LENGTH_LONG)
-                        } else if (isPrinterConnected) printBillViewModel.doPrint(body,1)
+                        } else if (isPrinterConnected) printBillViewModel.doPrint(body, 1)
                         else showDialogBox(
                             "Success",
                             "All Food Item are added Successfully",
@@ -454,7 +458,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor =
-                ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {},
+                ConfirmOderFragmentAdaptor(
+                    itemClickListerForFoodSelected = {},
                     itemClickListerForUpdate = { res ->
                         updateQtyDialogBox(res)
                     },
@@ -463,7 +468,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                     },
                     itemClickAmountLinter = { res ->
                         updateAmount(res)
-                    },context=requireActivity())
+                    }, context = requireActivity()
+                )
             adapter = confirmOderFragmentAdaptor
         }
     }

@@ -68,13 +68,14 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = ShowRoomFragmentBinding.bind(view)
+        binding.tableId2.text=args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = ShowRoomEstimationFragmentDirections
                 .actionGlobalScanQrCodeFragment(
                     Url_Text,
                     null,
                     FoodItemList(arrItem),
-                    customDiningRequest, WhereToGoFromScan.SHOWROOMESTIMATE.name
+                    customDiningRequest, WhereToGoFromScan.SHOWROOMESTIMATE.name, args.selectioncls
                 )
             findNavController().safeNavigate(action)
         }
@@ -136,8 +137,11 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
         binding.viewOfferBtn.setOnClickListener {
             val action =
                 ShowRoomEstimationFragmentDirections.actionGlobalDealsFragment(
-                    FoodItemList(arrItem), null,
-                    customDiningRequest, WhereToGoFromSearch.SHOWROOMESTIMATE.name
+                    FoodItemList(arrItem),
+                    null,
+                    customDiningRequest,
+                    WhereToGoFromSearch.SHOWROOMESTIMATE.name,
+                    args.selectioncls
                 )
             findNavController().safeNavigate(action)
         }
@@ -156,7 +160,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                     null,
                     FoodItemList(arrItem),
                     customDiningRequest,
-                    WhereToGoFromSearch.SHOWROOMESTIMATE.name
+                    WhereToGoFromSearch.SHOWROOMESTIMATE.name, args.selectioncls
                 )
             findNavController().safeNavigate(action)
         }

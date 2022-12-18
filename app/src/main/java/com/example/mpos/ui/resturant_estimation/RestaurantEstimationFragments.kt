@@ -67,6 +67,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = RestaurantEstimationFragmentBinding.bind(view)
+        binding.tableId2.text=args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = RestaurantEstimationFragmentsDirections
                 .actionGlobalScanQrCodeFragment(
@@ -74,7 +75,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                     null,
                     FoodItemList(arrItem),
                     customDiningRequest,
-                    WhereToGoFromScan.RESTAURANTESTIMATE.name
+                    WhereToGoFromScan.RESTAURANTESTIMATE.name, args.selectioncls
                 )
             findNavController().safeNavigate(action)
         }
@@ -136,8 +137,11 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
         binding.viewOfferBtn.setOnClickListener {
             val action =
                 RestaurantEstimationFragmentsDirections.actionGlobalDealsFragment(
-                    FoodItemList(arrItem), null,
-                    customDiningRequest, WhereToGoFromSearch.RESTAURANTESTIMATE.name
+                    FoodItemList(arrItem),
+                    null,
+                    customDiningRequest,
+                    WhereToGoFromSearch.RESTAURANTESTIMATE.name,
+                    args.selectioncls
                 )
             findNavController().safeNavigate(action)
         }
@@ -156,7 +160,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                     null,
                     FoodItemList(arrItem),
                     customDiningRequest,
-                    WhereToGoFromSearch.RESTAURANTESTIMATE.name
+                    WhereToGoFromSearch.RESTAURANTESTIMATE.name, args.selectioncls
                 )
             findNavController().safeNavigate(action)
         }

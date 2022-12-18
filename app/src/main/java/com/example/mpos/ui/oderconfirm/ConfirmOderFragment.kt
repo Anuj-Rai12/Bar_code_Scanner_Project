@@ -69,13 +69,14 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = ConfirmOrderLayoutBinding.bind(view)
+        binding.tableId2.text=args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = ConfirmOderFragmentDirections
                 .actionGlobalScanQrCodeFragment(
                     Url_Text,
                     args.tbl,
                     FoodItemList(arrItem),
-                    customDiningRequest, WhereToGoFromScan.TABLEMANGMENT.name
+                    customDiningRequest, WhereToGoFromScan.TABLEMANGMENT.name, args.selectioncls
                 )
             findNavController().safeNavigate(action)
         }
@@ -116,7 +117,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 ConfirmOderFragmentDirections.actionGlobalDealsFragment(
                     FoodItemList(arrItem),
                     args.tbl,
-                    customDiningRequest, WhereToGoFromSearch.TABLEMANGMENT.name
+                    customDiningRequest, WhereToGoFromSearch.TABLEMANGMENT.name, args.selectioncls
                 )
             findNavController().safeNavigate(action)
         }
@@ -139,7 +140,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     args.tbl,
                     FoodItemList(arrItem),
                     customDiningRequest,
-                    WhereToGoFromSearch.TABLEMANGMENT.name
+                    WhereToGoFromSearch.TABLEMANGMENT.name, args.selectioncls
                 )
             findNavController().safeNavigate(action)
         }
@@ -266,7 +267,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 if (flag) {
                     customDiningRequest = res
                     receiptNo = receiptNo ?: customDiningRequest?.body?.rcptNo
-                    Log.i(TAG, "requestCustomerDining: $customDiningRequest and Receipt Number = $receiptNo")
+                    Log.i(
+                        TAG,
+                        "requestCustomerDining: $customDiningRequest and Receipt Number = $receiptNo"
+                    )
                     confirmDinningOrder(customDiningRequest!!)
                 } else {
                     requestCustomerDining()
@@ -680,7 +684,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString("REST_INS",RestaurantSingletonCls.getInstance().getScreenType())
+        outState.putString("REST_INS", RestaurantSingletonCls.getInstance().getScreenType())
         super.onSaveInstanceState(outState)
     }
 }

@@ -83,60 +83,71 @@ class DealsFragment : Fragment(R.layout.deals_fragment_layout), OnBottomSheetCli
             val action=when(WhereToGoFromSearch.valueOf(args.type)){
                 WhereToGoFromSearch.TABLEMANGMENT -> {
                     DealsFragmentDirections.actionDealsFragmentToConfirmOderFragment(
-                        FoodItemList(listOfFoodItem), args.tbl!!, args.confirm
+                        FoodItemList(listOfFoodItem), args.tbl!!, args.confirm,
+                        args.selectioncls
                     )
                 }
                 WhereToGoFromSearch.COSTESTIMATE -> {
                     DealsFragmentDirections.actionDealsFragmentToCostDashBoardFragment(
                         FoodItemList(listOfFoodItem),
-                        args.confirm
+                        args.confirm,
+                        args.selectioncls
                     )
                 }
                 WhereToGoFromSearch.SHOWROOMESTIMATE -> {
                     DealsFragmentDirections.actionDealsFragmentToShowRoomEstimationFragment(
                         FoodItemList(listOfFoodItem),
-                        args.confirm
+                        args.confirm,
+                        args.selectioncls,
                     )
                 }
                 WhereToGoFromSearch.RESTAURANTESTIMATE -> {
                     DealsFragmentDirections.actionDealsFragmentToRestaurantEstimationFragments(
                         FoodItemList(listOfFoodItem),
-                        args.confirm
+                        args.confirm,
+                        args.selectioncls
                     )
                 }
                 WhereToGoFromSearch.BILLPAYMENT -> {
                     DealsFragmentDirections.actionDealsFragmentToBillingFragment(
                         FoodItemList(listOfFoodItem),
-                        args.confirm
+                        args.confirm,
+                        args.selectioncls
                     )
                 }
                 WhereToGoFromSearch.SHOWROOMBILLING -> {
                     DealsFragmentDirections.actionDealsFragmentToShowRoomBillingFragment(
                         FoodItemList(listOfFoodItem),
-                        args.confirm
+                        args.confirm,
+                        args.selectioncls
                     )
                 }
 
                 WhereToGoFromSearch.RESTARURANTBILLING -> {
                     DealsFragmentDirections.actionDealsFragmentToRestaurantBillingFragment(
                         FoodItemList(listOfFoodItem),
-                        args.confirm
+                        args.confirm,
+                        args.selectioncls
                     )
                 }
             }
             /*val action = if (args.tbl != null) {
                 DealsFragmentDirections.actionDealsFragmentToConfirmOderFragment(
-                    FoodItemList(listOfFoodItem), args.tbl!!, args.confirm
+                    FoodItemList(listOfFoodItem), args.tbl!!, args.confirm,
+                        args.selectioncls
                 )
-            } else if (args.tbl == null && args.confirm == null) {
+            } else if (args.tbl == null && args.confirm,
+                        args.selectioncls == null) {
                 DealsFragmentDirections.actionDealsFragmentToCostDashBoardFragment(
                     FoodItemList(listOfFoodItem),
-                    args.confirm
+                    args.confirm,
+                        args.selectioncls
                 )
             } else {
                 DealsFragmentDirections.actionDealsFragmentToBillingFragment(
                     FoodItemList(listOfFoodItem),
-                    args.confirm
+                    args.confirm,
+                        args.selectioncls
                 )
             }*/
             findNavController().safeNavigate(action)

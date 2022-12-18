@@ -6,8 +6,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ApkLoginJsonResponse(
+    @SerializedName("itemScanWithBarcode") val itemScanWithBarcode: Boolean,
     @SerializedName("Message") val message: String,
+    @SerializedName("screenlist") val screenList: List<ScreenList>,
     @SerializedName("Status") val status: Boolean,
-    @SerializedName("StoreName") val storeName: String,
-    @SerializedName("screenlist")val screenList: List<String>
+    @SerializedName("StoreName") val storeName: String
 ) : Parcelable

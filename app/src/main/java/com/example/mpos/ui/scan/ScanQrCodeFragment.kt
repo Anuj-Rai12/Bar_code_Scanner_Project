@@ -54,23 +54,23 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
 
     private var crossSellingBarcodeJsonResponse: BarcodeJsonResponse? = null
 
-   /* private val option = BarcodeScannerOptions.Builder()
-        .setBarcodeFormats(
-            Barcode.FORMAT_QR_CODE,
-            Barcode.FORMAT_AZTEC,
-            Barcode.FORMAT_CODE_93,
-            Barcode.FORMAT_CODABAR,
-            Barcode.FORMAT_CODE_128,
-            Barcode.FORMAT_CODE_39,
-            Barcode.FORMAT_EAN_8,
-            Barcode.FORMAT_ITF,
-            Barcode.FORMAT_DATA_MATRIX,
-            Barcode.FORMAT_EAN_13,
-            Barcode.FORMAT_PDF417,
-            Barcode.FORMAT_UPC_A,
-            Barcode.FORMAT_UPC_E,
-        )
-        .build()*/
+    /* private val option = BarcodeScannerOptions.Builder()
+         .setBarcodeFormats(
+             Barcode.FORMAT_QR_CODE,
+             Barcode.FORMAT_AZTEC,
+             Barcode.FORMAT_CODE_93,
+             Barcode.FORMAT_CODABAR,
+             Barcode.FORMAT_CODE_128,
+             Barcode.FORMAT_CODE_39,
+             Barcode.FORMAT_EAN_8,
+             Barcode.FORMAT_ITF,
+             Barcode.FORMAT_DATA_MATRIX,
+             Barcode.FORMAT_EAN_13,
+             Barcode.FORMAT_PDF417,
+             Barcode.FORMAT_UPC_A,
+             Barcode.FORMAT_UPC_E,
+         )
+         .build()*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +81,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("REST_INS",RestaurantSingletonCls.getInstance().getScreenType())
+        outState.putString("REST_INS", RestaurantSingletonCls.getInstance().getScreenType())
     }
 
     private val scanner by lazy {
@@ -366,43 +366,50 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToConfirmOderFragment(
                             FoodItemList(arr),
                             args.tbl!!,
-                            args.confirmreq
+                            args.confirmreq,
+                            args.selectioncls!!
                         )
                     }
                     WhereToGoFromScan.COSTESTIMATE -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToCostDashBoardFragment(
                             FoodItemList(arr),
-                            args.confirmreq
+                            args.confirmreq,
+                            args.selectioncls!!
                         )
                     }
                     WhereToGoFromScan.SHOWROOMESTIMATE -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToShowRoomEstimationFragment(
                             FoodItemList(arr),
-                            args.confirmreq
+                            args.confirmreq,
+                            args.selectioncls!!
                         )
                     }
                     WhereToGoFromScan.RESTAURANTESTIMATE -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToRestaurantEstimationFragments(
                             FoodItemList(arr),
-                            args.confirmreq
+                            args.confirmreq,
+                            args.selectioncls!!
                         )
                     }
                     WhereToGoFromScan.BILLPAYMENT -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToBillingFragment(
                             FoodItemList(arr),
-                            args.confirmreq
+                            args.confirmreq,
+                            args.selectioncls!!
                         )
                     }
                     WhereToGoFromScan.SHOWROOMBILLING -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToShowRoomBillingFragment(
                             FoodItemList(arr),
-                            args.confirmreq
+                            args.confirmreq,
+                            args.selectioncls!!
                         )
                     }
                     WhereToGoFromScan.RESTARURANTBILLING -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToRestaurantBillingFragment(
                             FoodItemList(arr),
-                            args.confirmreq
+                            args.confirmreq,
+                            args.selectioncls!!
                         )
                     }
                 }

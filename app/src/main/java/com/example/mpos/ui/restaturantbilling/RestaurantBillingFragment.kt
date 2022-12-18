@@ -65,12 +65,11 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: RestaurantBillingFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
-    private val customDiningRequest: ConfirmDiningRequest =
-        ConfirmDiningRequest(
-            ConfirmDiningBody(
-                screenType = RestaurantSingletonCls.getInstance().getScreenType()!!
-            )
+    private val customDiningRequest: ConfirmDiningRequest = ConfirmDiningRequest(
+        ConfirmDiningBody(
+            screenType = RestaurantSingletonCls.getInstance().getScreenType()!!
         )
+    )
     private var receiptNo: String? = null
     private var confirmBillingRequest: ConfirmBillingRequest? = null
 
@@ -81,13 +80,15 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = RestaurantBillingFragmentBinding.bind(view)
+        binding.tableId2.text=args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = RestaurantBillingFragmentDirections.actionGlobalScanQrCodeFragment(
                 Url_Text,
                 null,
                 FoodItemList(arrItem),
                 customDiningRequest,
-                WhereToGoFromScan.RESTARURANTBILLING.name
+                WhereToGoFromScan.RESTARURANTBILLING.name,
+                args.selectioncls
             )
             initViewModel()
             findNavController().safeNavigate(action)
@@ -112,9 +113,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
         val flag = activity?.checkBlueConnectPermission()
         if (flag == false) {
             (activity as MainActivity?)?.requestPermission(
-                Manifest.permission.BLUETOOTH_CONNECT,
-                BLUE_CONNECT,
-                "Bluetooth"
+                Manifest.permission.BLUETOOTH_CONNECT, BLUE_CONNECT, "Bluetooth"
             )
         }
 
@@ -167,8 +166,11 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
         binding.viewOfferBtn.setOnClickListener {
             val action = RestaurantBillingFragmentDirections.actionGlobalDealsFragment(
-                FoodItemList(arrItem), null, customDiningRequest,
-                WhereToGoFromSearch.RESTARURANTBILLING.name
+                FoodItemList(arrItem),
+                null,
+                customDiningRequest,
+                WhereToGoFromSearch.RESTARURANTBILLING.name,
+                args.selectioncls
             )
             initViewModel()
             findNavController().safeNavigate(action)
@@ -206,7 +208,8 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 null,
                 FoodItemList(arrItem),
                 customDiningRequest,
-                WhereToGoFromSearch.RESTARURANTBILLING.name
+                WhereToGoFromSearch.RESTARURANTBILLING.name,
+                args.selectioncls
             )
             initViewModel()
             findNavController().safeNavigate(action)
@@ -252,8 +255,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getBillPrintResponse() {
         printBillViewModel.doPrintInvoicePrinting.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
+            if (it != null) when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -270,10 +272,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 is ApisResponse.Success -> {
                     hidePb()
                     showDialogBox(
-                        "Success",
-                        "${it.data}",
-                        icon = R.drawable.ic_success,
-                        isCancel = false
+                        "Success", "${it.data}", icon = R.drawable.ic_success, isCancel = false
                     ) {
                         findNavController().popBackStack()
                     }
@@ -284,8 +283,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getPrintInvoiceResponse() {
         viewModel.printBillInvoice.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
+            if (it != null) when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -322,8 +320,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getPrintConnectResponse() {
         printBillViewModel.isPrinterConnected.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
+            if (it != null) when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     isPrinterConnected = false
@@ -360,8 +357,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getConfirmBillingResponse() {
         viewModel.confirmBillingResponse.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
+            if (it != null) when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -418,8 +414,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getConfirmOrderResponse() {
         confirmOrderViewModel.orderConfirm.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
+            if (it != null) when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -456,8 +451,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getCheckBillResponse() {
         viewModel.checkBillingStatus.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
+            if (it != null) when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -484,8 +478,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     private fun getSendBillToEdcResponse() {
         viewModel.sendBillingToEdc.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
+            if (it != null) when (it) {
                 is ApisResponse.Error -> {
                     hidePb()
                     if (it.data == null) {
@@ -526,7 +519,9 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                     },
                     itemClickAmountLinter = { res ->
                         updateAmount(res)
-                    }, context = requireActivity())
+                    },
+                    context = requireActivity()
+                )
             adapter = confirmOderFragmentAdaptor
         }
     }

@@ -29,7 +29,6 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor()
         binding = TestingConnectionFragmentBinding.bind(view)
-
         viewModel.events.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { str ->
                 if (str == "Please Scan Url") {
@@ -91,7 +90,7 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
                 Url_barcode,
                 null,
                 null,
-                null, WhereToGoFromScan.TESTINGCONNECTION.name
+                null, WhereToGoFromScan.TESTINGCONNECTION.name, null
             )
         findNavController().safeNavigate(action)
     }

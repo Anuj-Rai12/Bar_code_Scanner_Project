@@ -86,32 +86,97 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
     private fun setData() {
         val list = mutableListOf<SelectionDataClass>()
         args.information.screenList.forEach { item ->
-            val value = item.trim().uppercase(Locale.getDefault()).replace("\\s".toRegex(), "")
+            val value =
+                item.screenList.trim().uppercase(Locale.getDefault()).replace("\\s".toRegex(), "")
             Log.i("ITEMS", "setData: $value")
             when (valueOf(value)) {
                 TABLEMGT -> {
-                    list.add(SelectionDataClass.tblManagement)
+                    list.add(
+                        SelectionDataClass.generateData(
+                            SelectionDataClass.TABLE_MGT,
+                            R.drawable.ic_waiter,
+                            TABLEMGT.name,
+                            item.dynamicMenuEnable,
+                            args.information.itemScanWithBarcode
+                        )
+                    )
                 }
                 TABLERESERVATION -> {
-                    list.add(SelectionDataClass.tblReservation)
+                    list.add(
+                        SelectionDataClass.generateData(
+                            SelectionDataClass.TABLERESERVATION,
+                            R.drawable.ic_table_dinner,
+                            TABLERESERVATION.name,
+                            item.dynamicMenuEnable,
+                            args.information.itemScanWithBarcode
+                        )
+                    )
                 }
                 ESTIMATION -> {
-                    list.add(SelectionDataClass.cost)
+                    list.add(
+                        SelectionDataClass.generateData(
+                            SelectionDataClass.ESTIMATION,
+                            R.drawable.ic_cost_estimation,
+                            ESTIMATION.name,
+                            item.dynamicMenuEnable,
+                            args.information.itemScanWithBarcode
+                        )
+                    )
                 }
                 BILLING -> {
-                    list.add(SelectionDataClass.bill)
+                    list.add(
+                        SelectionDataClass.generateData(
+                            SelectionDataClass.BILLING,
+                            R.drawable.ic_receipt_bill,
+                            BILLING.name,
+                            item.dynamicMenuEnable,
+                            args.information.itemScanWithBarcode
+                        )
+                    )
                 }
                 SHOWROOMESTIMATE -> {
-                    list.add(SelectionDataClass.showRoom)
+                    list.add(
+                        SelectionDataClass.generateData(
+                            SelectionDataClass.SHOWROOMESTIMATE,
+                            R.drawable.showroom_estimation,
+                            SHOWROOMESTIMATE.name,
+                            item.dynamicMenuEnable,
+                            args.information.itemScanWithBarcode
+                        )
+                    )
                 }
                 RESTAURANTESTIMATE -> {
-                    list.add(SelectionDataClass.restaurant)
+                    list.add(
+                        SelectionDataClass.generateData(
+                            SelectionDataClass.RESTAURANTESTIMATE,
+                            R.drawable.restaurant_estimation,
+                            RESTAURANTESTIMATE.name,
+                            item.dynamicMenuEnable,
+                            args.information.itemScanWithBarcode
+                        )
+                    )
                 }
                 SHOWROOMBILLING -> {
-                    list.add(SelectionDataClass.showroomBilling)
+                    list.add(
+                        SelectionDataClass.generateData(
+                            SelectionDataClass.SHOWROOMBILLING,
+                            R.drawable.ic_receipt_bill,
+                            SHOWROOMESTIMATE.name,
+                            item.dynamicMenuEnable,
+                            args.information.itemScanWithBarcode
+                        )
+                    )
                 }
                 RESTAURANTBILLING -> {
-                    list.add(SelectionDataClass.restaurantBilling)
+                    list.add(
+                        SelectionDataClass.generateData(
+                            SelectionDataClass.RESTAURANTBILLING,
+                            R.drawable.ic_receipt_bill,
+                            RESTAURANTBILLING.name,
+                            item.dynamicMenuEnable,
+                            args.information.itemScanWithBarcode
+                        )
+                    )
                 }
             }
         }
@@ -157,53 +222,59 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
             when (valueOf(selection.type)) {
                 TABLEMGT -> {
                     TableManagementOrCostEstimateDirections
-                        .actionTableManagementOrCostEstimateToTableManagementFragment(args.information.storeName)
+                        .actionTableManagementOrCostEstimateToTableManagementFragment(args.information.storeName,selection)
                 }
                 ESTIMATION -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToCostDashBoardFragment(
                         null,
-                        null
+                        null,
+                        selection
                     )
                 }
                 TABLERESERVATION -> {
                     TableManagementOrCostEstimateDirections
-                        .actionTableManagementOrCostEstimateToTableReservationFragment()
+                        .actionTableManagementOrCostEstimateToTableReservationFragment(selection)
                 }
                 BILLING -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToBillingFragment(
                         null,
-                        null
+                        null,
+                        selection
                     )
                 }
                 SHOWROOMESTIMATE -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToShowRoomEstimationFragment(
                         null,
-                        null
+                        null,
+                        selection
                     )
                 }
                 RESTAURANTESTIMATE -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToRestaurantEstimationFragments(
                         null,
-                        null
+                        null,
+                        selection
                     )
                 }
                 //Need to do Work
                 SHOWROOMBILLING -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToShowRoomBillingFragment(
                         null,
-                        null
+                        null,
+                        selection
                     )
                 }
                 RESTAURANTBILLING -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToRestaurantBillingFragment(
                         null,
-                        null
+                        null,
+                        selection
                     )
                 }
             }
         RestaurantSingletonCls.getInstance().getScreenType()?.let {
             findNavController().safeNavigate(action)
-        }?:binding.root.showSandbar("Cannot Navigate to Screen")
+        } ?: binding.root.showSandbar("Cannot Navigate to Screen")
     }
 
 }

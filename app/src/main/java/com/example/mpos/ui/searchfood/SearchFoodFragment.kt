@@ -141,49 +141,56 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
 
                 WhereToGoFromSearch.TABLEMANGMENT -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToConfirmOderFragment(
-                        FoodItemList(listOfFoodItem), args.tbl!!, args.confirmreq
+                        FoodItemList(listOfFoodItem), args.tbl!!, args.confirmreq,
+                        args.selectioncls
                     )
                 }
 
                 WhereToGoFromSearch.COSTESTIMATE -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToCostDashBoardFragment(
                         FoodItemList(listOfFoodItem),
-                        args.confirmreq
+                        args.confirmreq,
+                        args.selectioncls
                     )
                 }
 
                 WhereToGoFromSearch.SHOWROOMESTIMATE -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToShowRoomEstimationFragment(
                         FoodItemList(listOfFoodItem),
-                        args.confirmreq
+                        args.confirmreq,
+                        args.selectioncls
                     )
                 }
 
                 WhereToGoFromSearch.RESTAURANTESTIMATE -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToRestaurantEstimationFragments(
                         FoodItemList(listOfFoodItem),
-                        args.confirmreq
+                        args.confirmreq,
+                        args.selectioncls
                     )
                 }
 
                 WhereToGoFromSearch.BILLPAYMENT -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToBillingFragment(
                         FoodItemList(listOfFoodItem),
-                        args.confirmreq
+                        args.confirmreq,
+                        args.selectioncls
                     )
                 }
 
                 WhereToGoFromSearch.SHOWROOMBILLING -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToShowRoomBillingFragment(
                         FoodItemList(listOfFoodItem),
-                        args.confirmreq
+                        args.confirmreq,
+                        args.selectioncls
                     )
                 }
 
                 WhereToGoFromSearch.RESTARURANTBILLING -> {
                     SearchFoodFragmentDirections.actionSearchFoodFragmentToRestaurantBillingFragment(
                         FoodItemList(listOfFoodItem),
-                        args.confirmreq
+                        args.confirmreq,
+                        args.selectioncls
                     )
                 }
 

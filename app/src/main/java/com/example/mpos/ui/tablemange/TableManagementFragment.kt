@@ -136,7 +136,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout),
         Log.i(TAG, "setRecycleView: $res")
         if (res.billPrinted.equals("No", true)) {
             val action = TableManagementFragmentDirections
-                .actionTableManagementFragmentToConfirmOderFragment(null, res, null)
+                .actionTableManagementFragmentToConfirmOderFragment(null, res, null,args.selectioncls)
             //findNavController().navigate(action)
                 findNavController().safeNavigate(action)
 

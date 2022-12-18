@@ -80,13 +80,15 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = BillingFragmentLayoutBinding.bind(view)
+        binding.tableId2.text=args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = BillingFragmentDirections.actionGlobalScanQrCodeFragment(
                 Url_Text,
                 null,
                 FoodItemList(arrItem),
                 customDiningRequest,
-                WhereToGoFromScan.BILLPAYMENT.name
+                WhereToGoFromScan.BILLPAYMENT.name,
+                args.selectioncls
             )
             initViewModel()
             findNavController().safeNavigate(action)
@@ -168,7 +170,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 FoodItemList(arrItem),
                 null,
                 customDiningRequest,
-                WhereToGoFromSearch.BILLPAYMENT.name
+                WhereToGoFromSearch.BILLPAYMENT.name,
+                args.selectioncls
             )
             initViewModel()
             findNavController().safeNavigate(action)
@@ -206,7 +209,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 null,
                 FoodItemList(arrItem),
                 customDiningRequest,
-                WhereToGoFromSearch.BILLPAYMENT.name
+                WhereToGoFromSearch.BILLPAYMENT.name,
+                args.selectioncls
             )
             initViewModel()
             findNavController().safeNavigate(action)
