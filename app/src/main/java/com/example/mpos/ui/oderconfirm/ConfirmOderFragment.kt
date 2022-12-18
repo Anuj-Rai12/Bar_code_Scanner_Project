@@ -98,7 +98,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         viewModel.time.observe(viewLifecycleOwner) {
             binding.orderBookingTimeTxt.text = getString(R.string.sample_tbl_time, "\n$it")
         }
-
+        if (!args.selectioncls.dynamicMenuEnable)
+            binding.foodMnuBtn.hide()
 
         binding.foodMnuBtn.setOnClickListener {
             val mnuBottom = MenuBottomSheetFragment("Order Menu")

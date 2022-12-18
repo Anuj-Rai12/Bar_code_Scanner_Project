@@ -96,6 +96,8 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                 showErrorDialog(msg)
             }
         }
+        if (!args.selectioncls.dynamicMenuEnable)
+            binding.foodMnuBtn.hide()
 
         binding.foodMnuBtn.setOnClickListener {
             val mnuBottom = MenuBottomSheetFragment("Order Menu")

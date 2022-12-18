@@ -96,6 +96,8 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                 showErrorDialog(msg)
             }
         }
+        if (!args.selectioncls.dynamicMenuEnable)
+            binding.foodMnuBtn.hide()
 
         binding.foodMnuBtn.setOnClickListener {
             val mnuBottom = MenuBottomSheetFragment("Order Menu")

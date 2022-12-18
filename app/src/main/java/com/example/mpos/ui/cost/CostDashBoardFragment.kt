@@ -97,7 +97,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 showErrorDialog(msg)
             }
         }
-
+        if (!args.selectioncls.dynamicMenuEnable)
+            binding.foodMnuBtn.hide()
         binding.foodMnuBtn.setOnClickListener {
             val mnuBottom = MenuBottomSheetFragment("Order Menu")
             mnuBottom.onBottomSheetClickListener = this

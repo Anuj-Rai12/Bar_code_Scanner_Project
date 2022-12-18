@@ -747,12 +747,15 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 override fun onAnimationRepeat(animation: Animation?) {
                 }
             })
-            binding.foodMnuBtn.show()
+
+            if (args.selectioncls.dynamicMenuEnable)
+                binding.foodMnuBtn.show()
             binding.checkStatusIc.show()
             binding.foodMnuBtn.animation = enterAnim
             binding.checkStatusIc.animation = enterAnim
         } ?: run {
-            binding.foodMnuBtn.show()
+            if (args.selectioncls.dynamicMenuEnable)
+                binding.foodMnuBtn.show()
             binding.checkStatusIc.show()
             binding.option.setImageResource(R.drawable.ic_close_24)
         }
