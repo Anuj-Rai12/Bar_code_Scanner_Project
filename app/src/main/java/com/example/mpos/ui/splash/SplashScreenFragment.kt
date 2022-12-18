@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.mpos.BuildConfig
 import com.example.mpos.R
 import com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse
 import com.example.mpos.databinding.SplashSrcLayoutBinding
@@ -31,6 +32,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.light_blue_bg)
         binding = SplashSrcLayoutBinding.bind(view)
+        binding.versionCode.text="v${BuildConfig.VERSION_NAME}"
         binding.logoFileId3.animation = animation
         doAuthTask()
         viewModel.events.observe(viewLifecycleOwner) {
