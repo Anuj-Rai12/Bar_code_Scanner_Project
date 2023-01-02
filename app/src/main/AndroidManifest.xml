@@ -21,8 +21,9 @@
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security"
         android:theme="@style/Theme.OffiqlResturantApp">
+        <activity android:name="com.example.mpos.MainActivity"/>
         <activity
-            android:name="com.example.mpos.MainActivity"
+            android:name=".delete.PineTestingActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
