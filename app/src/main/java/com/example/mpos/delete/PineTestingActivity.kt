@@ -55,7 +55,7 @@ class PineTestingActivity : BasePineActivity() {
 
         binding.amtByQr.setOnClickListener {
 
-            val amt = 20000
+            val amt = 20
 
 
             val request = TransactionRequest()
