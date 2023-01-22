@@ -10,16 +10,31 @@ data class SelectionDataClass(
     val title: String,
     val type: String,
     val dynamicMenuEnable: Boolean,
-    val isBarcodeVisible:Boolean
+    val isBarcodeVisible: Boolean,
+    val uPICode: String,
+    val billingFromEDC: Boolean,
+    val paymentLs: List<String>
 ) : Parcelable {
     companion object {
-        fun generateData(title: String, img: Int, type: String,dynamicMenuEnable:Boolean,isBarcodeVisible:Boolean): SelectionDataClass {
+        fun generateData(
+            title: String,
+            img: Int,
+            type: String,
+            dynamicMenuEnable: Boolean,
+            isBarcodeVisible: Boolean,
+            upi: String,
+            billingFromEDC: Boolean,
+            paymentLs: List<String>
+        ): SelectionDataClass {
             return SelectionDataClass(
                 image = img,
                 title = title,
                 type = type,
                 dynamicMenuEnable = dynamicMenuEnable,
-                isBarcodeVisible=isBarcodeVisible
+                isBarcodeVisible = isBarcodeVisible,
+                uPICode = upi,
+                billingFromEDC = billingFromEDC,
+                paymentLs = paymentLs
             )
         }
 

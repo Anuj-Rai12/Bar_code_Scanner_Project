@@ -122,6 +122,7 @@ class ConfirmOrderFragmentViewModel constructor(
 
                 if (RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty())
                 RestaurantSingletonCls.getInstance().setUserID(it.userID!!)
+
                 if (RestaurantSingletonCls.getInstance().getStoreId().isNullOrEmpty())
                 RestaurantSingletonCls.getInstance().setStoreId(it.storeNo!!)
             }

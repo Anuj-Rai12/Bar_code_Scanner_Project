@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.mpos.data.billing.billingtoedc.BillingFromEDCRequest
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
 import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
@@ -41,6 +42,10 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
     private val _sendBillingToEdc = MutableLiveData<ApisResponse<out String?>>()
     val sendBillingToEdc: LiveData<ApisResponse<out String?>>
         get() = _sendBillingToEdc
+
+   private val _billingToEdc = MutableLiveData<ApisResponse<out String?>>()
+    val billingToEdc: LiveData<ApisResponse<out String?>>
+        get() = _billingToEdc
 
 
     private val _printBillInvoice = MutableLiveData<ApisResponse<out Any?>>()
@@ -125,6 +130,19 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
         viewModelScope.launch {
             repository?.sendBillToEdc(request)?.collectLatest {
                 _sendBillingToEdc.postValue(it)
+            } ?: _events.postValue(Events("Oops Repository is Not Set Up!!"))
+        }
+
+    }
+    // this is for pineLab
+    fun sendBillingToEdcPaymentRequest(request: BillingFromEDCRequest) {
+        if (!app.isNetworkAvailable()) {
+            _events.postValue(Events("No Internet Connection Found!!"))
+            return
+        }
+        viewModelScope.launch {
+            repository?.billingFromEdc(request)?.collectLatest {
+                _billingToEdc.postValue(it)
             } ?: _events.postValue(Events("Oops Repository is Not Set Up!!"))
         }
 

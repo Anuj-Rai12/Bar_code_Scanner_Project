@@ -6,41 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".delete.PineTestingActivity">
 
-    <Button
-        android:id="@+id/amt_by_card"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Amount Rs 20 by Card"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".4" />
 
 
-    <Button
-        android:id="@+id/amt_by_qr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Amount Rs 20K by Qr"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/amt_by_card"
-        app:layout_constraintVertical_bias="0.3" />
 
 
-    <Button
-        android:id="@+id/print_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Print Data"
-        app:layout_constraintBottom_toTopOf="@id/amt_by_card"
-        app:layout_constraintLeft_toLeftOf="@id/amt_by_card"
-        app:layout_constraintRight_toRightOf="@id/amt_by_card"
-        app:layout_constraintTop_toTopOf="parent" />
+
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,6 +52,7 @@ class PineTestingActivity : BasePineActivity() {
             psh.callPineService(request)
 
         }
+/*
 
         binding.amtByQr.setOnClickListener {
 
@@ -102,6 +103,7 @@ class PineTestingActivity : BasePineActivity() {
             psh.callPineService(request)
         }
 
+*/
 
     }
 

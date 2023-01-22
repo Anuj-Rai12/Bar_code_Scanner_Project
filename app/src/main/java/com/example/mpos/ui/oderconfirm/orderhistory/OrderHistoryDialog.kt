@@ -6,14 +6,12 @@ import android.graphics.drawable.ColorDrawable
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LifecycleOwner
-import com.example.mpos.R
 import com.example.mpos.data.table_info.model.json.TableDetail
 import com.example.mpos.databinding.OrderHistoryDialogBoxBinding
 import com.example.mpos.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
 import com.example.mpos.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.utils.*
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 fun Activity.showDialogForOrderHistory(

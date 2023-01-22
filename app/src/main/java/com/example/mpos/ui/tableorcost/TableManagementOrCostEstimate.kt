@@ -97,7 +97,10 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_waiter,
                             TABLEMGT.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode
+                            args.information.itemScanWithBarcode,
+                            item.uPICode,
+                            item.billingFromEDC,
+                            item.paymentLs
                         )
                     )
                 }
@@ -108,7 +111,10 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_table_dinner,
                             TABLERESERVATION.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode
+                            args.information.itemScanWithBarcode,
+                            item.uPICode,
+                            item.billingFromEDC,
+                            item.paymentLs
                         )
                     )
                 }
@@ -119,7 +125,10 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_cost_estimation,
                             ESTIMATION.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode
+                            args.information.itemScanWithBarcode,
+                            item.uPICode,
+                            item.billingFromEDC,
+                            item.paymentLs
                         )
                     )
                 }
@@ -130,7 +139,10 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_receipt_bill,
                             BILLING.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode
+                            args.information.itemScanWithBarcode,
+                            item.uPICode,
+                            item.billingFromEDC,
+                            item.paymentLs
                         )
                     )
                 }
@@ -141,7 +153,10 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.showroom_estimation,
                             SHOWROOMESTIMATE.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode
+                            args.information.itemScanWithBarcode,
+                            item.uPICode,
+                            item.billingFromEDC,
+                            item.paymentLs
                         )
                     )
                 }
@@ -152,7 +167,10 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.restaurant_estimation,
                             RESTAURANTESTIMATE.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode
+                            args.information.itemScanWithBarcode,
+                            item.uPICode,
+                            item.billingFromEDC,
+                            item.paymentLs
                         )
                     )
                 }
@@ -163,7 +181,10 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_receipt_bill,
                             SHOWROOMESTIMATE.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode
+                            args.information.itemScanWithBarcode,
+                            item.uPICode,
+                            item.billingFromEDC,
+                            item.paymentLs
                         )
                     )
                 }
@@ -174,7 +195,10 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_receipt_bill,
                             RESTAURANTBILLING.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode
+                            args.information.itemScanWithBarcode,
+                            item.uPICode,
+                            item.billingFromEDC,
+                            item.paymentLs
                         )
                     )
                 }
