@@ -9,6 +9,7 @@ import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
 import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
+import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
 import com.example.mpos.data.costestimation.request.CostEstimation
 import com.example.mpos.ui.menu.repo.MenuRepository
 import com.example.mpos.utils.ApisResponse
@@ -149,6 +150,36 @@ class CostDashBoardRepository(retrofit: Retrofit) {
         }
         emit(data)
     }.flowOn(IO)
+
+
+    fun checkBillFROMEDCStatus(request: PaymentEdcRequest) = flow {
+        emit(ApisResponse.Loading("Checking Receipt status.."))
+        val data = try {
+            val response = billingApi.checkBillFROMEDCStatusApi(request = request)
+            if (response.isSuccessful) {
+                response.body()?.let { res ->
+                    if (res.body?.returnValue.toBoolean()) {
+                        ApisResponse.Success(request.body?.mPosDoc)
+                    } else {
+                        ApisResponse.Error(
+                            "Cannot get Status Report on this receipt number ${request.body?.mPosDoc}",
+                            null
+                        )
+                    }
+                } ?: ApisResponse.Error(MenuRepository.nullError, null)
+            } else {
+                ApisResponse.Error(MenuRepository.err, null)
+            }
+        } catch (e: Exception) {
+            PrintRepository.setCashAnalytics(e)
+            ApisResponse.Error(null, e)
+        }
+        emit(data)
+    }.flowOn(IO)
+
+
+
+
 
 
     fun getPrintInvoice(request: PrintInvoiceRequest) = flow {

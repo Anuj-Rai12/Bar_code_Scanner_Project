@@ -142,6 +142,8 @@ object AllStringConst {
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:PrintFinalInvoice"
 
         const val crossSelling = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CrossSellingAPI"
+
+        const val checkBillFROMEDC = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CheckStatusBillingFromEDC"
     }
 
 

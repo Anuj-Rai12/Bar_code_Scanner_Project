@@ -11,6 +11,7 @@ import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
 import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
+import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
 import com.example.mpos.data.costestimation.request.CostEstimation
 import com.example.mpos.dataStore.UserSoredData
 import com.example.mpos.di.RetrofitInstance
@@ -56,6 +57,10 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
     private val _checkBillingStatus = MutableLiveData<ApisResponse<out String?>>()
     val checkBillingStatus: LiveData<ApisResponse<out String?>>
         get() = _checkBillingStatus
+
+    private val _checkBillingFromEdcStatus = MutableLiveData<ApisResponse<out String?>>()
+    val checkBillingFromEdcStatus: LiveData<ApisResponse<out String?>>
+        get() = _checkBillingFromEdcStatus
 
     private val _confirmBillingResponse = MutableLiveData<ApisResponse<out String?>>()
     val confirmBillingResponse: LiveData<ApisResponse<out String?>>
@@ -157,6 +162,20 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
         viewModelScope.launch {
             repository?.checkBillStatus(request)?.collectLatest {
                 _checkBillingStatus.postValue(it)
+            } ?: _events.postValue(Events("Oops Repository is Not Set Up!!"))
+        }
+
+    }
+
+
+    fun checkBillingFROMEDCStatus(request: PaymentEdcRequest) {
+        if (!app.isNetworkAvailable()) {
+            _events.postValue(Events("No Internet Connection Found!!"))
+            return
+        }
+        viewModelScope.launch {
+            repository?.checkBillFROMEDCStatus(request)?.collectLatest {
+                _checkBillingFromEdcStatus.postValue(it)
             } ?: _events.postValue(Events("Oops Repository is Not Set Up!!"))
         }
 

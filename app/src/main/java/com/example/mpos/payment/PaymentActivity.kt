@@ -6,6 +6,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import com.example.mpos.R
+import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
+import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequestBody
 import com.example.mpos.data.table_info.model.json.TableDetail
 import com.example.mpos.databinding.PrintTsetingLayoutBinding
 import com.example.mpos.payment.pine.BasePineActivity
@@ -86,6 +88,20 @@ class PaymentActivity : BasePineActivity() {
 
         getAllOrder()
         getGrandTotal()
+
+        //paymentResponse
+        getPaymentResponse()
+
+        binding.cashPaymentBtn.setOnClickListener {
+            costDashBordViewModel.checkBillingFROMEDCStatus(PaymentEdcRequest(
+                PaymentEdcRequestBody(
+                    mPosDoc = receipt!!,
+                    edcMachineStatus = true,
+                    paymentType = "CASH",
+                    eDCResponse = ""
+                )
+            ))
+        }
 
         /*  binding.amtByCard.setOnClickListener {
               val amt = 20
@@ -168,11 +184,47 @@ class PaymentActivity : BasePineActivity() {
 
     }
 
+    private fun getPaymentResponse() {
+        costDashBordViewModel.checkBillingFromEdcStatus.observe(this) {
+            if (it != null) when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> showPb("${it.data}")
+                is ApisResponse.Success -> {
+                    hidePb()
+                    showErrorDialog("Working Fine","Success")
+                    /*viewModel.getPrintBillInvoiceResponse(
+                        PrintInvoiceRequest(
+                            PrintInvoiceRequestBody("${it.data}")
+                        )
+                    )*/
+                }
+            }
+        }
+    }
+
+
+    private fun  hidePb(){
+        binding.pbLayout.root.hide()
+    }
+
+    private fun showPb(msg: String){
+        binding.pbLayout.titleTxt.text = msg
+        binding.pbLayout.root.show()
+    }
     private fun getAllOrder() {
         confirmOrderViewModel.occupiedTbl.observe(this) {
             when (it) {
                 is ApisResponse.Error -> {
-                    binding.pbLayout.root.hide()
+                    hidePb()
                     if (it.data == null) {
                         it.exception?.localizedMessage?.let { err ->
                             showErrorDialog(err)
@@ -182,11 +234,10 @@ class PaymentActivity : BasePineActivity() {
                     }
                 }
                 is ApisResponse.Loading -> {
-                    binding.pbLayout.titleTxt.text = "${it.data}"
-                    binding.pbLayout.root.show()
+                    showPb("${it.data}")
                 }
                 is ApisResponse.Success -> {
-                    binding.pbLayout.root.hide()
+                    hidePb()
                     binding.orderRecycleView.show()
                     (it.data as FoodItemList?)?.let { item ->
                         confirmOrderViewModel.getGrandTotal(item.foodList)
@@ -229,9 +280,9 @@ class PaymentActivity : BasePineActivity() {
     }
 
 
-    private fun showErrorDialog(msg: String) {
+    private fun showErrorDialog(msg: String,type:String="Failed") {
         val dialog = AlertDialog.Builder(this@PaymentActivity)
-        dialog.setTitle("Failed")
+        dialog.setTitle(type)
         dialog.setMessage(msg)
         dialog.setIcon(R.drawable.ic_error)
         dialog.setPositiveButton("ok") { _, _ ->

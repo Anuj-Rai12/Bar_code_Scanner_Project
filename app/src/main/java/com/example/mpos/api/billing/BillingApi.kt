@@ -10,6 +10,8 @@ import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcResponse
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusResponse
+import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
+import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcResponse
 import com.example.mpos.utils.AllStringConst
 import retrofit2.Response
 import retrofit2.http.Body
@@ -47,6 +49,12 @@ interface BillingApi {
         @Body request: CheckBillingStatusRequest
     ): Response<CheckBillingStatusResponse>
 
+
+    @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.checkBillFROMEDC}")
+    @POST(AllStringConst.End_point)
+    suspend fun checkBillFROMEDCStatusApi(
+        @Body request: PaymentEdcRequest
+    ): Response<PaymentEdcResponse>
 
     @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.printBillInvoice}")
     @POST(AllStringConst.End_point)
