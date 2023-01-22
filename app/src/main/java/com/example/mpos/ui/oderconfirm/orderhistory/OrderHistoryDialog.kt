@@ -1,7 +1,10 @@
 package com.example.mpos.ui.oderconfirm.orderhistory
 
 import android.app.Activity
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LifecycleOwner
 import com.example.mpos.R
 import com.example.mpos.data.table_info.model.json.TableDetail
@@ -24,14 +27,9 @@ fun Activity.showDialogForOrderHistory(
 
     val binding = OrderHistoryDialogBoxBinding.inflate(layoutInflater)
 
-    val materialDialogs = MaterialAlertDialogBuilder(
-        this,
-        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog_simple
-    )
-        .setView(binding.root)
-        .setCancelable(false)
-        .show()
 
+    val materialDialogs= AlertDialog.Builder(this).setView(binding.root).setCancelable(false).show()
+    materialDialogs?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     binding.orderHistoryTxt.text = title
     binding.orderRecycleView.apply {
         confirmOderFragmentAdaptor = ConfirmOderFragmentAdaptor({},{})

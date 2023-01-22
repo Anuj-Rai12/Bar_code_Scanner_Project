@@ -1,5 +1,7 @@
 package com.example.mpos.api.billing
 
+import com.example.mpos.data.billing.billingtoedc.BillingFromEDCRequest
+import com.example.mpos.data.billing.billingtoedc.BillingToEdcResponse
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingResponse
 import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
@@ -27,6 +29,16 @@ interface BillingApi {
     suspend fun postSendBillingApi(
         @Body request: ScanBillingToEdcRequest
     ): Response<ScanBillingToEdcResponse>
+
+
+
+    @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.BillingFromEDC}")
+    @POST(AllStringConst.End_point)
+    suspend fun postBillingFromEdcApi(
+        @Body request: BillingFromEDCRequest
+    ): Response<BillingToEdcResponse>
+
+
 
 
     @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.checkStatusBillingEDC}")

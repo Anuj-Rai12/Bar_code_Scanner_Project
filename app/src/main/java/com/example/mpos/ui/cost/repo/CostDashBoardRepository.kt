@@ -3,6 +3,7 @@ package com.example.mpos.ui.cost.repo
 import android.util.Log
 import com.example.mpos.api.billing.BillingApi
 import com.example.mpos.api.confirmDining.ConfirmDiningApi
+import com.example.mpos.data.billing.billingtoedc.BillingFromEDCRequest
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
 import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
 import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
@@ -98,6 +99,32 @@ class CostDashBoardRepository(retrofit: Retrofit) {
     }.flowOn(IO)
 
 
+    fun billingFromEdc(request: BillingFromEDCRequest) = flow {
+        emit(ApisResponse.Loading("Sending Bill..."))
+        val data = try {
+            val response = billingApi.postBillingFromEdcApi(request = request)
+            if (response.isSuccessful) {
+                response.body()?.let { estimation ->
+                    if (!estimation.body?.errorFound.toBoolean() && estimation.body?.returnValue.toBoolean()) {
+                        ApisResponse.Success(null)
+                    } else {
+                        ApisResponse
+                            .Error(
+                                estimation.body?.errorText ?: "Cannot Upload the menu item",
+                                null
+                            )
+                    }
+                } ?: ApisResponse.Error(MenuRepository.nullError, null)
+            } else {
+                ApisResponse.Error(MenuRepository.err, null)
+            }
+        } catch (e: Exception) {
+            ApisResponse.Error(null, e)
+        }
+        emit(data)
+    }.flowOn(IO)
+
+
     fun checkBillStatus(request: CheckBillingStatusRequest) = flow {
         emit(ApisResponse.Loading("Checking Receipt status.."))
         val data = try {
@@ -107,7 +134,10 @@ class CostDashBoardRepository(retrofit: Retrofit) {
                     if (res.body?.returnValue.toBoolean()) {
                         ApisResponse.Success(request.body?.mPosDoc)
                     } else {
-                        ApisResponse.Error("Cannot get Status Report on this receipt number ${request.body?.mPosDoc}",null)
+                        ApisResponse.Error(
+                            "Cannot get Status Report on this receipt number ${request.body?.mPosDoc}",
+                            null
+                        )
                     }
                 } ?: ApisResponse.Error(MenuRepository.nullError, null)
             } else {
@@ -132,21 +162,22 @@ class CostDashBoardRepository(retrofit: Retrofit) {
                             ApisResponse.Success(it)
                         } ?: ApisResponse.Error("Cannot Generate Invoice Body", null)
                     } else {
-                        ApisResponse.Error("No Invoice is Found for the Receipt ${request.body?.mPosDoc}",null)
+                        ApisResponse.Error(
+                            "No Invoice is Found for the Receipt ${request.body?.mPosDoc}",
+                            null
+                        )
                     }
                 } ?: ApisResponse.Error(MenuRepository.nullError, null)
             } else {
                 ApisResponse.Error(MenuRepository.err, null)
             }
-        }catch (e:JsonSyntaxException){
+        } catch (e: JsonSyntaxException) {
             PrintRepository.setCashAnalytics(e)
             ApisResponse.Error("Response is Not Match with Pint Invoice Syntax", null)
-        }
-        catch (e:RuntimeException){
+        } catch (e: RuntimeException) {
             PrintRepository.setCashAnalytics(e)
             ApisResponse.Error("Cannot Fetch Invoice Response as it is Empty", null)
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             PrintRepository.setCashAnalytics(e)
             Log.e("PRINT_INVOICE", "getPrintInvoice: ${e.javaClass.canonicalName}")
             ApisResponse.Error(null, e)
