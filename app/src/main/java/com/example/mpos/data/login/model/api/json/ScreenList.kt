@@ -8,6 +8,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ScreenList(
     @SerializedName("DynamicMenuEnable") val dynamicMenuEnable: Boolean,
+    @SerializedName("BillingFromEDC") val billingFromEDC: Boolean,
     @SerializedName("screencaption") val screenCaption: String,
-    @SerializedName("screenlist") val screenList: String
+    @SerializedName("UPICode") val uPICode: String,
+    @SerializedName("screenlist") val screenList: String,
+    @SerializedName("PaymentType") val paymentLs: List<String>
 ) : Parcelable

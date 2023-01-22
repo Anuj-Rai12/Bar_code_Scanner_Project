@@ -694,7 +694,7 @@ fun Fragment.showQtyDialog(
 
 
 fun Activity.getDialogInput(
-    hint: String, isCancelable: Boolean,view:View?, success: (String) -> Unit, cancel: () -> Unit
+    hint: String, isCancelable: Boolean, view: View?, success: (String) -> Unit, cancel: () -> Unit
 ) {
     val materialDialogs = MaterialAlertDialogBuilder(
         this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
@@ -706,18 +706,20 @@ fun Activity.getDialogInput(
         cancel.invoke()
         dialog.dismiss()
     }
-    binding.qtyEd.hint=hint
-    binding.qtyEd.inputType=InputType.TYPE_CLASS_NUMBER
+    binding.qtyEd.hint = hint
+    binding.qtyEd.inputType = InputType.TYPE_CLASS_NUMBER
     binding.btnDone.setOnClickListener {
-    val txt=binding.qtyEd.text.toString()
-    if (checkFieldValue(txt)){
-        view?.showSandbar(
-            "Please enter the Correct Value", Snackbar.LENGTH_LONG, getColorInt(R.color.color_red)
-        ) {
-            return@showSandbar "OK"
+        val txt = binding.qtyEd.text.toString()
+        if (checkFieldValue(txt)) {
+            view?.showSandbar(
+                "Please enter the Correct Value",
+                Snackbar.LENGTH_LONG,
+                getColorInt(R.color.color_red)
+            ) {
+                return@showSandbar "OK"
+            }
+            return@setOnClickListener
         }
-        return@setOnClickListener
-    }
         success.invoke(txt)
         dialog.dismiss()
     }
@@ -821,6 +823,11 @@ fun Activity.isValidUrl(url: String?): Boolean {
         msg("Please Enter valid Url")
         false
     }
+}
+
+
+fun createLogStatement(tag: String, msg: String) {
+    Log.i(tag, "createLogStatement: $msg")
 }
 
 

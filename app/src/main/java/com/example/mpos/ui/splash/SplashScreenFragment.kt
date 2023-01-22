@@ -28,6 +28,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
 
 
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.light_blue_bg)
@@ -87,6 +88,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                 is ApisResponse.Success -> {
                     it.data?.let { type ->
                         val json = type as ApkLoginJsonResponse
+                        createLogStatement("LOGIN","$json")
                         if (json.status)
                             nextFrag(json.storeName,json)
                     }
