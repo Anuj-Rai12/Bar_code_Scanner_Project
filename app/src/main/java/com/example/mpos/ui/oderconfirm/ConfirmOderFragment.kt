@@ -148,7 +148,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("About User", "Help"), this)
+            activity?.dialogOption(listOf("${getEmojiByUnicode( 0x1F642)} About User", "${getEmojiByUnicode( 0x1F4A1)} Help"), this)
         }
 
         binding.infoBtn.setOnLongClickListener {

@@ -179,7 +179,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("About User", "Help"), this)
+            activity?.dialogOption(listOf("${getEmojiByUnicode( 0x1F642)} About User", "${getEmojiByUnicode( 0x1F4A1)} Help"), this)
         }
 
 

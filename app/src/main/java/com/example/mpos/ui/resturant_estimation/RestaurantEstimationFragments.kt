@@ -150,7 +150,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("About User", "Help"), this)
+            activity?.dialogOption(listOf("${getEmojiByUnicode( 0x1F642)} About User", "${getEmojiByUnicode( 0x1F4A1)} Help"), this)
         }
 
         binding.searchBoxTxt.setOnClickListener {

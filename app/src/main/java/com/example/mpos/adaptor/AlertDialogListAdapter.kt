@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
 import com.example.mpos.R
 import com.example.mpos.databinding.OfferItemLayoutBinding
 import com.example.mpos.utils.getColorInt
@@ -25,6 +23,7 @@ class AlertDialogListAdapter(private val context: Context) : BaseAdapter() {
         binding.btnClickCheckBox.hide()
         binding.orderFoodItemDescTv.hide()
         binding.txtInfo.show()
+        binding.borderTxt.show()
         binding.root.setBackgroundColor(binding.root.context.getColorInt(R.color.light_blue_bg))
         binding.txtInfo.text = data[position]
         return binding.root

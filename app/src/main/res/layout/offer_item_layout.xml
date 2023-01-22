@@ -16,6 +16,7 @@
         android:fontFamily="@font/roboto_medium"
         android:textColor="@color/light_grey_color"
         android:textSize="12sp"
+        tools:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/btn_click_check_box"
@@ -29,12 +30,13 @@
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
+        android:paddingTop="14dp"
         android:paddingBottom="14dp"
         android:fontFamily="@font/roboto_medium"
-        android:textAlignment="textStart"
         android:textColor="@color/light_grey_color"
         android:textSize="14sp"
         android:visibility="gone"
+        android:gravity="center|bottom"
         tools:visibility="visible"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -46,11 +48,26 @@
         android:id="@+id/btn_click_check_box"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        tools:visibility="gone"
         android:background="@drawable/ic_check_box"
         android:backgroundTint="@color/white"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:backgroundTint="@color/black" />
+
+<View
+    android:id="@+id/border_txt"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:visibility="gone"
+    android:background="@color/black"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/txt_info"
+    app:layout_constraintBottom_toBottomOf="parent"
+    />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

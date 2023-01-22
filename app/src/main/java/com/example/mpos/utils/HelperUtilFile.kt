@@ -768,7 +768,7 @@ fun Activity.dialogOption(list: List<String>, fragment: Fragment) {
         if (list[which] == list.last()) {
             dialog.dismiss()
             showDialogForDeleteInfo("${getEmojiByUnicode(0x1F5D1)} Swipe to delete")
-        } else if (list[which] == "About User") {
+        } else if (list[which].contains("About User")) {
             dialog.dismiss()
             val userID = RestaurantSingletonCls.getInstance().getUserId()
             val storeID = RestaurantSingletonCls.getInstance().getStoreId()
