@@ -34,13 +34,17 @@ import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
+import com.example.mpos.data.generic.GenericDataCls
+import com.example.mpos.data.generic.GenericDataCls.Companion.Type.*
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.BillingFragmentLayoutBinding
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
+import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
 import com.example.mpos.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
+import com.example.mpos.ui.optionsbottomsheet.InfoBottomSheet
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
@@ -80,7 +84,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = BillingFragmentLayoutBinding.bind(view)
-        binding.tableId2.text=args.selectioncls.title
+        binding.tableId2.text = args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = BillingFragmentDirections.actionGlobalScanQrCodeFragment(
                 Url_Text,
@@ -179,7 +183,12 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("${getEmojiByUnicode( 0x1F642)} About User", "${getEmojiByUnicode( 0x1F4A1)} Help"), this)
+            activity?.dialogOption(
+                listOf(
+                    "${getEmojiByUnicode(0x1F642)} About User",
+                    "${getEmojiByUnicode(0x1F4A1)} Help"
+                ), this
+            )
         }
 
 
@@ -256,65 +265,26 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun getBillPrintResponse() {
         printBillViewModel.doPrintInvoicePrinting.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
-                is ApisResponse.Error -> {
-                    hidePb()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { msg ->
-                            showErrorDialog(msg)
+            if (it != null)
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { msg ->
+                                showErrorDialog(msg)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
                         }
-                    } else {
-                        showErrorDialog("${it.data}")
                     }
-                }
-                is ApisResponse.Loading -> {
-                    showPb("${it.data}")
-                }
-                is ApisResponse.Success -> {
-                    hidePb()
-                    showDialogBox(
-                        "Success",
-                        "${it.data}",
-                        icon = R.drawable.ic_success,
-                        isCancel = false
-                    ) {
-                        findNavController().popBackStack()
+                    is ApisResponse.Loading -> {
+                        showPb("${it.data}")
                     }
-                }
-            }
-        }
-    }
-
-    private fun getPrintInvoiceResponse() {
-        viewModel.printBillInvoice.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
-                is ApisResponse.Error -> {
-                    hidePb()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { msg ->
-                            showErrorDialog(msg)
-                        }
-                    } else {
-                        showErrorDialog("${it.data}")
-                    }
-                }
-                is ApisResponse.Loading -> {
-                    showPb("${it.data}")
-                }
-                is ApisResponse.Success -> {
-                    hidePb()
-                    binding.restItemBtn.performClick()
-                    /*arrItem.clear()
-                    confirmOrderViewModel.getOrderList(null)*/
-                    (it.data as PrintInvoice?)?.let { printInvoice ->
-                        Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
-                        printBillViewModel.doPrintInvoice(printInvoice)
-                    } ?: run {
+                    is ApisResponse.Success -> {
+                        hidePb()
                         showDialogBox(
                             "Success",
-                            "Invoice Generate Successfully",
+                            "${it.data}",
                             icon = R.drawable.ic_success,
                             isCancel = false
                         ) {
@@ -322,20 +292,74 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         }
                     }
                 }
-            }
+        }
+    }
+
+    private fun getPrintInvoiceResponse() {
+        viewModel.printBillInvoice.observe(viewLifecycleOwner) {
+            if (it != null)
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { msg ->
+                                showErrorDialog(msg)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
+                        }
+                    }
+                    is ApisResponse.Loading -> {
+                        showPb("${it.data}")
+                    }
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        binding.restItemBtn.performClick()
+                        /*arrItem.clear()
+                        confirmOrderViewModel.getOrderList(null)*/
+                        (it.data as PrintInvoice?)?.let { printInvoice ->
+                            Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
+                            printBillViewModel.doPrintInvoice(printInvoice)
+                        } ?: run {
+                            showDialogBox(
+                                "Success",
+                                "Invoice Generate Successfully",
+                                icon = R.drawable.ic_success,
+                                isCancel = false
+                            ) {
+                                findNavController().popBackStack()
+                            }
+                        }
+                    }
+                }
         }
     }
 
     private fun getPrintConnectResponse() {
         printBillViewModel.isPrinterConnected.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
-                is ApisResponse.Error -> {
-                    hidePb()
-                    isPrinterConnected = false
-                    showDialogBox(
-                        "Error", it.data!!, btn = "Yes", cancel = "No"
-                    ) {
+            if (it != null)
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        isPrinterConnected = false
+                        showDialogBox(
+                            "Error", it.data!!, btn = "Yes", cancel = "No"
+                        ) {
+                            viewModel.checkBillingStatus(
+                                CheckBillingStatusRequest(
+                                    CheckBillingStatusRequestBody(
+                                        mPosDoc = receiptNo!!
+                                    )
+                                )
+                            )
+                        }
+                    }
+                    is ApisResponse.Loading -> {
+                        showPb("${it.data}")
+                    }
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        isPrinterConnected = true
                         viewModel.checkBillingStatus(
                             CheckBillingStatusRequest(
                                 CheckBillingStatusRequestBody(
@@ -345,45 +369,30 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         )
                     }
                 }
-                is ApisResponse.Loading -> {
-                    showPb("${it.data}")
-                }
-                is ApisResponse.Success -> {
-                    hidePb()
-                    isPrinterConnected = true
-                    viewModel.checkBillingStatus(
-                        CheckBillingStatusRequest(
-                            CheckBillingStatusRequestBody(
-                                mPosDoc = receiptNo!!
-                            )
-                        )
-                    )
-                }
-            }
         }
     }
 
 
     private fun getConfirmBillingResponse() {
         viewModel.confirmBillingResponse.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
-                is ApisResponse.Error -> {
-                    hidePb()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { msg ->
-                            showErrorDialog(msg)
+            if (it != null)
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { msg ->
+                                showErrorDialog(msg)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
                         }
-                    } else {
-                        showErrorDialog("${it.data}")
+                    }
+                    is ApisResponse.Loading -> showPb("${it.data}")
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        confirmOrderViewModel.postLineUrl(receiptNo!!, arrItem)
                     }
                 }
-                is ApisResponse.Loading -> showPb("${it.data}")
-                is ApisResponse.Success -> {
-                    hidePb()
-                    confirmOrderViewModel.postLineUrl(receiptNo!!, arrItem)
-                }
-            }
         }
     }
 
@@ -424,97 +433,97 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private fun getConfirmOrderResponse() {
         confirmOrderViewModel.orderConfirm.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
-                is ApisResponse.Error -> {
-                    hidePb()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { err ->
-                            showErrorDialog(err)
+            if (it != null)
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { err ->
+                                showErrorDialog(err)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
                         }
-                    } else {
-                        showErrorDialog("${it.data}")
                     }
-                }
-                is ApisResponse.Loading -> {
-                    Log.i("getConfirmOrderResponse", " Loading ${it.data}")
-                    showPb("${it.data}")
-                }
-                is ApisResponse.Success -> {
-                    hidePb()
-                    val billObj = confirmBillingRequest?.body!!
-                    viewModel.scanBillingRequest(
-                        ScanBillingToEdcRequest(
-                            ScanBillingToEdcRequestBody(
-                                rcptNo = receiptNo!!,
-                                transDate = billObj.transDate,
-                                transTime = billObj.transTime,
-                                storeVar = billObj.storeVar,
-                                staffID = billObj.staffID
+                    is ApisResponse.Loading -> {
+                        Log.i("getConfirmOrderResponse", " Loading ${it.data}")
+                        showPb("${it.data}")
+                    }
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        val billObj = confirmBillingRequest?.body!!
+                        viewModel.scanBillingRequest(
+                            ScanBillingToEdcRequest(
+                                ScanBillingToEdcRequestBody(
+                                    rcptNo = receiptNo!!,
+                                    transDate = billObj.transDate,
+                                    transTime = billObj.transTime,
+                                    storeVar = billObj.storeVar,
+                                    staffID = billObj.staffID
+                                )
                             )
                         )
-                    )
+                    }
                 }
-            }
         }
     }
 
 
     private fun getCheckBillResponse() {
         viewModel.checkBillingStatus.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
-                is ApisResponse.Error -> {
-                    hidePb()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { msg ->
-                            showErrorDialog(msg)
+            if (it != null)
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { msg ->
+                                showErrorDialog(msg)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
                         }
-                    } else {
-                        showErrorDialog("${it.data}")
+                    }
+                    is ApisResponse.Loading -> showPb("${it.data}")
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        viewModel.getPrintBillInvoiceResponse(
+                            PrintInvoiceRequest(
+                                PrintInvoiceRequestBody("${it.data}")
+                            )
+                        )
                     }
                 }
-                is ApisResponse.Loading -> showPb("${it.data}")
-                is ApisResponse.Success -> {
-                    hidePb()
-                    viewModel.getPrintBillInvoiceResponse(
-                        PrintInvoiceRequest(
-                            PrintInvoiceRequestBody("${it.data}")
-                        )
-                    )
-                }
-            }
         }
     }
 
 
     private fun getSendBillToEdcResponse() {
         viewModel.sendBillingToEdc.observe(viewLifecycleOwner) {
-            if (it!=null)
-            when (it) {
-                is ApisResponse.Error -> {
-                    hidePb()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { msg ->
-                            showErrorDialog(msg)
+            if (it != null)
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { msg ->
+                                showErrorDialog(msg)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
                         }
-                    } else {
-                        showErrorDialog("${it.data}")
+                    }
+                    is ApisResponse.Loading -> showPb("${it.data}")
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        showDialogBox(
+                            "Success",
+                            "Completed the Billing for All Food Item Successfully",
+                            icon = R.drawable.ic_success,
+                            isCancel = true
+                        ) {
+                            //findNavController().popBackStack()
+                        }
                     }
                 }
-                is ApisResponse.Loading -> showPb("${it.data}")
-                is ApisResponse.Success -> {
-                    hidePb()
-                    showDialogBox(
-                        "Success",
-                        "Completed the Billing for All Food Item Successfully",
-                        icon = R.drawable.ic_success,
-                        isCancel = true
-                    ) {
-                        //findNavController().popBackStack()
-                    }
-                }
-            }
         }
     }
 
@@ -524,15 +533,10 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor =
                 ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {},
-                    itemClickListerForUpdate = { res ->
-                        updateQtyDialogBox(res)
-                    },
-                    itemClickInstructionLinter = { res ->
-                        updateFreeTxt(res)
-                    },
-                    itemClickAmountLinter = { res ->
-                        updateAmount(res)
-                    },context=requireActivity())
+                    itemClickListerForProcess = {
+                        if (GenericDataCls.getBookingLs(it).isNotEmpty())
+                        createBottomSheet("Deatils..", GenericDataCls.getBookingLs(it))
+                    })
             adapter = confirmOderFragmentAdaptor
         }
     }
@@ -682,6 +686,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setUpRecycleAdaptor(data: List<ItemMasterFoodItem>) {
         binding.orderRecycleViewHint.hide()
         binding.listOfItemRecycleView.show()
@@ -801,8 +806,20 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         }
     }
 
+
+    private fun <t> createBottomSheet(title: String, list: List<t>) {
+        val bottomSheet = InfoBottomSheet(title, list)
+        bottomSheet.listener = this
+        bottomSheet.show(childFragmentManager, "Bottom Sheet")
+    }
+
+
     @Suppress("UNCHECKED_CAST")
     override fun <T> onItemClicked(response: T) {
+        if (response is GenericDataCls) {
+            navDialog(response)
+            return
+        }
         val barcode = (response as Pair<*, *>).first as BarcodeJsonResponse
         val crossSellingItems =
             (response as Pair<*, *>).second as Pair<Double, CrossSellingJsonResponse>?
@@ -839,5 +856,22 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         )
         confirmOrderViewModel.getOrderList(FoodItemList(mutableList))
         activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
+    }
+
+    private fun navDialog(info: GenericDataCls) {
+        val data = info.data as ItemMasterFoodItem
+        when (valueOf(info.type)) {
+            ADDINSTRUCTION -> {
+                updateFreeTxt(data)
+            }
+            UPDTQTY -> {
+                updateQtyDialogBox(data)
+            }
+            UPDTAMTM -> updateAmount(data)
+            VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
+                requireActivity(),
+                data.crossSellingItems!!
+            )
+        }
     }
 }

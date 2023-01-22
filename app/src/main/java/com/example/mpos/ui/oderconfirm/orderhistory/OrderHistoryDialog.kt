@@ -34,7 +34,7 @@ fun Activity.showDialogForOrderHistory(
 
     binding.orderHistoryTxt.text = title
     binding.orderRecycleView.apply {
-        confirmOderFragmentAdaptor = ConfirmOderFragmentAdaptor({}, {},{},{},context=null)
+        confirmOderFragmentAdaptor = ConfirmOderFragmentAdaptor({},{})
         confirmOderFragmentAdaptor.setCheckBoxType(false)
         adapter = confirmOderFragmentAdaptor
     }

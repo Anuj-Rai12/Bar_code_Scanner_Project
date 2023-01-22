@@ -1,6 +1,8 @@
 package com.example.mpos.ui.crosselling
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AlertDialog
@@ -19,6 +21,16 @@ class CrossSellingDialog(private val activity: Activity) {
 
     var itemClicked: OnBottomSheetClickListener? = null
 
+    companion object {
+        fun showCrossSellingItem(context: Context?, response: CrossSellingJsonResponse) {
+            context?.let {
+                val dialog = CrossSellingDialog(context as Activity)
+                dialog.displayCrossSellingItem(response)
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     fun showCrossSellingDialog(response: CrossSellingJsonResponse) {
         val itemSelected = mutableListOf<CrossSellingItems>()
         var totalItem = 0.0
@@ -78,6 +90,7 @@ class CrossSellingDialog(private val activity: Activity) {
     }
 
 
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     fun displayCrossSellingItem(response: CrossSellingJsonResponse) {
         val binding = CrossSellingDialogBoxBinding.inflate(activity.layoutInflater)
 
@@ -91,7 +104,7 @@ class CrossSellingDialog(private val activity: Activity) {
         val crossAdaptor = CrossSellingAdaptor {}
         binding.recycleViewItem.adapter = crossAdaptor
         crossAdaptor.submitList(response.childItemList)
-        crossAdaptor.isFlagReset=true
+        crossAdaptor.isFlagReset = true
         crossAdaptor.isEnable = false
         crossAdaptor.notifyDataSetChanged()
 

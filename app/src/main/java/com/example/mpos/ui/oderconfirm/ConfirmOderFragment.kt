@@ -69,7 +69,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = ConfirmOrderLayoutBinding.bind(view)
-        binding.tableId2.text=args.selectioncls.title
+        binding.tableId2.text = args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = ConfirmOderFragmentDirections
                 .actionGlobalScanQrCodeFragment(
@@ -148,7 +148,12 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("${getEmojiByUnicode( 0x1F642)} About User", "${getEmojiByUnicode( 0x1F4A1)} Help"), this)
+            activity?.dialogOption(
+                listOf(
+                    "${getEmojiByUnicode(0x1F642)} About User",
+                    "${getEmojiByUnicode(0x1F4A1)} Help"
+                ), this
+            )
         }
 
         binding.infoBtn.setOnLongClickListener {
@@ -325,16 +330,16 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         viewModel.orderDining.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
-                    Log.i("getConfirmDinningResponse", " Error ${it.exception}")
+                    Log.i("Dining", " Error ${it.exception}")
                     oopsSomeThingWentWrong()
                     hidePb()
                 }
                 is ApisResponse.Loading -> {
-                    Log.i("getConfirmDinningResponse", " Loading ${it.data}")
+                    Log.i("Dinning", " Loading ${it.data}")
                     showPb(it.data.toString())
                 }
                 is ApisResponse.Success -> {
-                    Log.i("getConfirmDinningResponse", " Success ${it.data}")
+                    Log.i("Dinning", " Success ${it.data}")
                     hidePb()
                     (it.data as ConfirmDiningSuccessResponse?)?.let { res ->
                         val error = res.body?.errorFound?.toBoolean()
@@ -558,15 +563,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor =
-                ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {
+                ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {},
+                    itemClickListerForProcess = { res ->
 
-                }, itemClickListerForUpdate = { res ->
-                    updateQtyDialogBox(res)
-                }, itemClickInstructionLinter = { res ->
-                    updateFreeTxt(res)
-                }, itemClickAmountLinter = { res ->
-                    updateAmount(res)
-                }, context = requireActivity())
+                    })
             adapter = confirmOderFragmentAdaptor
         }
     }

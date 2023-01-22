@@ -1,8 +1,6 @@
 package com.example.mpos.ui.oderconfirm.adaptor
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import android.graphics.PorterDuff
 import android.os.Build
 import android.view.LayoutInflater
@@ -13,19 +11,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.R
-import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.databinding.ListOfFoodItemSelectedBinding
-import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.utils.*
 import java.util.*
 
 class ConfirmOderFragmentAdaptor(
     private val itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
-    private val itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit,
-    private val itemClickInstructionLinter: (foodItem: ItemMasterFoodItem) -> Unit,
-    private val itemClickAmountLinter: (foodItem: ItemMasterFoodItem) -> Unit,
-    private val context: Context?
+    private val itemClickListerForProcess: (foodItem: ItemMasterFoodItem) -> Unit
 ) : ListAdapter<ItemMasterFoodItem, ConfirmOderFragmentAdaptor.SelectedFoodItemViewHolder>(diffUtil) {
 
     private var showCheckBox: Boolean = false
@@ -58,9 +51,7 @@ class ConfirmOderFragmentAdaptor(
         fun setData(
             foodItem: ItemMasterFoodItem,
             itemClickListerForFoodSelected: (foodItem: ItemMasterFoodItem) -> Unit,
-            itemClickListerForUpdate: (foodItem: ItemMasterFoodItem) -> Unit,
-            itemClickInstructionLinter: (foodItem: ItemMasterFoodItem) -> Unit,
-            itemClickAmountLinter: (foodItem: ItemMasterFoodItem) -> Unit
+            itemClickListerForProcess: (foodItem: ItemMasterFoodItem) -> Unit
         ) {
             binding.apply {
                 foodItemName.apply {
@@ -90,23 +81,25 @@ class ConfirmOderFragmentAdaptor(
                     checkBoxView.setImageResource(R.drawable.ic_info)
                     getTintColor(checkBoxView, R.color.dark_green_color)
                 }
-
-
-                amtOfFoodTv.setOnClickListener {
+                root.setOnClickListener {
+                    /*val decimal = foodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
+                        .toBoolean()
                     val crossSellingFlag =
                         foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
                             .toBoolean()
 
-                    if (!foodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
-                            .toBoolean() || crossSellingFlag) {
-                        root.showSandbar("Cannot change Amount")
+                    if (foodItem.isDeal || crossSellingFlag || !decimal) {
                         return@setOnClickListener
-                    }
-                    itemClickAmountLinter.invoke(foodItem)
+                    }*/
+                    itemClickListerForProcess.invoke(foodItem)
                 }
 
+              /*  amtOfFoodTv.setOnClickListener {
+                 itemClickAmountLinter.invoke(foodItem)
+                }*/
 
-                qtyOfFood.setOnClickListener {
+
+             /*   qtyOfFood.setOnClickListener {
                     val decimal = foodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
                         .toBoolean()
                     val crossSellingFlag =
@@ -117,25 +110,26 @@ class ConfirmOderFragmentAdaptor(
                         root.showSandbar("Cannot change Qty")
                         return@setOnClickListener
                     }
-                    if (showQtyBox) itemClickListerForUpdate(foodItem)
-                }
-                foodItemName.setOnClickListener {
-                    val crossSellingFlag =
-                        foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
-                            .toBoolean()
+                  //  if (showQtyBox) itemClickListerForUpdate(foodItem)
+                }*/
 
-                    if (foodItem.isDeal || crossSellingFlag) {
-                        root.showSandbar("Cannot change Food Name")
-                        return@setOnClickListener
-                    }
-                    if (showQtyBox) {
-                        itemClickInstructionLinter(foodItem)
-                    }
-                }
+                /*       foodItemName.setOnClickListener {
+                           val crossSellingFlag =
+                               foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
+                                   .toBoolean()
+
+                           if (foodItem.isDeal || crossSellingFlag) {
+                               root.showSandbar("Cannot change Food Name")
+                               return@setOnClickListener
+                           }
+                           if (showQtyBox) {
+                            //   itemClickInstructionLinter(foodItem)
+                           }
+                }*/
 
 
                 //Showing CrossSelling Items
-                binding.qtyOfFood.setOnLongClickListener {
+              /*  binding.qtyOfFood.setOnLongClickListener {
                     val flag = foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
                         .toBoolean()
 
@@ -143,34 +137,34 @@ class ConfirmOderFragmentAdaptor(
                         showCrossSellingItem(foodItem.crossSellingItems!!)
                     }
                     return@setOnLongClickListener true
-                }
+                }*/
 
-                binding.foodItemName.setOnLongClickListener {
+               /* binding.foodItemName.setOnLongClickListener {
                     val flag = foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
                         .toBoolean()
                     if (flag) {
                         showCrossSellingItem(foodItem.crossSellingItems!!)
                     }
                     return@setOnLongClickListener true
-                }
+                }*/
 
-                binding.rateOfFood.setOnLongClickListener {
+        /*        binding.rateOfFood.setOnLongClickListener {
                     val flag = foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
                         .toBoolean()
                     if (flag) {
                         showCrossSellingItem(foodItem.crossSellingItems!!)
                     }
                     return@setOnLongClickListener true
-                }
+                }*/
 
-                binding.amtOfFoodTv.setOnLongClickListener {
+             /*   binding.amtOfFoodTv.setOnLongClickListener {
                     val flag = foodItem.itemMaster.crossSellingAllow.lowercase(Locale.getDefault())
                         .toBoolean()
                     if (flag) {
                         showCrossSellingItem(foodItem.crossSellingItems!!)
                     }
                     return@setOnLongClickListener true
-                }
+                }*/
 
                 qtyOfFood.apply {
                     setBg(foodItem.bg)
@@ -184,14 +178,6 @@ class ConfirmOderFragmentAdaptor(
                     setBg(foodItem.bg)
                     text = "$Rs_Symbol ${foodItem.foodAmt}"
                 }
-            }
-        }
-
-
-        private fun showCrossSellingItem(response: CrossSellingJsonResponse) {
-            context?.let {
-                val dialog = CrossSellingDialog(context as Activity)
-                dialog.displayCrossSellingItem(response)
             }
         }
 
@@ -225,6 +211,7 @@ class ConfirmOderFragmentAdaptor(
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setQtyBoxType(flag: Boolean) {
         notifyDataSetChanged()
         showQtyBox = flag
@@ -244,9 +231,7 @@ class ConfirmOderFragmentAdaptor(
             holder.setData(
                 it,
                 itemClickListerForFoodSelected,
-                itemClickListerForUpdate,
-                itemClickInstructionLinter,
-                itemClickAmountLinter
+                itemClickListerForProcess
             )
         }
     }

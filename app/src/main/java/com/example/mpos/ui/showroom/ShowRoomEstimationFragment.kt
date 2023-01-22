@@ -476,13 +476,9 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor =
                 ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {
-                }, itemClickListerForUpdate = { res ->
-                    updateQtyDialogBox(res)
-                }, itemClickInstructionLinter = { res ->
-                    updateFreeTxt(res)
-                }, itemClickAmountLinter = { res ->
-                    updateAmount(res)
-                }, context = requireActivity())
+                },itemClickListerForProcess = { res->
+
+                })
             adapter = confirmOderFragmentAdaptor
         }
     }

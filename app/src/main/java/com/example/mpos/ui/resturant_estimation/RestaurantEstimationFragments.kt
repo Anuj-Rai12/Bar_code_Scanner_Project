@@ -476,13 +476,9 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
             layoutManager = LinearLayoutManager(requireActivity())
             confirmOderFragmentAdaptor =
                 ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {
-                }, itemClickListerForUpdate = { res ->
-                    updateQtyDialogBox(res)
-                }, itemClickInstructionLinter = { res ->
-                    updateFreeTxt(res)
-                }, itemClickAmountLinter = { res ->
-                    updateAmount(res)
-                }, context = requireActivity())
+                },itemClickListerForProcess = { res->
+
+                })
             adapter = confirmOderFragmentAdaptor
         }
     }

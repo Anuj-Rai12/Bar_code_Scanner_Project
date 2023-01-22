@@ -77,7 +77,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = ShowRoomBillingFragmentBinding.bind(view)
-        binding.tableId2.text=args.selectioncls.title
+        binding.tableId2.text = args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = ShowRoomBillingFragmentDirections.actionGlobalScanQrCodeFragment(
                 Url_Text,
@@ -178,7 +178,12 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("${getEmojiByUnicode( 0x1F642)} About User", "${getEmojiByUnicode( 0x1F4A1)} Help"), this)
+            activity?.dialogOption(
+                listOf(
+                    "${getEmojiByUnicode(0x1F642)} About User",
+                    "${getEmojiByUnicode(0x1F4A1)} Help"
+                ), this
+            )
         }
 
 
@@ -517,15 +522,9 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
             confirmOderFragmentAdaptor =
                 ConfirmOderFragmentAdaptor(
                     itemClickListerForFoodSelected = {},
-                    itemClickListerForUpdate = { res ->
-                        updateQtyDialogBox(res)
-                    },
-                    itemClickInstructionLinter = { res ->
-                        updateFreeTxt(res)
-                    },
-                    itemClickAmountLinter = { res ->
-                        updateAmount(res)
-                    }, context = requireActivity()
+                    itemClickListerForProcess = { res ->
+
+                    }
                 )
             adapter = confirmOderFragmentAdaptor
         }

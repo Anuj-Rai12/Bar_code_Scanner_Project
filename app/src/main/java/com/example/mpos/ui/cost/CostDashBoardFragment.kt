@@ -461,15 +461,9 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             confirmOderFragmentAdaptor =
                 ConfirmOderFragmentAdaptor(
                     itemClickListerForFoodSelected = {},
-                    itemClickListerForUpdate = { res ->
-                        updateQtyDialogBox(res)
-                    },
-                    itemClickInstructionLinter = { res ->
-                        updateFreeTxt(res)
-                    },
-                    itemClickAmountLinter = { res ->
-                        updateAmount(res)
-                    }, context = requireActivity()
+                   itemClickListerForProcess = { res->
+
+                   }
                 )
             adapter = confirmOderFragmentAdaptor
         }
