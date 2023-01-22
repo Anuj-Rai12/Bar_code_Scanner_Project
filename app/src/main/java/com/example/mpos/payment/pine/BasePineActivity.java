@@ -1,10 +1,10 @@
-package com.example.mpos.delete.pine;
+package com.example.mpos.payment.pine;
 
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mpos.delete.pine.response.TransactionResponse;
+import com.example.mpos.payment.pine.response.TransactionResponse;
 
 
 public abstract class BasePineActivity extends AppCompatActivity implements PineServiceHelper.PineCallBack {

@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security"
         android:theme="@style/Theme.OffiqlResturantApp">
-        <activity android:name=".delete.PineTestingActivity"/>
+        <activity android:name=".payment.PaymentActivity"/>
         <activity
             android:name="com.example.mpos.MainActivity"
             android:exported="true"

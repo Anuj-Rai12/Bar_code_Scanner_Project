@@ -1,4 +1,4 @@
-package com.example.mpos.delete.unit;
+package com.example.mpos.payment.unit;
 
 import com.google.gson.Gson;
 

@@ -1,8 +1,8 @@
-package com.example.mpos.delete.pine.request;
+package com.example.mpos.payment.pine.request;
 
 
 import com.google.gson.annotations.SerializedName;
-import com.example.mpos.delete.unit.GsonUtils;
+import com.example.mpos.payment.unit.GsonUtils;
 
 public class TransactionRequest {
     @SerializedName("APP_ID")

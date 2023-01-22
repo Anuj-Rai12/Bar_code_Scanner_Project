@@ -1,4 +1,4 @@
-package com.example.mpos.delete.pine.response;
+package com.example.mpos.payment.pine.response;
 
 import android.os.Bundle;
 
@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.example.mpos.delete.pine.AppConfig;
-import com.example.mpos.delete.unit.GsonUtils;
+import com.example.mpos.payment.pine.AppConfig;
+import com.example.mpos.payment.unit.GsonUtils;
 
 
 

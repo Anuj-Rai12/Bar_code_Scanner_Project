@@ -1,4 +1,4 @@
-package com.example.mpos.delete.pine.request;
+package com.example.mpos.payment.pine.request;
 
 import com.google.gson.annotations.SerializedName;
 

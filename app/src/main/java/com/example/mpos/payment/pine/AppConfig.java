@@ -1,4 +1,4 @@
-package com.example.mpos.delete.pine;
+package com.example.mpos.payment.pine;
 
 
 public class AppConfig {

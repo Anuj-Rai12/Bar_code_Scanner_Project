@@ -21,6 +21,7 @@
     <string name="show_room_billing_frag">Showroom Billing</string>
     <string name="restaurant_billing_frag">Restaurant Billing</string>
     <string name="item_billing_estimate">Billing</string>
+    <string name="payment_src">Payment</string>
     <string name="table_reservation">Table Reservation</string>
     <string name="open_table">Open</string>
     <string name="bok_tbl">Book the table</string>
@@ -38,6 +39,9 @@
 
     <string name="oder_confirm_btn">Confirm Order</string>
     <string name="oder_reset">Reset All</string>
+    <string name="upi_request">Pay by UPI</string>
+    <string name="card_request">Pay by Card</string>
+    <string name="cash_request">Pay BY Cash</string>
     <string name="oder_del">Order History</string>
     <string name="print_order">Print Order</string>
     <string name="oder_view">View Deals</string>

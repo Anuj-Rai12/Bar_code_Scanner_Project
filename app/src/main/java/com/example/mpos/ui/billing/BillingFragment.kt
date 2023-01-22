@@ -41,7 +41,7 @@ import com.example.mpos.data.generic.GenericDataCls
 import com.example.mpos.data.generic.GenericDataCls.Companion.Type.*
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.BillingFragmentLayoutBinding
-import com.example.mpos.delete.PineTestingActivity
+import com.example.mpos.payment.PaymentActivity
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
 import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
@@ -58,6 +58,7 @@ import com.example.mpos.utils.print.recpit.PrintViewModel
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
+import kotlin.collections.ArrayList
 
 class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomSheetClickListener {
     private lateinit var binding: BillingFragmentLayoutBinding
@@ -458,8 +459,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                                 )
                             )
                         )
-                    }
-                        else {
+                    } else {
                         viewModel.scanBillingRequest(
                             ScanBillingToEdcRequest(
                                 ScanBillingToEdcRequestBody(
@@ -521,7 +521,14 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    val intent = Intent(requireActivity(), PineTestingActivity::class.java)
+                    val intent = Intent(requireActivity(), PaymentActivity::class.java)
+                    val pay = ArrayList<String>()
+                    pay.clear()
+                    pay.addAll(args.selectioncls.paymentLs)
+                    intent.putExtra("Receipt", receiptNo)
+                    intent.putExtra("upiCode", args.selectioncls.uPICode)
+                    intent.putExtra("payment", pay)
+                    intent.putExtra("tableNo", "1")
                     startActivity(intent)
                 }
             }

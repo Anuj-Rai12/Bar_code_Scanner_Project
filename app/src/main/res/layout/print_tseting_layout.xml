@@ -4,15 +4,227 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".delete.PineTestingActivity">
+    android:background="@color/semi_white_color"
+    android:padding="10dp"
+    tools:context=".payment.PaymentActivity">
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/bck_arr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/circle_shape"
+        android:contentDescription="Menu Option"
+        android:elevation="5dp"
+        android:minWidth="48dp"
+        android:layout_marginStart="3dp"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_arrow_back_24"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:tint="#019DE2" />
+
+    <TextView
+        android:id="@+id/src_title_txt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/roboto_medium"
+        android:maxLines="1"
+        android:text="@string/payment_src"
+        android:textAlignment="center"
+        android:textColor="@color/light_grey_color"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@id/bck_arr"
+        app:layout_constraintLeft_toRightOf="@id/bck_arr"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/bck_arr"
+        app:layout_constraintVertical_bias=".7" />
+
+
+    <LinearLayout
+        android:id="@+id/dsc_item_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bck_arr">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".9"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_desc"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_qty"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_rate"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:text="@string/oder_amt"
+            android:textAlignment="center"
+            android:textColor="@color/light_grey_color"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/order_recycle_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbarThumbVertical="@color/light_grey_color"
+        android:scrollbars="vertical"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/dsc_item_layout"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/total_order_amt"
+        tools:listitem="@layout/list_of_food_item_selected" />
 
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/total_sum"
+        android:textColor="@color/light_grey_color"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/total_order_amt"
+        app:layout_constraintRight_toLeftOf="@id/total_order_amt"
+        app:layout_constraintTop_toTopOf="@id/total_order_amt" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/total_order_amt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="7dp"
+        android:background="@drawable/black_underline_border"
+        android:fontFamily="@font/roboto_medium"
+        android:paddingStart="41dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="41dp"
+        android:paddingBottom="8dp"
+        android:text="@string/sample_total_amt"
+        android:textColor="@color/light_grey_color"
+        android:textSize="12sp"
+        app:layout_constraintRight_toRightOf="@id/card_payment_btn"
+        app:layout_constraintBottom_toTopOf="@id/cash_payment_btn" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/upi_payment_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:layout_marginBottom="22dp"
+        android:layout_weight="1"
+        android:background="@drawable/modify_order_btn_border"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/upi_request"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cash_payment_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cash_payment_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:layout_marginBottom="22dp"
+        android:layout_weight="1"
+        android:background="@drawable/modify_order_btn_border"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/cash_request"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/card_payment_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/upi_payment_btn"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/card_payment_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="22dp"
+        android:layout_weight="1"
+        android:background="@drawable/modify_order_btn_border"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/card_request"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/cash_payment_btn" />
 
 
 
-
-
+    <include
+        android:id="@+id/pb_layout"
+        layout="@layout/progress_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
