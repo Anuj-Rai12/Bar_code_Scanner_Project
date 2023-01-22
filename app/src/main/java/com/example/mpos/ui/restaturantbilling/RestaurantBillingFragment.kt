@@ -34,13 +34,16 @@ import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
+import com.example.mpos.data.generic.GenericDataCls
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.RestaurantBillingFragmentBinding
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
+import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
 import com.example.mpos.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
+import com.example.mpos.ui.optionsbottomsheet.InfoBottomSheet
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
@@ -512,13 +515,20 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
             confirmOderFragmentAdaptor =
                 ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {},
                     itemClickListerForProcess = { res->
-
+                        if (GenericDataCls.getBookingLs(res)
+                                .isNotEmpty()
+                        ) createBottomSheet("Select the Option.", GenericDataCls.getBookingLs(res))
+                        else binding.root.showSandbar("Cannot Change the Content")
                     }
                 )
             adapter = confirmOderFragmentAdaptor
         }
     }
-
+    private fun <t> createBottomSheet(title: String, list: List<t>) {
+        val bottomSheet = InfoBottomSheet(title, list)
+        bottomSheet.listener = this
+        bottomSheet.show(childFragmentManager, "Bottom Sheet")
+    }
     private fun updateAmount(itemMasterFoodItem: ItemMasterFoodItem) {
         showQtyDialog(true,
             itemMasterFoodItem.itemMaster,
@@ -663,6 +673,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setUpRecycleAdaptor(data: List<ItemMasterFoodItem>) {
         binding.orderRecycleViewHint.hide()
         binding.listOfItemRecycleView.show()
@@ -787,6 +798,10 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> onItemClicked(response: T) {
+        if (response is GenericDataCls) {
+            navDialog(response)
+            return
+        }
         val barcode = (response as Pair<*, *>).first as BarcodeJsonResponse
         val crossSellingItems =
             (response as Pair<*, *>).second as Pair<Double, CrossSellingJsonResponse>?
@@ -824,4 +839,21 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
         confirmOrderViewModel.getOrderList(FoodItemList(mutableList))
         activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
     }
+
+    private fun navDialog(info: GenericDataCls) {
+        val data = info.data as ItemMasterFoodItem
+        when (GenericDataCls.Companion.Type.valueOf(info.type)) {
+            GenericDataCls.Companion.Type.ADDINSTRUCTION -> {
+                updateFreeTxt(data)
+            }
+            GenericDataCls.Companion.Type.UPDTQTY -> {
+                updateQtyDialogBox(data)
+            }
+            GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
+            GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
+                requireActivity(), data.crossSellingItems!!
+            )
+        }
+    }
+
 }

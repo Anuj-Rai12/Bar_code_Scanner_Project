@@ -24,15 +24,18 @@ import com.example.mpos.data.cofirmDining.response.ConfirmDiningSuccessResponse
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
+import com.example.mpos.data.generic.GenericDataCls
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.data.printbIll.PrintBillRequest
 import com.example.mpos.data.printbIll.PrintBillRequestBody
 import com.example.mpos.databinding.ConfirmOrderLayoutBinding
+import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
 import com.example.mpos.ui.oderconfirm.orderhistory.showDialogForOrderHistory
 import com.example.mpos.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
+import com.example.mpos.ui.optionsbottomsheet.InfoBottomSheet
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
@@ -71,12 +74,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         binding = ConfirmOrderLayoutBinding.bind(view)
         binding.tableId2.text = args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
-            val action = ConfirmOderFragmentDirections
-                .actionGlobalScanQrCodeFragment(
+            val action = ConfirmOderFragmentDirections.actionGlobalScanQrCodeFragment(
                     Url_Text,
                     args.tbl,
                     FoodItemList(arrItem),
-                    customDiningRequest, WhereToGoFromScan.TABLEMANGMENT.name, args.selectioncls
+                    customDiningRequest,
+                    WhereToGoFromScan.TABLEMANGMENT.name,
+                    args.selectioncls
                 )
             findNavController().safeNavigate(action)
         }
@@ -98,8 +102,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         viewModel.time.observe(viewLifecycleOwner) {
             binding.orderBookingTimeTxt.text = getString(R.string.sample_tbl_time, "\n$it")
         }
-        if (!args.selectioncls.dynamicMenuEnable)
-            binding.foodMnuBtn.hide()
+        if (!args.selectioncls.dynamicMenuEnable) binding.foodMnuBtn.hide()
 
         binding.foodMnuBtn.setOnClickListener {
             val mnuBottom = MenuBottomSheetFragment("Order Menu")
@@ -114,12 +117,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         getGrandTotal()
 
         binding.viewOfferBtn.setOnClickListener {
-            val action =
-                ConfirmOderFragmentDirections.actionGlobalDealsFragment(
-                    FoodItemList(arrItem),
-                    args.tbl,
-                    customDiningRequest, WhereToGoFromSearch.TABLEMANGMENT.name, args.selectioncls
-                )
+            val action = ConfirmOderFragmentDirections.actionGlobalDealsFragment(
+                FoodItemList(arrItem),
+                args.tbl,
+                customDiningRequest,
+                WhereToGoFromSearch.TABLEMANGMENT.name,
+                args.selectioncls
+            )
             findNavController().safeNavigate(action)
         }
 
@@ -136,13 +140,13 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             Log.i(TAG, "Search: Table ${args.tbl}")
             Log.i(TAG, "Search: CustomerDining $customDiningRequest")
             Log.i(TAG, "Search: FoodItemList ${FoodItemList(arrItem)}")
-            val action =
-                ConfirmOderFragmentDirections.actionGlobalSearchFoodFragment(
-                    args.tbl,
-                    FoodItemList(arrItem),
-                    customDiningRequest,
-                    WhereToGoFromSearch.TABLEMANGMENT.name, args.selectioncls
-                )
+            val action = ConfirmOderFragmentDirections.actionGlobalSearchFoodFragment(
+                args.tbl,
+                FoodItemList(arrItem),
+                customDiningRequest,
+                WhereToGoFromSearch.TABLEMANGMENT.name,
+                args.selectioncls
+            )
             findNavController().safeNavigate(action)
         }
 
@@ -150,8 +154,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             //Show Swipe dialog
             activity?.dialogOption(
                 listOf(
-                    "${getEmojiByUnicode(0x1F642)} About User",
-                    "${getEmojiByUnicode(0x1F4A1)} Help"
+                    "${getEmojiByUnicode(0x1F642)} About User", "${getEmojiByUnicode(0x1F4A1)} Help"
                 ), this
             )
         }
@@ -185,10 +188,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
 
         binding.confirmOrderBtn.setOnClickListener {
-            if (!receiptNo.isNullOrEmpty())
-                viewModel.postLineUrl(receiptNo!!, arrItem)
-            else
-                activity?.msg("Oops Some thing Went Wrong Try Again?")
+            if (!receiptNo.isNullOrEmpty()) viewModel.postLineUrl(receiptNo!!, arrItem)
+            else activity?.msg("Oops Some thing Went Wrong Try Again?")
         }
 
     }
@@ -203,10 +204,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             if (arrItem.isNotEmpty()) {
                 if (!args.list?.foodList?.containsAll(arrItem)!!) {
                     list.addAll(arrItem)
-                } else
-                    list.addAll(arrItem)
-            } else
-                list.addAll(args.list?.foodList!!)
+                } else list.addAll(arrItem)
+            } else list.addAll(args.list?.foodList!!)
 
             viewModel.getOrderList(FoodItemList(list))
         } else if (args.list == null && arrItem.isNotEmpty()) {
@@ -238,8 +237,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         hidePb()
                         if (it.data?.startsWith("01")!!) {
                             activity?.msg(
-                                "order Printed ${getEmojiByUnicode(0x1F5A8)}",
-                                Toast.LENGTH_LONG
+                                "order Printed ${getEmojiByUnicode(0x1F5A8)}", Toast.LENGTH_LONG
                             )
                             findNavController().popBackStack()
                         } else {
@@ -261,15 +259,16 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         receiptNo = AlphaNumericString.getAlphaNumericString(8)
         isCustomerDiningRequestVisible = false
         val singletonCls = RestaurantSingletonCls.getInstance()
-        activity?.addDialogMaterial(
-            title = "Receipt No: $receiptNo",
+        activity?.addDialogMaterial(title = "Receipt No: $receiptNo",
             time = viewModel.time.value ?: "04:00 PM",
             tableNo = args.tbl.tableNo,
             receiptNo = receiptNo!!,
             storeVar = singletonCls.getStoreId()!!,
-            staffID = singletonCls.getUserId()!!, cancel = {
+            staffID = singletonCls.getUserId()!!,
+            cancel = {
                 findNavController().popBackStack()
-            }, listener = { res, flag ->
+            },
+            listener = { res, flag ->
                 if (flag) {
                     customDiningRequest = res
                     receiptNo = receiptNo ?: customDiningRequest?.body?.rcptNo
@@ -294,8 +293,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     @SuppressLint("NotifyDataSetChanged")
     private fun getData() {
         viewModel.listOfOrder.observe(viewLifecycleOwner) {
-            if (it != null)
-                viewModel.getGrandTotal(it.data)
+            if (it != null) viewModel.getGrandTotal(it.data)
             else {
                 viewModel.getGrandTotal(null)
             }
@@ -317,6 +315,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setUpRecycleAdaptor(data: List<ItemMasterFoodItem>) {
         binding.orderRecycleViewHint.hide()
         binding.listOfItemRecycleView.show()
@@ -476,8 +475,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     }
 
     private fun setCallBack() {
-        callback = object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -506,48 +504,26 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             ) {
 
                 RecyclerViewSwipeDecorator.Builder(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-                    .addSwipeLeftBackgroundColor(
+                    c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
+                ).addSwipeLeftBackgroundColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.color_red
+                            requireContext(), R.color.color_red
                         )
-                    )
-                    .addSwipeLeftLabel("Delete")
-                    .setSwipeLeftLabelColor(
+                    ).addSwipeLeftLabel("Delete").setSwipeLeftLabelColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.white
+                            requireContext(), R.color.white
                         )
-                    )
-                    .setSwipeLeftLabelTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
-                    .addSwipeLeftActionIcon(R.drawable.ic_round_delete)
-                    .setSwipeLeftActionIconTint(
+                    ).setSwipeLeftLabelTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+                    .addSwipeLeftActionIcon(R.drawable.ic_round_delete).setSwipeLeftActionIconTint(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.white
+                            requireContext(), R.color.white
                         )
-                    )
-                    .create()
-                    .decorate()
+                    ).create().decorate()
 
 
 
                 super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
+                    c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
                 )
             }
 
@@ -565,15 +541,23 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             confirmOderFragmentAdaptor =
                 ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {},
                     itemClickListerForProcess = { res ->
-
+                        if (GenericDataCls.getBookingLs(res)
+                                .isNotEmpty()
+                        ) createBottomSheet("Select the Option.", GenericDataCls.getBookingLs(res))
+                        else binding.root.showSandbar("Cannot Change the Content")
                     })
             adapter = confirmOderFragmentAdaptor
         }
     }
 
+    private fun <t> createBottomSheet(title: String, list: List<t>) {
+        val bottomSheet = InfoBottomSheet(title, list)
+        bottomSheet.listener = this
+        bottomSheet.show(childFragmentManager, "Bottom Sheet")
+    }
+
     private fun updateFreeTxt(itemMasterFoodItem: ItemMasterFoodItem) {
-        showQtyDialog(
-            true,
+        showQtyDialog(true,
             itemMasterFoodItem.itemMaster,
             value = itemMasterFoodItem.free_txt,
             type = "Instruction",
@@ -585,7 +569,9 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt),
                     itemRemoved = itemMasterFoodItem
                 )
-            }, isDecimal = false, amount = {})
+            },
+            isDecimal = false,
+            amount = {})
     }
 
     private fun updateAmount(itemMasterFoodItem: ItemMasterFoodItem) {
@@ -595,7 +581,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             isDecimal = true,
             cancel = {},
             res = {},
-            instruction = {}, amount = {
+            instruction = {},
+            amount = {
                 viewModel.addUpdateQty(
                     food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
                     itemRemoved = itemMasterFoodItem
@@ -604,8 +591,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     }
 
     private fun updateQtyDialogBox(itemMasterFoodItem: ItemMasterFoodItem) {
-        showQtyDialog(
-            true,
+        showQtyDialog(true,
             itemMasterFoodItem.itemMaster,
             cancel = {},
             res = {
@@ -616,15 +602,14 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             },
             instruction = { },
             isDecimal = itemMasterFoodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
-                .toBoolean(), amount = {})
+                .toBoolean(),
+            amount = {})
     }
 
 
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
         binding.root.showSandbar(
-            msg,
-            length,
-            requireActivity().getColorInt(color)
+            msg, length, requireActivity().getColorInt(color)
         ) {
             return@showSandbar "OK"
         }
@@ -632,6 +617,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> onItemClicked(response: T) {
+        if (response is GenericDataCls) {
+            navDialog(response)
+            return
+        }
         val barcode = (response as Pair<*, *>).first as BarcodeJsonResponse
         val crossSellingItems =
             (response as Pair<*, *>).second as Pair<Double, CrossSellingJsonResponse>?
@@ -683,6 +672,22 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         binding.confirmOrderBtn.isClickable = true
     }
 
+
+    private fun navDialog(info: GenericDataCls) {
+        val data = info.data as ItemMasterFoodItem
+        when (GenericDataCls.Companion.Type.valueOf(info.type)) {
+            GenericDataCls.Companion.Type.ADDINSTRUCTION -> {
+                updateFreeTxt(data)
+            }
+            GenericDataCls.Companion.Type.UPDTQTY -> {
+                updateQtyDialogBox(data)
+            }
+            GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
+            GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
+                requireActivity(), data.crossSellingItems!!
+            )
+        }
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("REST_INS", RestaurantSingletonCls.getInstance().getScreenType())

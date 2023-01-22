@@ -535,7 +535,9 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 ConfirmOderFragmentAdaptor(itemClickListerForFoodSelected = {},
                     itemClickListerForProcess = {
                         if (GenericDataCls.getBookingLs(it).isNotEmpty())
-                        createBottomSheet("Deatils..", GenericDataCls.getBookingLs(it))
+                        createBottomSheet("Select the Option.", GenericDataCls.getBookingLs(it))
+                        else
+                            binding.root.showSandbar("Cannot Change the Content")
                     })
             adapter = confirmOderFragmentAdaptor
         }
