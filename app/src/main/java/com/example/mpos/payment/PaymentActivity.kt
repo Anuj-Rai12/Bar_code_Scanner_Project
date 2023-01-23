@@ -358,7 +358,13 @@ class PaymentActivity : BasePineActivity() {
 
     override fun sendResult(detailResponse: TransactionResponse?) {
         super.sendResult(detailResponse)
-        Utils.createLogcat("PINE_Res", "$detailResponse")
+        detailResponse?.let {transactionResponse ->
+            if (transactionResponse.response.responseCode==0){ //Success
+                Utils.createLogcat("PINE_SUC","$transactionResponse")
+            }else{
+                showErrorDialog(transactionResponse.response.responseMsg)
+            }
+        }?:showErrorDialog("Oops Something Went Wrong")
     }
 
     override fun showToast(msg: String?) {

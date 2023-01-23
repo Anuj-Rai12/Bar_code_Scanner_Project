@@ -9,6 +9,8 @@ public class TransactionResponse {
     public Header header;
     @SerializedName("Response")
     public Response response;
+    @SerializedName("Detail")
+    public DetailTrans detail;
 
     @Override
     public String toString() {
