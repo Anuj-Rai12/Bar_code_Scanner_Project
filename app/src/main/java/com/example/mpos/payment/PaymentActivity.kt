@@ -1,5 +1,6 @@
 package com.example.mpos.payment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -10,8 +11,12 @@ import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequestBody
 import com.example.mpos.data.table_info.model.json.TableDetail
 import com.example.mpos.databinding.PrintTsetingLayoutBinding
+import com.example.mpos.payment.pine.AppConfig
 import com.example.mpos.payment.pine.BasePineActivity
 import com.example.mpos.payment.pine.PineServiceHelper
+import com.example.mpos.payment.pine.request.Detail
+import com.example.mpos.payment.pine.request.Header
+import com.example.mpos.payment.pine.request.TransactionRequest
 import com.example.mpos.payment.pine.response.TransactionResponse
 import com.example.mpos.payment.unit.Utils
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
@@ -93,42 +98,47 @@ class PaymentActivity : BasePineActivity() {
         getPaymentResponse()
 
         binding.cashPaymentBtn.setOnClickListener {
-            costDashBordViewModel.checkBillingFROMEDCStatus(PaymentEdcRequest(
-                PaymentEdcRequestBody(
-                    mPosDoc = receipt!!,
-                    edcMachineStatus = true,
-                    paymentType = "CASH",
-                    eDCResponse = ""
+            costDashBordViewModel.checkBillingFROMEDCStatus(
+                PaymentEdcRequest(
+                    PaymentEdcRequestBody(
+                        mPosDoc = receipt!!,
+                        edcMachineStatus = true,
+                        paymentType = "CASH",
+                        eDCResponse = ""
+                    )
                 )
-            ))
+            )
         }
 
-        /*  binding.amtByCard.setOnClickListener {
-              val amt = 20
+        binding.cardPaymentBtn.setOnClickListener {
+            createLogStatement("CARD",
+                "Amount is  is ${binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "")}")
+
+            val amt = binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "").toDouble()
+            val request = TransactionRequest()
+            request.aPP_ID = AppConfig.APP_ID
+            //Setting header
+            val header = Header()
+            header.applicationId = AppConfig.APP_ID
+            header.methodId = "1001"
+            header.userId = "user_$receipt"
+            header.versionNo = AppConfig.versionCode
+            val detail = Detail()
+            detail.data = arrayListOf()
+            request.header = header
+
+            //Detail Obj
+            detail.billingRefNo = "receipt_$receipt"
+            detail.paymentAmount = (amt * 100.0).toString()
+            detail.transactionType = "4001"//Card
+            detail.mobileNumberForEChargeSlip = "9219141756"
+            request.detail = detail
+
+            psh.callPineService(request)
+
+        }
 
 
-              val request = TransactionRequest()
-              request.aPP_ID = AppConfig.APP_ID
-              //Setting header ;
-              val header = Header()
-              header.applicationId = AppConfig.APP_ID
-              header.methodId = "1001"
-              header.userId = "AnujRai101"
-              header.versionNo = AppConfig.versionCode
-              val detail = Detail()
-              detail.data = arrayListOf()
-              request.header = header
-
-              //Detail Obj
-              detail.billingRefNo = "receiptNo1010"
-              detail.paymentAmount = (amt * 100.0).toString()
-              detail.transactionType = "4001"//Card
-              detail.mobileNumberForEChargeSlip = "9219141756"
-              request.detail = detail
-
-              psh.callPineService(request)
-
-          }*/
         /*
 
         binding.amtByQr.setOnClickListener {
@@ -200,7 +210,7 @@ class PaymentActivity : BasePineActivity() {
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    showErrorDialog("Working Fine","Success")
+                    showErrorDialog("Working Fine", "Success", R.drawable.ic_success)
                     /*viewModel.getPrintBillInvoiceResponse(
                         PrintInvoiceRequest(
                             PrintInvoiceRequestBody("${it.data}")
@@ -212,14 +222,16 @@ class PaymentActivity : BasePineActivity() {
     }
 
 
-    private fun  hidePb(){
+    private fun hidePb() {
         binding.pbLayout.root.hide()
     }
 
-    private fun showPb(msg: String){
+    private fun showPb(msg: String) {
         binding.pbLayout.titleTxt.text = msg
         binding.pbLayout.root.show()
     }
+
+    @SuppressLint("NotifyDataSetChanged")
     private fun getAllOrder() {
         confirmOrderViewModel.occupiedTbl.observe(this) {
             when (it) {
@@ -280,11 +292,15 @@ class PaymentActivity : BasePineActivity() {
     }
 
 
-    private fun showErrorDialog(msg: String,type:String="Failed") {
+    private fun showErrorDialog(
+        msg: String,
+        type: String = "Failed",
+        ic: Int = R.drawable.ic_error
+    ) {
         val dialog = AlertDialog.Builder(this@PaymentActivity)
         dialog.setTitle(type)
         dialog.setMessage(msg)
-        dialog.setIcon(R.drawable.ic_error)
+        dialog.setIcon(ic)
         dialog.setPositiveButton("ok") { _, _ ->
         }
         dialog.show()
@@ -342,8 +358,7 @@ class PaymentActivity : BasePineActivity() {
 
     override fun sendResult(detailResponse: TransactionResponse?) {
         super.sendResult(detailResponse)
-        /*    Utils.createLogcat("PINE_Res", "$detailResponse")
-            */
+        Utils.createLogcat("PINE_Res", "$detailResponse")
     }
 
     override fun showToast(msg: String?) {
