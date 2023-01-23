@@ -153,7 +153,7 @@ class CostDashBoardRepository(retrofit: Retrofit) {
 
 
     fun checkBillFROMEDCStatus(request: PaymentEdcRequest) = flow {
-        emit(ApisResponse.Loading("Checking Receipt status.."))
+        emit(ApisResponse.Loading("Confirming Payment.."))
         val data = try {
             val response = billingApi.checkBillFROMEDCStatusApi(request = request)
             if (response.isSuccessful) {

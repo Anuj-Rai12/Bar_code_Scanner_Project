@@ -22,7 +22,7 @@ data class PaymentEdcRequest @JvmOverloads constructor(
 
 )
 
-
+@Root(name = "CheckStatusBillingFromEDC", strict = false)
 data class PaymentEdcRequestBody(
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
