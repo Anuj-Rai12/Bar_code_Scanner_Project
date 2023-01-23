@@ -2,7 +2,7 @@ package com.example.mpos.payment.pine;
 
 
 public class AppConfig {
-    public static final Integer PrinterWidth = 24;
+    public static final Integer PrinterWidth = 32;
     public static final String Separator = String.format("%0" + PrinterWidth + "d", 0).replace("0", "-");
 
     public static final String REQUEST_KEY = "MASTERAPPREQUEST";

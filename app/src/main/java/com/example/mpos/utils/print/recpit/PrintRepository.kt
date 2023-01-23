@@ -1,5 +1,8 @@
 package com.example.mpos.utils.print.recpit
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.util.Log
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
@@ -9,6 +12,9 @@ import com.example.mpos.data.confirmOrder.response.json.ItemList
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.payment.pine.AppConfig
 import com.example.mpos.payment.pine.request.Datum
+import com.example.mpos.payment.qr.CreateQr
+import com.example.mpos.payment.unit.ImageConvertor
+import com.example.mpos.payment.unit.trimBorders
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.Rs_Symbol
@@ -18,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.io.ByteArrayOutputStream
 
 class PrintRepository {
 
@@ -304,6 +311,30 @@ class PrintRepository {
             arr.add(line())
             arr.add(setPineLabPrintData(setTenderTable(responseBody.paymentDetails, tenderSize = 16, amtSize = 16),false))
             arr.add(line())
+//Qr
+            val qr=CreateQr()
+            val bitmap=qr.createQr("${responseBody.qrPrint}")
+            bitmap?.let {bit->
+                val buffer=qr.bitInputStream(bit.trimBorders(Color.WHITE))
+                val bitmap1 = BitmapFactory.decodeStream(buffer)
+                val resizedBitmap = Bitmap.createScaledBitmap(
+                    bitmap1, 150, 150, false
+                )
+                    .trimBorders(Color.WHITE) //else Bitmap1.createScaledBitmap(inputBitmap, 184, 35, false)*/
+                val output = ByteArrayOutputStream(resizedBitmap.byteCount)
+                resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+                val imageBytes = output.toByteArray()
+                val imgData = ImageConvertor.bytesToHex(imageBytes)
+                val datum=Datum()
+                datum.printDataType="2"
+                datum.printerWidth=AppConfig.PrinterWidth
+                datum.isCenterAligned=true
+                datum.dataToPrint=""
+                datum.imagePath=""
+                datum.imageData=imgData
+                arr.add(datum)
+                arr.add(line())
+            }
             arr.add(setPineLabPrintData(responseBody.footerTxt1))
             arr.add(setPineLabPrintData(responseBody.footerTxt2))
             arr.add(setPineLabPrintData(responseBody.footerTxt3))
@@ -325,7 +356,7 @@ class PrintRepository {
         datum.dataToPrint = msg
         datum.imagePath = "0"
         datum.printDataType = "0"
-        datum.printerWidth = 32//AppConfig.PrinterWidth
+        datum.printerWidth = AppConfig.PrinterWidth
         datum.isCenterAligned = isCenterAlign
         return datum
     }
@@ -337,7 +368,7 @@ class PrintRepository {
         datum.imagePath = "0"
         datum.printDataType = "0"
         datum.isCenterAligned = true
-        datum.printerWidth = 32//AppConfig.PrinterWidth
+        datum.printerWidth = AppConfig.PrinterWidth
         return datum
     }
 

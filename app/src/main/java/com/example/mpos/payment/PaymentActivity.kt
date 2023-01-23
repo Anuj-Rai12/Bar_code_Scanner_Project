@@ -151,7 +151,9 @@ class PaymentActivity : BasePineActivity() {
             psh.callPineService(request)
 
         }
-
+        binding.upiPaymentBtn.setOnClickListener {
+            showErrorDialog("Not Enable !!")
+        }
 
         /*
 
