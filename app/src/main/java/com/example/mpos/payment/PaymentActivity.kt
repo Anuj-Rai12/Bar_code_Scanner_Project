@@ -2,11 +2,15 @@ package com.example.mpos.payment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import com.example.mpos.R
+import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
+import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
+import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequestBody
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequestBody
 import com.example.mpos.data.table_info.model.json.TableDetail
@@ -14,6 +18,7 @@ import com.example.mpos.databinding.PrintTsetingLayoutBinding
 import com.example.mpos.payment.pine.AppConfig
 import com.example.mpos.payment.pine.BasePineActivity
 import com.example.mpos.payment.pine.PineServiceHelper
+import com.example.mpos.payment.pine.request.Datum
 import com.example.mpos.payment.pine.request.Detail
 import com.example.mpos.payment.pine.request.Header
 import com.example.mpos.payment.pine.request.TransactionRequest
@@ -24,6 +29,7 @@ import com.example.mpos.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
 import com.example.mpos.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.utils.*
+import com.example.mpos.utils.print.recpit.PrintViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class PaymentActivity : BasePineActivity() {
@@ -31,6 +37,7 @@ class PaymentActivity : BasePineActivity() {
 
     private val confirmOrderViewModel: ConfirmOrderFragmentViewModel by viewModels()
     private val costDashBordViewModel: CostDashBoardViewModel by viewModels()
+    private val printBillViewModel: PrintViewModel by viewModels()
 
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
 
@@ -50,7 +57,7 @@ class PaymentActivity : BasePineActivity() {
     private val tblNo by lazy {
         intent.getStringExtra("tableNo")
     }
-
+    private lateinit var psh: PineServiceHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +69,7 @@ class PaymentActivity : BasePineActivity() {
         transactionType = savedInstanceState?.getString("TRANS") ?: ""
 
 
-        val psh = PineServiceHelper.getInstance()
+        psh = PineServiceHelper.getInstance()
         psh.connect(this, this)
         createLogStatement("PAY", "RCPT -> $receipt")
         createLogStatement("PAY", "UPI -> $upiCode")
@@ -78,6 +85,13 @@ class PaymentActivity : BasePineActivity() {
                 }
             }
         }
+
+        costDashBordViewModel.event.observe(this) {
+            it.getContentIfNotHandled()?.let { msg ->
+                showErrorDialog(msg)
+            }
+        }
+
         binding.bckArr.setOnClickListener {
             onBackPressed()
         }
@@ -100,19 +114,12 @@ class PaymentActivity : BasePineActivity() {
 
         //paymentResponse
         getPaymentResponse()
+        getPrintInvoiceResponse()
+        getBillPrintResponse()
 
         binding.cashPaymentBtn.setOnClickListener {
             transactionType = "CASH"
-            costDashBordViewModel.checkBillingFROMEDCStatus(
-                PaymentEdcRequest(
-                    PaymentEdcRequestBody(
-                        mPosDoc = receipt!!,
-                        edcMachineStatus = true,
-                        paymentType = transactionType,
-                        eDCResponse = ""
-                    )
-                )
-            )
+            callPaymentApi("")
         }
 
         binding.cardPaymentBtn.setOnClickListener {
@@ -201,6 +208,97 @@ class PaymentActivity : BasePineActivity() {
 
     }
 
+    private fun getBillPrintResponse() {
+        printBillViewModel.doPrintPineInvoicePrinting.observe(this) {
+            if (it != null) when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    showPb("${it.data}")
+                }
+                is ApisResponse.Success -> {
+                    hidePb()
+                    val res = it.data as ArrayList<Datum>
+                    val request = TransactionRequest()
+                    request.aPP_ID = AppConfig.APP_ID
+                    //Setting header ;
+                    val header = Header()
+                    header.applicationId = AppConfig.APP_ID
+                    header.methodId = "1002"//Print Format
+                    header.userId = "user_$receipt"
+                    header.versionNo = AppConfig.versionCode
+                    request.header = header
+
+                    val detail = Detail()
+                    detail.data = res
+                    detail.printRefNo = "0103REX"
+                    detail.savePrintData = true
+                    request.detail = detail
+                    if (this::psh.isInitialized) {
+                        psh.callPineService(request)
+                    } else {
+                        showErrorDialog("Cannot Print Bill")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getPrintInvoiceResponse() {
+        costDashBordViewModel.printBillInvoice.observe(this) {
+            if (it != null) when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    showPb("${it.data}")
+                }
+                is ApisResponse.Success -> {
+                    hidePb()
+                    /*arrItem.clear()
+                    confirmOrderViewModel.getOrderList(null)*/
+                    (it.data as PrintInvoice?)?.let { printInvoice ->
+                        Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
+                        printBillViewModel.doPineLabPrintInvoice(printInvoice)
+                    } ?: run {
+                        showErrorDialog(
+                            "Payment Success", "Success", ic = R.drawable.ic_success
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun callPaymentApi(res: String) {
+        costDashBordViewModel.checkBillingFROMEDCStatus(
+            PaymentEdcRequest(
+                PaymentEdcRequestBody(
+                    mPosDoc = receipt!!,
+                    edcMachineStatus = true,
+                    paymentType = transactionType,
+                    eDCResponse = res
+                )
+            )
+        )
+    }
+
     private fun getPaymentResponse() {
         costDashBordViewModel.checkBillingFromEdcStatus.observe(this) {
             if (it != null) when (it) {
@@ -217,12 +315,12 @@ class PaymentActivity : BasePineActivity() {
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
-                    showErrorDialog("Working Fine", "Success", R.drawable.ic_success)
-                    /*viewModel.getPrintBillInvoiceResponse(
+                    //showErrorDialog("Working Fine", "Success", R.drawable.ic_success)
+                    costDashBordViewModel.getPrintBillInvoiceResponse(
                         PrintInvoiceRequest(
                             PrintInvoiceRequestBody("${it.data}")
                         )
-                    )*/
+                    )
                 }
             }
         }
@@ -300,9 +398,7 @@ class PaymentActivity : BasePineActivity() {
 
 
     private fun showErrorDialog(
-        msg: String,
-        type: String = "Failed",
-        ic: Int = R.drawable.ic_error
+        msg: String, type: String = "Failed", ic: Int = R.drawable.ic_error
     ) {
         val dialog = AlertDialog.Builder(this@PaymentActivity)
         dialog.setTitle(type)
@@ -349,6 +445,7 @@ class PaymentActivity : BasePineActivity() {
          return datum
      }
  */
+
     private fun getGrandTotal() {
         confirmOrderViewModel.grandTotal.observe(this) {
             binding.totalOrderAmt.text = it
@@ -365,19 +462,18 @@ class PaymentActivity : BasePineActivity() {
 
     override fun sendResult(detailResponse: TransactionResponse?) {
         super.sendResult(detailResponse)
+        Utils.createLogcat("PINE_SUC", "$detailResponse and $transactionType")
         detailResponse?.let { transactionResponse ->
             if (transactionResponse.response.responseCode == 0) { //Success
                 Utils.createLogcat("PINE_SUC", "$transactionResponse and $transactionType")
-                costDashBordViewModel.checkBillingFROMEDCStatus(
-                    PaymentEdcRequest(
-                        PaymentEdcRequestBody(
-                            mPosDoc = receipt!!,
-                            edcMachineStatus = true,
-                            paymentType = transactionType,
-                            eDCResponse = "$transactionResponse"
-                        )
+                if (transactionResponse.header.methodId != "1002")
+                    callPaymentApi("$transactionResponse")
+                else
+                    showErrorDialog(
+                        "Order Completed!! ${getEmojiByUnicode(0x2705)}",
+                        "Success",
+                        R.drawable.ic_success
                     )
-                )
             } else {
                 showErrorDialog(transactionResponse.response.responseMsg)
             }

@@ -7,8 +7,11 @@ import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnection
 import com.example.mpos.data.billing.printInvoice.json.*
 import com.example.mpos.data.confirmOrder.response.json.ItemList
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
+import com.example.mpos.payment.pine.AppConfig
+import com.example.mpos.payment.pine.request.Datum
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.utils.ApisResponse
+import com.example.mpos.utils.Rs_Symbol
 import com.example.mpos.utils.getEmojiByUnicode
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -36,8 +39,14 @@ class PrintRepository {
     private val header = "${createNewString("Description", 25)}${createNewString("Qty", 7)}" +
             "${createNewString("Price", 8)}${createNewString("Amount", 10)}\n"
 
+    private val headerPine = "${createNewString("Description", 15)}${createNewString("Qty", 4)}" +
+            "${createNewString("Price", 6)}${createNewString("Amount", 6)}"
+
     private val headerGst = "${createNewString("GST %", 25)}${createNewString("CGST", 7)}" +
             "${createNewString("SGST", 8)}${createNewString("CESS", 10)}\n"
+
+    private val headerGstPine = "${createNewString("GST %", 8)}${createNewString("CGST", 8)}" +
+            "${createNewString("SGST", 8)}${createNewString("CESS", 8)}"
 
     fun isPrintSelected() = flow {
         emit(ApisResponse.Loading("Checking Printer"))
@@ -56,7 +65,7 @@ class PrintRepository {
     }.flowOn(IO)
 
 
-    fun doPrint(responseBody: PrintReceiptInfo,times:Int) = flow {
+    fun doPrint(responseBody: PrintReceiptInfo, times: Int) = flow {
         emit(ApisResponse.Loading("Please Wait Printing Receipt ${getEmojiByUnicode(0x1F5A8)}"))
 
         val data = try {
@@ -116,9 +125,9 @@ class PrintRepository {
 //"[C]<barcode type='128' width='40' text='above'>${responseBody.orderId}</barcode>\n"+
                 printer.printFormattedText(stringBuilder.toString())
                 printer.disconnectPrinter()
-                return@let if (times<2){
-                    ApisResponse.Success(Pair(responseBody,times+1))
-                }else{
+                return@let if (times < 2) {
+                    ApisResponse.Success(Pair(responseBody, times + 1))
+                } else {
                     ApisResponse.Success("Receipt Printed ${getEmojiByUnicode(0x1F5A8)}")
                 }
             } ?: ApisResponse.Error("Please connect to Printer", null)
@@ -195,6 +204,142 @@ class PrintRepository {
         emit(data)
     }.flowOn(IO)*/
 
+    fun doPineLabPrintInvoice(responseBody: PrintInvoice) = flow {
+        emit(ApisResponse.Loading("Please Wait Printing Invoice ${getEmojiByUnicode(0x1F5A8)}"))
+        val data = try {
+            val arr = ArrayList<Datum>()
+            arr.add(setPineLabPrintData(responseBody.headerTxt1))
+            arr.add(setPineLabPrintData(responseBody.headerTxt2))
+            arr.add(setPineLabPrintData(responseBody.headerTxt3))
+            arr.add(setPineLabPrintData(responseBody.headerTxt4))
+            arr.add(setPineLabPrintData(responseBody.headerTxt5))
+            arr.add(setPineLabPrintData(responseBody.headerTxt6))
+            arr.add(setPineLabPrintData(responseBody.headerTxt7))
+//            arr.add(line())
+//            arr.add(setPineLabPrintData(responseBody.billTypeTxt))
+            arr.add(line())
+            arr.add(setPineLabPrintData(responseBody.billType))
+            arr.add(line())
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt1))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt2))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt3))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt4))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt5))
+            arr.add(line())
+            arr.add(setPineLabPrintData(headerPine, false))
+            arr.add(line())
+            arr.add(
+                setPineLabPrintData(
+                    setBillInvoiceTable(
+                        responseBody.childitemList,
+                        descSize = 14,
+                        qty = 2,
+                        price = 8,
+                        amt = 8
+                    ),
+                    false
+                )
+            )
+            arr.add(line())
+            arr.add(setPineLabPrintData(headerGstPine, false))
+            arr.add(line())
+            arr.add(
+                setPineLabPrintData(
+                    setGstTable(
+                        responseBody.gstDetails,
+                        descSize = 8,
+                        qty = 8,
+                        price = 8,
+                        amt = 8
+                    ), false
+                )
+            )
+            arr.add(line())
+            arr.add(setPineLabPrintData("Amount Including GST $Rs_Symbol ${responseBody.amtIncGST}",false))
+            /*arr.add(
+                setPineLabPrintData(
+                    "${
+                        setPineLabPrintData(
+                            createNewString(
+                                "Amount Including GST",
+                                14
+                            )
+                        )
+                    } ${createNewString(responseBody.amtIncGST, 10)}", false
+                )
+            )*/
+            arr.add(line())
+            arr.add(setPineLabPrintData("Rounding Amt $Rs_Symbol ${responseBody.roundAmt}",false))
+            /*arr.add(
+                setPineLabPrintData(
+                    "${
+                        setPineLabPrintData(
+                            createNewString(
+                                "Rounding Amt",
+                                14
+                            )
+                        )
+                    } ${createNewString(responseBody.roundAmt, 10)}", false
+                )
+            )*/
+            arr.add(line())
+            arr.add(setPineLabPrintData("Rounding Total $Rs_Symbol ${getRoundingTotal(responseBody.amtIncGST, responseBody.roundAmt)}",false))
+            /*arr.add(
+                setPineLabPrintData(
+                    "${
+                        setPineLabPrintData(
+                            createNewString(
+                                "Rounding Total",
+                                14
+                            )
+                        )
+                    } ${
+                        createNewString(
+                            getRoundingTotal(responseBody.amtIncGST, responseBody.roundAmt),
+                            10
+                        )
+                    }", false
+                )
+            )*/
+            arr.add(line())
+            arr.add(setPineLabPrintData(setTenderTable(responseBody.paymentDetails, tenderSize = 16, amtSize = 16),false))
+            arr.add(line())
+            arr.add(setPineLabPrintData(responseBody.footerTxt1))
+            arr.add(setPineLabPrintData(responseBody.footerTxt2))
+            arr.add(setPineLabPrintData(responseBody.footerTxt3))
+            arr.add(setPineLabPrintData(responseBody.footerTxt4))
+            arr.add(setPineLabPrintData(responseBody.footerTxt5))
+            arr.add(setPineLabPrintData(responseBody.footerTxt6))
+            arr.add(line())
+            ApisResponse.Success(arr)
+        } catch (e: Exception) {
+            ApisResponse.Error(null, e)
+        }
+        emit(data)
+    }.flowOn(IO)
+
+
+    private fun setPineLabPrintData(msg: String, isCenterAlign: Boolean = true): Datum {
+        val datum = Datum()
+        datum.imageData = "0"
+        datum.dataToPrint = msg
+        datum.imagePath = "0"
+        datum.printDataType = "0"
+        datum.printerWidth = 32//AppConfig.PrinterWidth
+        datum.isCenterAligned = isCenterAlign
+        return datum
+    }
+
+    private fun line(): Datum {
+        val datum = Datum()
+        datum.imageData = "0"
+        datum.dataToPrint = "--------------------------------"
+        datum.imagePath = "0"
+        datum.printDataType = "0"
+        datum.isCenterAligned = true
+        datum.printerWidth = 32//AppConfig.PrinterWidth
+        return datum
+    }
 
     fun doPrintInvoice(responseBody: PrintInvoice) = flow {
         emit(ApisResponse.Loading("Please Wait Printing Invoice ${getEmojiByUnicode(0x1F5A8)}"))
@@ -203,7 +348,7 @@ class PrintRepository {
             connection?.let {
                 val printer = EscPosPrinter(connection, 203, 80f, 32)
                 val stringBuilder = StringBuilder()
-                val qrTxt=getScanQr(responseBody.qrPrint)
+                val qrTxt = getScanQr(responseBody.qrPrint)
                 stringBuilder.append(
                     "[C]$underLine" +
                             "[L][C]${responseBody.headerTxt1}\n" +
@@ -339,47 +484,76 @@ class PrintRepository {
     }
 
 
-    private fun setBillInvoiceTable(list: List<Childitem>): String {
+    private fun setBillInvoiceTable(
+        list: List<Childitem>,
+        descSize: Int = 25,
+        qty: Int = 7,
+        price: Int = 8,
+        amt: Int = 10
+    ): String {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
             val value =
-                "[L]${createNewString(item.description, 25)}${
+                "${if (descSize == 25) "[L]" else ""}${
+                    createNewString(
+                        item.description,
+                        descSize
+                    )
+                }${
                     createNewString(
                         item.qty.toString(),
-                        7
+                        qty
                     )
                 }" +
                         createNewString(
-                            ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(), 8
+                            ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(), price
                         ) +
                         "${
                             createNewString(
-                                ListOfFoodItemToSearchAdaptor.setPrice(item.amount).toString(), 10
+                                ListOfFoodItemToSearchAdaptor.setPrice(item.amount).toString(), amt
                             )
-                        }\n"
+                        }${if (descSize == 25) "\n" else ""}"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
     }
 
-    private fun setGstTable(list: List<GstDetail>): String {
+    private fun setGstTable(
+        list: List<GstDetail>,
+        descSize: Int = 25,
+        qty: Int = 7,
+        price: Int = 8,
+        amt: Int = 10
+    ): String {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
             val value =
-                "[L]${createNewString(item.gstPer, 25)}${createNewString(item.cGSTAmt, 7)}" +
-                        createNewString(item.sGSTAmt, 8) +
-                        "${createNewString(item.cessAmt, 10)}\n"
+                "${if (descSize == 25) "[L]" else ""}${createNewString(item.gstPer, descSize)}${
+                    createNewString(
+                        item.cGSTAmt,
+                        qty
+                    )
+                }" +
+                        createNewString(item.sGSTAmt, price) +
+                        "${createNewString(item.cessAmt, amt)}${if (descSize == 25) "\n" else ""}"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
     }
 
 
-    private fun setTenderTable(list: List<PaymentDetail>): String {
+    private fun setTenderTable(
+        list: List<PaymentDetail>,
+        tenderSize: Int = 40,
+        amtSize: Int = 10
+    ): String {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
-            val value = "[L]" + createNewString(item.tenderType, 40) +
-                    "${createNewString(item.amt, 10)}\n"
+            val value = (if (tenderSize == 40) "[L]" else "") + createNewString(
+                item.tenderType,
+                tenderSize
+            ) +
+                    "${createNewString(item.amt, amtSize)}${if (tenderSize == 25) "\n" else ""}"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()

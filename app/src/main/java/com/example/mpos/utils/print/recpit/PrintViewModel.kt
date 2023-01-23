@@ -28,6 +28,9 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
     val doPrintInvoicePrinting: LiveData<ApisResponse<out String>>
         get() = _doPrintInvoicePrinting
 
+    private val _doPrintPineInvoicePrinting = MutableLiveData<ApisResponse<out Serializable>>()
+    val doPrintPineInvoicePrinting: LiveData<ApisResponse<out Serializable>>
+        get() = _doPrintPineInvoicePrinting
 
     private val repo = PrintRepository()
 
@@ -59,6 +62,15 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             repo.doPrintInvoice(response).collectLatest {
                 _doPrintInvoicePrinting.postValue(it)
+            }
+        }
+    }
+
+
+    fun doPineLabPrintInvoice(response: PrintInvoice) {
+        viewModelScope.launch {
+            repo.doPineLabPrintInvoice(response).collectLatest {
+                _doPrintPineInvoicePrinting.postValue(it)
             }
         }
     }

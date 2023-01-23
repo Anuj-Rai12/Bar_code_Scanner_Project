@@ -446,7 +446,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 is ApisResponse.Success -> {
                     hidePb()
                     val billObj = confirmBillingRequest?.body!!
-                    //args.selectioncls.billingFromEDC
+                    //args.selectioncls.billingFromEDC for testing Reason Only
                     if (true) {
                         viewModel.sendBillingToEdcPaymentRequest(
                             BillingFromEDCRequest(
