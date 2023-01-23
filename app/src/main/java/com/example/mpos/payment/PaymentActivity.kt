@@ -34,7 +34,7 @@ class PaymentActivity : BasePineActivity() {
 
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
 
-
+    private var transactionType = ""
     private val receipt by lazy {
         intent.getStringExtra("Receipt")
     }
@@ -58,6 +58,10 @@ class PaymentActivity : BasePineActivity() {
         this.changeStatusBarColor(R.color.semi_white_color_two)
         binding = PrintTsetingLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        transactionType = savedInstanceState?.getString("TRANS") ?: ""
+
+
         val psh = PineServiceHelper.getInstance()
         psh.connect(this, this)
         createLogStatement("PAY", "RCPT -> $receipt")
@@ -98,12 +102,13 @@ class PaymentActivity : BasePineActivity() {
         getPaymentResponse()
 
         binding.cashPaymentBtn.setOnClickListener {
+            transactionType = "CASH"
             costDashBordViewModel.checkBillingFROMEDCStatus(
                 PaymentEdcRequest(
                     PaymentEdcRequestBody(
                         mPosDoc = receipt!!,
                         edcMachineStatus = true,
-                        paymentType = "CASH",
+                        paymentType = transactionType,
                         eDCResponse = ""
                     )
                 )
@@ -111,8 +116,10 @@ class PaymentActivity : BasePineActivity() {
         }
 
         binding.cardPaymentBtn.setOnClickListener {
-            createLogStatement("CARD",
-                "Amount is  is ${binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "")}")
+            createLogStatement(
+                "CARD",
+                "Amount is  is ${binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "")}"
+            )
 
             val amt = binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "").toDouble()
             val request = TransactionRequest()
@@ -133,7 +140,7 @@ class PaymentActivity : BasePineActivity() {
             detail.transactionType = "4001"//Card
             detail.mobileNumberForEChargeSlip = "9219141756"
             request.detail = detail
-
+            transactionType = "CARD"
             psh.callPineService(request)
 
         }
@@ -358,13 +365,23 @@ class PaymentActivity : BasePineActivity() {
 
     override fun sendResult(detailResponse: TransactionResponse?) {
         super.sendResult(detailResponse)
-        detailResponse?.let {transactionResponse ->
-            if (transactionResponse.response.responseCode==0){ //Success
-                Utils.createLogcat("PINE_SUC","$transactionResponse")
-            }else{
+        detailResponse?.let { transactionResponse ->
+            if (transactionResponse.response.responseCode == 0) { //Success
+                Utils.createLogcat("PINE_SUC", "$transactionResponse and $transactionType")
+                costDashBordViewModel.checkBillingFROMEDCStatus(
+                    PaymentEdcRequest(
+                        PaymentEdcRequestBody(
+                            mPosDoc = receipt!!,
+                            edcMachineStatus = true,
+                            paymentType = transactionType,
+                            eDCResponse = "$transactionResponse"
+                        )
+                    )
+                )
+            } else {
                 showErrorDialog(transactionResponse.response.responseMsg)
             }
-        }?:showErrorDialog("Oops Something Went Wrong")
+        } ?: showErrorDialog("Oops Something Went Wrong")
     }
 
     override fun showToast(msg: String?) {
@@ -379,4 +396,8 @@ class PaymentActivity : BasePineActivity() {
         Utils.createLogcat("PINE_Res", "Waiting...")
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("TRANS", transactionType)
+    }
 }
