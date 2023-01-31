@@ -119,7 +119,7 @@ class PaymentActivity : BasePineActivity() {
 
         binding.cashPaymentBtn.setOnClickListener {
             transactionType = "CASH"
-            callPaymentApi("")
+            callPaymentApi("1")//Cash Body
         }
 
         binding.cardPaymentBtn.setOnClickListener {
@@ -225,6 +225,7 @@ class PaymentActivity : BasePineActivity() {
                 }
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
+                    psh.connect(this, this)
                 }
                 is ApisResponse.Success -> {
                     hidePb()
@@ -488,6 +489,7 @@ class PaymentActivity : BasePineActivity() {
 
     override fun connectAgain() {
         Utils.createLogcat("PINE_Res", "Connect Again")
+        psh.connect(this, this)
     }
 
     override fun showWaitingDialog() {
