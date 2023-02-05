@@ -1,12 +1,14 @@
 package com.example.mpos.payment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
+import com.example.mpos.MainActivity
 import com.example.mpos.R
 import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
 import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
@@ -57,6 +59,9 @@ class PaymentActivity : BasePineActivity() {
     private val tblNo by lazy {
         intent.getStringExtra("tableNo")
     }
+
+    private var isPaymentCompleted: Boolean = false
+
     private lateinit var psh: PineServiceHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +72,7 @@ class PaymentActivity : BasePineActivity() {
         setContentView(binding.root)
 
         transactionType = savedInstanceState?.getString("TRANS") ?: ""
-
+        isPaymentCompleted = savedInstanceState?.getBoolean("PAYMENT_DONE") ?: false
 
         psh = PineServiceHelper.getInstance()
         psh.connect(this, this)
@@ -319,6 +324,7 @@ class PaymentActivity : BasePineActivity() {
                 is ApisResponse.Success -> {
                     hidePb()
                     //showErrorDialog("Working Fine", "Success", R.drawable.ic_success)
+                    isPaymentCompleted = true
                     costDashBordViewModel.getPrintBillInvoiceResponse(
                         PrintInvoiceRequest(
                             PrintInvoiceRequestBody("${it.data}")
@@ -371,12 +377,40 @@ class PaymentActivity : BasePineActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (isPaymentCompleted) {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("Show_main_scr", true)
+            startActivity(intent)
+            finishAffinity()
+        }
+    }
+
     private fun setBtn() {
         if (!paymentLs.isNullOrEmpty()) {
             binding.cardPaymentBtn.hide()
             binding.upiPaymentBtn.hide()
             binding.cashPaymentBtn.hide()
-            paymentLs?.forEach {
+            if (paymentLs!!.contains("Card")) {
+                binding.totalOrderAmt.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    bottomToTop = binding.cardPaymentBtn.id
+                }
+                binding.cardPaymentBtn.show()
+            }
+            if (paymentLs!!.contains("Cash")) {
+                binding.cashPaymentBtn.show()
+                binding.totalOrderAmt.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    bottomToTop = binding.cashPaymentBtn.id
+                }
+            }
+            if (paymentLs!!.contains("UPI")) {
+                binding.upiPaymentBtn.show()
+                binding.totalOrderAmt.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    bottomToTop = binding.upiPaymentBtn.id
+                }
+            }
+            /*paymentLs?.forEach {
                 if (it.equals("Card", true)) {
                     binding.cardPaymentBtn.show()
                     binding.totalOrderAmt.updateLayoutParams<ConstraintLayout.LayoutParams> {
@@ -395,7 +429,7 @@ class PaymentActivity : BasePineActivity() {
                         bottomToTop = binding.cashPaymentBtn.id
                     }
                 }
-            }
+            }*/
         }
     }
 
@@ -408,6 +442,14 @@ class PaymentActivity : BasePineActivity() {
         dialog.setMessage(msg)
         dialog.setIcon(ic)
         dialog.setPositiveButton("ok") { _, _ ->
+            if (ic == R.drawable.ic_success) {
+                onBackPressed()
+            }
+        }
+        dialog.setOnDismissListener {
+            if (ic == R.drawable.ic_success) {
+                onBackPressed()
+            }
         }
         dialog.show()
     }
@@ -469,14 +511,17 @@ class PaymentActivity : BasePineActivity() {
         detailResponse?.let { transactionResponse ->
             if (transactionResponse.response.responseCode == 0) { //Success
                 Utils.createLogcat("PINE_SUC", "$transactionResponse and $transactionType")
-                if (transactionResponse.header.methodId != "1002")
+                if (transactionResponse.header.methodId != "1002") {
                     callPaymentApi("$transactionResponse")
-                else
+                } else {
                     showErrorDialog(
                         "Order Completed!! ${getEmojiByUnicode(0x2705)}",
                         "Success",
                         R.drawable.ic_success
                     )
+                    isPaymentCompleted = true
+                    binding.orderRecycleView.hide()
+                }
             } else {
                 showErrorDialog(transactionResponse.response.responseMsg)
             }
@@ -499,5 +544,6 @@ class PaymentActivity : BasePineActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("TRANS", transactionType)
+        outState.putBoolean("PAYMENT_DONE", isPaymentCompleted)
     }
 }
