@@ -110,10 +110,18 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                     )
                 }
                 else -> {
-                    SplashScreenFragmentDirections.actionSplashScreenFragmentToTableManagementOrCostEstimate(data!!)
+                    null
                 }
             }
-            findNavController().safeNavigate(action)
+            action?.let {
+                findNavController().safeNavigate(action)
+            }
+            if (action==null){
+                val item=Bundle()
+                item.putParcelable("TBL_VALUE",data!!)
+                findNavController().navigate(R.id.action_splashScreenFragment_to_tableManagementOrCostEstimate,item)
+            }
+
         }
     }
 

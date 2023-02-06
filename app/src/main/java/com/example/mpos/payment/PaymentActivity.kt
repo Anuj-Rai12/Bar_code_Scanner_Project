@@ -15,6 +15,7 @@ import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
 import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequestBody
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequestBody
+import com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse
 import com.example.mpos.data.table_info.model.json.TableDetail
 import com.example.mpos.databinding.PrintTsetingLayoutBinding
 import com.example.mpos.payment.pine.AppConfig
@@ -58,6 +59,10 @@ class PaymentActivity : BasePineActivity() {
 
     private val tblNo by lazy {
         intent.getStringExtra("tableNo")
+    }
+
+    private val apk by lazy {
+        intent.getParcelableExtra<ApkLoginJsonResponse>("TBL_VALUE")
     }
 
     private var isPaymentCompleted: Boolean = false
@@ -382,6 +387,7 @@ class PaymentActivity : BasePineActivity() {
         if (isPaymentCompleted) {
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra("Show_main_scr", true)
+            intent.putExtra("TBL_VALUE", apk)
             startActivity(intent)
             finishAffinity()
         }

@@ -6,8 +6,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.mpos.R
+import com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse
 import com.example.mpos.databinding.TableOrCostLayoutBinding
 import com.example.mpos.ui.login.viewmodel.LoginScreenViewModel
 import com.example.mpos.ui.tableorcost.adaptor.TableManagementOrCostRecyclerAdaptor
@@ -21,14 +21,17 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
 
     private lateinit var binding: TableOrCostLayoutBinding
     private lateinit var tableManagementOrCostRecyclerAdaptor: TableManagementOrCostRecyclerAdaptor
-    private val args: TableManagementOrCostEstimateArgs by navArgs()
+    private val args by lazy { 
+        arguments?.getParcelable<ApkLoginJsonResponse>("TBL_VALUE") ?:
+        activity?.intent?.getParcelableExtra("TBL_VALUE")
+    }
     private val viewModel: LoginScreenViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor()
         binding = TableOrCostLayoutBinding.bind(view)
-        binding.mposId3.text = args.information.storeName
+        binding.mposId3.text = args?.storeName
         setRecycleView()
         setData()
         getLogOutResponse()
@@ -85,7 +88,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
 
     private fun setData() {
         val list = mutableListOf<SelectionDataClass>()
-        args.information.screenList.forEach { item ->
+        args?.screenList?.forEach { item ->
             val value =
                 item.screenList.trim().uppercase(Locale.getDefault()).replace("\\s".toRegex(), "")
             Log.i("ITEMS", "setData: $value")
@@ -97,10 +100,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_waiter,
                             TABLEMGT.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode,
+                            args?.itemScanWithBarcode!!,
                             item.uPICode,
                             item.billingFromEDC,
-                            item.paymentLs
+                            item.paymentLs,
+                            args!!
                         )
                     )
                 }
@@ -111,10 +115,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_table_dinner,
                             TABLERESERVATION.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode,
+                            args?.itemScanWithBarcode!!,
                             item.uPICode,
                             item.billingFromEDC,
-                            item.paymentLs
+                            item.paymentLs,
+                            args!!
                         )
                     )
                 }
@@ -125,10 +130,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_cost_estimation,
                             ESTIMATION.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode,
+                            args?.itemScanWithBarcode!!,
                             item.uPICode,
                             item.billingFromEDC,
-                            item.paymentLs
+                            item.paymentLs,
+                            args!!
                         )
                     )
                 }
@@ -139,10 +145,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_receipt_bill,
                             BILLING.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode,
+                            args?.itemScanWithBarcode!!,
                             item.uPICode,
                             item.billingFromEDC,
-                            item.paymentLs
+                            item.paymentLs,
+                            args!!
                         )
                     )
                 }
@@ -153,10 +160,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.showroom_estimation,
                             SHOWROOMESTIMATE.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode,
+                            args?.itemScanWithBarcode!!,
                             item.uPICode,
                             item.billingFromEDC,
-                            item.paymentLs
+                            item.paymentLs,
+                            args!!
                         )
                     )
                 }
@@ -167,10 +175,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.restaurant_estimation,
                             RESTAURANTESTIMATE.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode,
+                            args?.itemScanWithBarcode!!,
                             item.uPICode,
                             item.billingFromEDC,
-                            item.paymentLs
+                            item.paymentLs,
+                            args!!
                         )
                     )
                 }
@@ -181,10 +190,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_receipt_bill,
                             SHOWROOMESTIMATE.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode,
+                            args?.itemScanWithBarcode!!,
                             item.uPICode,
                             item.billingFromEDC,
-                            item.paymentLs
+                            item.paymentLs,
+                            args!!
                         )
                     )
                 }
@@ -195,10 +205,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             R.drawable.ic_receipt_bill,
                             RESTAURANTBILLING.name,
                             item.dynamicMenuEnable,
-                            args.information.itemScanWithBarcode,
+                            args?.itemScanWithBarcode!!,
                             item.uPICode,
                             item.billingFromEDC,
-                            item.paymentLs
+                            item.paymentLs,
+                            args!!
                         )
                     )
                 }
@@ -246,7 +257,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
             when (valueOf(selection.type)) {
                 TABLEMGT -> {
                     TableManagementOrCostEstimateDirections
-                        .actionTableManagementOrCostEstimateToTableManagementFragment(args.information.storeName,selection)
+                        .actionTableManagementOrCostEstimateToTableManagementFragment(args?.storeName!!,selection)
                 }
                 ESTIMATION -> {
                     TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToCostDashBoardFragment(
@@ -297,7 +308,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                 }
             }
         RestaurantSingletonCls.getInstance().getScreenType()?.let {
-            findNavController().safeNavigate(action)
+            findNavController().navigate(action)
         } ?: binding.root.showSandbar("Cannot Navigate to Screen")
     }
 

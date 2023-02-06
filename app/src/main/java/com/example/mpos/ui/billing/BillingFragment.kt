@@ -529,6 +529,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     intent.putExtra("upiCode", args.selectioncls.uPICode)
                     intent.putExtra("payment", pay)
                     intent.putExtra("tableNo", "1")
+                    intent.putExtra("TBL_VALUE",args.selectioncls.apk)
                     startActivity(intent)
                 }
             }

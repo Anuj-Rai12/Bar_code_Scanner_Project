@@ -104,9 +104,9 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
     }
 
     private fun nextFrag(storeNumber: ApkLoginJsonResponse) {
-        val action =
-            LoginScreenFragmentDirections.actionLoginScreenFragmentToTableManagementOrCostEstimate(storeNumber)
-        findNavController().safeNavigate(action)
+        val item=Bundle()
+        item.putParcelable("TBL_VALUE",storeNumber)
+        findNavController().navigate(R.id.action_loginScreenFragment_to_tableManagementOrCostEstimate,item)
     }
 
 

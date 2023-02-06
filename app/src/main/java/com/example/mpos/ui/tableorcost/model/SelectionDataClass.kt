@@ -1,6 +1,7 @@
 package com.example.mpos.ui.tableorcost.model
 
 import android.os.Parcelable
+import com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse
 import kotlinx.parcelize.Parcelize
 
 
@@ -13,7 +14,8 @@ data class SelectionDataClass(
     val isBarcodeVisible: Boolean,
     val uPICode: String,
     val billingFromEDC: Boolean,
-    val paymentLs: List<String>
+    val paymentLs: List<String>,
+    val apk:ApkLoginJsonResponse
 ) : Parcelable {
     companion object {
         fun generateData(
@@ -24,7 +26,8 @@ data class SelectionDataClass(
             isBarcodeVisible: Boolean,
             upi: String,
             billingFromEDC: Boolean,
-            paymentLs: List<String>
+            paymentLs: List<String>,
+            apk: ApkLoginJsonResponse
         ): SelectionDataClass {
             return SelectionDataClass(
                 image = img,
@@ -34,7 +37,8 @@ data class SelectionDataClass(
                 isBarcodeVisible = isBarcodeVisible,
                 uPICode = upi,
                 billingFromEDC = billingFromEDC,
-                paymentLs = paymentLs
+                paymentLs = paymentLs,
+                apk =apk
             )
         }
 
