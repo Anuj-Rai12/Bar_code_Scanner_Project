@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.example.mpos.payment
 
 import android.annotation.SuppressLint
@@ -67,6 +69,7 @@ class PaymentActivity : BasePineActivity() {
 
     private var isPaymentCompleted: Boolean = false
 
+    private var transactionDone: String? = null
     private lateinit var psh: PineServiceHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +81,7 @@ class PaymentActivity : BasePineActivity() {
 
         transactionType = savedInstanceState?.getString("TRANS") ?: ""
         isPaymentCompleted = savedInstanceState?.getBoolean("PAYMENT_DONE") ?: false
+        transactionDone = savedInstanceState?.getString("PAYMENT_BODY_DONE", "")
 
         psh = PineServiceHelper.getInstance()
         psh.connect(this, this)
@@ -85,6 +89,7 @@ class PaymentActivity : BasePineActivity() {
         createLogStatement("PAY", "UPI -> $upiCode")
         createLogStatement("PAY", "PAYMENT -> $paymentLs")
         createLogStatement("PAY", "TBL -> $tblNo")
+        createLogStatement("PAY", "transaction -> $transactionDone")
 
         confirmOrderViewModel.event.observe(this) {
             it.getContentIfNotHandled()?.let { map ->
@@ -128,17 +133,42 @@ class PaymentActivity : BasePineActivity() {
         getBillPrintResponse()
 
         binding.cashPaymentBtn.setOnClickListener {
+            if (isPaymentCompleted && transactionDone == null) {
+                costDashBordViewModel.getPrintBillInvoiceResponse(
+                    PrintInvoiceRequest(
+                        PrintInvoiceRequestBody("$receipt")
+                    )
+                )
+                return@setOnClickListener
+            }
             transactionType = "CASH"
             callPaymentApi("1")//Cash Body
         }
 
         binding.cardPaymentBtn.setOnClickListener {
+
+            if (isPaymentCompleted) {
+                //Print Only
+                costDashBordViewModel.getPrintBillInvoiceResponse(
+                    PrintInvoiceRequest(
+                        PrintInvoiceRequestBody("$receipt")
+                    )
+                )
+                return@setOnClickListener
+            }
+
+            if (transactionDone != null) {
+                //Card done
+                callPaymentApi("$transactionDone")
+                return@setOnClickListener
+            }
+
             createLogStatement(
                 "CARD",
                 "Amount is  is ${binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "")}"
             )
 
-            val amt = binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "").toDouble()
+            val amt = 101//binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "").toDouble()
             val request = TransactionRequest()
             request.aPP_ID = AppConfig.APP_ID
             //Setting header
@@ -383,13 +413,15 @@ class PaymentActivity : BasePineActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         if (isPaymentCompleted) {
+            super.onBackPressed()
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra("Show_main_scr", true)
             intent.putExtra("TBL_VALUE", apk)
             startActivity(intent)
             finishAffinity()
+        } else {
+            return
         }
     }
 
@@ -441,12 +473,13 @@ class PaymentActivity : BasePineActivity() {
 
 
     private fun showErrorDialog(
-        msg: String, type: String = "Failed", ic: Int = R.drawable.ic_error
+        msg: String, type: String = "Failed", ic: Int = R.drawable.ic_error,isCancelAble:Boolean=true
     ) {
         val dialog = AlertDialog.Builder(this@PaymentActivity)
         dialog.setTitle(type)
         dialog.setMessage(msg)
         dialog.setIcon(ic)
+        dialog.setCancelable(isCancelAble)
         dialog.setPositiveButton("ok") { _, _ ->
             if (ic == R.drawable.ic_success) {
                 onBackPressed()
@@ -518,7 +551,8 @@ class PaymentActivity : BasePineActivity() {
             if (transactionResponse.response.responseCode == 0) { //Success
                 Utils.createLogcat("PINE_SUC", "$transactionResponse and $transactionType")
                 if (transactionResponse.header.methodId != "1002") {
-                    callPaymentApi("$transactionResponse")
+                    transactionDone="$transactionResponse"
+                    callPaymentApi(transactionDone!!)
                 } else {
                     showErrorDialog(
                         "Order Completed!! ${getEmojiByUnicode(0x2705)}",
@@ -551,5 +585,6 @@ class PaymentActivity : BasePineActivity() {
         super.onSaveInstanceState(outState)
         outState.putString("TRANS", transactionType)
         outState.putBoolean("PAYMENT_DONE", isPaymentCompleted)
+        outState.putString("PAYMENT_BODY_DONE", transactionDone)
     }
 }

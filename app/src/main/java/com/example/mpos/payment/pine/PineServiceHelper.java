@@ -121,7 +121,7 @@ public class PineServiceHelper {
                 }
             } catch (RemoteException e) {
 
-              //  System.err.println(e);
+                //  System.err.println(e);
 
                 e.printStackTrace();
             }
@@ -172,7 +172,7 @@ public class PineServiceHelper {
                 case MASTER_APP:
                     bundle = msg.getData();
                     value = bundle.getString(AppConfig.RESPONSE_KEY);
-
+                    Log.i("TRANS_AMT", "handleMessage: MASTER_APP  "+value);
                     BaseResponse response = GsonUtils.fromStringToJson(value, BaseResponse.class);
                     if (response != null) {
                         value = response.getResponseMessage();
@@ -184,6 +184,7 @@ public class PineServiceHelper {
                 case BILLING_APP:
                     bundle = msg.getData();
                     value = bundle.getString(AppConfig.RESPONSE_KEY);
+                    Log.i("TRANS_AMT", "handleMessage: BILLING_APP  "+value);
                     TransactionResponse detailResponse = GsonUtils.fromStringToJson(value, TransactionResponse.class);
 
 
