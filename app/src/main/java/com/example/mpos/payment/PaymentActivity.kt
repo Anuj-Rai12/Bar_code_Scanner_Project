@@ -168,7 +168,7 @@ class PaymentActivity : BasePineActivity() {
                 "Amount is  is ${binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "")}"
             )
 
-            val amt = 101//binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "").toDouble()
+            val amt = binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "").toDouble()
             val request = TransactionRequest()
             request.aPP_ID = AppConfig.APP_ID
             //Setting header
