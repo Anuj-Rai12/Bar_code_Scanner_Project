@@ -13,6 +13,7 @@ import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
 import com.example.mpos.data.costestimation.request.CostEstimation
+import com.example.mpos.data.printkot.PrintKotRequest
 import com.example.mpos.dataStore.UserSoredData
 import com.example.mpos.di.RetrofitInstance
 import com.example.mpos.ui.cost.repo.CostDashBoardRepository
@@ -53,6 +54,9 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
     val printBillInvoice: LiveData<ApisResponse<out Any?>>
         get() = _printBillInvoice
 
+    private val _printBillKOTInvoice = MutableLiveData<ApisResponse<out Any?>>()
+    val printBillKOTInvoice: LiveData<ApisResponse<out Any?>>
+        get() = _printBillKOTInvoice
 
     private val _checkBillingStatus = MutableLiveData<ApisResponse<out String?>>()
     val checkBillingStatus: LiveData<ApisResponse<out String?>>
@@ -96,6 +100,7 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
         _confirmBillingResponse.postValue(null)
         _sendBillingToEdc.postValue(null)
         _printBillInvoice.postValue(null)
+        _printBillKOTInvoice.postValue(null)
         _checkBillingStatus.postValue(null)
     }
 
@@ -190,6 +195,18 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
         viewModelScope.launch {
             repository?.getPrintInvoice(request)?.collectLatest {
                 _printBillInvoice.postValue(it)
+            } ?: _events.postValue(Events("Oops Repository is Not Set Up!!"))
+        }
+    }
+
+    fun getPrintBillKOTInvoiceResponse(request: PrintKotRequest) {
+        if (!app.isNetworkAvailable()) {
+            _events.postValue(Events("No Internet Connection Found!!"))
+            return
+        }
+        viewModelScope.launch {
+            repository?.getPrintKOTInvoice(request)?.collectLatest {
+                _printBillKOTInvoice.postValue(it)
             } ?: _events.postValue(Events("Oops Repository is Not Set Up!!"))
         }
     }

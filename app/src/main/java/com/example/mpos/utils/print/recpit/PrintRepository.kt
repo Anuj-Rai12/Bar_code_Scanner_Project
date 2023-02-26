@@ -10,6 +10,7 @@ import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnection
 import com.example.mpos.data.billing.printInvoice.json.*
 import com.example.mpos.data.confirmOrder.response.json.ItemList
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
+import com.example.mpos.data.printkot.json.PrintKotInvoice
 import com.example.mpos.payment.pine.AppConfig
 import com.example.mpos.payment.pine.request.Datum
 import com.example.mpos.payment.qr.CreateQr
@@ -157,70 +158,6 @@ class PrintRepository {
     }.flowOn(IO)
 
 
-    /*fun deleteFun(responseBody: PrintInvoice) = flow {
-        emit(ApisResponse.Loading("Please Wait Printing Invoice ${getEmojiByUnicode(0x1F5A8)}"))
-        val data = try {
-            val stringBuilder = StringBuilder()
-            stringBuilder.append(
-                "[C]$line" +
-                        "[L][C]${responseBody.headerTxt1}\n" +
-                        "[L][C]" + "${responseBody.headerTxt2}\n" +
-                        "[L][C]" + "${responseBody.headerTxt3}\n" +
-                        "[L][C]" + "${responseBody.headerTxt4}\n" +
-                        "[L][C]" + "${responseBody.headerTxt5}\n" +
-                        "[L][C]" + "${responseBody.headerTxt6}\n" +
-                        "[L][C]" + "${responseBody.headerTxt7}\n" +
-                        "[C]$line" +
-                        "[L][C]" + "${responseBody.billTypeTxt}\n" +
-                        "[C]$line" +
-                        "[L][C]" + "${responseBody.billType}\n" +
-                        "[C]$line" +
-                        "[L][C] ${responseBody.subHeaderTxt1}" + "\n" +
-                        "[L][C] ${responseBody.subHeaderTxt2}" + "\n" +
-                        "[L][C] ${responseBody.subHeaderTxt3}" + "\n" +
-                        "[L][C] ${responseBody.subHeaderTxt4}" + "\n" +
-                        "[L][C] ${responseBody.subHeaderTxt5}" + "\n" +
-                        "[C]$line" +
-                        "[L]" + header +
-                        "[C]$line" +
-                        setBillInvoiceTable(responseBody.childitemList) +
-                        "[C]$line" +
-                        "[L]" + createNewString("Total", 40) +
-                        "${createNewString(responseBody.baseAmount, 10)}\n" +
-                        "[C]$line" +
-                        "[L]" + headerGst +
-                        "[C]$line" +
-                        setGstTable(responseBody.gstDetails) +
-                        "[C]$line" +
-                        "[L]" + createNewString("Amount Including GST", 40) +
-                        "${createNewString(responseBody.amtIncGST, 10)}\n" +
-                        "[C]$line" +
-                        "[L]" + createNewString("Rounding Amt", 40) +
-                        "${createNewString(responseBody.roundAmt, 10)}\n" +
-                        "[C]$line" +
-                        "[L]" + createNewString("Rounding Total", 40) +
-                        "${createNewString(getRoundingTotal(responseBody.amtIncGST, responseBody.roundAmt), 10)}\n" +
-                        "[C]$line" +
-                        setTenderTable(responseBody.paymentDetails) +
-                        "[C]$line" +
-                        "[L][C]${responseBody.footerTxt1}\n" +
-                        "[L][C]${responseBody.footerTxt2}\n" +
-                        "[L][C]${responseBody.footerTxt3}\n" +
-                        "[L][C]${responseBody.footerTxt4}\n" +
-                        "[L][C]${responseBody.footerTxt5}\n" +
-                        "[L][C]${responseBody.footerTxt6}\n" +
-                        "[L][C]${responseBody.footerTxt7}\n" +
-                        "[C]$line"
-            )
-
-            Log.i("PRINT_ANUJ", "deleteFun:success $stringBuilder")
-            ApisResponse.Success("Success will do it")
-        } catch (e: Exception) {
-            ApisResponse.Error(null, e)
-        }
-        emit(data)
-    }.flowOn(IO)*/
-
     fun doPineLabPrintInvoice(responseBody: PrintInvoice) = flow {
         emit(ApisResponse.Loading("Please Wait Printing Invoice ${getEmojiByUnicode(0x1F5A8)}"))
         val data = try {
@@ -232,8 +169,6 @@ class PrintRepository {
             arr.add(setPineLabPrintData(responseBody.headerTxt5))
             arr.add(setPineLabPrintData(responseBody.headerTxt6))
             arr.add(setPineLabPrintData(responseBody.headerTxt7))
-//            arr.add(line())
-//            arr.add(setPineLabPrintData(responseBody.billTypeTxt))
             arr.add(line())
             arr.add(setPineLabPrintData(responseBody.billType))
             arr.add(line())
@@ -278,32 +213,8 @@ class PrintRepository {
                     "Amount Including GST $Rs_Symbol ${responseBody.amtIncGST}", false
                 )
             )
-            /*arr.add(
-                setPineLabPrintData(
-                    "${
-                        setPineLabPrintData(
-                            createNewString(
-                                "Amount Including GST",
-                                14
-                            )
-                        )
-                    } ${createNewString(responseBody.amtIncGST, 10)}", false
-                )
-            )*/
             arr.add(line())
             arr.add(setPineLabPrintData("Rounding Amt $Rs_Symbol ${responseBody.roundAmt}", false))
-            /*arr.add(
-                setPineLabPrintData(
-                    "${
-                        setPineLabPrintData(
-                            createNewString(
-                                "Rounding Amt",
-                                14
-                            )
-                        )
-                    } ${createNewString(responseBody.roundAmt, 10)}", false
-                )
-            )*/
             arr.add(line())
             arr.add(
                 setPineLabPrintData(
@@ -314,23 +225,6 @@ class PrintRepository {
                     }", false
                 )
             )
-            /*arr.add(
-                setPineLabPrintData(
-                    "${
-                        setPineLabPrintData(
-                            createNewString(
-                                "Rounding Total",
-                                14
-                            )
-                        )
-                    } ${
-                        createNewString(
-                            getRoundingTotal(responseBody.amtIncGST, responseBody.roundAmt),
-                            10
-                        )
-                    }", false
-                )
-            )*/
             arr.add(line())
             arr.add(
                 setPineLabPrintData(
@@ -378,6 +272,62 @@ class PrintRepository {
         emit(data)
     }.flowOn(IO)
 
+    fun doPineLabPrintKOTInvoice(responseBody: PrintKotInvoice) = flow {
+        emit(ApisResponse.Loading("Please Wait Printing KOT Invoice ${getEmojiByUnicode(0x1F5A8)}"))
+        val data = try {
+            val item = mutableListOf<Childitem>()
+            responseBody.childitemList.forEach { res ->
+                item.add(
+                    Childitem(
+                        amount = res.amount,
+                        description = res.description,
+                        itemcode = res.itemcode,
+                        price = res.price,
+                        qty = res.qty.toInt()
+                    )
+                )
+            }
+            val arr = ArrayList<Datum>()
+            arr.add(setPineLabPrintData(responseBody.headerTxt1))
+            arr.add(setPineLabPrintData(responseBody.headerTxt2))
+            arr.add(setPineLabPrintData(responseBody.headerTxt3))
+            arr.add(setPineLabPrintData(responseBody.headerTxt4))
+            arr.add(setPineLabPrintData(responseBody.headerTxt5))
+            arr.add(setPineLabPrintData(responseBody.headerTxt6))
+            arr.add(setPineLabPrintData(responseBody.headerTxt7))
+            arr.add(line())
+            arr.add(setPineLabPrintData(responseBody.billType))
+            arr.add(line())
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt1))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt2))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt3))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt4))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt5))
+            arr.add(line())
+            arr.add(setPineLabPrintData(headerPine, false))
+            arr.add(line())
+            arr.add(
+                setPineLabPrintData(
+                    setBillInvoiceTable(
+                        item, descSize = 14, qty = 2, price = 8, amt = 8
+                    ), false
+                )
+            )
+            arr.add(line())
+            arr.add(
+                setPineLabPrintData(
+                    "Base Amount $Rs_Symbol ${responseBody.baseAmount}",
+                    false
+                )
+            )
+            arr.add(line())
+            ApisResponse.Success(arr)
+        } catch (e: Exception) {
+            ApisResponse.Error(null, e)
+        }
+        emit(data)
+
+    }.flowOn(IO)
 
     private fun setPineLabPrintData(msg: String, isCenterAlign: Boolean = true): Datum {
         val datum = Datum()
@@ -570,7 +520,7 @@ class PrintRepository {
 
 
     private fun setVATable(
-        list: List<VatDetail>, percentage: Int=10, baseAmt: Int=10, vatAmt: Int=10
+        list: List<VatDetail>, percentage: Int = 10, baseAmt: Int = 10, vatAmt: Int = 10
     ): String {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
@@ -586,8 +536,8 @@ class PrintRepository {
         return stringBuilder.toString()
     }
 
-    private fun getDigitOnlyValue(string: String,addon:String="%"): String {
-        return string.filter { it.isDigit() || it == '.' }+addon
+    private fun getDigitOnlyValue(string: String, addon: String = "%"): String {
+        return string.filter { it.isDigit() || it == '.' } + addon
     }
 
 

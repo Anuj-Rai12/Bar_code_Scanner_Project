@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
+import com.example.mpos.data.printkot.json.PrintKotInvoice
 import com.example.mpos.utils.ApisResponse
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
@@ -31,6 +32,11 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
     private val _doPrintPineInvoicePrinting = MutableLiveData<ApisResponse<out Serializable>>()
     val doPrintPineInvoicePrinting: LiveData<ApisResponse<out Serializable>>
         get() = _doPrintPineInvoicePrinting
+
+
+    private val _doPrintPineKOTInvoicePrinting = MutableLiveData<ApisResponse<out Serializable>>()
+    val doPrintPineKOTInvoicePrinting: LiveData<ApisResponse<out Serializable>>
+        get() = _doPrintPineKOTInvoicePrinting
 
     private val repo = PrintRepository()
 
@@ -78,6 +84,14 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
     override fun onCleared() {
         viewModelScope.cancel()
         super.onCleared()
+    }
+
+    fun doPrintKotInvoice(printInvoice: PrintKotInvoice) {
+        viewModelScope.launch {
+            repo.doPineLabPrintKOTInvoice(printInvoice).collectLatest {
+                _doPrintPineKOTInvoicePrinting.postValue(it)
+            }
+        }
     }
 
 

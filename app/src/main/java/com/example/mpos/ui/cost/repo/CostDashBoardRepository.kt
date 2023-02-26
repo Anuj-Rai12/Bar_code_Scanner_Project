@@ -11,6 +11,8 @@ import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
 import com.example.mpos.data.costestimation.request.CostEstimation
+import com.example.mpos.data.printkot.PrintKotRequest
+import com.example.mpos.data.printkot.json.PrintKotInvoice
 import com.example.mpos.ui.menu.repo.MenuRepository
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.buildApi
@@ -217,6 +219,48 @@ class CostDashBoardRepository(retrofit: Retrofit) {
             PrintRepository.setCashAnalytics(e)
             ApisResponse.Error("Cannot Fetch Invoice Response as it is Empty", null)
         } catch (e: Exception) {
+            PrintRepository.setCashAnalytics(e)
+            Log.e("PRINT_INVOICE", "getPrintInvoice: ${e.javaClass.canonicalName}")
+            ApisResponse.Error(null, e)
+        }
+        emit(data)
+    }.flowOn(IO)
+
+
+    fun getPrintKOTInvoice(request: PrintKotRequest) = flow {
+        emit(ApisResponse.Loading("Loading Print KOT Bill Invoice"))
+        val data = try {
+            val response = billingApi.getPrintKOTResponse(request = request)
+            if (response.isSuccessful) {
+                response.body()?.let { res ->
+                    if (!res.responseForBody?.value.isNullOrEmpty()) {
+                        deserializeFromJson<PrintKotInvoice>(res.responseForBody?.value)?.let {
+                            if (it.childitemList.isEmpty()){
+                                ApisResponse.Error("Cannot find the Order Item Detail",null)
+                            }else{
+                                ApisResponse.Success(it)
+                            }
+                        } ?: ApisResponse.Error("Cannot Generate Invoice Body", null)
+                    } else {
+                        ApisResponse.Error(
+                            "No Invoice is Found for the Receipt ${request.body?.mDocNo}",
+                            null
+                        )
+                    }
+                } ?: ApisResponse.Error(MenuRepository.nullError, null)
+            } else {
+                ApisResponse.Error(MenuRepository.err, null)
+            }
+        }
+        catch (e: JsonSyntaxException) {
+            PrintRepository.setCashAnalytics(e)
+            ApisResponse.Error("Response is Not Match with Pint Invoice Syntax", null)
+        }
+        catch (e: RuntimeException) {
+            PrintRepository.setCashAnalytics(e)
+            ApisResponse.Error("Cannot Fetch Invoice Response as it is Empty", null)
+        }
+        catch (e: Exception) {
             PrintRepository.setCashAnalytics(e)
             Log.e("PRINT_INVOICE", "getPrintInvoice: ${e.javaClass.canonicalName}")
             ApisResponse.Error(null, e)

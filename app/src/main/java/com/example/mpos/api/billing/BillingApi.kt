@@ -12,6 +12,10 @@ import com.example.mpos.data.checkBillingStatus.CheckBillingStatusRequest
 import com.example.mpos.data.checkBillingStatus.CheckBillingStatusResponse
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcResponse
+import com.example.mpos.data.printbIll.PrintBillRequest
+import com.example.mpos.data.printbIll.PrintBillResponse
+import com.example.mpos.data.printkot.PrintKotRequest
+import com.example.mpos.data.printkot.PrintKotResponse
 import com.example.mpos.utils.AllStringConst
 import retrofit2.Response
 import retrofit2.http.Body
@@ -59,5 +63,11 @@ interface BillingApi {
     @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.printBillInvoice}")
     @POST(AllStringConst.End_point)
     suspend fun getPrintBillInvoiceResponse(@Body request: PrintInvoiceRequest): Response<PrintInvoiceResponse>
+
+
+
+    @Headers("${AllStringConst.SoapAction.HeaderKey}${AllStringConst.SoapAction.printKot}")
+    @POST(AllStringConst.End_point)
+    suspend fun getPrintKOTResponse(@Body request: PrintKotRequest): Response<PrintKotResponse>
 
 }

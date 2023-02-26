@@ -18,6 +18,9 @@ import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequestBod
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequestBody
 import com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse
+import com.example.mpos.data.printkot.PrintKotForEDCBody
+import com.example.mpos.data.printkot.PrintKotRequest
+import com.example.mpos.data.printkot.json.PrintKotInvoice
 import com.example.mpos.data.table_info.model.json.TableDetail
 import com.example.mpos.databinding.PrintTsetingLayoutBinding
 import com.example.mpos.payment.pine.AppConfig
@@ -63,14 +66,14 @@ class PaymentActivity : BasePineActivity() {
         intent.getStringExtra("tableNo")
     }
     private val kotPrintFromEDC by lazy {
-        intent.getBooleanExtra("KOTPrintFromEDC",false)
+        intent.getBooleanExtra("KOTPrintFromEDC", false)
     }
     private val apk by lazy {
         intent.getParcelableExtra<ApkLoginJsonResponse>("TBL_VALUE")
     }
 
     private var isPaymentCompleted: Boolean = false
-
+    private var kotPrintISDONE = false
     private var transactionDone: String? = null
     private lateinit var psh: PineServiceHelper
 
@@ -83,11 +86,13 @@ class PaymentActivity : BasePineActivity() {
 
         transactionType = savedInstanceState?.getString("TRANS") ?: ""
         isPaymentCompleted = savedInstanceState?.getBoolean("PAYMENT_DONE") ?: false
+        kotPrintISDONE = savedInstanceState?.getBoolean("KOT_PRINT_DONE") ?: false
         transactionDone = savedInstanceState?.getString("PAYMENT_BODY_DONE", "")
 
         psh = PineServiceHelper.getInstance()
         psh.connect(this, this)
         createLogStatement("PAY", "RCPT -> $receipt")
+        createLogStatement("PAY", "KOT -> $kotPrintFromEDC")
         createLogStatement("PAY", "UPI -> $upiCode")
         createLogStatement("PAY", "PAYMENT -> $paymentLs")
         createLogStatement("PAY", "TBL -> $tblNo")
@@ -131,16 +136,25 @@ class PaymentActivity : BasePineActivity() {
 
         //paymentResponse
         getPaymentResponse()
+        getPrintKOTInvoiceResponse()
         getPrintInvoiceResponse()
+
+        getBillPrintKOTResponse()
         getBillPrintResponse()
 
         binding.cashPaymentBtn.setOnClickListener {
             if (isPaymentCompleted && transactionDone == null) {
-                costDashBordViewModel.getPrintBillInvoiceResponse(
-                    PrintInvoiceRequest(
-                        PrintInvoiceRequestBody("$receipt")
+                if (!kotPrintFromEDC) {
+                    costDashBordViewModel.getPrintBillInvoiceResponse(
+                        PrintInvoiceRequest(
+                            PrintInvoiceRequestBody("$receipt")
+                        )
                     )
-                )
+                } else {
+                    costDashBordViewModel.getPrintBillKOTInvoiceResponse(
+                        PrintKotRequest(PrintKotForEDCBody("$receipt"))
+                    )
+                }
                 return@setOnClickListener
             }
             transactionType = "CASH"
@@ -151,11 +165,17 @@ class PaymentActivity : BasePineActivity() {
 
             if (isPaymentCompleted) {
                 //Print Only
-                costDashBordViewModel.getPrintBillInvoiceResponse(
-                    PrintInvoiceRequest(
-                        PrintInvoiceRequestBody("$receipt")
+                if (!kotPrintFromEDC) {
+                    costDashBordViewModel.getPrintBillInvoiceResponse(
+                        PrintInvoiceRequest(
+                            PrintInvoiceRequestBody("$receipt")
+                        )
                     )
-                )
+                } else {
+                    costDashBordViewModel.getPrintBillKOTInvoiceResponse(
+                        PrintKotRequest(PrintKotForEDCBody("$receipt"))
+                    )
+                }
                 return@setOnClickListener
             }
 
@@ -288,6 +308,53 @@ class PaymentActivity : BasePineActivity() {
                     detail.savePrintData = true
                     request.detail = detail
                     if (this::psh.isInitialized) {
+                        kotPrintISDONE=false
+                        psh.callPineService(request)
+                    } else {
+                        showErrorDialog("Cannot Print Bill")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getBillPrintKOTResponse() {
+        printBillViewModel.doPrintPineKOTInvoicePrinting.observe(this) {
+            if (it != null) when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    showPb("${it.data}")
+                    psh.connect(this, this)
+                }
+                is ApisResponse.Success -> {
+                    hidePb()
+                    val res = it.data as ArrayList<Datum>
+                    val request = TransactionRequest()
+                    request.aPP_ID = AppConfig.APP_ID
+                    //Setting header ;
+                    val header = Header()
+                    header.applicationId = AppConfig.APP_ID
+                    header.methodId = "1002"//Print Format
+                    header.userId = "user_$receipt"
+                    header.versionNo = AppConfig.versionCode
+                    request.header = header
+
+                    val detail = Detail()
+                    detail.data = res
+                    detail.printRefNo = "0103REX"
+                    detail.savePrintData = true
+                    request.detail = detail
+                    if (this::psh.isInitialized) {
+                        kotPrintISDONE=true
                         psh.callPineService(request)
                     } else {
                         showErrorDialog("Cannot Print Bill")
@@ -315,8 +382,6 @@ class PaymentActivity : BasePineActivity() {
                 }
                 is ApisResponse.Success -> {
                     hidePb()
-                    /*arrItem.clear()
-                    confirmOrderViewModel.getOrderList(null)*/
                     (it.data as PrintInvoice?)?.let { printInvoice ->
                         Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
                         printBillViewModel.doPineLabPrintInvoice(printInvoice)
@@ -324,6 +389,39 @@ class PaymentActivity : BasePineActivity() {
                         showErrorDialog(
                             "Payment Success", "Success", ic = R.drawable.ic_success
                         )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getPrintKOTInvoiceResponse() {
+        costDashBordViewModel.printBillKOTInvoice.observe(this) {
+            if (it != null) {
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { msg ->
+                                showErrorDialog(msg)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
+                        }
+                    }
+                    is ApisResponse.Loading -> {
+                        showPb("${it.data}")
+                    }
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        (it.data as PrintKotInvoice?)?.let { printInvoice ->
+                            Log.i("PRINT_INVOICE", "KOT RES: $printInvoice")
+                            printBillViewModel.doPrintKotInvoice(printInvoice)
+                        } ?: run {
+                            showErrorDialog(
+                                "Payment Success", "Success", ic = R.drawable.ic_success
+                            )
+                        }
                     }
                 }
             }
@@ -362,11 +460,17 @@ class PaymentActivity : BasePineActivity() {
                     hidePb()
                     //showErrorDialog("Working Fine", "Success", R.drawable.ic_success)
                     isPaymentCompleted = true
-                    costDashBordViewModel.getPrintBillInvoiceResponse(
-                        PrintInvoiceRequest(
-                            PrintInvoiceRequestBody("${it.data}")
+                    if (!kotPrintFromEDC) {
+                        costDashBordViewModel.getPrintBillInvoiceResponse(
+                            PrintInvoiceRequest(
+                                PrintInvoiceRequestBody("${it.data}")
+                            )
                         )
-                    )
+                    } else {
+                        costDashBordViewModel.getPrintBillKOTInvoiceResponse(
+                            PrintKotRequest(PrintKotForEDCBody("${it.data}"))
+                        )
+                    }
                 }
             }
         }
@@ -475,7 +579,10 @@ class PaymentActivity : BasePineActivity() {
 
 
     private fun showErrorDialog(
-        msg: String, type: String = "Failed", ic: Int = R.drawable.ic_error,isCancelAble:Boolean=true
+        msg: String,
+        type: String = "Failed",
+        ic: Int = R.drawable.ic_error,
+        isCancelAble: Boolean = true
     ) {
         val dialog = AlertDialog.Builder(this@PaymentActivity)
         dialog.setTitle(type)
@@ -553,16 +660,24 @@ class PaymentActivity : BasePineActivity() {
             if (transactionResponse.response.responseCode == 0) { //Success
                 Utils.createLogcat("PINE_SUC", "$transactionResponse and $transactionType")
                 if (transactionResponse.header.methodId != "1002") {
-                    transactionDone="$transactionResponse"
+                    transactionDone = "$transactionResponse"
                     callPaymentApi(transactionDone!!)
                 } else {
-                    showErrorDialog(
-                        "Order Completed!! ${getEmojiByUnicode(0x2705)}",
-                        "Success",
-                        R.drawable.ic_success
-                    )
-                    isPaymentCompleted = true
-                    binding.orderRecycleView.hide()
+                    if (kotPrintISDONE){
+                        costDashBordViewModel.getPrintBillInvoiceResponse(
+                            PrintInvoiceRequest(
+                                PrintInvoiceRequestBody("$receipt")
+                            )
+                        )
+                    }else{
+                        showErrorDialog(
+                            "Order Completed!! ${getEmojiByUnicode(0x2705)}",
+                            "Success",
+                            R.drawable.ic_success
+                        )
+                        isPaymentCompleted = true
+                        binding.orderRecycleView.hide()
+                    }
                 }
             } else {
                 showErrorDialog(transactionResponse.response.responseMsg)
@@ -584,9 +699,10 @@ class PaymentActivity : BasePineActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
         outState.putString("TRANS", transactionType)
         outState.putBoolean("PAYMENT_DONE", isPaymentCompleted)
         outState.putString("PAYMENT_BODY_DONE", transactionDone)
+        outState.putBoolean("KOT_PRINT_DONE", kotPrintISDONE)
+        super.onSaveInstanceState(outState)
     }
 }
