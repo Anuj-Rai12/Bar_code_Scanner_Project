@@ -21,9 +21,9 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
 
     private lateinit var binding: TableOrCostLayoutBinding
     private lateinit var tableManagementOrCostRecyclerAdaptor: TableManagementOrCostRecyclerAdaptor
-    private val args by lazy { 
-        arguments?.getParcelable<ApkLoginJsonResponse>("TBL_VALUE") ?:
-        activity?.intent?.getParcelableExtra("TBL_VALUE")
+    private val args by lazy {
+        arguments?.getParcelable<ApkLoginJsonResponse>("TBL_VALUE")
+            ?: activity?.intent?.getParcelableExtra("TBL_VALUE")
     }
     private val viewModel: LoginScreenViewModel by viewModels()
 
@@ -104,7 +104,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.uPICode,
                             item.billingFromEDC,
                             item.paymentLs,
-                            args!!
+                            args!!,
+                            kotPrintFromEDC = item.kotPrintFromEDC
                         )
                     )
                 }
@@ -119,7 +120,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.uPICode,
                             item.billingFromEDC,
                             item.paymentLs,
-                            args!!
+                            args!!,
+                            kotPrintFromEDC = item.kotPrintFromEDC
                         )
                     )
                 }
@@ -134,7 +136,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.uPICode,
                             item.billingFromEDC,
                             item.paymentLs,
-                            args!!
+                            args!!,
+                            kotPrintFromEDC = item.kotPrintFromEDC,
                         )
                     )
                 }
@@ -149,7 +152,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.uPICode,
                             item.billingFromEDC,
                             item.paymentLs,
-                            args!!
+                            args!!,
+                            kotPrintFromEDC = item.kotPrintFromEDC
                         )
                     )
                 }
@@ -164,7 +168,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.uPICode,
                             item.billingFromEDC,
                             item.paymentLs,
-                            args!!
+                            args!!,
+                            kotPrintFromEDC = item.kotPrintFromEDC
                         )
                     )
                 }
@@ -179,7 +184,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.uPICode,
                             item.billingFromEDC,
                             item.paymentLs,
-                            args!!
+                            args!!,
+                            kotPrintFromEDC = item.kotPrintFromEDC
                         )
                     )
                 }
@@ -194,7 +200,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.uPICode,
                             item.billingFromEDC,
                             item.paymentLs,
-                            args!!
+                            args!!,
+                            kotPrintFromEDC = item.kotPrintFromEDC
                         )
                     )
                 }
@@ -209,7 +216,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.uPICode,
                             item.billingFromEDC,
                             item.paymentLs,
-                            args!!
+                            args!!,
+                            kotPrintFromEDC = item.kotPrintFromEDC
                         )
                     )
                 }
@@ -233,10 +241,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
 
     private fun showErrorDialog(desc: String) {
         showDialogBox(
-            "Failed!!",
-            desc,
-            "Ok",
-            icon = R.drawable.ic_error
+            "Failed!!", desc, "Ok", icon = R.drawable.ic_error
         ) {}
     }
 
@@ -253,60 +258,49 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
 
     private fun screenNav(selection: SelectionDataClass) {
         RestaurantSingletonCls.getInstance().setScreenType(selection.type)
-        val action =
-            when (valueOf(selection.type)) {
-                TABLEMGT -> {
-                    TableManagementOrCostEstimateDirections
-                        .actionTableManagementOrCostEstimateToTableManagementFragment(args?.storeName!!,selection)
-                }
-                ESTIMATION -> {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToCostDashBoardFragment(
-                        null,
-                        null,
-                        selection
-                    )
-                }
-                TABLERESERVATION -> {
-                    TableManagementOrCostEstimateDirections
-                        .actionTableManagementOrCostEstimateToTableReservationFragment(selection)
-                }
-                BILLING -> {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToBillingFragment(
-                        null,
-                        null,
-                        selection
-                    )
-                }
-                SHOWROOMESTIMATE -> {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToShowRoomEstimationFragment(
-                        null,
-                        null,
-                        selection
-                    )
-                }
-                RESTAURANTESTIMATE -> {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToRestaurantEstimationFragments(
-                        null,
-                        null,
-                        selection
-                    )
-                }
-                //Need to do Work
-                SHOWROOMBILLING -> {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToShowRoomBillingFragment(
-                        null,
-                        null,
-                        selection
-                    )
-                }
-                RESTAURANTBILLING -> {
-                    TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToRestaurantBillingFragment(
-                        null,
-                        null,
-                        selection
-                    )
-                }
+        val action = when (valueOf(selection.type)) {
+            TABLEMGT -> {
+                TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToTableManagementFragment(
+                    args?.storeName!!, selection
+                )
             }
+            ESTIMATION -> {
+                TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToCostDashBoardFragment(
+                    null, null, selection
+                )
+            }
+            TABLERESERVATION -> {
+                TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToTableReservationFragment(
+                    selection
+                )
+            }
+            BILLING -> {
+                TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToBillingFragment(
+                    null, null, selection
+                )
+            }
+            SHOWROOMESTIMATE -> {
+                TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToShowRoomEstimationFragment(
+                    null, null, selection
+                )
+            }
+            RESTAURANTESTIMATE -> {
+                TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToRestaurantEstimationFragments(
+                    null, null, selection
+                )
+            }
+            //Need to do Work
+            SHOWROOMBILLING -> {
+                TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToShowRoomBillingFragment(
+                    null, null, selection
+                )
+            }
+            RESTAURANTBILLING -> {
+                TableManagementOrCostEstimateDirections.actionTableManagementOrCostEstimateToRestaurantBillingFragment(
+                    null, null, selection
+                )
+            }
+        }
         RestaurantSingletonCls.getInstance().getScreenType()?.let {
             findNavController().navigate(action)
         } ?: binding.root.showSandbar("Cannot Navigate to Screen")

@@ -18,6 +18,7 @@ data class PrintInvoice(
     @SerializedName("FooterTxt6") val footerTxt6: String,
     @SerializedName("FooterTxt7") val footerTxt7: String,
     @SerializedName("GstDetails") val gstDetails: List<GstDetail>,
+    @SerializedName("VatDetails") val vatDetails: List<VatDetail>,
     @SerializedName("HeaderTxt1") val headerTxt1: String,
     @SerializedName("HeaderTxt2") val headerTxt2: String,
     @SerializedName("HeaderTxt3") val headerTxt3: String,

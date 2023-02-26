@@ -190,7 +190,15 @@ class CostDashBoardRepository(retrofit: Retrofit) {
                 response.body()?.let { res ->
                     if (!res.body?.returnValue.isNullOrEmpty()) {
                         deserializeFromJson<PrintInvoice>(res.body?.returnValue)?.let {
-                            ApisResponse.Success(it)
+                            if (it.paymentDetails.isEmpty()){
+                                ApisResponse.Error("Cannot find the Payment Detail",null)
+                            }else if (it.gstDetails.isEmpty()){
+                                ApisResponse.Error("Cannot find the GST Details",null)
+                            }else if (it.vatDetails.isEmpty()){
+                                ApisResponse.Error("Cannot find the VAT Detail",null)
+                            }else{
+                                ApisResponse.Success(it)
+                            }
                         } ?: ApisResponse.Error("Cannot Generate Invoice Body", null)
                     } else {
                         ApisResponse.Error(

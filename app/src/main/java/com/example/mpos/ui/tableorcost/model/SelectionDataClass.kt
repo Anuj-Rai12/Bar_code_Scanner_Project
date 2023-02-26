@@ -12,6 +12,7 @@ data class SelectionDataClass(
     val type: String,
     val dynamicMenuEnable: Boolean,
     val isBarcodeVisible: Boolean,
+    val kotPrintFromEDC:Boolean,
     val uPICode: String,
     val billingFromEDC: Boolean,
     val paymentLs: List<String>,
@@ -27,7 +28,8 @@ data class SelectionDataClass(
             upi: String,
             billingFromEDC: Boolean,
             paymentLs: List<String>,
-            apk: ApkLoginJsonResponse
+            apk: ApkLoginJsonResponse,
+            kotPrintFromEDC:Boolean
         ): SelectionDataClass {
             return SelectionDataClass(
                 image = img,
@@ -38,7 +40,8 @@ data class SelectionDataClass(
                 uPICode = upi,
                 billingFromEDC = billingFromEDC,
                 paymentLs = paymentLs,
-                apk =apk
+                apk =apk,
+                kotPrintFromEDC = kotPrintFromEDC
             )
         }
 

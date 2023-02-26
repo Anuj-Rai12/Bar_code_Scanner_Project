@@ -43,17 +43,42 @@ class PrintRepository {
 
     private val underLine = "<u>                                                </u>\n"
 
-    private val header = "${createNewString("Description", 25)}${createNewString("Qty", 7)}" +
-            "${createNewString("Price", 8)}${createNewString("Amount", 10)}\n"
+    private val header = "${createNewString("Description", 25)}${
+        createNewString(
+            "Qty",
+            7
+        )
+    }" + "${createNewString("Price", 8)}${createNewString("Amount", 10)}\n"
 
-    private val headerPine = "${createNewString("Description", 15)}${createNewString("Qty", 4)}" +
-            "${createNewString("Price", 6)}${createNewString("Amount", 6)}"
+    private val headerPine = "${createNewString("Description", 15)}${
+        createNewString(
+            "Qty",
+            4
+        )
+    }" + "${createNewString("Price", 6)}${createNewString("Amount", 6)}"
 
-    private val headerGst = "${createNewString("GST %", 25)}${createNewString("CGST", 7)}" +
-            "${createNewString("SGST", 8)}${createNewString("CESS", 10)}\n"
+    private val headerGst = "${createNewString("GST %", 25)}${createNewString("CGST", 7)}" + "${
+        createNewString(
+            "SGST",
+            8
+        )
+    }${createNewString("CESS", 10)}\n"
 
-    private val headerGstPine = "${createNewString("GST %", 8)}${createNewString("CGST", 8)}" +
-            "${createNewString("SGST", 8)}${createNewString("CESS", 8)}"
+    private val headerGstPine = "${createNewString("GST %", 8)}${createNewString("CGST", 8)}" + "${
+        createNewString(
+            "SGST",
+            8
+        )
+    }${createNewString("CESS", 8)}"
+
+
+    private val headerVATPine = "${createNewString("VAT/ST", 10)}${
+        createNewString(
+            "Base Amt",
+            10
+        )
+    }" + createNewString("VAT/ST AMT", 10)
+
 
     fun isPrintSelected() = flow {
         emit(ApisResponse.Loading("Checking Printer"))
@@ -82,52 +107,37 @@ class PrintRepository {
                 val stringBuilder = StringBuilder()
                 Log.i("PRINT_ANUJ", "doPrint: ${responseBody.itemList}")
                 stringBuilder.append(
-                    "[C]$underLine" +
-                            "[L][C]${responseBody.headerTxt}\n" +
-                            "[L][C]" + "${responseBody.headerTxt2}\n" +
-                            "[C]$line" +
-                            "[L] Order No .: " + "[R]${responseBody.orderId}  " + "[R]" + responseBody.datetime + "\n" +
-                            "[C]$line" +
-                            "[L]" + header +
-                            "[C]$line" +
-                            setTable(responseBody.itemList) +
-                            "[C]$line" +
-                            "[L]" +
-                            createNewString("Total Amt Excel. Of GST", 40) +
-                            "${
-                                createNewString(
-                                    ListOfFoodItemToSearchAdaptor.setPrice(responseBody.amtExclGST)
-                                        .toString(), 10
-                                )
-                            }\n" +
-                            "[C]$line" +
-                            "[L]" + "${
+                    "[C]$underLine" + "[L][C]${responseBody.headerTxt}\n" + "[L][C]" + "${responseBody.headerTxt2}\n" + "[C]$line" + "[L] Order No .: " + "[R]${responseBody.orderId}  " + "[R]" + responseBody.datetime + "\n" + "[C]$line" + "[L]" + header + "[C]$line" + setTable(
+                        responseBody.itemList
+                    ) + "[C]$line" + "[L]" + createNewString("Total Amt Excel. Of GST", 40) + "${
                         createNewString(
-                            "No. of Items ",
-                            40
+                            ListOfFoodItemToSearchAdaptor.setPrice(responseBody.amtExclGST)
+                                .toString(), 10
                         )
-                    }${createNewString(responseBody.itemList.size.toString(), 10)}\n" +
-                            "[C]$line" +
-                            "[L]" + "${
+                    }\n" + "[C]$line" + "[L]" + "${
                         createNewString(
-                            "Total Amt Inc. Of GST",
-                            40
+                            "No. of Items ", 40
+                        )
+                    }${
+                        createNewString(
+                            responseBody.itemList.size.toString(),
+                            10
+                        )
+                    }\n" + "[C]$line" + "[L]" + "${
+                        createNewString(
+                            "Total Amt Inc. Of GST", 40
                         )
                     }${
                         createNewString(
                             ListOfFoodItemToSearchAdaptor.setPrice(responseBody.amtInclGST)
                                 .toString(), 10
                         )
-                    }\n" +
-                            "[C]$line" +
-                            "[L]" + "${createNewString("Total", 40)}${
+                    }\n" + "[C]$line" + "[L]" + "${createNewString("Total", 40)}${
                         createNewString(
                             ListOfFoodItemToSearchAdaptor.setPrice(responseBody.amtInclGST)
-                                .toString(),
-                            10
+                                .toString(), 10
                         )
-                    }\n" +
-                            "[C]$underLine"
+                    }\n" + "[C]$underLine"
                 )
 //"[C]<barcode type='128' width='40' text='above'>${responseBody.orderId}</barcode>\n"+
                 printer.printFormattedText(stringBuilder.toString())
@@ -238,13 +248,8 @@ class PrintRepository {
             arr.add(
                 setPineLabPrintData(
                     setBillInvoiceTable(
-                        responseBody.childitemList,
-                        descSize = 14,
-                        qty = 2,
-                        price = 8,
-                        amt = 8
-                    ),
-                    false
+                        responseBody.childitemList, descSize = 14, qty = 2, price = 8, amt = 8
+                    ), false
                 )
             )
             arr.add(line())
@@ -253,16 +258,26 @@ class PrintRepository {
             arr.add(
                 setPineLabPrintData(
                     setGstTable(
-                        responseBody.gstDetails,
-                        descSize = 8,
-                        qty = 8,
-                        price = 8,
-                        amt = 8
+                        responseBody.gstDetails, descSize = 8, qty = 8, price = 8, amt = 8
                     ), false
                 )
             )
             arr.add(line())
-            arr.add(setPineLabPrintData("Amount Including GST $Rs_Symbol ${responseBody.amtIncGST}",false))
+            arr.add(setPineLabPrintData(headerVATPine, false))
+            arr.add(line())
+            arr.add(
+                setPineLabPrintData(
+                    setVATable(
+                        responseBody.vatDetails
+                    ), false
+                )
+            )
+            arr.add(line())
+            arr.add(
+                setPineLabPrintData(
+                    "Amount Including GST $Rs_Symbol ${responseBody.amtIncGST}", false
+                )
+            )
             /*arr.add(
                 setPineLabPrintData(
                     "${
@@ -276,7 +291,7 @@ class PrintRepository {
                 )
             )*/
             arr.add(line())
-            arr.add(setPineLabPrintData("Rounding Amt $Rs_Symbol ${responseBody.roundAmt}",false))
+            arr.add(setPineLabPrintData("Rounding Amt $Rs_Symbol ${responseBody.roundAmt}", false))
             /*arr.add(
                 setPineLabPrintData(
                     "${
@@ -290,7 +305,15 @@ class PrintRepository {
                 )
             )*/
             arr.add(line())
-            arr.add(setPineLabPrintData("Rounding Total $Rs_Symbol ${getRoundingTotal(responseBody.amtIncGST, responseBody.roundAmt)}",false))
+            arr.add(
+                setPineLabPrintData(
+                    "Rounding Total $Rs_Symbol ${
+                        getRoundingTotal(
+                            responseBody.amtIncGST, responseBody.roundAmt
+                        )
+                    }", false
+                )
+            )
             /*arr.add(
                 setPineLabPrintData(
                     "${
@@ -309,13 +332,19 @@ class PrintRepository {
                 )
             )*/
             arr.add(line())
-            arr.add(setPineLabPrintData(setTenderTable(responseBody.paymentDetails, tenderSize = 16, amtSize = 16),false))
+            arr.add(
+                setPineLabPrintData(
+                    setTenderTable(
+                        responseBody.paymentDetails, tenderSize = 16, amtSize = 16
+                    ), false
+                )
+            )
             arr.add(line())
 //Qr
-            val qr=CreateQr()
-            val bitmap=qr.createQr("${responseBody.qrPrint}")
-            bitmap?.let {bit->
-                val buffer=qr.bitInputStream(bit.trimBorders(Color.WHITE))
+            val qr = CreateQr()
+            val bitmap = qr.createQr("${responseBody.qrPrint}")
+            bitmap?.let { bit ->
+                val buffer = qr.bitInputStream(bit.trimBorders(Color.WHITE))
                 val bitmap1 = BitmapFactory.decodeStream(buffer)
                 val resizedBitmap = Bitmap.createScaledBitmap(
                     bitmap1, 150, 150, false
@@ -325,13 +354,13 @@ class PrintRepository {
                 resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
                 val imageBytes = output.toByteArray()
                 val imgData = ImageConvertor.bytesToHex(imageBytes)
-                val datum=Datum()
-                datum.printDataType="2"
-                datum.printerWidth=AppConfig.PrinterWidth
-                datum.isCenterAligned=true
-                datum.dataToPrint=""
-                datum.imagePath=""
-                datum.imageData=imgData
+                val datum = Datum()
+                datum.printDataType = "2"
+                datum.printerWidth = AppConfig.PrinterWidth
+                datum.isCenterAligned = true
+                datum.dataToPrint = ""
+                datum.imagePath = ""
+                datum.imageData = imgData
                 arr.add(datum)
                 arr.add(line())
             }
@@ -381,62 +410,41 @@ class PrintRepository {
                 val stringBuilder = StringBuilder()
                 val qrTxt = getScanQr(responseBody.qrPrint)
                 stringBuilder.append(
-                    "[C]$underLine" +
-                            "[L][C]${responseBody.headerTxt1}\n" +
-                            "[L][C]" + "${responseBody.headerTxt2}\n" +
-                            "[L][C]" + "${responseBody.headerTxt3}\n" +
-                            "[L][C]" + "${responseBody.headerTxt4}\n" +
-                            "[L][C]" + "${responseBody.headerTxt5}\n" +
-                            "[L][C]" + "${responseBody.headerTxt6}\n" +
-                            "[L][C]" + "${responseBody.headerTxt7}\n" +
-                            "[C]$doubleLine" +
-                            "[L][C]" + "${responseBody.billTypeTxt}\n" +
-                            "[C]$doubleLine" +
-                            "[L][C]" + "${responseBody.billType}\n" +
-                            "[C]$doubleLine" +
-                            "[L] ${responseBody.subHeaderTxt1}" + "\n" +
-                            "[L] ${responseBody.subHeaderTxt2}" + "\n" +
-                            "[L] ${responseBody.subHeaderTxt3}" + "\n" +
-                            "[L] ${responseBody.subHeaderTxt4}" + "\n" +
-                            "[L] ${responseBody.subHeaderTxt5}" + "\n" +
-                            "[C]$doubleLine" +
-                            "[L]" + header +
-                            "[C]$doubleLine" +
-                            setBillInvoiceTable(responseBody.childitemList) +
-                            "[C]$doubleLine" +
-                            "[L]" + createNewString("Total", 40) +
-                            "${createNewString(responseBody.baseAmount, 10)}\n" +
-                            "[C]$doubleLine" +
-                            "[L]" + headerGst +
-                            "[C]$doubleLine" +
-                            setGstTable(responseBody.gstDetails) +
-                            "[C]$doubleLine" +
-                            "[L]" + createNewString("Amount Including GST", 40) +
-                            "${createNewString(responseBody.amtIncGST, 10)}\n" +
-                            "[C]$doubleLine" +
-                            "[L]" + createNewString("Rounding Amt", 40) +
-                            "${createNewString(responseBody.roundAmt, 10)}\n" +
-                            "[C]$doubleLine" +
-                            "[L]" + createNewString("Rounding Total", 40) +
-                            "${
-                                createNewString(
-                                    getRoundingTotal(
-                                        responseBody.amtIncGST,
-                                        responseBody.roundAmt
-                                    ), 10
-                                )
-                            }\n" +
-                            "[C]$doubleLine" +
-                            setTenderTable(responseBody.paymentDetails) +
-                            "[C]$doubleLine" +
-                            "[L]${responseBody.footerTxt1}\n" +
-                            "[L]${responseBody.footerTxt2}\n" +
-                            "[L]${responseBody.footerTxt3}\n" +
-                            "[L]${responseBody.footerTxt4}\n" +
-                            "[L]${responseBody.footerTxt5}\n" +
-                            "[L]${responseBody.footerTxt6}\n" +
-                            "[L]${responseBody.footerTxt7}\n" +
-                            "[C]<qrcode size='40'>$qrTxt</qrcode>\n" +
+                    "[C]$underLine" + "[L][C]${responseBody.headerTxt1}\n" + "[L][C]" + "${responseBody.headerTxt2}\n" + "[L][C]" + "${responseBody.headerTxt3}\n" + "[L][C]" + "${responseBody.headerTxt4}\n" + "[L][C]" + "${responseBody.headerTxt5}\n" + "[L][C]" + "${responseBody.headerTxt6}\n" + "[L][C]" + "${responseBody.headerTxt7}\n" + "[C]$doubleLine" + "[L][C]" + "${responseBody.billTypeTxt}\n" + "[C]$doubleLine" + "[L][C]" + "${responseBody.billType}\n" + "[C]$doubleLine" + "[L] ${responseBody.subHeaderTxt1}" + "\n" + "[L] ${responseBody.subHeaderTxt2}" + "\n" + "[L] ${responseBody.subHeaderTxt3}" + "\n" + "[L] ${responseBody.subHeaderTxt4}" + "\n" + "[L] ${responseBody.subHeaderTxt5}" + "\n" + "[C]$doubleLine" + "[L]" + header + "[C]$doubleLine" + setBillInvoiceTable(
+                        responseBody.childitemList
+                    ) + "[C]$doubleLine" + "[L]" + createNewString(
+                        "Total",
+                        40
+                    ) + "${
+                        createNewString(
+                            responseBody.baseAmount,
+                            10
+                        )
+                    }\n" + "[C]$doubleLine" + "[L]" + headerGst + "[C]$doubleLine" + setGstTable(
+                        responseBody.gstDetails
+                    ) + "[C]$doubleLine" + "[L]" + createNewString(
+                        "Amount Including GST",
+                        40
+                    ) + "${
+                        createNewString(
+                            responseBody.amtIncGST,
+                            10
+                        )
+                    }\n" + "[C]$doubleLine" + "[L]" + createNewString(
+                        "Rounding Amt",
+                        40
+                    ) + "${
+                        createNewString(
+                            responseBody.roundAmt,
+                            10
+                        )
+                    }\n" + "[C]$doubleLine" + "[L]" + createNewString("Rounding Total", 40) + "${
+                        createNewString(
+                            getRoundingTotal(
+                                responseBody.amtIncGST, responseBody.roundAmt
+                            ), 10
+                        )
+                    }\n" + "[C]$doubleLine" + setTenderTable(responseBody.paymentDetails) + "[C]$doubleLine" + "[L]${responseBody.footerTxt1}\n" + "[L]${responseBody.footerTxt2}\n" + "[L]${responseBody.footerTxt3}\n" + "[L]${responseBody.footerTxt4}\n" + "[L]${responseBody.footerTxt5}\n" + "[L]${responseBody.footerTxt6}\n" + "[L]${responseBody.footerTxt7}\n" + "[C]<qrcode size='40'>$qrTxt</qrcode>\n" +
                             //<qrcode size='30'></qrcode>" +
                             "[C]$underLine"
                 )
@@ -498,17 +506,16 @@ class PrintRepository {
     private fun setTable(list: List<ItemList>): String {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
-            val value =
-                "[L]${createNewString(item.description, 25)}" +
-                        createNewString("${item.qty}", 7) + createNewString(
-                    ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(),
-                    8
-                ) +
-                        "${
-                            createNewString(
-                                ListOfFoodItemToSearchAdaptor.setPrice(item.amount).toString(), 10
-                            )
-                        }\n"
+            val value = "[L]${createNewString(item.description, 25)}" + createNewString(
+                "${item.qty}",
+                7
+            ) + createNewString(
+                ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(), 8
+            ) + "${
+                createNewString(
+                    ListOfFoodItemToSearchAdaptor.setPrice(item.amount).toString(), 10
+                )
+            }\n"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
@@ -516,75 +523,82 @@ class PrintRepository {
 
 
     private fun setBillInvoiceTable(
-        list: List<Childitem>,
-        descSize: Int = 25,
-        qty: Int = 7,
-        price: Int = 8,
-        amt: Int = 10
+        list: List<Childitem>, descSize: Int = 25, qty: Int = 7, price: Int = 8, amt: Int = 10
     ): String {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
-            val value =
-                "${if (descSize == 25) "[L]" else ""}${
-                    createNewString(
-                        item.description,
-                        descSize
-                    )
-                }${
-                    createNewString(
-                        item.qty.toString(),
-                        qty
-                    )
-                }" +
-                        createNewString(
-                            ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(), price
-                        ) +
-                        "${
-                            createNewString(
-                                ListOfFoodItemToSearchAdaptor.setPrice(item.amount).toString(), amt
-                            )
-                        }${if (descSize == 25) "\n" else ""}"
+            val value = "${if (descSize == 25) "[L]" else ""}${
+                createNewString(
+                    item.description, descSize
+                )
+            }${
+                createNewString(
+                    item.qty.toString(), qty
+                )
+            }" + createNewString(
+                ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(), price
+            ) + "${
+                createNewString(
+                    ListOfFoodItemToSearchAdaptor.setPrice(item.amount).toString(), amt
+                )
+            }${if (descSize == 25) "\n" else ""}"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
     }
 
     private fun setGstTable(
-        list: List<GstDetail>,
-        descSize: Int = 25,
-        qty: Int = 7,
-        price: Int = 8,
-        amt: Int = 10
+        list: List<GstDetail>, descSize: Int = 25, qty: Int = 7, price: Int = 8, amt: Int = 10
     ): String {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
             val value =
                 "${if (descSize == 25) "[L]" else ""}${createNewString(item.gstPer, descSize)}${
                     createNewString(
-                        item.cGSTAmt,
-                        qty
+                        item.cGSTAmt, qty
                     )
-                }" +
-                        createNewString(item.sGSTAmt, price) +
-                        "${createNewString(item.cessAmt, amt)}${if (descSize == 25) "\n" else ""}"
+                }" + createNewString(item.sGSTAmt, price) + "${
+                    createNewString(
+                        item.cessAmt,
+                        amt
+                    )
+                }${if (descSize == 25) "\n" else ""}"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
     }
 
 
+    private fun setVATable(
+        list: List<VatDetail>, percentage: Int=10, baseAmt: Int=10, vatAmt: Int=10
+    ): String {
+        val stringBuilder = StringBuilder()
+        list.forEach { item ->
+            val value = "${createNewString(getDigitOnlyValue(item.vatPer), percentage)}${
+                createNewString(
+                    item.vatBaseAmt,
+                    baseAmt
+                )
+            }" +
+                    createNewString(item.vatAmt, vatAmt)
+            stringBuilder.append(value)
+        }
+        return stringBuilder.toString()
+    }
+
+    private fun getDigitOnlyValue(string: String,addon:String="%"): String {
+        return string.filter { it.isDigit() || it == '.' }+addon
+    }
+
+
     private fun setTenderTable(
-        list: List<PaymentDetail>,
-        tenderSize: Int = 40,
-        amtSize: Int = 10
+        list: List<PaymentDetail>, tenderSize: Int = 40, amtSize: Int = 10
     ): String {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
             val value = (if (tenderSize == 40) "[L]" else "") + createNewString(
-                item.tenderType,
-                tenderSize
-            ) +
-                    "${createNewString(item.amt, amtSize)}${if (tenderSize == 25) "\n" else ""}"
+                item.tenderType, tenderSize
+            ) + "${createNewString(item.amt, amtSize)}${if (tenderSize == 25) "\n" else ""}"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()

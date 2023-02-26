@@ -62,7 +62,9 @@ class PaymentActivity : BasePineActivity() {
     private val tblNo by lazy {
         intent.getStringExtra("tableNo")
     }
-
+    private val kotPrintFromEDC by lazy {
+        intent.getBooleanExtra("KOTPrintFromEDC",false)
+    }
     private val apk by lazy {
         intent.getParcelableExtra<ApkLoginJsonResponse>("TBL_VALUE")
     }
