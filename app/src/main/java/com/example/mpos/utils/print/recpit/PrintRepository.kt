@@ -10,6 +10,7 @@ import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnection
 import com.example.mpos.data.billing.printInvoice.json.*
 import com.example.mpos.data.confirmOrder.response.json.ItemList
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
+import com.example.mpos.data.printkot.json.ChildItemList
 import com.example.mpos.data.printkot.json.PrintKotInvoice
 import com.example.mpos.payment.pine.AppConfig
 import com.example.mpos.payment.pine.request.Datum
@@ -57,6 +58,9 @@ class PrintRepository {
             4
         )
     }" + "${createNewString("Price", 6)}${createNewString("Amount", 6)}"
+
+
+    private val headerKOTPine = createNewString("Description", 25) + createNewString("Amount", 7)
 
     private val headerGst = "${createNewString("GST %", 25)}${createNewString("CGST", 7)}" + "${
         createNewString(
@@ -172,11 +176,11 @@ class PrintRepository {
             arr.add(line())
             arr.add(setPineLabPrintData(responseBody.billType))
             arr.add(line())
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt1))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt2))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt3))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt4))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt5))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt1,isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt2,isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt3,isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt4,isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt5,isCenterAlign = false))
             arr.add(line())
             arr.add(setPineLabPrintData(headerPine, false))
             arr.add(line())
@@ -188,26 +192,30 @@ class PrintRepository {
                 )
             )
             arr.add(line())
-            arr.add(setPineLabPrintData(headerGstPine, false))
-            arr.add(line())
-            arr.add(
-                setPineLabPrintData(
-                    setGstTable(
-                        responseBody.gstDetails, descSize = 8, qty = 8, price = 8, amt = 8
-                    ), false
+            if (responseBody.gstDetails.isNotEmpty()) {
+                arr.add(setPineLabPrintData(headerGstPine, false))
+                arr.add(line())
+                arr.add(
+                    setPineLabPrintData(
+                        setGstTable(
+                            responseBody.gstDetails, descSize = 8, qty = 8, price = 8, amt = 8
+                        ), false
+                    )
                 )
-            )
-            arr.add(line())
-            arr.add(setPineLabPrintData(headerVATPine, false))
-            arr.add(line())
-            arr.add(
-                setPineLabPrintData(
-                    setVATable(
-                        responseBody.vatDetails
-                    ), false
+                arr.add(line())
+            }
+            if (responseBody.vatDetails.isNotEmpty()) {
+                arr.add(setPineLabPrintData(headerVATPine, false))
+                arr.add(line())
+                arr.add(
+                    setPineLabPrintData(
+                        setVATable(
+                            responseBody.vatDetails
+                        ), false
+                    )
                 )
-            )
-            arr.add(line())
+                arr.add(line())
+            }
             arr.add(
                 setPineLabPrintData(
                     "Amount Including GST $Rs_Symbol ${responseBody.amtIncGST}", false
@@ -275,19 +283,9 @@ class PrintRepository {
     fun doPineLabPrintKOTInvoice(responseBody: PrintKotInvoice) = flow {
         emit(ApisResponse.Loading("Please Wait Printing KOT Invoice ${getEmojiByUnicode(0x1F5A8)}"))
         val data = try {
-            val item = mutableListOf<Childitem>()
-            responseBody.childitemList.forEach { res ->
-                item.add(
-                    Childitem(
-                        amount = res.amount,
-                        description = res.description,
-                        itemcode = res.itemcode,
-                        price = res.price,
-                        qty = res.qty.toInt()
-                    )
-                )
-            }
             val arr = ArrayList<Datum>()
+            arr.add(setPineLabPrintData(responseBody.headerTxt, printWidth = 24))
+            arr.add(line())
             arr.add(setPineLabPrintData(responseBody.headerTxt1))
             arr.add(setPineLabPrintData(responseBody.headerTxt2))
             arr.add(setPineLabPrintData(responseBody.headerTxt3))
@@ -298,29 +296,23 @@ class PrintRepository {
             arr.add(line())
             arr.add(setPineLabPrintData(responseBody.billType))
             arr.add(line())
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt1))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt2))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt3))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt4))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt5))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt1,isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt2,isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt3,isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt4,isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt5,isCenterAlign = false))
             arr.add(line())
-            arr.add(setPineLabPrintData(headerPine, false))
+            arr.add(setPineLabPrintData(headerKOTPine, false))
             arr.add(line())
             arr.add(
                 setPineLabPrintData(
-                    setBillInvoiceTable(
-                        item, descSize = 14, qty = 2, price = 8, amt = 8
+                    setBillKOTInvoiceTable(
+                        responseBody.childitemList
                     ), false
                 )
             )
             arr.add(line())
-            arr.add(
-                setPineLabPrintData(
-                    "Base Amount $Rs_Symbol ${responseBody.baseAmount}",
-                    false
-                )
-            )
-            arr.add(line())
+            arr.add(setPineLabPrintData("\n"))
             ApisResponse.Success(arr)
         } catch (e: Exception) {
             ApisResponse.Error(null, e)
@@ -329,13 +321,18 @@ class PrintRepository {
 
     }.flowOn(IO)
 
-    private fun setPineLabPrintData(msg: String, isCenterAlign: Boolean = true): Datum {
+
+    private fun setPineLabPrintData(
+        msg: String,
+        isCenterAlign: Boolean = true,
+        printWidth: Int = AppConfig.PrinterWidth
+    ): Datum {
         val datum = Datum()
         datum.imageData = "0"
         datum.dataToPrint = msg
         datum.imagePath = "0"
         datum.printDataType = "0"
-        datum.printerWidth = AppConfig.PrinterWidth
+        datum.printerWidth = printWidth
         datum.isCenterAligned = isCenterAlign
         return datum
     }
@@ -549,6 +546,20 @@ class PrintRepository {
             val value = (if (tenderSize == 40) "[L]" else "") + createNewString(
                 item.tenderType, tenderSize
             ) + "${createNewString(item.amt, amtSize)}${if (tenderSize == 25) "\n" else ""}"
+            stringBuilder.append(value)
+        }
+        return stringBuilder.toString()
+    }
+
+
+    private fun setBillKOTInvoiceTable(
+        childItemList: List<ChildItemList>,
+        descSize: Int = 25,
+        amt: Int = 7
+    ): String {
+        val stringBuilder = StringBuilder()
+        childItemList.forEach {
+            val value = createNewString(it.description, descSize) + createNewString(it.amount, amt)
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
