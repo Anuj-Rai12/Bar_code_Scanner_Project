@@ -60,7 +60,7 @@ class PrintRepository {
     }" + "${createNewString("Price", 6)}${createNewString("Amount", 6)}"
 
 
-    private val headerKOTPine = createNewString("Description", 25) + createNewString("Amount", 7)
+    private val headerKOTPine = createNewString("Description", 25)  + createNewString("QTY", 7)
 
     private val headerGst = "${createNewString("GST %", 25)}${createNewString("CGST", 7)}" + "${
         createNewString(
@@ -521,13 +521,7 @@ class PrintRepository {
     ): String {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
-            val value = "${createNewString(getDigitOnlyValue(item.vatPer), percentage)}${
-                createNewString(
-                    item.vatBaseAmt,
-                    baseAmt
-                )
-            }" +
-                    createNewString(item.vatAmt, vatAmt)
+            val value = "${createNewString(getDigitOnlyValue(item.vatPer), percentage)}${createNewString(item.vatBaseAmt, baseAmt)}${createNewString(item.vatAmt, vatAmt)}${if (item!=list.last()) "\n" else ""}"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
@@ -559,7 +553,7 @@ class PrintRepository {
     ): String {
         val stringBuilder = StringBuilder()
         childItemList.forEach {
-            val value = createNewString(it.description, descSize) + createNewString(it.amount, amt)
+            val value = createNewString(it.description, descSize) + createNewString(it.qty.toString(), amt)
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
