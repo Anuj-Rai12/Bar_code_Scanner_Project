@@ -5,6 +5,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.example.mpos.data.item_master_sync.json.ItemMaster
+import com.example.mpos.databinding.BillingFragmentLayoutBinding
 import com.example.mpos.databinding.TestingLayoutBinding
 import com.example.mpos.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.mpos.utils.ApisResponse
@@ -13,7 +14,7 @@ import com.example.mpos.utils.msg
 class TestingActivity : AppCompatActivity() {
 
     private val binding by lazy {
-        TestingLayoutBinding.inflate(layoutInflater)
+        BillingFragmentLayoutBinding.inflate(layoutInflater)
     }
 
     private val viewModel: SearchFoodViewModel by viewModels()
@@ -22,9 +23,11 @@ class TestingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.userNameEd2.doOnTextChanged { txt, _, _, _ ->
+        binding.menuSearchEd.doOnTextChanged { txt, _, _, _ ->
             if (!txt.isNullOrEmpty()) {
                 viewModel.searchQuery("%$txt%")
+            }else{
+                foodAdaptor.submitList(listOf())
             }
         }
         setAdaptor()
@@ -32,7 +35,7 @@ class TestingActivity : AppCompatActivity() {
     }
 
     private fun setAdaptor() {
-        binding.testingRecycle.apply {
+        binding.menuRecycle.apply {
             foodAdaptor = FoodAdaptor {
                 msg("$it")
             }

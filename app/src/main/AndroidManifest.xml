@@ -22,10 +22,11 @@
         android:networkSecurityConfig="@xml/network_security"
         android:theme="@style/Theme.OffiqlResturantApp">
         <activity android:name=".payment.PaymentActivity"/>
-        <activity android:name=".TestingActivity"/>
+        <activity android:name=".MainActivity"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".TestingActivity"
             android:exported="true"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
