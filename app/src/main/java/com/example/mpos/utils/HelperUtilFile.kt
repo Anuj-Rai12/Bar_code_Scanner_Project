@@ -212,7 +212,7 @@ fun AppCompatActivity.show() {
     this.supportActionBar!!.show()
 }
 
-fun checkFieldValue(string: String) = string.isEmpty() || string.isBlank()
+fun checkFieldValue(string: String) = string.isEmpty() || string.isBlank() || string=="null"
 
 fun Button.showButtonProgress(string: String, color: Int) {
     showProgress {

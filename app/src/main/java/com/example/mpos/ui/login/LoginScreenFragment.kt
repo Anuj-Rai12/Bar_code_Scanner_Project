@@ -10,6 +10,7 @@ import com.example.mpos.R
 import com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse
 import com.example.mpos.databinding.LoginScreenFragmentBinding
 import com.example.mpos.ui.login.viewmodel.LoginScreenViewModel
+import com.example.mpos.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.mpos.utils.*
 import com.github.razir.progressbutton.bindProgressButton
 import com.google.android.material.snackbar.Snackbar
@@ -19,6 +20,9 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
     private lateinit var binding: LoginScreenFragmentBinding
 
     private val viewModel: LoginScreenViewModel by viewModels()
+    private val menuItemSyncViewModel: SearchFoodViewModel by viewModels()
+
+    private var jsonLoginResponse: ApkLoginJsonResponse? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,7 +49,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
 
 
         checkAuthCycle()
-
+        syncMenuResponse()
     }
 
     private fun checkAuthCycle() {
@@ -71,9 +75,10 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                     hideProgress()
                     it.data?.let { res ->
                         val json = res as ApkLoginJsonResponse
-                        if (json.status)
-                            nextFrag(json)
-                        else
+                        if (json.status) {
+                            jsonLoginResponse = json
+                            menuItemSyncViewModel.fetchResponseApi()
+                        } else
                             showDialogBox(
                                 "Failed!!",
                                 "Cannot Login Unauthorized Access${getEmojiByUnicode(0x274C)}\n\nTip ${
@@ -104,9 +109,49 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
     }
 
     private fun nextFrag(storeNumber: ApkLoginJsonResponse) {
-        val item=Bundle()
-        item.putParcelable("TBL_VALUE",storeNumber)
-        findNavController().navigate(R.id.action_loginScreenFragment_to_tableManagementOrCostEstimate,item)
+        val item = Bundle()
+        item.putParcelable("TBL_VALUE", storeNumber)
+        findNavController().navigate(
+            R.id.action_loginScreenFragment_to_tableManagementOrCostEstimate,
+            item
+        )
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun syncMenuResponse() {
+        menuItemSyncViewModel.fdInfo.observe(this) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    hideProgress()
+                    val err = it.exception?.localizedMessage
+                    err?.let { e ->
+                        showDialogBox(
+                            "Failure",
+                            e,
+                            icon = R.drawable.ic_error
+                        ) {}
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.loginBtnId.showButtonProgress(
+                        "Syncing menu ${getEmojiByUnicode(0x1F4A1)}...",
+                        requireActivity().getColorInt(R.color.white)
+                    )
+                }
+                is ApisResponse.Success -> {
+                    hideProgress()
+                    jsonLoginResponse?.let { jsn ->
+                        nextFrag(jsn)
+                    } ?: run {
+                        showDialogBox(
+                            "Failure",
+                            "Cannot Generate Menu Response!!",
+                            icon = R.drawable.ic_error
+                        ) {}
+                    }
+                }
+            }
+        }
     }
 
 
