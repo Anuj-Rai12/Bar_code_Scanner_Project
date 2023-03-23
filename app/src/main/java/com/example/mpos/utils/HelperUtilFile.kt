@@ -9,6 +9,8 @@ import android.text.InputType
 import android.util.Base64
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -834,6 +836,27 @@ fun Activity.isValidUrl(url: String?): Boolean {
 
 fun createLogStatement(tag: String, msg: String) {
     Log.i(tag, "createLogStatement: $msg")
+}
+
+
+
+
+fun Fragment.showKeyBoard(view: View) {
+    if (isAdded && activity != null) {
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        imm!!.toggleSoftInput(
+            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.HIDE_IMPLICIT_ONLY
+        )
+        view.requestFocus()
+    }
+}
+
+fun Activity.hideKeyBoard(view: View) {
+    val imm = (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+    imm.hideSoftInputFromWindow(view.windowToken, 0)
+    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 }
 
 

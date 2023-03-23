@@ -11,6 +11,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,6 +19,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mpos.FoodAdaptor
 import com.example.mpos.MainActivity
 import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
@@ -52,6 +54,7 @@ import com.example.mpos.ui.optionsbottomsheet.InfoBottomSheet
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
+import com.example.mpos.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.mpos.use_case.AlphaNumericString
 import com.example.mpos.utils.*
 import com.example.mpos.utils.print.recpit.PrintViewModel
@@ -67,7 +70,11 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private val confirmOrderViewModel: ConfirmOrderFragmentViewModel by viewModels()
     private val viewModel: CostDashBoardViewModel by viewModels()
+    private val searchViewModel: SearchFoodViewModel by viewModels()
     private val printBillViewModel: PrintViewModel by viewModels()
+
+
+    private lateinit var searchFoodAdaptor: FoodAdaptor
 
     private var isPrinterConnected: Boolean = false
     private lateinit var callback: ItemTouchHelper.SimpleCallback
@@ -136,6 +143,10 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         getPrintInvoiceResponse()
         getBillPrintResponse()
 
+        //Set Search Adaptor
+        setSearchAdaptorView()
+        getItemSearchInfo()
+
         (activity as MainActivity?)?.getPermissionForBlueTooth()
         val flag = activity?.checkBlueConnectPermission()
         if (flag == false) {
@@ -144,6 +155,14 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             )
         }
 
+
+        binding.menuSearchEd.doOnTextChanged { txt, _, _, _ ->
+            if (!txt.isNullOrEmpty()) {
+                searchViewModel.searchQuery("%$txt%")
+            }else{
+                searchFoodAdaptor.submitList(listOf())
+            }
+        }
 
         binding.option.setOnClickListener {
             if (isOptionMnuVisible) {
@@ -250,6 +269,38 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         printBillViewModel.init()
     }
 
+
+    private fun setSearchAdaptorView() {
+        binding.menuRecycle.apply {
+            searchFoodAdaptor = FoodAdaptor {
+                activity?.msg("$it")
+                binding.menuSearchEd.setText("")
+            }
+            adapter = searchFoodAdaptor
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    @SuppressLint("NotifyDataSetChanged")
+    private fun getItemSearchInfo() {
+        searchViewModel.fdInfo.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    //hideOrShow(null)
+                    it.exception?.localizedMessage?.let { e ->
+                        //showSnackBar(e, R.color.color_red, Snackbar.LENGTH_INDEFINITE)
+                        activity?.msg(e)
+                    }
+                }
+                is ApisResponse.Loading -> {}
+                is ApisResponse.Success -> {
+                    searchFoodAdaptor.notifyDataSetChanged()
+                    val ls=it.data as List<ItemMaster>?
+                    searchFoodAdaptor.submitList(ls)
+                }
+            }
+        }
+    }
     private fun setUpCostEstimation(): Boolean {
         receiptNo = AlphaNumericString.getAlphaNumericString(8)
         confirmBillingRequest = ConfirmBillingRequest(
@@ -264,6 +315,16 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         return true
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        showKeyBoard(binding.menuSearchEd)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.hideKeyBoard(binding.menuSearchEd)
+    }
 
     private fun getBillPrintResponse() {
         printBillViewModel.doPrintInvoicePrinting.observe(viewLifecycleOwner) {
@@ -530,7 +591,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     intent.putExtra("payment", pay)
                     intent.putExtra("tableNo", "1")
                     intent.putExtra("KOTPrintFromEDC", args.selectioncls.kotPrintFromEDC)
-                    intent.putExtra("TBL_VALUE",args.selectioncls.apk)
+                    intent.putExtra("TBL_VALUE", args.selectioncls.apk)
                     startActivity(intent)
                 }
             }
