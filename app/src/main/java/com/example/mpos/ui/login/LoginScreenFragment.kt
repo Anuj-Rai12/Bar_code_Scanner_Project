@@ -35,6 +35,13 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
             }
         }
 
+
+        menuItemSyncViewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { msg ->
+                showDialogBox("Failed",msg){}
+            }
+        }
+
         bindProgressButton(binding.loginBtnId)
 
         binding.loginBtnId.setOnClickListener {
@@ -77,7 +84,8 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                         val json = res as ApkLoginJsonResponse
                         if (json.status) {
                             jsonLoginResponse = json
-                            menuItemSyncViewModel.fetchResponseApi()
+                            activity?.msg("LOGIN SUCCESS!!")
+                            menuItemSyncViewModel.fetchResponseApi(storeID = viewModel.storeId)
                         } else
                             showDialogBox(
                                 "Failed!!",

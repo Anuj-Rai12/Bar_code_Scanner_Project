@@ -1,7 +1,6 @@
 package com.example.mpos.ui.searchfood.view_model
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -80,6 +79,22 @@ class SearchFoodViewModel constructor(
             }
         }
     }
+
+
+    //For Login Check In Response Type
+    fun fetchResponseApi(storeID:String) {
+        if (!this::repository.isInitialized) {
+            _event.postValue(Events("Unknown Error"))
+            return
+        }
+        viewModelScope.launch {
+            repository.getItemMasterSync(storeID,"Table Reservation").collectLatest { res ->
+                _fdInfo.postValue(res)
+            }
+        }
+    }
+
+
 
     fun getCrossSellingItem(itemCode: String) {
         if (!this::repository.isInitialized) {

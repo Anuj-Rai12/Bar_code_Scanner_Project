@@ -24,7 +24,7 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
     private val app = application
 
     private lateinit var repository: LoginRepositoryImpl
-    private var storeId: String = "PER002"
+    var storeId: String = "PER002"
 
     init {
         viewModelScope.launch {

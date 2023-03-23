@@ -28,28 +28,30 @@ class SearchFoodRepositoryImpl constructor(
     private val crossSellingApi = buildApi<CrossSellingApi>(retrofit)
     private val dao = roomDataBaseInstance.itemDao()
 
-    override fun getItemMasterSync(stateNo: String) = networkBoundResource(query = {
-        dao.getAllItem()
-    }, fetch = {
-        val info = api.getItemMasterSync(
-            ItemMasterSyncRequest(
-                TableInformation(
-                    storeNo = stateNo,
-                    screenType = RestaurantSingletonCls.getInstance().getScreenType()!!
+    override fun getItemMasterSync(stateNo: String, screenType: String?) =
+        networkBoundResource(query = {
+            dao.getAllItem()
+        }, fetch = {
+            val info = api.getItemMasterSync(
+                ItemMasterSyncRequest(
+                    TableInformation(
+                        storeNo = stateNo,
+                        screenType = screenType ?: RestaurantSingletonCls.getInstance()
+                            .getScreenType()!!
+                    )
                 )
             )
-        )
-        info.body()?.apkLoginResult?.value?.let {
-            return@let deserializeFromJson<ItemMethodSyncJsonResponse>(it)
-        }!!.itemMaster
-    }, saveFetchResult = { item ->
-        roomDataBaseInstance.withTransaction {
-            dao.deleteAllData()
-            dao.insertAllItem(item)
-        }
-    }, shouldFetch = {
-        application.isNetworkAvailable()
-    }).flowOn(IO)
+            info.body()?.apkLoginResult?.value?.let {
+                return@let deserializeFromJson<ItemMethodSyncJsonResponse>(it)
+            }!!.itemMaster
+        }, saveFetchResult = { item ->
+            roomDataBaseInstance.withTransaction {
+                dao.deleteAllData()
+                dao.insertAllItem(item)
+            }
+        }, shouldFetch = {
+            application.isNetworkAvailable()
+        }).flowOn(IO)
 
     override fun getSearchFoodItem(query: String) = channelFlow {
         dao.searchResult(query).collectLatest {
