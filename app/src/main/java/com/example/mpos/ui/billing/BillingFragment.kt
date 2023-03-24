@@ -273,8 +273,10 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
     private fun setSearchAdaptorView() {
         binding.menuRecycle.apply {
             searchFoodAdaptor = FoodAdaptor {
-                activity?.msg("$it")
                 binding.menuSearchEd.setText("")
+                arrItem.add(it)
+                createLogStatement("TAG_ARR","Item Size ${arrItem.size}")
+                setInitialValue()
             }
             adapter = searchFoodAdaptor
         }
@@ -717,6 +719,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         arrItem.clear()
                         arrItem.addAll(data)
                         confirmOderFragmentAdaptor.setQtyBoxType(true)
+                        createLogStatement("TAG_LOG","the Search Info ${data.isEmpty()} and ${arrItem.isEmpty()}")
                         setUpRecycleAdaptor(data)
                     }
                 }

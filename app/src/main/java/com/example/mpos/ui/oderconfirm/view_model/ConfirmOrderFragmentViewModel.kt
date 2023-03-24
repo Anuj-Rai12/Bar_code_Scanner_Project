@@ -134,6 +134,7 @@ class ConfirmOrderFragmentViewModel constructor(
 
 
     fun getOrderList(foodItemList: FoodItemList?) {
+        createLogStatement("TAG_RES","$foodItemList")
         foodItemList?.let { foodItem ->
             if (foodItem.foodList.isNotEmpty())
                 _listOfOrder.postValue(ApisResponse.Success(foodItem.foodList))

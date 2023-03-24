@@ -7,19 +7,32 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.FoodItemResultItemBinding
+import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
+import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
+import com.example.mpos.utils.createLogStatement
 
-typealias listenerItem = (data: ItemMaster) -> Unit
+typealias listenerItem = (data: ItemMasterFoodItem) -> Unit
 
 class FoodAdaptor(private val itemClicked: listenerItem) :
     ListAdapter<ItemMaster, FoodAdaptor.FoodItemViewHolder>(diffUtil) {
     inner class FoodItemViewHolder(private val binding: FoodItemResultItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun setData(data: ItemMaster, itemClicked: listenerItem) {
+
             binding.txtFood.text = data.itemName.ifEmpty {
                 data.itemDescription
             }
             binding.root.setOnClickListener {
-                itemClicked.invoke(data)
+                createLogStatement("FOOD_TAB","The DATA VALUE IS $data")
+                data.foodQty = if (data.foodQty > 0) data.foodQty else 1.0
+                val amt = (ListOfFoodItemToSearchAdaptor.setPrice(data.salePrice) * data.foodQty)
+                data.foodAmt = "%.4f".format(amt).toDouble()
+                itemClicked(
+                    ItemMasterFoodItem(
+                        data, foodAmt = data.foodAmt, foodQty = data.foodQty
+                    )
+                )
+                //itemClicked.invoke(data)
             }
         }
     }
