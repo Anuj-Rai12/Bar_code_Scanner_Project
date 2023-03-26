@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Canvas
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -61,7 +62,6 @@ import com.example.mpos.utils.print.recpit.PrintViewModel
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
-import kotlin.collections.ArrayList
 
 class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomSheetClickListener {
     private lateinit var binding: BillingFragmentLayoutBinding
@@ -149,7 +149,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
         (activity as MainActivity?)?.getPermissionForBlueTooth()
         val flag = activity?.checkBlueConnectPermission()
-        if (flag == false) {
+        if (flag == false && Build.VERSION.SDK_INT>=Build.VERSION_CODES.S) {
             (activity as MainActivity?)?.requestPermission(
                 Manifest.permission.BLUETOOTH_CONNECT, BLUE_CONNECT, "Bluetooth"
             )
@@ -158,8 +158,10 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
         binding.menuSearchEd.doOnTextChanged { txt, _, _, _ ->
             if (!txt.isNullOrEmpty()) {
+                binding.menuRecycle.show()
                 searchViewModel.searchQuery("%$txt%")
-            }else{
+            } else {
+                binding.menuRecycle.hide()
                 searchFoodAdaptor.submitList(listOf())
             }
         }
@@ -275,7 +277,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             searchFoodAdaptor = FoodAdaptor {
                 binding.menuSearchEd.setText("")
                 arrItem.add(it)
-                createLogStatement("TAG_ARR","Item Size ${arrItem.size}")
+                createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
                 setInitialValue()
             }
             adapter = searchFoodAdaptor
@@ -289,20 +291,29 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             when (it) {
                 is ApisResponse.Error -> {
                     //hideOrShow(null)
+                    binding.menuRecycle.hide()
                     it.exception?.localizedMessage?.let { e ->
                         //showSnackBar(e, R.color.color_red, Snackbar.LENGTH_INDEFINITE)
                         activity?.msg(e)
                     }
                 }
-                is ApisResponse.Loading -> {}
+                is ApisResponse.Loading -> {
+                    binding.menuRecycle.show()
+                }
                 is ApisResponse.Success -> {
                     searchFoodAdaptor.notifyDataSetChanged()
-                    val ls=it.data as List<ItemMaster>?
+                    val ls = it.data as List<ItemMaster>?
+                    if (ls.isNullOrEmpty()){
+                        binding.menuRecycle.hide()
+                    }else {
+                        binding.menuSearchEd.show()
+                    }
                     searchFoodAdaptor.submitList(ls)
                 }
             }
         }
     }
+
     private fun setUpCostEstimation(): Boolean {
         receiptNo = AlphaNumericString.getAlphaNumericString(8)
         confirmBillingRequest = ConfirmBillingRequest(
@@ -509,8 +520,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 is ApisResponse.Success -> {
                     hidePb()
                     val billObj = confirmBillingRequest?.body!!
-                    //args.selectioncls.billingFromEDC
-                    if (true) {
+                    if (args.selectioncls.billingFromEDC) {
                         viewModel.sendBillingToEdcPaymentRequest(
                             BillingFromEDCRequest(
                                 BillingToEdcRequestBody(
@@ -719,7 +729,10 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         arrItem.clear()
                         arrItem.addAll(data)
                         confirmOderFragmentAdaptor.setQtyBoxType(true)
-                        createLogStatement("TAG_LOG","the Search Info ${data.isEmpty()} and ${arrItem.isEmpty()}")
+                        createLogStatement(
+                            "TAG_LOG",
+                            "the Search Info ${data.isEmpty()} and ${arrItem.isEmpty()}"
+                        )
                         setUpRecycleAdaptor(data)
                     }
                 }
@@ -840,7 +853,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         } else if (args.list == null && arrItem.isNotEmpty()) {
             list.addAll(arrItem)
             confirmOrderViewModel.getOrderList(FoodItemList(list))
-        } else if (args.list == null && list.isEmpty()) {
+        } else if (args.list == null) {
             confirmOrderViewModel.getOrderList(null)
         }
     }
