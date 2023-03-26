@@ -281,6 +281,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         binding.menuRecycle.apply {
             searchFoodAdaptor = FoodAdaptor {
                 binding.menuSearchEd.setText("")
+                DealsStoreInstance.getInstance().setIsResetButtonClick(false)
                 if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
                     crossSellingItemMaster = it
                     searchViewModel.getCrossSellingItem(it.itemMaster.itemCode)
