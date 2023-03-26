@@ -91,6 +91,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private var isOptionMnuVisible: Boolean = false
 
+    private var crossSellingItemMaster: ItemMasterFoodItem? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
@@ -147,9 +149,12 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         setSearchAdaptorView()
         getItemSearchInfo()
 
+        //Get Cross Selling Item
+        getCrossSellingResponse()
+
         (activity as MainActivity?)?.getPermissionForBlueTooth()
         val flag = activity?.checkBlueConnectPermission()
-        if (flag == false && Build.VERSION.SDK_INT>=Build.VERSION_CODES.S) {
+        if (flag == false && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             (activity as MainActivity?)?.requestPermission(
                 Manifest.permission.BLUETOOTH_CONNECT, BLUE_CONNECT, "Bluetooth"
             )
@@ -276,12 +281,50 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         binding.menuRecycle.apply {
             searchFoodAdaptor = FoodAdaptor {
                 binding.menuSearchEd.setText("")
-                arrItem.add(it)
-                createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
-                setInitialValue()
+                if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
+                    crossSellingItemMaster = it
+                    searchViewModel.getCrossSellingItem(it.itemMaster.itemCode)
+                } else {
+                    arrItem.add(it)
+                    createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                    setInitialValue()
+                }
             }
             adapter = searchFoodAdaptor
         }
+    }
+
+
+    private fun getCrossSellingResponse() {
+        searchViewModel.crossSellingResponse.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    binding.pbLayout.root.hide()
+                    if (it.data != null) {
+                        showDialogBox("Failed", "${it.data}", icon = R.drawable.ic_error) {}
+                    } else {
+                        it.exception?.localizedMessage?.let { exp ->
+                            showDialogBox("Failed", exp, icon = R.drawable.ic_error) {}
+                        }
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.pbLayout.root.show()
+                    binding.pbLayout.titleTxt.text = it.data as String
+                }
+                is ApisResponse.Success -> {
+                    binding.pbLayout.root.hide()
+                    val res = it.data as CrossSellingJsonResponse
+                    openCrossSellingDialog(res)
+                }
+            }
+        }
+    }
+
+    private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
+        val dialog = CrossSellingDialog(activity!!)
+        dialog.itemClicked = this
+        dialog.showCrossSellingDialog(response)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -303,9 +346,9 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 is ApisResponse.Success -> {
                     searchFoodAdaptor.notifyDataSetChanged()
                     val ls = it.data as List<ItemMaster>?
-                    if (ls.isNullOrEmpty()){
+                    if (ls.isNullOrEmpty()) {
                         binding.menuRecycle.hide()
-                    }else {
+                    } else {
                         binding.menuSearchEd.show()
                     }
                     searchFoodAdaptor.submitList(ls)
@@ -937,6 +980,10 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             navDialog(response)
             return
         }
+        if (response is Pair<*, *> && response.first is Double && response.second is CrossSellingJsonResponse) {
+            processCrossSellingItem(response as Pair<Double, CrossSellingJsonResponse>)
+            return
+        }
         val barcode = (response as Pair<*, *>).first as BarcodeJsonResponse
         val crossSellingItems =
             (response as Pair<*, *>).second as Pair<Double, CrossSellingJsonResponse>?
@@ -973,6 +1020,35 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         )
         confirmOrderViewModel.getOrderList(FoodItemList(mutableList))
         activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
+    }
+
+    private fun processCrossSellingItem(res: Pair<Double, CrossSellingJsonResponse>) {
+        crossSellingItemMaster?.let {
+            arrItem.add(
+                ItemMasterFoodItem(
+                    itemMaster = it.itemMaster,
+                    foodQty = it.foodQty,
+                    foodAmt = it.foodAmt + res.first,
+                    bg = listOfBg[2],
+                    free_txt = it.free_txt,
+                    isDeal = it.isDeal,
+                    crossSellingItems = res.second
+                )
+            )
+            crossSellingItemMaster = null
+            arrItem.add(it)
+            //createLogStatement("TAG_ARR_txt", "Item Size ${arrItem.size} and $arrItem")
+            val item = arrItem.filter { res ->
+                res.itemMaster.id == it.itemMaster.id && res.crossSellingItems==null
+                        && res.itemMaster.crossSellingAllow.lowercase().toBoolean()
+            }
+            //createLogStatement("TAG_ARR_txt","FILTER ARR IS ${item.size} $item")
+            if (item.isNotEmpty()){
+                arrItem.removeAll(item)
+            }
+            //createLogStatement("TAG_ARR_txt", "Item Size ${arrItem.size} and $arrItem")
+            setInitialValue()
+        } ?: activity?.msg("Cannot Add Item")
     }
 
     private fun navDialog(info: GenericDataCls) {
