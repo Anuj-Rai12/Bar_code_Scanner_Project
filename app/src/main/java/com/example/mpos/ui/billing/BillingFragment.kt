@@ -335,6 +335,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             when (it) {
                 is ApisResponse.Error -> {
                     //hideOrShow(null)
+                    createLogStatement("TAG_RES","${it.data}")
                     binding.menuRecycle.hide()
                     it.exception?.localizedMessage?.let { e ->
                         //showSnackBar(e, R.color.color_red, Snackbar.LENGTH_INDEFINITE)
@@ -346,6 +347,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 }
                 is ApisResponse.Success -> {
                     searchFoodAdaptor.notifyDataSetChanged()
+                    createLogStatement("TAG_RES","${it.data}")
                     val ls = it.data as List<ItemMaster>?
                     if (ls.isNullOrEmpty()) {
                         binding.menuRecycle.hide()
