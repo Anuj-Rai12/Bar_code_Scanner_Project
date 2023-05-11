@@ -292,7 +292,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
 
     private fun getPosItemRequest() {
         confirmOrderViewModel.postLine.observe(viewLifecycleOwner) { pair ->
-            pair.second.let {
+            pair?.second?.let {
                 when (it) {
                     is ApisResponse.Error -> {
                         hidePb()

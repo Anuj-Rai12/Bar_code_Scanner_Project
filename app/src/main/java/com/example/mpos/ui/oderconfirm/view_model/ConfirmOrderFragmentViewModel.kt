@@ -1,5 +1,6 @@
 package com.example.mpos.ui.oderconfirm.view_model
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -60,8 +61,8 @@ class ConfirmOrderFragmentViewModel constructor(
     val orderDining: LiveData<ApisResponse<out Any?>>
         get() = _orderDining
 
-    private val _orderConfirm = MutableLiveData<ApisResponse<out Any?>>()
-    val orderConfirm: LiveData<ApisResponse<out Any?>>
+    private val _orderConfirm = MutableLiveData<ApisResponse<out Any?>?>()
+    val orderConfirm: LiveData<ApisResponse<out Any?>?>
         get() = _orderConfirm
 
 
@@ -69,8 +70,8 @@ class ConfirmOrderFragmentViewModel constructor(
     val occupiedTbl: LiveData<ApisResponse<out Any>>
         get() = _occupiedTbl
 
-    private val _postLine = MutableLiveData<Pair<String, ApisResponse<out String>>>()
-    val postLine: LiveData<Pair<String, ApisResponse<out String>>>
+    private val _postLine = MutableLiveData<Pair<String, ApisResponse<out String>>?>()
+    val postLine: LiveData<Pair<String, ApisResponse<out String>>?>
         get() = _postLine
 
 
@@ -78,8 +79,8 @@ class ConfirmOrderFragmentViewModel constructor(
     val printBill: LiveData<Events<ApisResponse<out String>>>
         get() = _printBill
 
-    private val _listOfOrder = MutableLiveData<ApisResponse<out List<ItemMasterFoodItem>>>()
-    val listOfOrder: LiveData<ApisResponse<out List<ItemMasterFoodItem>>>
+    private val _listOfOrder = MutableLiveData<ApisResponse<out List<ItemMasterFoodItem>>?>()
+    val listOfOrder: LiveData<ApisResponse<out List<ItemMasterFoodItem>>?>
         get() = _listOfOrder
 
 
@@ -87,8 +88,8 @@ class ConfirmOrderFragmentViewModel constructor(
     val time: LiveData<String>
         get() = _time
 
-    private val _grandTotal = MutableLiveData<String>()
-    val grandTotal: LiveData<String>
+    private val _grandTotal = MutableLiveData<String?>()
+    val grandTotal: LiveData<String?>
         get() = _grandTotal
 
     fun init(){

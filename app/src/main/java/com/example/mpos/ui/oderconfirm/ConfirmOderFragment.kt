@@ -381,7 +381,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
     private fun getPosItemRequest() {
         viewModel.postLine.observe(viewLifecycleOwner) { pair ->
-            pair.second.let {
+            pair?.second?.let {
                 when (it) {
                     is ApisResponse.Error -> {
                         hidePb()

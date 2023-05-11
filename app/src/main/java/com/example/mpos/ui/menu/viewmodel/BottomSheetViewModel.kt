@@ -40,8 +40,8 @@ class BottomSheetViewModel(application: Application) : AndroidViewModel(applicat
         get() = _mnuItem
 
 
-    private val _mnuTab = MutableLiveData<List<String>>()
-    val mnuTab: LiveData<List<String>>
+    private val _mnuTab = MutableLiveData<List<String>?>()
+    val mnuTab: LiveData<List<String>?>
         get() = _mnuTab
 
 

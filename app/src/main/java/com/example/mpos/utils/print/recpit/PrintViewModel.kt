@@ -17,16 +17,16 @@ import java.io.Serializable
 class PrintViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    private val _isPrinterConnected = MutableLiveData<ApisResponse<out String>>()
-    val isPrinterConnected: LiveData<ApisResponse<out String>>
+    private val _isPrinterConnected = MutableLiveData<ApisResponse<out String>?>()
+    val isPrinterConnected: LiveData<ApisResponse<out String>?>
         get() = _isPrinterConnected
 
-    private val _doPrinting = MutableLiveData<ApisResponse<out Serializable>>()
-    val doPrinting: LiveData<ApisResponse<out Serializable>>
+    private val _doPrinting = MutableLiveData<ApisResponse<out Serializable>?>()
+    val doPrinting: LiveData<ApisResponse<out Serializable>?>
         get() = _doPrinting
 
-    private val _doPrintInvoicePrinting = MutableLiveData<ApisResponse<out String>>()
-    val doPrintInvoicePrinting: LiveData<ApisResponse<out String>>
+    private val _doPrintInvoicePrinting = MutableLiveData<ApisResponse<out String>?>()
+    val doPrintInvoicePrinting: LiveData<ApisResponse<out String>?>
         get() = _doPrintInvoicePrinting
 
     private val _doPrintPineInvoicePrinting = MutableLiveData<ApisResponse<out Serializable>>()

@@ -292,7 +292,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
 
     private fun getPosItemRequest() {
         confirmOrderViewModel.postLine.observe(viewLifecycleOwner) { pair ->
-            pair.second.let {
+            pair?.second?.let {
                 when (it) {
                     is ApisResponse.Error -> {
                         hidePb()

@@ -41,8 +41,8 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
         get() = _costEstimationResponse
 
 
-    private val _sendBillingToEdc = MutableLiveData<ApisResponse<out String?>>()
-    val sendBillingToEdc: LiveData<ApisResponse<out String?>>
+    private val _sendBillingToEdc = MutableLiveData<ApisResponse<out String?>?>()
+    val sendBillingToEdc: LiveData<ApisResponse<out String?>?>
         get() = _sendBillingToEdc
 
    private val _billingToEdc = MutableLiveData<ApisResponse<out String?>>()
@@ -50,24 +50,24 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
         get() = _billingToEdc
 
 
-    private val _printBillInvoice = MutableLiveData<ApisResponse<out Any?>>()
-    val printBillInvoice: LiveData<ApisResponse<out Any?>>
+    private val _printBillInvoice = MutableLiveData<ApisResponse<out Any?>?>()
+    val printBillInvoice: LiveData<ApisResponse<out Any?>?>
         get() = _printBillInvoice
 
-    private val _printBillKOTInvoice = MutableLiveData<ApisResponse<out Any?>>()
-    val printBillKOTInvoice: LiveData<ApisResponse<out Any?>>
+    private val _printBillKOTInvoice = MutableLiveData<ApisResponse<out Any?>?>()
+    val printBillKOTInvoice: LiveData<ApisResponse<out Any?>?>
         get() = _printBillKOTInvoice
 
-    private val _checkBillingStatus = MutableLiveData<ApisResponse<out String?>>()
-    val checkBillingStatus: LiveData<ApisResponse<out String?>>
+    private val _checkBillingStatus = MutableLiveData<ApisResponse<out String?>?>()
+    val checkBillingStatus: LiveData<ApisResponse<out String?>?>
         get() = _checkBillingStatus
 
     private val _checkBillingFromEdcStatus = MutableLiveData<ApisResponse<out String?>>()
     val checkBillingFromEdcStatus: LiveData<ApisResponse<out String?>>
         get() = _checkBillingFromEdcStatus
 
-    private val _confirmBillingResponse = MutableLiveData<ApisResponse<out String?>>()
-    val confirmBillingResponse: LiveData<ApisResponse<out String?>>
+    private val _confirmBillingResponse = MutableLiveData<ApisResponse<out String?>?>()
+    val confirmBillingResponse: LiveData<ApisResponse<out String?>?>
         get() = _confirmBillingResponse
 
     init {

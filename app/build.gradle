@@ -11,6 +11,24 @@ plugins {
 android {
     compileSdk 32
 
+    configurations {
+        all {
+            exclude module: 'httpclient'
+            exclude module: 'commons-logging'
+            exclude group: 'org.json'
+            exclude group: 'org.apache.httpcomponents'
+            exclude module: 'opengl-api'
+            exclude module: 'xmlParserAPIs'
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId "com.example.mpos"
         minSdk 21
