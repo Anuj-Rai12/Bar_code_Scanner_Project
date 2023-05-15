@@ -27,46 +27,50 @@ class TestingConnectionFragment : Fragment(R.layout.testing_connection_fragment)
     @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.changeStatusBarColor()
-        binding = TestingConnectionFragmentBinding.bind(view)
-        viewModel.events.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { str ->
-                if (str == "Please Scan Url") {
-                    getScannedUrl()
-                } else
-                    showSnackBar(str)
-            }
-        }
-
-        args.bar?.let {
-            try {
-                if (it.title != null && it.uri != null) {
-                    activity?.msg("${it.uri}")
-                    viewModel.scannerUrl = it.uri
-                } else {
-                    Log.i(TAG, "onViewCreated: url is Null")
+        try {
+            activity?.changeStatusBarColor()
+            binding = TestingConnectionFragmentBinding.bind(view)
+            viewModel.events.observe(viewLifecycleOwner) {
+                it.getContentIfNotHandled()?.let { str ->
+                    if (str == "Please Scan Url") {
+                        getScannedUrl()
+                    } else
+                        showSnackBar(str)
                 }
-            } catch (e: Exception) {
-                Log.i(TAG, "onViewCreated: ${e.localizedMessage}")
             }
-        }
 
-        checkApiResponse()
-
-        bindProgressButton(binding.testConnectionId)
-
-        binding.scanOrCodeId.setOnClickListener {
-            getScannedUrl()
-        }
-        binding.testConnectionId.setOnClickListener {
-            val userID = binding.userNameEd.text.toString()
-            val password = binding.userPassEd.text.toString()
-            val storeNo = binding.storeNoEd.text.toString()
-            if (checkFieldValue(userID) || checkFieldValue(password) || checkFieldValue(storeNo)) {
-                activity?.msg("Please Enter the Details Correctly")
-                return@setOnClickListener
+            args.bar?.let {
+                try {
+                    if (it.title != null && it.uri != null) {
+                        activity?.msg("${it.uri}")
+                        viewModel.scannerUrl = it.uri
+                    } else {
+                        Log.i(TAG, "onViewCreated: url is Null")
+                    }
+                } catch (e: Exception) {
+                    Log.i(TAG, "onViewCreated: ${e.localizedMessage}")
+                }
             }
-            viewModel.testTheUrl(userID.trim(), password.trim(), storeNo.trim())
+
+            checkApiResponse()
+
+            bindProgressButton(binding.testConnectionId)
+
+            binding.scanOrCodeId.setOnClickListener {
+                getScannedUrl()
+            }
+            binding.testConnectionId.setOnClickListener {
+                val userID = binding.userNameEd.text.toString()
+                val password = binding.userPassEd.text.toString()
+                val storeNo = binding.storeNoEd.text.toString()
+                if (checkFieldValue(userID) || checkFieldValue(password) || checkFieldValue(storeNo)) {
+                    activity?.msg("Please Enter the Details Correctly")
+                    return@setOnClickListener
+                }
+                viewModel.testTheUrl(userID.trim(), password.trim(), storeNo.trim())
+            }
+        } catch (e: Exception) {
+            createLogStatement("ERROR_Pro", "$e")
         }
     }
 

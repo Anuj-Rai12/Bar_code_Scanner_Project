@@ -23,23 +23,27 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.hide()
-        this.changeStatusBarColor()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        getPermission()
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-        val inflater = navHostFragment.navController.navInflater
-        val graph = inflater.inflate(R.navigation.nav_graph)
+        try {
+            this.hide()
+            this.changeStatusBarColor()
+            binding = ActivityMainBinding.inflate(layoutInflater)
+            setContentView(binding.root)
+            getPermission()
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+            val inflater = navHostFragment.navController.navInflater
+            val graph = inflater.inflate(R.navigation.nav_graph)
 
-        if (isShowMainScr != null && isShowMainScr == true) {
-            graph.setStartDestination(R.id.tableManagementOrCostEstimate)
-        } else {
-            graph.setStartDestination(R.id.splashScreenFragment)
+            if (isShowMainScr != null && isShowMainScr == true) {
+                graph.setStartDestination(R.id.tableManagementOrCostEstimate)
+            } else {
+                graph.setStartDestination(R.id.splashScreenFragment)
+            }
+            val navController = navHostFragment.navController
+            navController.setGraph(graph, intent.extras)
+        } catch (e: Exception) {
+            createLogStatement("TAG_PROD", "$e")
         }
-        val navController = navHostFragment.navController
-        navController.setGraph(graph, intent.extras)
     }
 
     fun getPermission() {
