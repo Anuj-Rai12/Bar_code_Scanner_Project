@@ -12,11 +12,13 @@ data class SelectionDataClass(
     val type: String,
     val dynamicMenuEnable: Boolean,
     val isBarcodeVisible: Boolean,
-    val kotPrintFromEDC:Boolean,
+    val kotPrintFromEDC: Boolean,
     val uPICode: String,
+    val modernSearch: Boolean,
+    val enableCustDetail: Boolean,
     val billingFromEDC: Boolean,
     val paymentLs: List<String>,
-    val apk:ApkLoginJsonResponse
+    val apk: ApkLoginJsonResponse
 ) : Parcelable {
     companion object {
         fun generateData(
@@ -29,7 +31,9 @@ data class SelectionDataClass(
             billingFromEDC: Boolean,
             paymentLs: List<String>,
             apk: ApkLoginJsonResponse,
-            kotPrintFromEDC:Boolean
+            kotPrintFromEDC: Boolean,
+            modernSearch: Boolean,
+            enableCustDetail: Boolean
         ): SelectionDataClass {
             return SelectionDataClass(
                 image = img,
@@ -40,20 +44,15 @@ data class SelectionDataClass(
                 uPICode = upi,
                 billingFromEDC = billingFromEDC,
                 paymentLs = paymentLs,
-                apk =apk,
-                kotPrintFromEDC = kotPrintFromEDC
+                apk = apk,
+                kotPrintFromEDC = kotPrintFromEDC,
+                modernSearch = modernSearch,
+                enableCustDetail = enableCustDetail
             )
         }
 
         enum class RestaurantSelection {
-            TABLEMGT,
-            TABLERESERVATION,
-            ESTIMATION,
-            BILLING,
-            SHOWROOMESTIMATE,
-            RESTAURANTESTIMATE,
-            SHOWROOMBILLING,
-            RESTAURANTBILLING
+            TABLEMGT, TABLERESERVATION, ESTIMATION, BILLING, SHOWROOMESTIMATE, RESTAURANTESTIMATE, SHOWROOMBILLING, RESTAURANTBILLING
         }
 
         const val TABLE_MGT = "Table Management"

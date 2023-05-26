@@ -105,7 +105,9 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.billingFromEDC,
                             item.paymentLs,
                             args!!,
-                            kotPrintFromEDC = item.kotPrintFromEDC
+                            kotPrintFromEDC = item.kotPrintFromEDC,
+                            enableCustDetail = item.enableCustDetail,
+                            modernSearch = item.modernSearch
                         )
                     )
                 }
@@ -121,7 +123,9 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.billingFromEDC,
                             item.paymentLs,
                             args!!,
-                            kotPrintFromEDC = item.kotPrintFromEDC
+                            kotPrintFromEDC = item.kotPrintFromEDC,
+                            enableCustDetail = item.enableCustDetail,
+                            modernSearch = item.modernSearch
                         )
                     )
                 }
@@ -138,6 +142,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.paymentLs,
                             args!!,
                             kotPrintFromEDC = item.kotPrintFromEDC,
+                            enableCustDetail = item.enableCustDetail,
+                            modernSearch = item.modernSearch
                         )
                     )
                 }
@@ -153,7 +159,9 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.billingFromEDC,
                             item.paymentLs,
                             args!!,
-                            kotPrintFromEDC = item.kotPrintFromEDC
+                            kotPrintFromEDC = item.kotPrintFromEDC,
+                            enableCustDetail = item.enableCustDetail,
+                            modernSearch = item.modernSearch
                         )
                     )
                 }
@@ -169,7 +177,9 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.billingFromEDC,
                             item.paymentLs,
                             args!!,
-                            kotPrintFromEDC = item.kotPrintFromEDC
+                            kotPrintFromEDC = item.kotPrintFromEDC,
+                            enableCustDetail = item.enableCustDetail,
+                            modernSearch = item.modernSearch
                         )
                     )
                 }
@@ -185,7 +195,9 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.billingFromEDC,
                             item.paymentLs,
                             args!!,
-                            kotPrintFromEDC = item.kotPrintFromEDC
+                            kotPrintFromEDC = item.kotPrintFromEDC,
+                            enableCustDetail = item.enableCustDetail,
+                            modernSearch = item.modernSearch
                         )
                     )
                 }
@@ -201,7 +213,9 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.billingFromEDC,
                             item.paymentLs,
                             args!!,
-                            kotPrintFromEDC = item.kotPrintFromEDC
+                            kotPrintFromEDC = item.kotPrintFromEDC,
+                            enableCustDetail = item.enableCustDetail,
+                            modernSearch = item.modernSearch
                         )
                     )
                 }
@@ -217,7 +231,9 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             item.billingFromEDC,
                             item.paymentLs,
                             args!!,
-                            kotPrintFromEDC = item.kotPrintFromEDC
+                            kotPrintFromEDC = item.kotPrintFromEDC,
+                            enableCustDetail = item.enableCustDetail,
+                            modernSearch = item.modernSearch
                         )
                     )
                 }

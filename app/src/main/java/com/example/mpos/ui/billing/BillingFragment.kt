@@ -238,6 +238,11 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             }
         }
 
+        if (!args.selectioncls.modernSearch) {
+            binding.searchBtnTxt.hide()
+            binding.searchBoxTxt.show()
+        }
+
         binding.searchBoxTxt.setOnClickListener {
             //New Fragment
             Log.i(TAG, "Search: CustomerDining $customDiningRequest")
@@ -335,7 +340,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             when (it) {
                 is ApisResponse.Error -> {
                     //hideOrShow(null)
-                    createLogStatement("TAG_RES","${it.data}")
+                    createLogStatement("TAG_RES", "${it.data}")
                     binding.menuRecycle.hide()
                     it.exception?.localizedMessage?.let { e ->
                         //showSnackBar(e, R.color.color_red, Snackbar.LENGTH_INDEFINITE)
@@ -347,7 +352,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 }
                 is ApisResponse.Success -> {
                     searchFoodAdaptor.notifyDataSetChanged()
-                    createLogStatement("TAG_RES","${it.data}")
+                    createLogStatement("TAG_RES", "${it.data}")
                     val ls = it.data as List<ItemMaster>?
                     if (ls.isNullOrEmpty()) {
                         binding.menuRecycle.hide()
@@ -1042,11 +1047,11 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             arrItem.add(it)
             //createLogStatement("TAG_ARR_txt", "Item Size ${arrItem.size} and $arrItem")
             val item = arrItem.filter { res ->
-                res.itemMaster.id == it.itemMaster.id && res.crossSellingItems==null
+                res.itemMaster.id == it.itemMaster.id && res.crossSellingItems == null
                         && res.itemMaster.crossSellingAllow.lowercase().toBoolean()
             }
             //createLogStatement("TAG_ARR_txt","FILTER ARR IS ${item.size} $item")
-            if (item.isNotEmpty()){
+            if (item.isNotEmpty()) {
                 arrItem.removeAll(item)
             }
             //createLogStatement("TAG_ARR_txt", "Item Size ${arrItem.size} and $arrItem")
