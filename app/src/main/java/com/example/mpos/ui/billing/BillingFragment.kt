@@ -382,6 +382,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     override fun onResume() {
         super.onResume()
+        if (args.selectioncls.modernSearch)
         showKeyBoard(binding.menuSearchEd)
     }
 
