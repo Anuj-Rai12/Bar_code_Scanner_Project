@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/semi_white_color"
-    tools:context="com.example.mpos.ui.showroom.ShowRoomEstimationFragment">
+    tools:context="com.example.mpos.ui.billing.BillingFragment">
 
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/food_mnu_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/circle_shape"
         android:contentDescription="Food menu"
         android:elevation="5dp"
@@ -19,6 +20,45 @@
         android:minHeight="48dp"
         android:padding="10dp"
         android:src="@drawable/ic_food_mnu"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/check_status_ic"
+        app:layout_constraintLeft_toLeftOf="@id/check_status_ic"
+        app:layout_constraintRight_toRightOf="@id/check_status_ic"
+        app:tint="#019DE2"
+        tools:visibility="visible" />
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/check_status_ic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/circle_shape"
+        android:contentDescription="Check Bill Status"
+        android:elevation="5dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:src="@drawable/check_status_ic"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/option"
+        app:layout_constraintLeft_toLeftOf="@id/option"
+        app:layout_constraintRight_toRightOf="@id/option"
+        app:tint="@color/dark_green_color"
+        tools:visibility="visible" />
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/circle_shape"
+        android:contentDescription="Menu Option"
+        android:elevation="5dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:src="@drawable/option_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/confirm_order_btn"
         app:layout_constraintRight_toRightOf="parent"
@@ -103,9 +143,51 @@
         android:background="@drawable/white_underline_boder"
         android:drawableEnd="@drawable/ic_search_24"
         android:drawablePadding="10dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/search_btn_txt"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/qr_code_scan"
         app:layout_constraintTop_toBottomOf="@id/tbl_detail_layout" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_btn_txt"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:visibility="visible"
+        app:boxBackgroundColor="@color/gray_card"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:boxStrokeColor="@color/light_red_color"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/black"
+        app:hintEnabled="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/qr_code_scan"
+        app:layout_constraintTop_toBottomOf="@id/tbl_detail_layout"
+        app:startIconDrawable="@drawable/ic_search_24"
+        app:startIconTint="@color/black">
+
+
+        <EditText
+            android:id="@+id/menu_search_ed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Menu Search.."
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <ImageButton
         android:id="@+id/qr_code_scan"
@@ -365,6 +447,18 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/menu_recycle"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="5dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintLeft_toLeftOf="@id/search_btn_txt"
+        app:layout_constraintRight_toRightOf="@id/search_btn_txt"
+        app:layout_constraintTop_toBottomOf="@id/search_btn_txt"
+        tools:listitem="@layout/food_item_result_item" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mpos.FoodAdaptor
 import com.example.mpos.MainActivity
 import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
@@ -39,6 +41,7 @@ import com.example.mpos.ui.optionsbottomsheet.InfoBottomSheet
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
+import com.example.mpos.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.mpos.use_case.AlphaNumericString
 import com.example.mpos.utils.*
 import com.example.mpos.utils.print.recpit.PrintViewModel
@@ -68,11 +71,15 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     private var costEstimation: CostEstimation? = null
 
 
+    private val searchViewModel: SearchFoodViewModel by viewModels()
+    private var crossSellingItemMaster: ItemMasterFoodItem? = null
+    private lateinit var searchFoodAdaptor: FoodAdaptor
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
         binding = CostCalDashbordLayoutBinding.bind(view)
-        binding.tableId2.text=args.selectioncls.title
+        binding.tableId2.text = args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = CostDashBoardFragmentDirections.actionGlobalScanQrCodeFragment(
                 Url_Text,
@@ -121,6 +128,16 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
         getPrintConnectResponse()
         getBillPrintResponse()
+
+
+        //Set Search Adaptor
+        setSearchAdaptorView()
+        getItemSearchInfo()
+
+        //Get Cross Selling Item
+        getCrossSellingResponse()
+
+
         (activity as MainActivity?)?.getPermissionForBlueTooth()
         val flag = activity?.checkBlueConnectPermission()
         if (flag == false) {
@@ -149,7 +166,12 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
         binding.infoBtn.setOnClickListener {
             //Show Swipe dialog
-            activity?.dialogOption(listOf("${getEmojiByUnicode( 0x1F642)} About User", "${getEmojiByUnicode( 0x1F4A1)} Help"), this)
+            activity?.dialogOption(
+                listOf(
+                    "${getEmojiByUnicode(0x1F642)} About User",
+                    "${getEmojiByUnicode(0x1F4A1)} Help"
+                ), this
+            )
         }
 
         binding.searchBoxTxt.setOnClickListener {
@@ -164,6 +186,19 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             )
             findNavController().safeNavigate(action)
         }
+
+
+
+        binding.menuSearchEd.doOnTextChanged { txt, _, _, _ ->
+            if (!txt.isNullOrEmpty()) {
+                binding.menuRecycle.show()
+                searchViewModel.searchQuery("%$txt%")
+            } else {
+                binding.menuRecycle.hide()
+                searchFoodAdaptor.submitList(listOf())
+            }
+        }
+
 
 
         binding.infoBtn.setOnLongClickListener {
@@ -181,6 +216,92 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         }
 
     }
+
+
+    private fun getCrossSellingResponse() {
+        searchViewModel.crossSellingResponse.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    binding.pbLayout.root.hide()
+                    if (it.data != null) {
+                        showDialogBox("Failed", "${it.data}", icon = R.drawable.ic_error) {}
+                    } else {
+                        it.exception?.localizedMessage?.let { exp ->
+                            showDialogBox("Failed", exp, icon = R.drawable.ic_error) {}
+                        }
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.pbLayout.root.show()
+                    binding.pbLayout.titleTxt.text = it.data as String
+                }
+                is ApisResponse.Success -> {
+                    binding.pbLayout.root.hide()
+                    val res = it.data as CrossSellingJsonResponse
+                    openCrossSellingDialog(res)
+                }
+            }
+        }
+    }
+
+    private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
+        val dialog = CrossSellingDialog(activity!!)
+        dialog.itemClicked = this
+        dialog.showCrossSellingDialog(response)
+    }
+
+
+    @Suppress("UNCHECKED_CAST")
+    @SuppressLint("NotifyDataSetChanged")
+    private fun getItemSearchInfo() {
+        searchViewModel.fdInfo.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    //hideOrShow(null)
+                    createLogStatement("TAG_RES", "${it.data}")
+                    binding.menuRecycle.hide()
+                    it.exception?.localizedMessage?.let { e ->
+                        //showSnackBar(e, R.color.color_red, Snackbar.LENGTH_INDEFINITE)
+                        activity?.msg(e)
+                    }
+                }
+                is ApisResponse.Loading -> {
+                    binding.menuRecycle.show()
+                }
+                is ApisResponse.Success -> {
+                    searchFoodAdaptor.notifyDataSetChanged()
+                    createLogStatement("TAG_RES", "${it.data}")
+                    val ls = it.data as List<ItemMaster>?
+                    if (ls.isNullOrEmpty()) {
+                        binding.menuRecycle.hide()
+                    } else {
+                        binding.menuSearchEd.show()
+                    }
+                    searchFoodAdaptor.submitList(ls)
+                }
+            }
+        }
+    }
+
+
+    private fun setSearchAdaptorView() {
+        binding.menuRecycle.apply {
+            searchFoodAdaptor = FoodAdaptor {
+                binding.menuSearchEd.setText("")
+                DealsStoreInstance.getInstance().setIsResetButtonClick(false)
+                if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
+                    crossSellingItemMaster = it
+                    searchViewModel.getCrossSellingItem(it.itemMaster.itemCode)
+                } else {
+                    arrItem.add(it)
+                    createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                    setInitialValue()
+                }
+            }
+            adapter = searchFoodAdaptor
+        }
+    }
+
 
     private fun getBillPrintResponse() {
         printBillViewModel.doPrinting.observe(viewLifecycleOwner) {
@@ -465,12 +586,15 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             confirmOderFragmentAdaptor =
                 ConfirmOderFragmentAdaptor(
                     itemClickListerForFoodSelected = {},
-                   itemClickListerForProcess = { res->
-                       if (GenericDataCls.getBookingLs(res).isNotEmpty())
-                           createBottomSheet("Select the Option.", GenericDataCls.getBookingLs(res))
-                       else
-                           binding.root.showSandbar("Cannot Change the Content")
-                   }
+                    itemClickListerForProcess = { res ->
+                        if (GenericDataCls.getBookingLs(res).isNotEmpty())
+                            createBottomSheet(
+                                "Select the Option.",
+                                GenericDataCls.getBookingLs(res)
+                            )
+                        else
+                            binding.root.showSandbar("Cannot Change the Content")
+                    }
                 )
             adapter = confirmOderFragmentAdaptor
         }
@@ -618,6 +742,10 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             navDialog(response)
             return
         }
+        if (response is Pair<*, *> && response.first is Double && response.second is CrossSellingJsonResponse) {
+            processCrossSellingItem(response as Pair<Double, CrossSellingJsonResponse>)
+            return
+        }
         val barcode = (response as Pair<*, *>).first as BarcodeJsonResponse
         val crossSellingItems =
             (response as Pair<*, *>).second as Pair<Double, CrossSellingJsonResponse>?
@@ -656,6 +784,40 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
     }
 
+    private fun processCrossSellingItem(res: Pair<Double, CrossSellingJsonResponse>) {
+        crossSellingItemMaster?.let {
+            arrItem.add(
+                ItemMasterFoodItem(
+                    itemMaster = it.itemMaster,
+                    foodQty = it.foodQty,
+                    foodAmt = it.foodAmt + res.first,
+                    bg = listOfBg[2],
+                    free_txt = it.free_txt,
+                    isDeal = it.isDeal,
+                    crossSellingItems = res.second
+                )
+            )
+            crossSellingItemMaster = null
+            arrItem.add(it)
+            //createLogStatement("TAG_ARR_txt", "Item Size ${arrItem.size} and $arrItem")
+            val item = arrItem.filter { res ->
+                res.itemMaster.id == it.itemMaster.id && res.crossSellingItems == null
+                        && res.itemMaster.crossSellingAllow.lowercase().toBoolean()
+            }
+            //createLogStatement("TAG_ARR_txt","FILTER ARR IS ${item.size} $item")
+            if (item.isNotEmpty()) {
+                arrItem.removeAll(item)
+            }
+            //createLogStatement("TAG_ARR_txt", "Item Size ${arrItem.size} and $arrItem")
+            setInitialValue()
+        } ?: activity?.msg("Cannot Add Item")
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        showKeyBoard(binding.menuSearchEd)
+    }
 
     private fun navDialog(info: GenericDataCls) {
         val data = info.data as ItemMasterFoodItem
