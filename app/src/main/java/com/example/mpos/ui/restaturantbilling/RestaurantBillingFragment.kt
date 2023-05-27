@@ -136,7 +136,10 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
             )
         }
 
-
+        if (!args.selectioncls.modernSearch) {
+            binding.searchBtnTxt.hide()
+            binding.searchBoxTxt.show()
+        }
         setInitialValue()
         getGrandTotal()
         getData()
@@ -468,10 +471,6 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
             }
         }
     }
-
-
-
-
 
 
     private fun getConfirmBillingResponse() {
@@ -907,7 +906,9 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
 
     override fun onResume() {
         super.onResume()
-        showKeyBoard(binding.menuSearchEd)
+        if (args.selectioncls.modernSearch)
+            showKeyBoard(binding.menuSearchEd)
+
     }
 
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
@@ -968,7 +969,6 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
     }
 
 
-
     private fun processCrossSellingItem(res: Pair<Double, CrossSellingJsonResponse>) {
         crossSellingItemMaster?.let {
             arrItem.add(
@@ -997,7 +997,6 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
             setInitialValue()
         } ?: activity?.msg("Cannot Add Item")
     }
-
 
 
     private fun navDialog(info: GenericDataCls) {

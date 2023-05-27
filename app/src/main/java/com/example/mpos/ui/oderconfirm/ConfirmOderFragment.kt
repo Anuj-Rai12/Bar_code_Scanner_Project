@@ -123,6 +123,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         getConfirmDinningResponse()
         getGrandTotal()
 
+
+
         binding.viewOfferBtn.setOnClickListener {
             val action = ConfirmOderFragmentDirections.actionGlobalDealsFragment(
                 FoodItemList(arrItem),
@@ -200,6 +202,14 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
         //Get Cross Selling Item
         getCrossSellingResponse()
+
+
+
+        if (!args.selectioncls.modernSearch) {
+            binding.searchBtnTxt.hide()
+            binding.searchBoxTxt.show()
+        }
+
 
 
         binding.menuSearchEd.doOnTextChanged { txt, _, _, _ ->
@@ -483,7 +493,9 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
     override fun onResume() {
         super.onResume()
+        if (args.selectioncls.modernSearch)
         showKeyBoard(binding.menuSearchEd)
+
         customDiningRequest = args.confirmreq
         receiptNo = if (customDiningRequest?.body?.rcptNo != null) {
             customDiningRequest?.body?.rcptNo.toString()

@@ -115,6 +115,12 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
             mnuBottom.onBottomSheetClickListener = this
             mnuBottom.show(parentFragmentManager, MenuBottomSheetFragment.NAME)
         }
+
+        if (!args.selectioncls.modernSearch) {
+            binding.searchBtnTxt.hide()
+            binding.searchBoxTxt.show()
+        }
+
         setInitialValue()
         getGrandTotal()
         getData()
@@ -129,7 +135,6 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
 
         getPrintConnectResponse()
         getBillPrintResponse()
-
 
 
         //Set Search Adaptor
@@ -227,9 +232,6 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
     }
 
 
-
-
-
     private fun getCrossSellingResponse() {
         searchViewModel.crossSellingResponse.observe(viewLifecycleOwner) {
             when (it) {
@@ -313,10 +315,6 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
             adapter = searchFoodAdaptor
         }
     }
-
-
-
-
 
 
     private fun getBillPrintResponse() {
@@ -788,7 +786,8 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
 
     override fun onResume() {
         super.onResume()
-        showKeyBoard(binding.menuSearchEd)
+        if (args.selectioncls.modernSearch)
+            showKeyBoard(binding.menuSearchEd)
     }
 
 

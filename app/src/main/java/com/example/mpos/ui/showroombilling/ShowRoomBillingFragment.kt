@@ -155,7 +155,10 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
         //Get Cross Selling Item
         getCrossSellingResponse()
 
-
+        if (!args.selectioncls.modernSearch) {
+            binding.searchBtnTxt.hide()
+            binding.searchBoxTxt.show()
+        }
         binding.menuSearchEd.doOnTextChanged { txt, _, _, _ ->
             if (!txt.isNullOrEmpty()) {
                 binding.menuRecycle.show()
@@ -281,8 +284,6 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
     }
 
 
-
-
     private fun getCrossSellingResponse() {
         searchViewModel.crossSellingResponse.observe(viewLifecycleOwner) {
             when (it) {
@@ -366,10 +367,6 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
             adapter = searchFoodAdaptor
         }
     }
-
-
-
-
 
 
     private fun initViewModel() {
@@ -1006,7 +1003,8 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
     override fun onResume() {
         super.onResume()
-        showKeyBoard(binding.menuSearchEd)
+        if (args.selectioncls.modernSearch)
+            showKeyBoard(binding.menuSearchEd)
         customDiningRequest = ConfirmDiningRequest(
             ConfirmDiningBody(
                 screenType = RestaurantSingletonCls.getInstance().getScreenType()!!

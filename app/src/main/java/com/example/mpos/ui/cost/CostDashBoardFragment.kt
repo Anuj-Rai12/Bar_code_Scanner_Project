@@ -138,6 +138,14 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
         getCrossSellingResponse()
 
 
+
+        if (!args.selectioncls.modernSearch) {
+            binding.searchBtnTxt.hide()
+            binding.searchBoxTxt.show()
+        }
+
+
+
         (activity as MainActivity?)?.getPermissionForBlueTooth()
         val flag = activity?.checkBlueConnectPermission()
         if (flag == false) {
@@ -816,7 +824,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     override fun onResume() {
         super.onResume()
-        showKeyBoard(binding.menuSearchEd)
+        if (args.selectioncls.modernSearch)
+            showKeyBoard(binding.menuSearchEd)
     }
 
     private fun navDialog(info: GenericDataCls) {
