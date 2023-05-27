@@ -409,6 +409,85 @@ fun Activity.addDialogMaterial(
 }
 
 
+
+
+fun Activity.getCustomerInfoDialog(
+    title: String,
+    time: String,
+    tableNo: String,
+    receiptNo: String,
+    storeVar: String,
+    staffID: String,
+    cancel: () -> Unit,
+    listener: CustomerDining
+) {
+    val binding = ConfirmOrderDialogLayoutBinding.inflate(layoutInflater)
+
+
+    val material = MaterialAlertDialogBuilder(
+        this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+    )
+
+    material.setView(binding.root).setTitle(title).setPositiveButton("Done") { dialog, _ ->
+        val customerName = binding.customerNameEd.text?.toString()
+        val customerNumber = binding.customerNumberEd.text?.toString()
+        val coverNumber = binding.coverNumEd.text.toString()
+        if (checkFieldValue(coverNumber) || !coverNumber.isDigitsOnly()) {
+            msg("Please Enter Correct Covers\n Try Again.")
+            listener.invoke(null, false)
+            return@setPositiveButton
+        }
+        if (!checkFieldValue(customerNumber.toString()) && !isValidPhone(customerNumber.toString())) {
+            msg("Please Enter Correct Phone Number\n Try Again.")
+            listener.invoke(null, false)
+            return@setPositiveButton
+        }
+        if (coverNumber.isDigitsOnly() && coverNumber.toLong() <= 0) {
+            msg("Convert cannot be Zero!!")
+            listener.invoke(null, false)
+            return@setPositiveButton
+        }
+        val confirmDiningRequest = ConfirmDiningRequest(
+            body = ConfirmDiningBody(
+                rcptNo = receiptNo,
+                customerPhone = customerNumber ?: "",
+                customerName = customerName ?: "",
+                covers = coverNumber,
+                storeVar = storeVar,
+                tableNo = tableNo,
+                terminalNo = "",
+                errorFound = false.toString(),
+                salesType = "RESTAURANT",
+                staffID = staffID,
+                transDate = getDate() ?: "2022-06-18",
+                transTime = time,
+                waiterName = "",
+                waiterID = "",
+                errorText = "",
+                contactNo = "0000000000",
+                screenType = RestaurantSingletonCls.getInstance().getScreenType()!!
+            )
+        )
+        msg("Saved")
+        listener.invoke(confirmDiningRequest, true)
+        dialog.dismiss()
+    }.setCancelable(false).setNegativeButton("Cancel") { dialog, _ ->
+        cancel.invoke()
+        dialog.dismiss()
+    }.create().show()
+}
+
+
+
+
+
+
+
+
+
+
+
+
 fun Activity.addReservation(
     title: String, fragmentManager: FragmentManager, cancel: () -> Unit, listener: AddReservation
 ) {
