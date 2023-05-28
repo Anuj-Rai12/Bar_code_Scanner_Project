@@ -134,7 +134,7 @@ object AllStringConst {
         const val sendBillingEtc =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:SendBillingToEDC"
 
-        const val BillingFromEDC=
+        const val BillingFromEDC =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:BillingFromEDC"
 
         const val checkStatusBillingEDC =
@@ -146,7 +146,15 @@ object AllStringConst {
         const val crossSelling = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CrossSellingAPI"
         const val printKot = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:PrintKOT"
 
-        const val checkBillFROMEDC = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CheckStatusBillingFromEDC"
+        const val checkBillFROMEDC =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:CheckStatusBillingFromEDC"
+
+        const val finalFeedBackSend =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:FinalFeedbackSend"
+
+        const val finalInvoiceSend =
+            "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:FinalInvoiceSend"
+
     }
 
 
@@ -214,7 +222,7 @@ fun AppCompatActivity.show() {
     this.supportActionBar!!.show()
 }
 
-fun checkFieldValue(string: String) = string.isEmpty() || string.isBlank() || string=="null"
+fun checkFieldValue(string: String) = string.isEmpty() || string.isBlank() || string == "null"
 
 fun Button.showButtonProgress(string: String, color: Int) {
     showProgress {
@@ -409,8 +417,6 @@ fun Activity.addDialogMaterial(
 }
 
 
-
-
 fun Activity.getCustomerInfoDialog(
     title: String,
     time: String,
@@ -476,16 +482,6 @@ fun Activity.getCustomerInfoDialog(
         dialog.dismiss()
     }.create().show()
 }
-
-
-
-
-
-
-
-
-
-
 
 
 fun Activity.addReservation(
@@ -916,8 +912,6 @@ fun Activity.isValidUrl(url: String?): Boolean {
 fun createLogStatement(tag: String, msg: String) {
     Log.i(tag, "createLogStatement: $msg")
 }
-
-
 
 
 fun Fragment.showKeyBoard(view: View) {

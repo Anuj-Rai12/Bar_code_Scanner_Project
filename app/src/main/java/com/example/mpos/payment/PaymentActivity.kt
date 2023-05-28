@@ -17,6 +17,11 @@ import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequest
 import com.example.mpos.data.billing.printInvoice.request.PrintInvoiceRequestBody
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequest
 import com.example.mpos.data.checkBillingStatus.checkstatusedc.PaymentEdcRequestBody
+import com.example.mpos.data.feedback.feedbck.FeedBackRequest
+import com.example.mpos.data.feedback.feedbck.FinalFeedbackSendBody
+import com.example.mpos.data.feedback.invoice.FinalInvoiceSendBody
+import com.example.mpos.data.feedback.invoice.FinalInvoiceSendRequest
+import com.example.mpos.data.feedback.invoice.ResponseFinalInvoiceSend
 import com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse
 import com.example.mpos.data.printkot.PrintKotForEDCBody
 import com.example.mpos.data.printkot.PrintKotRequest
@@ -32,6 +37,7 @@ import com.example.mpos.payment.pine.request.Header
 import com.example.mpos.payment.pine.request.TransactionRequest
 import com.example.mpos.payment.pine.response.TransactionResponse
 import com.example.mpos.payment.unit.Utils
+import com.example.mpos.payment.viewmodel.FeedBackViewModel
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
 import com.example.mpos.ui.oderconfirm.adaptor.ConfirmOderFragmentAdaptor
 import com.example.mpos.ui.oderconfirm.view_model.ConfirmOrderFragmentViewModel
@@ -46,6 +52,8 @@ class PaymentActivity : BasePineActivity() {
     private val confirmOrderViewModel: ConfirmOrderFragmentViewModel by viewModels()
     private val costDashBordViewModel: CostDashBoardViewModel by viewModels()
     private val printBillViewModel: PrintViewModel by viewModels()
+    private val feedBackViewModel: FeedBackViewModel by viewModels()
+
 
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
 
@@ -141,8 +149,13 @@ class PaymentActivity : BasePineActivity() {
 
         getBillPrintKOTResponse()
         getBillPrintResponse()
+        getFeedBackResponse()
 
         binding.cashPaymentBtn.setOnClickListener {
+
+            feedBackViewModel.getFeedBack(FinalInvoiceSendRequest(FinalInvoiceSendBody("${true}")))
+
+            return@setOnClickListener
             if (isPaymentCompleted && transactionDone == null) {
                 if (!kotPrintFromEDC) {
                     costDashBordViewModel.getPrintBillInvoiceResponse(
@@ -272,6 +285,35 @@ class PaymentActivity : BasePineActivity() {
 
     }
 
+    private fun getFeedBackResponse() {
+        feedBackViewModel.isFeedBackSend.observe(this) { res ->
+            res?.let {
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        createLogStatement(
+                            "Feed_Testing",
+                            "${it.data} and ${it.exception?.localizedMessage}"
+                        )
+                    }
+                    is ApisResponse.Loading -> {
+                        showPb("${it.data}")
+                    }
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        createLogStatement(
+                            "Feed_Testing",
+                            "$it"
+                        )
+                        if (it.data is ResponseFinalInvoiceSend) {
+                            feedBackViewModel.getFeedBack(FeedBackRequest(FinalFeedbackSendBody("${true}")))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun getBillPrintResponse() {
         printBillViewModel.doPrintPineInvoicePrinting.observe(this) {
             if (it != null) when (it) {
@@ -308,7 +350,7 @@ class PaymentActivity : BasePineActivity() {
                     detail.savePrintData = true
                     request.detail = detail
                     if (this::psh.isInitialized) {
-                        kotPrintISDONE=false
+                        kotPrintISDONE = false
                         psh.callPineService(request)
                     } else {
                         showErrorDialog("Cannot Print Bill")
@@ -354,7 +396,7 @@ class PaymentActivity : BasePineActivity() {
                     detail.savePrintData = true
                     request.detail = detail
                     if (this::psh.isInitialized) {
-                        kotPrintISDONE=true
+                        kotPrintISDONE = true
                         psh.callPineService(request)
                     } else {
                         showErrorDialog("Cannot Print Bill")
@@ -663,13 +705,13 @@ class PaymentActivity : BasePineActivity() {
                     transactionDone = "$transactionResponse"
                     callPaymentApi(transactionDone!!)
                 } else {
-                    if (kotPrintISDONE){
+                    if (kotPrintISDONE) {
                         costDashBordViewModel.getPrintBillInvoiceResponse(
                             PrintInvoiceRequest(
                                 PrintInvoiceRequestBody("$receipt")
                             )
                         )
-                    }else{
+                    } else {
                         showErrorDialog(
                             "Order Completed!! ${getEmojiByUnicode(0x2705)}",
                             "Success",
