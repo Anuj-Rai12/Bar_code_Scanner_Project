@@ -32,6 +32,14 @@ data class ConfirmOrderBody(
     @param:Element(name = "getBillDetailFlag")
     val getPrintBody: String = false.toString(),
 
+    @field:Element(name = "customerName")
+    @param:Element(name = "customerName")
+    val customerName: String = "",
+
+    @field:Element(name = "customerPhone")
+    @param:Element(name = "customerPhone")
+    val customerPhone: String = "",
+
     @field:Attribute(name = "xmlns")
     @param:Attribute(name = "xmlns")
     val xmlns: String = AllStringConst._xmls,

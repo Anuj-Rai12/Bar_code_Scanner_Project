@@ -93,6 +93,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     private var crossSellingItemMaster: ItemMasterFoodItem? = null
 
+    private var customerInfo: Pair<String, String>? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.semi_white_color_two)
@@ -190,10 +192,14 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 viewModel.addError("Please Add Item Menu !!")
                 return@setOnClickListener
             }
-            if (setUpCostEstimation()) {
-                viewModel.confirmBilling(confirmBillingRequest!!)
+            if (args.selectioncls.enableCustDetail) {
+                addCustomerInfo()
             } else {
-                viewModel.addError("Oops cannot setUp a Process!!")
+                if (setUpCostEstimation()) {
+                    viewModel.confirmBilling(confirmBillingRequest!!)
+                } else {
+                    viewModel.addError("Oops cannot setUp a Process!!")
+                }
             }
         }
 
@@ -273,6 +279,23 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             initial()
         }
 
+    }
+
+    private fun addCustomerInfo() {
+        activity?.getCustomerInfoDialog("Add Customer Info", cancel = {
+            addCustomerInfo()
+        }, listener = {
+            if (it == null) {
+                addCustomerInfo()
+            } else {
+                customerInfo = it
+                if (setUpCostEstimation()) {
+                    viewModel.confirmBilling(confirmBillingRequest!!)
+                } else {
+                    viewModel.addError("Oops cannot setUp a Process!!")
+                }
+            }
+        })
     }
 
     private fun initViewModel() {
@@ -382,8 +405,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
     override fun onResume() {
         super.onResume()
-        if (args.selectioncls.modernSearch)
-        showKeyBoard(binding.menuSearchEd)
+        if (args.selectioncls.modernSearch) showKeyBoard(binding.menuSearchEd)
     }
 
     override fun onPause() {
@@ -541,7 +563,9 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         confirmOrder(
                             ConfirmOrderRequest(
                                 ConfirmOrderBody(
-                                    pair.first
+                                    pair.first,
+                                    customerPhone = customerInfo?.first ?: "",
+                                    customerName = customerInfo?.second ?: ""
                                 )
                             )
                         )
@@ -782,8 +806,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         arrItem.addAll(data)
                         confirmOderFragmentAdaptor.setQtyBoxType(true)
                         createLogStatement(
-                            "TAG_LOG",
-                            "the Search Info ${data.isEmpty()} and ${arrItem.isEmpty()}"
+                            "TAG_LOG", "the Search Info ${data.isEmpty()} and ${arrItem.isEmpty()}"
                         )
                         setUpRecycleAdaptor(data)
                     }
@@ -1048,8 +1071,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             arrItem.add(it)
             //createLogStatement("TAG_ARR_txt", "Item Size ${arrItem.size} and $arrItem")
             val item = arrItem.filter { res ->
-                res.itemMaster.id == it.itemMaster.id && res.crossSellingItems == null
-                        && res.itemMaster.crossSellingAllow.lowercase().toBoolean()
+                res.itemMaster.id == it.itemMaster.id && res.crossSellingItems == null && res.itemMaster.crossSellingAllow.lowercase()
+                    .toBoolean()
             }
             //createLogStatement("TAG_ARR_txt","FILTER ARR IS ${item.size} $item")
             if (item.isNotEmpty()) {

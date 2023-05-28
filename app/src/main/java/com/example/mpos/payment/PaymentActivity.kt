@@ -152,10 +152,6 @@ class PaymentActivity : BasePineActivity() {
         getFeedBackResponse()
 
         binding.cashPaymentBtn.setOnClickListener {
-
-            feedBackViewModel.getFeedBack(FinalInvoiceSendRequest(FinalInvoiceSendBody("${true}")))
-
-            return@setOnClickListener
             if (isPaymentCompleted && transactionDone == null) {
                 if (!kotPrintFromEDC) {
                     costDashBordViewModel.getPrintBillInvoiceResponse(
@@ -291,9 +287,10 @@ class PaymentActivity : BasePineActivity() {
                 when (it) {
                     is ApisResponse.Error -> {
                         hidePb()
-                        createLogStatement(
-                            "Feed_Testing",
-                            "${it.data} and ${it.exception?.localizedMessage}"
+                        showErrorDialog(
+                            "Order Completed!! ${getEmojiByUnicode(0x2705)}",
+                            "Success",
+                            R.drawable.ic_success
                         )
                     }
                     is ApisResponse.Loading -> {
@@ -303,10 +300,27 @@ class PaymentActivity : BasePineActivity() {
                         hidePb()
                         createLogStatement(
                             "Feed_Testing",
-                            "$it"
+                            "${it.data}"
                         )
-                        if (it.data is ResponseFinalInvoiceSend) {
-                            feedBackViewModel.getFeedBack(FeedBackRequest(FinalFeedbackSendBody("${true}")))
+                        showErrorDialog(
+                            "${if (it.data is String) it.data else (it.data as ResponseFinalInvoiceSend).value} ${
+                                getEmojiByUnicode(
+                                    0x2705
+                                )
+                            }",
+                            "Success",
+                            R.drawable.ic_success,
+                            doFeedBackFlag = (it.data is ResponseFinalInvoiceSend)
+                        ) {
+                            if (it.data is ResponseFinalInvoiceSend) {
+                                feedBackViewModel.getFeedBack(
+                                    FeedBackRequest(
+                                        FinalFeedbackSendBody(
+                                            "${true}"
+                                        )
+                                    )
+                                )
+                            }
                         }
                     }
                 }
@@ -624,7 +638,9 @@ class PaymentActivity : BasePineActivity() {
         msg: String,
         type: String = "Failed",
         ic: Int = R.drawable.ic_error,
-        isCancelAble: Boolean = true
+        isCancelAble: Boolean = true,
+        doFeedBackFlag: Boolean = false,
+        doFeedBackListen: (() -> Unit?)? = null
     ) {
         val dialog = AlertDialog.Builder(this@PaymentActivity)
         dialog.setTitle(type)
@@ -632,13 +648,19 @@ class PaymentActivity : BasePineActivity() {
         dialog.setIcon(ic)
         dialog.setCancelable(isCancelAble)
         dialog.setPositiveButton("ok") { _, _ ->
-            if (ic == R.drawable.ic_success) {
+            if (ic == R.drawable.ic_success && !doFeedBackFlag) {
                 onBackPressed()
+            }
+            if (ic == R.drawable.ic_success && doFeedBackFlag) {
+                doFeedBackListen?.invoke()
             }
         }
         dialog.setOnDismissListener {
-            if (ic == R.drawable.ic_success) {
+            if (ic == R.drawable.ic_success && !doFeedBackFlag) {
                 onBackPressed()
+            }
+            if (ic == R.drawable.ic_success && doFeedBackFlag) {
+                doFeedBackListen?.invoke()
             }
         }
         dialog.show()
@@ -712,11 +734,7 @@ class PaymentActivity : BasePineActivity() {
                             )
                         )
                     } else {
-                        showErrorDialog(
-                            "Order Completed!! ${getEmojiByUnicode(0x2705)}",
-                            "Success",
-                            R.drawable.ic_success
-                        )
+                        feedBackViewModel.getFeedBack(FinalInvoiceSendRequest(FinalInvoiceSendBody("${true}")))
                         isPaymentCompleted = true
                         binding.orderRecycleView.hide()
                     }
