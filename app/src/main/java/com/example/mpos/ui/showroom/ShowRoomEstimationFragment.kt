@@ -756,6 +756,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
 
     override fun onResume() {
         super.onResume()
+        createLogStatement("SHOW_ROOM_EST", "${args.selectioncls.modernSearch}")
         if (args.selectioncls.modernSearch)
             showKeyBoard(binding.menuSearchEd)
     }

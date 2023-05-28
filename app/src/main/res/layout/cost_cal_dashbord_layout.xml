@@ -144,6 +144,7 @@
         android:drawableEnd="@drawable/ic_search_24"
         android:drawablePadding="10dp"
         android:visibility="invisible"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/search_btn_txt"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/qr_code_scan"

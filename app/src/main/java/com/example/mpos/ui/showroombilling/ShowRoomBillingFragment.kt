@@ -154,7 +154,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
         //Get Cross Selling Item
         getCrossSellingResponse()
-
+        createLogStatement("SHOW_ROOM", "${args.selectioncls.modernSearch}")
         if (!args.selectioncls.modernSearch) {
             binding.searchBtnTxt.hide()
             binding.searchBoxTxt.show()

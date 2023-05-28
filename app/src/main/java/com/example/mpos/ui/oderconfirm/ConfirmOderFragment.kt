@@ -206,7 +206,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
 
         if (!args.selectioncls.modernSearch) {
-            binding.searchBtnTxt.hide()
+            binding.searchBtnTxt.visibility=View.INVISIBLE
             binding.searchBoxTxt.show()
         }
 
@@ -441,6 +441,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         setUpRecycleAdaptor(data)
                     }
                 }
+                else -> {}
             }
         }
     }
@@ -583,6 +584,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     }
                     hidePb()
                 }
+                else -> {}
             }
         }
     }

@@ -140,7 +140,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
 
         if (!args.selectioncls.modernSearch) {
-            binding.searchBtnTxt.hide()
+            binding.searchBtnTxt.visibility=View.INVISIBLE
             binding.searchBoxTxt.show()
         }
 
