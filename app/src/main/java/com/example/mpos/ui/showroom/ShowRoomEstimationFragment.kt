@@ -134,6 +134,11 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
         //Get Cross Selling Item
         getCrossSellingResponse()
 
+        if (!args.selectioncls.modernSearch) {
+            binding.searchBtnTxt.hide()
+            binding.searchBoxTxt.show()
+        }
+
         (activity as MainActivity?)?.getPermissionForBlueTooth()
         val flag = activity?.checkBlueConnectPermission()
         if (flag == false) {
