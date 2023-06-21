@@ -1,5 +1,6 @@
 package com.example.mpos.ui.scan.utils
 
+/*
 import android.annotation.SuppressLint
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -42,4 +43,4 @@ class LuminosityAnalyzer(
     }
 
 
-}
+}*/

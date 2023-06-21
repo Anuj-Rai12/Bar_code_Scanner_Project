@@ -45,8 +45,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.gson.Gson
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.common.InputImage
 import com.vmadalin.easypermissions.EasyPermissions
 import retrofit2.Retrofit
 import java.net.URL
@@ -64,8 +62,8 @@ const val BLUE_ADIMS = 121
 const val BLUE_SCAN = 113
 const val BLUE_CONNECT = 231
 
-const val Url_barcode = Barcode.TYPE_URL
-const val Url_Text = Barcode.TYPE_TEXT
+const val Url_barcode =0// Barcode.TYPE_URL
+const val Url_Text = 1//Barcode.TYPE_TEXT
 fun AppCompatActivity.hide() {
     this.supportActionBar!!.hide()
 }
@@ -917,7 +915,7 @@ typealias ItemClickListerForTableOrCost = (selection: SelectionDataClass) -> Uni
 typealias ItemClickListerForListOfFood = (foodItem: ItemMasterFoodItem) -> Unit
 typealias LumaListener = (lum: Double) -> Unit
 typealias CustomerDining = (customer: ConfirmDiningRequest?, flag: Boolean) -> Unit
-typealias ImageListener = (imageInput: InputImage) -> Unit
+//typealias ImageListener = (imageInput: InputImage) -> Unit
 typealias SnackBarListener = (msg: String?) -> String?
 typealias AddReservation = (data: AddTableReservationRequest?) -> Unit
 //typealias ItemClickListerForFoodSelected = (foodItemSelected: FoodItemSelected) -> Unit

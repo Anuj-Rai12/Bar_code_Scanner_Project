@@ -1,22 +1,17 @@
 package com.example.mpos.ui.scan
 
-import android.content.res.ColorStateList
-import android.graphics.Color
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.Preview
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.budiyev.android.codescanner.CodeScanner
+import com.budiyev.android.codescanner.DecodeCallback
 import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
@@ -25,7 +20,6 @@ import com.example.mpos.data.login.model.TestingBarcodeConnection
 import com.example.mpos.databinding.ScanQrLayoutBinding
 import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
-import com.example.mpos.ui.scan.utils.LuminosityAnalyzer
 import com.example.mpos.ui.scan.viewmodel.BarCodeViewModel
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.FoodItemList
@@ -33,19 +27,18 @@ import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.ui.searchfood.view_model.SearchFoodViewModel
 import com.example.mpos.utils.*
 import com.google.android.material.snackbar.Snackbar
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.barcode.common.Barcode
 import java.util.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import kotlin.collections.ArrayList
 
 
 class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClickListener {
     private lateinit var binding: ScanQrLayoutBinding
-    private var imageCapture: ImageCapture? = null
-    private var flagList: Boolean = false
-    private lateinit var cameraExecutor: ExecutorService
+    private var codeScanner: CodeScanner? = null
+
+    //private var imageCapture: ImageCapture? = null
+//    private var flagList: Boolean = false
+    private var progressDialog: ProgressDialog? = null
+
+    //private lateinit var cameraExecutor: ExecutorService
     private val args: ScanQrCodeFragmentArgs by navArgs()
     private var showDialog = true
     private val viewModel: BarCodeViewModel by viewModels()
@@ -84,18 +77,18 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
         outState.putString("REST_INS", RestaurantSingletonCls.getInstance().getScreenType())
     }
 
-    private val scanner by lazy {
-        //BarcodeScanning.getClient(option)
-        BarcodeScanning.getClient()
-    }
+    /*   private val scanner by lazy {
+           //BarcodeScanning.getClient(option)
+           BarcodeScanning.getClient()
+       }*/
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.black)
         binding = ScanQrLayoutBinding.bind(view)
-        cameraExecutor = Executors.newSingleThreadExecutor()
-        (activity as com.example.mpos.MainActivity?)?.getPermission()
+        //cameraExecutor = Executors.newSingleThreadExecutor()
+        //(activity as com.example.mpos.MainActivity?)?.getPermission()
         viewModel.events.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { res ->
                 if (res is ApisResponse.Error) {
@@ -143,10 +136,12 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                     showLoadingSrc(false)
                     showScannerScreen(true)
                 }
+
                 is ApisResponse.Loading -> {
                     showLoadingSrc(true, "${it.data}")
                     showScannerScreen(false)
                 }
+
                 is ApisResponse.Success -> {
                     showLoadingSrc(false)
                     val res = it.data as CrossSellingJsonResponse
@@ -171,10 +166,12 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showLoadingSrc(true, "${it.data}")
                         showScannerScreen(false)
                     }
+
                     is ApisResponse.Success -> {
                         showLoadingSrc(false)
                         showScannerScreen(false)
@@ -203,7 +200,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
         ) {
             showScannerScreen(true)
             startProcess()
-            flagList = false
+            //flagList = false
             //  showErrorDialogOnce = true
         }
         //showErrorDialogOnce = false
@@ -212,104 +209,129 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
 
     private fun showLoadingSrc(flag: Boolean, text: String? = null) {
         if (flag) {
-            binding.pbLayout.titleTxt.setTextColor(ColorStateList.valueOf(Color.GREEN))
-            binding.pbLayout.titleTxt.text = text
-            binding.pbLayout.root.show()
+            progressDialog = ProgressDialog(activity)
+            progressDialog?.setMessage(text)
+            progressDialog?.setCancelable(false)
+            progressDialog?.show()
+//            binding.pbLayout.titleTxt.setTextColor(ColorStateList.valueOf(Color.GREEN))
+//            binding.pbLayout.titleTxt.text = text
+//            binding.pbLayout.root.show()
         } else {
-            binding.pbLayout.root.hide()
+            progressDialog?.hide()
+            //binding.pbLayout.root.hide()
         }
     }
 
     private fun showScannerScreen(flag: Boolean) {
         if (flag) {
-            binding.scanQrLayout.show()
+            binding.scannerView.show()
         } else {
-            binding.scanQrLayout.hide()
+            binding.scannerView.hide()
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        codeScanner?.startPreview()
+    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        cameraExecutor.shutdown()
+    override fun onPause() {
+        super.onPause()
+        codeScanner?.stopPreview()
     }
 
     private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(activity?.applicationContext!!)
-
-        cameraProviderFuture.addListener({
-            // Used to bind the lifecycle of cameras to the lifecycle owner
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-
-            // Preview
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
-                }
-
-            imageCapture = ImageCapture.Builder()
-                .build()
-
-            val imageAnalyzer = ImageAnalysis.Builder()
-                .build()
-                .also {
-                    it.setAnalyzer(
-                        cameraExecutor, LuminosityAnalyzer({ luma ->
-                            Log.d("TAG", "Average luminosity: $luma")
-                        }, { imageInput ->
-                            scanner.process(imageInput).addOnSuccessListener { list ->
-                                if (!list.isNullOrEmpty() && !flagList) {
-                                    if (list.first().valueType == args.item) {
-                                        flagList = true
-                                        sendData(list.first())
-                                    } else if (list.last().valueType == args.item) {
-                                        flagList = true
-                                        sendData(list.last())
-                                    }
-                                    return@addOnSuccessListener
-                                }
-
-                            }.addOnFailureListener { e ->
-                                Log.i(TAG, "startCamera: Error is $e")
-                            }
-                        })
-                    )
-                }
-
-            // Select back camera as a default
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            try {
-                // Unbind use cases before rebinding
-                cameraProvider.unbindAll()
-
-                // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture, imageAnalyzer
-                )
-
-            } catch (exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
+        if (activity == null || !isAdded) {
+            return
+        }
+        codeScanner = CodeScanner(activity!!, binding.scannerView)
+        codeScanner?.decodeCallback = DecodeCallback {
+            createLogStatement("SCAN_QR_LIST", "${it.text} and ${it.barcodeFormat.name}")
+            activity?.runOnUiThread {
+                sendData(first = it.text)
             }
+        }
 
-        }, ContextCompat.getMainExecutor(activity?.applicationContext!!))
+        codeScanner?.startPreview()
+        /*
+                val cameraProviderFuture = ProcessCameraProvider.getInstance(activity?.applicationContext!!)
+
+                cameraProviderFuture.addListener({
+                    // Used to bind the lifecycle of cameras to the lifecycle owner
+                    val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+
+                    // Preview
+                    val preview = Preview.Builder()
+                        .build()
+                        .also {
+                            it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+                        }
+
+                    imageCapture = ImageCapture.Builder()
+                        .build()
+
+                    val imageAnalyzer = ImageAnalysis.Builder()
+                        .build()
+                        .also {
+                            it.setAnalyzer(
+                                cameraExecutor, LuminosityAnalyzer({ luma ->
+                                    Log.d("TAG", "Average luminosity: $luma")
+                                }, { imageInput ->
+                                    scanner.process(imageInput).addOnSuccessListener { list ->
+                                        if (!list.isNullOrEmpty() && !flagList) {
+                                            if (list.first().valueType == args.item) {
+                                                flagList = true
+                                                sendData(list.first())
+                                            } else if (list.last().valueType == args.item) {
+                                                flagList = true
+                                                sendData(list.last())
+                                            }
+                                            return@addOnSuccessListener
+                                        }
+
+                                    }.addOnFailureListener { e ->
+                                        Log.i(TAG, "startCamera: Error is $e")
+                                    }
+                                })
+                            )
+                        }
+
+                    // Select back camera as a default
+                    val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+                    try {
+                        // Unbind use cases before rebinding
+                        cameraProvider.unbindAll()
+
+                        // Bind use cases to camera
+                        cameraProvider.bindToLifecycle(
+                            this, cameraSelector, preview, imageCapture, imageAnalyzer
+                        )
+
+                    } catch (exc: Exception) {
+                        Log.e(TAG, "Use case binding failed", exc)
+                    }
+
+                }, ContextCompat.getMainExecutor(activity?.applicationContext!!))*/
+
+
     }
 
-    private fun sendData(first: Barcode) {
+    private fun sendData(first: String) {
         activity?.msg("Qr Code Detected")
         val type = WhereToGoFromScan.TESTINGCONNECTION.name
         if (args.item == Url_Text && args.type != type) {
-            first.rawValue?.let {
-                viewModel.checkForItemItem(it, args.type)
-            } ?: activity?.msg("Oops SomeThing Went Wrong")
+            viewModel.checkForItemItem(first, args.type)
+//            first.rawValue?.let {
+//
+//            } ?: activity?.msg("Oops SomeThing Went Wrong")
         } else {
             val handler = Handler(Looper.getMainLooper())
             handler.post {
                 if (showDialog) {
                     showDialog = false
                     val barcodeValue =
-                        TestingBarcodeConnection(title = first.url?.title, uri = first.url?.url)
+                        TestingBarcodeConnection(title = first, uri = first)
                     val action =
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToTestingConnectionFragment(
                             barcodeValue
@@ -385,6 +407,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                             args.selectioncls!!
                         )
                     }
+
                     WhereToGoFromScan.COSTESTIMATE -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToCostDashBoardFragment(
                             FoodItemList(arr),
@@ -392,6 +415,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                             args.selectioncls!!
                         )
                     }
+
                     WhereToGoFromScan.SHOWROOMESTIMATE -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToShowRoomEstimationFragment(
                             FoodItemList(arr),
@@ -399,6 +423,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                             args.selectioncls!!
                         )
                     }
+
                     WhereToGoFromScan.RESTAURANTESTIMATE -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToRestaurantEstimationFragments(
                             FoodItemList(arr),
@@ -406,6 +431,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                             args.selectioncls!!
                         )
                     }
+
                     WhereToGoFromScan.BILLPAYMENT -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToBillingFragment(
                             FoodItemList(arr),
@@ -413,6 +439,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                             args.selectioncls!!
                         )
                     }
+
                     WhereToGoFromScan.SHOWROOMBILLING -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToShowRoomBillingFragment(
                             FoodItemList(arr),
@@ -420,6 +447,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                             args.selectioncls!!
                         )
                     }
+
                     WhereToGoFromScan.RESTARURANTBILLING -> {
                         ScanQrCodeFragmentDirections.actionScanQrCodeFragmentToRestaurantBillingFragment(
                             FoodItemList(arr),
