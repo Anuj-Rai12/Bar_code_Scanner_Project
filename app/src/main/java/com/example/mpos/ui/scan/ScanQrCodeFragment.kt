@@ -223,11 +223,11 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
     }
 
     private fun showScannerScreen(flag: Boolean) {
-        if (flag) {
-            binding.scannerView.show()
-        } else {
-            binding.scannerView.hide()
-        }
+//        if (flag) {
+//            binding.scannerView.show()
+//        } else {
+//            binding.scannerView.hide()
+//        }
     }
 
     override fun onResume() {
