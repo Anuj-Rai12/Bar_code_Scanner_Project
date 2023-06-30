@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     configurations {
         all {
@@ -32,7 +32,7 @@ android {
     defaultConfig {
         applicationId "com.example.mpos"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 5
         versionName "1.6"
 
