@@ -12,9 +12,10 @@ public class AppConfig {
     public static final String PINE_PACKAGE = "com.pinelabs.masterapp";
 
 
-    public static final String APP_ID = "926148e754c34f86919cafa741de3bc1";//"7e9dbc358ddd4fa2ad65a21560916b6b";
+    public static final String APP_ID = "9fa6692e99b84b38ba2f3abfe51c2397";//"7e9dbc358ddd4fa2ad65a21560916b6b";
 
-    //"926148e754c34f86919cafa741de3bc1"; FBTS
+    //9fa6692e99b84b38ba2f3abfe51c2397 FBTS PRODUCTION KEY
+    //"926148e754c34f86919cafa741de3bc1"; FBTS DEBUG
     public static final String versionCode = "1.0";
 
     public static final int ITEM_RV = 0;
