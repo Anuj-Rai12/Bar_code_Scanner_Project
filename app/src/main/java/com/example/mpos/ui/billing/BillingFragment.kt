@@ -351,7 +351,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
     }
 
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
-        val dialog = CrossSellingDialog(activity!!)
+        val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
         dialog.showCrossSellingDialog(response)
     }
@@ -794,6 +794,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             else {
                 confirmOrderViewModel.getGrandTotal(null)
             }
+        it?.let {
             when (it) {
                 is ApisResponse.Error -> Log.i(TAG, "getData: Error")
                 is ApisResponse.Loading -> if (it.data == null) {
@@ -812,6 +813,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                     }
                 }
             }
+        }
         }
     }
 

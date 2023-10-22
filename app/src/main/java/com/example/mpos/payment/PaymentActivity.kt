@@ -223,7 +223,54 @@ class PaymentActivity : BasePineActivity() {
 
         }
         binding.upiPaymentBtn.setOnClickListener {
-            showErrorDialog("Not Enable !!")
+            if (isPaymentCompleted) {
+                //Print Only
+                if (!kotPrintFromEDC) {
+                    costDashBordViewModel.getPrintBillInvoiceResponse(
+                        PrintInvoiceRequest(
+                            PrintInvoiceRequestBody("$receipt")
+                        )
+                    )
+                } else {
+                    costDashBordViewModel.getPrintBillKOTInvoiceResponse(
+                        PrintKotRequest(PrintKotForEDCBody("$receipt"))
+                    )
+                }
+                return@setOnClickListener
+            }
+
+            if (transactionDone != null) {
+                //Card done
+                callPaymentApi("$transactionDone")
+                return@setOnClickListener
+            }
+
+            createLogStatement(
+                "UPI",
+                "Amount is  is ${binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "")}"
+            )
+
+            val amt = binding.totalOrderAmt.text.toString().replace(Rs_Symbol, "").toDouble()
+            val request = TransactionRequest()
+            request.aPP_ID = AppConfig.APP_ID
+            //Setting header
+            val header = Header()
+            header.applicationId = AppConfig.APP_ID
+            header.methodId = "1001"
+            header.userId = "user_$receipt"
+            header.versionNo = AppConfig.versionCode
+            val detail = Detail()
+            detail.data = arrayListOf()
+            request.header = header
+
+            //Detail Obj
+            detail.billingRefNo = "receipt_$receipt"
+            detail.paymentAmount = (amt * 100.0).toString()
+            detail.invoiceNo = "0001"//UPI
+            detail.mobileNumberForEChargeSlip = "9219141756"
+            request.detail = detail
+            transactionType = "UPI"
+            psh.callPineService(request)
         }
 
         /*

@@ -253,7 +253,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
     }
 
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
-        val dialog = CrossSellingDialog(activity!!)
+        val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
         dialog.showCrossSellingDialog(response)
     }
@@ -313,37 +313,39 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private fun getBillPrintResponse() {
         printBillViewModel.doPrinting.observe(viewLifecycleOwner) {
-            when (it) {
-                is ApisResponse.Error -> {
-                    hidePb()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { msg ->
-                            showErrorDialog(msg)
+            it?.let {
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { msg ->
+                                showErrorDialog(msg)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
                         }
-                    } else {
-                        showErrorDialog("${it.data}")
                     }
-                }
-                is ApisResponse.Loading -> {
-                    showPb("${it.data}")
-                }
-                is ApisResponse.Success -> {
-                    hidePb()
-                    if (it.data is String) {
-                        showDialogBox(
-                            "Success",
-                            "All Food Item are added Successfully",
-                            icon = R.drawable.ic_success,
-                            isCancel = false
-                        ) {
-                            findNavController().popBackStack()
+                    is ApisResponse.Loading -> {
+                        showPb("${it.data}")
+                    }
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        if (it.data is String) {
+                            showDialogBox(
+                                "Success",
+                                "All Food Item are added Successfully",
+                                icon = R.drawable.ic_success,
+                                isCancel = false
+                            ) {
+                                findNavController().popBackStack()
+                            }
+                        } else {
+                            val value = it.data as Pair<*, *>
+                            printBillViewModel.doPrint(
+                                value.first as PrintReceiptInfo,
+                                times = value.second as Int
+                            )
                         }
-                    } else {
-                        val value = it.data as Pair<*, *>
-                        printBillViewModel.doPrint(
-                            value.first as PrintReceiptInfo,
-                            times = value.second as Int
-                        )
                     }
                 }
             }
@@ -352,27 +354,29 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private fun getPrintConnectResponse() {
         printBillViewModel.isPrinterConnected.observe(viewLifecycleOwner) {
-            when (it) {
-                is ApisResponse.Error -> {
-                    hidePb()
-                    isPrinterConnected = false
-                    if (setUpCostEstimation()) {
-                        showDialogBox(
-                            "Error", it.data!!, btn = "Yes", cancel = "No"
-                        ) {
+            it?.let {
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        isPrinterConnected = false
+                        if (setUpCostEstimation()) {
+                            showDialogBox(
+                                "Error", it.data!!, btn = "Yes", cancel = "No"
+                            ) {
+                                costEstimationViewModel.getCostEstimation(costEstimation!!)
+                            }
+                        } else costEstimationViewModel.addError("Failed to Cost Estimated")
+                    }
+                    is ApisResponse.Loading -> {
+                        showPb("${it.data}")
+                    }
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        isPrinterConnected = true
+                        if (setUpCostEstimation()) {
                             costEstimationViewModel.getCostEstimation(costEstimation!!)
-                        }
-                    } else costEstimationViewModel.addError("Failed to Cost Estimated")
-                }
-                is ApisResponse.Loading -> {
-                    showPb("${it.data}")
-                }
-                is ApisResponse.Success -> {
-                    hidePb()
-                    isPrinterConnected = true
-                    if (setUpCostEstimation()) {
-                        costEstimationViewModel.getCostEstimation(costEstimation!!)
-                    } else costEstimationViewModel.addError("Failed to Cost Estimated")
+                        } else costEstimationViewModel.addError("Failed to Cost Estimated")
+                    }
                 }
             }
         }
@@ -441,28 +445,39 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
     private fun getConfirmOrderResponse() {
         confirmOrderViewModel.orderConfirm.observe(viewLifecycleOwner) {
-            when (it) {
-                is ApisResponse.Error -> {
-                    hidePb()
-                    if (it.data == null) {
-                        it.exception?.localizedMessage?.let { err ->
-                            showErrorDialog(err)
+            it?.let {
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { err ->
+                                showErrorDialog(err)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
                         }
-                    } else {
-                        showErrorDialog("${it.data}")
                     }
-                }
-                is ApisResponse.Loading -> {
-                    Log.i("getConfirmOrderResponse", " Loading ${it.data}")
-                    showPb("${it.data}")
-                }
-                is ApisResponse.Success -> {
-                    hidePb()
-                    arrItem.clear()
-                    confirmOrderViewModel.getOrderList(null)
-                    (it.data as PrintReceiptInfo?)?.let { body ->
-                        if (body.itemList.isEmpty()) {
-                            showDialogBox(
+                    is ApisResponse.Loading -> {
+                        Log.i("getConfirmOrderResponse", " Loading ${it.data}")
+                        showPb("${it.data}")
+                    }
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        arrItem.clear()
+                        confirmOrderViewModel.getOrderList(null)
+                        (it.data as PrintReceiptInfo?)?.let { body ->
+                            if (body.itemList.isEmpty()) {
+                                showDialogBox(
+                                    "Success",
+                                    "All Food Item are added Successfully",
+                                    icon = R.drawable.ic_success,
+                                    isCancel = false
+                                ) {
+                                    findNavController().popBackStack()
+                                }
+                                activity?.msg("Bill List is Empty", Toast.LENGTH_LONG)
+                            } else if (isPrinterConnected) printBillViewModel.doPrint(body, 1)
+                            else showDialogBox(
                                 "Success",
                                 "All Food Item are added Successfully",
                                 icon = R.drawable.ic_success,
@@ -470,17 +485,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                             ) {
                                 findNavController().popBackStack()
                             }
-                            activity?.msg("Bill List is Empty", Toast.LENGTH_LONG)
-                        } else if (isPrinterConnected) printBillViewModel.doPrint(body, 1)
-                        else showDialogBox(
-                            "Success",
-                            "All Food Item are added Successfully",
-                            icon = R.drawable.ic_success,
-                            isCancel = false
-                        ) {
-                            findNavController().popBackStack()
-                        }
-                    } ?: showErrorDialog("Cannot Print Bill")
+                        } ?: showErrorDialog("Cannot Print Bill")
+                    }
                 }
             }
         }
@@ -530,18 +536,20 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             else {
                 confirmOrderViewModel.getGrandTotal(null)
             }
-            when (it) {
-                is ApisResponse.Error -> Log.i(TAG, "getData: Error")
-                is ApisResponse.Loading -> if (it.data == null) {
-                    arrItem.clear()
-                    initial()
-                }
-                is ApisResponse.Success -> {
-                    it.data?.let { data ->
+            it?.let {
+                when (it) {
+                    is ApisResponse.Error -> Log.i(TAG, "getData: Error")
+                    is ApisResponse.Loading -> if (it.data == null) {
                         arrItem.clear()
-                        arrItem.addAll(data)
-                        confirmOderFragmentAdaptor.setQtyBoxType(true)
-                        setUpRecycleAdaptor(data)
+                        initial()
+                    }
+                    is ApisResponse.Success -> {
+                        it.data?.let { data ->
+                            arrItem.clear()
+                            arrItem.addAll(data)
+                            confirmOderFragmentAdaptor.setQtyBoxType(true)
+                            setUpRecycleAdaptor(data)
+                        }
                     }
                 }
             }

@@ -311,7 +311,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
     }
 
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
-        val dialog = CrossSellingDialog(activity!!)
+        val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
         dialog.showCrossSellingDialog(response)
     }
@@ -719,18 +719,20 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
             else {
                 confirmOrderViewModel.getGrandTotal(null)
             }
-            when (it) {
-                is ApisResponse.Error -> Log.i(TAG, "getData: Error")
-                is ApisResponse.Loading -> if (it.data == null) {
-                    arrItem.clear()
-                    initial()
-                }
-                is ApisResponse.Success -> {
-                    it.data?.let { data ->
+            it?.let {
+                when (it) {
+                    is ApisResponse.Error -> Log.i(TAG, "getData: Error")
+                    is ApisResponse.Loading -> if (it.data == null) {
                         arrItem.clear()
-                        arrItem.addAll(data)
-                        confirmOderFragmentAdaptor.setQtyBoxType(true)
-                        setUpRecycleAdaptor(data)
+                        initial()
+                    }
+                    is ApisResponse.Success -> {
+                        it.data?.let { data ->
+                            arrItem.clear()
+                            arrItem.addAll(data)
+                            confirmOderFragmentAdaptor.setQtyBoxType(true)
+                            setUpRecycleAdaptor(data)
+                        }
                     }
                 }
             }

@@ -3,14 +3,14 @@ buildscript {
     ext.nav_version = '2.4.1'
     ext.lifecycle_version = "2.4.0"
     ext.jetpack_data_store = "1.0.0"
-    ext.room_version = "2.4.0"
+    ext.room_version = "2.5.2"
             repositories {
                 google()
                 mavenCentral()
             }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
         classpath 'com.google.gms:google-services:4.3.13'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.1'
