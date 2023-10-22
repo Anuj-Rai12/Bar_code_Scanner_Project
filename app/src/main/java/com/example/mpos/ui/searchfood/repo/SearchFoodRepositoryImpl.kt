@@ -41,7 +41,8 @@ class SearchFoodRepositoryImpl constructor(
                     )
                 )
             )
-            info.body()?.apkLoginResult?.value?.let {
+            //info.body()?.apkLoginResult?.value?.let { //for testing only
+            readFromFile(application, "jsonviewer.json")?.let {
                 return@let deserializeFromJson<ItemMethodSyncJsonResponse>(it)
             }!!.itemMaster
         }, saveFetchResult = { item ->

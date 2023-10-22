@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.mpos.BuildConfig
 import com.example.mpos.R
 import com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse
+import com.example.mpos.data.login.model.api.json.ScreenList
 import com.example.mpos.databinding.SplashSrcLayoutBinding
 import com.example.mpos.ui.testingconnection.viewModel.TestingConnectionViewModel
 import com.example.mpos.utils.*
@@ -27,13 +28,12 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
     }
 
 
-
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.changeStatusBarColor(R.color.light_blue_bg)
         binding = SplashSrcLayoutBinding.bind(view)
-        binding.versionCode.text="v${BuildConfig.VERSION_NAME}"
+        binding.versionCode.text = "v${BuildConfig.VERSION_NAME}"
         binding.logoFileId3.animation = animation
         doAuthTask()
         viewModel.events.observe(viewLifecycleOwner) {
@@ -82,15 +82,57 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                         nextFrag("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     Log.i(TAG, "checkApiResponse: ${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     it.data?.let { type ->
                         val json = type as ApkLoginJsonResponse
-                        createLogStatement("LOGIN","$json")
-                        if (json.status)
-                            nextFrag(json.storeName,json)
+                        val jsonTest = ApkLoginJsonResponse(
+                            itemScanWithBarcode = false,
+                            message = "Login Success",
+                            screenList = listOf(
+                                ScreenList(
+                                    dynamicMenuEnable = false,
+                                    billingFromEDC = true,
+                                    screenCaption = "0000",
+                                    modernSearch = true,
+                                    uPICode = "",
+                                    enableCustDetail = false,
+                                    screenList = "Billing",
+                                    kotPrintFromEDC = true,
+                                    paymentLs = listOf("Cash", "Card", "UPI")
+                                ),
+                                ScreenList(
+                                    dynamicMenuEnable = false,
+                                    billingFromEDC = true,
+                                    screenCaption = "0000",
+                                    modernSearch = true,
+                                    uPICode = "",
+                                    enableCustDetail = false,
+                                    screenList = "SHOWROOMBILLING",
+                                    kotPrintFromEDC = true,
+                                    paymentLs = listOf("Cash", "Card", "UPI")
+                                ),
+                                ScreenList(
+                                    dynamicMenuEnable = false,
+                                    billingFromEDC = true,
+                                    screenCaption = "0000",
+                                    modernSearch = true,
+                                    uPICode = "",
+                                    enableCustDetail = false,
+                                    screenList = "RESTAURANTBILLING",
+                                    kotPrintFromEDC = true,
+                                    paymentLs = listOf("Cash", "Card", "UPI")
+                                )
+                            ), status = true, storeName = "OAM Industries Ajni"
+                        )
+                        createLogStatement("LOGIN", "$json")
+                        if (json.status) {
+                            nextFrag(json.storeName, json)
+                        }
                     }
                 }
             }
@@ -98,17 +140,19 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
     }
 
 
-    private fun nextFrag(string: String?,data:ApkLoginJsonResponse?=null) {
+    private fun nextFrag(string: String?, data: ApkLoginJsonResponse? = null) {
         lifecycleScope.launchWhenStarted {
             val action = when (string) {
                 null -> {
                     SplashScreenFragmentDirections.actionSplashScreenFragmentToLoginScreenFragment()
                 }
+
                 "1" -> {
                     SplashScreenFragmentDirections.actionSplashScreenFragmentToTestingConnectionFragment(
                         null
                     )
                 }
+
                 else -> {
                     null
                 }
@@ -116,10 +160,13 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
             action?.let {
                 findNavController().safeNavigate(action)
             }
-            if (action==null){
-                val item=Bundle()
-                item.putParcelable("TBL_VALUE",data!!)
-                findNavController().navigate(R.id.action_splashScreenFragment_to_tableManagementOrCostEstimate,item)
+            if (action == null) {
+                val item = Bundle()
+                item.putParcelable("TBL_VALUE", data!!)
+                findNavController().navigate(
+                    R.id.action_splashScreenFragment_to_tableManagementOrCostEstimate,
+                    item
+                )
             }
 
         }

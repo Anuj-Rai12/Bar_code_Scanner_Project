@@ -2,6 +2,7 @@ package com.example.mpos.ui.showroombilling
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,8 @@ import com.example.mpos.FoodAdaptor
 import com.example.mpos.MainActivity
 import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
+import com.example.mpos.data.billing.billingtoedc.BillingFromEDCRequest
+import com.example.mpos.data.billing.billingtoedc.BillingToEdcRequestBody
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
 import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequestBody
 import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
@@ -39,6 +42,7 @@ import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonRespo
 import com.example.mpos.data.generic.GenericDataCls
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.ShowRoomBillingFragmentBinding
+import com.example.mpos.payment.PaymentActivity
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
 import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
@@ -139,7 +143,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
         getPosItemRequest()
         getConfirmOrderResponse()
         getSendBillToEdcResponse()
-
+        getBillingToEdcResponse()
 
         //Check Bill Status
         getPrintConnectResponse()
@@ -297,10 +301,12 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                         }
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.pbLayout.root.show()
                     binding.pbLayout.titleTxt.text = it.data as String
                 }
+
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
                     val res = it.data as CrossSellingJsonResponse
@@ -331,9 +337,11 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                         activity?.msg(e)
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.menuRecycle.show()
                 }
+
                 is ApisResponse.Success -> {
                     searchFoodAdaptor.notifyDataSetChanged()
                     createLogStatement("TAG_RES", "${it.data}")
@@ -389,9 +397,11 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         showDialogBox(
@@ -418,9 +428,11 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         binding.restItemBtn.performClick()
@@ -461,9 +473,11 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                             )
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         isPrinterConnected = true
@@ -494,6 +508,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> showPb("${it.data}")
                     is ApisResponse.Success -> {
                         hidePb()
@@ -517,9 +532,11 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
@@ -552,24 +569,40 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         Log.i("getConfirmOrderResponse", " Loading ${it.data}")
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         val billObj = confirmBillingRequest?.body!!
-                        viewModel.scanBillingRequest(
-                            ScanBillingToEdcRequest(
-                                ScanBillingToEdcRequestBody(
-                                    rcptNo = receiptNo!!,
-                                    transDate = billObj.transDate,
-                                    transTime = billObj.transTime,
-                                    storeVar = billObj.storeVar,
-                                    staffID = billObj.staffID
+                        if (args.selectioncls.billingFromEDC) {
+                            viewModel.sendBillingToEdcPaymentRequest(
+                                BillingFromEDCRequest(
+                                    BillingToEdcRequestBody(
+                                        rcptNo = receiptNo!!,
+                                        transDate = billObj.transDate,
+                                        transTime = billObj.transTime,
+                                        storeVar = billObj.storeVar,
+                                        staffID = billObj.staffID
+                                    )
                                 )
                             )
-                        )
+                        } else {
+                            viewModel.scanBillingRequest(
+                                ScanBillingToEdcRequest(
+                                    ScanBillingToEdcRequestBody(
+                                        rcptNo = receiptNo!!,
+                                        transDate = billObj.transDate,
+                                        transTime = billObj.transTime,
+                                        storeVar = billObj.storeVar,
+                                        staffID = billObj.staffID
+                                    )
+                                )
+                            )
+                        }
                     }
                 }
         }
@@ -590,6 +623,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> showPb("${it.data}")
                     is ApisResponse.Success -> {
                         hidePb()
@@ -618,6 +652,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> showPb("${it.data}")
                     is ApisResponse.Success -> {
                         hidePb()
@@ -631,6 +666,40 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                         }
                     }
                 }
+        }
+    }
+
+
+    private fun getBillingToEdcResponse() {
+        viewModel.billingToEdc.observe(viewLifecycleOwner) {
+            if (it != null) when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+
+                is ApisResponse.Loading -> showPb("${it.data}")
+                is ApisResponse.Success -> {
+                    hidePb()
+                    val intent = Intent(requireActivity(), PaymentActivity::class.java)
+                    val pay = ArrayList<String>()
+                    pay.clear()
+                    pay.addAll(args.selectioncls.paymentLs)
+                    intent.putExtra("Receipt", receiptNo)
+                    intent.putExtra("upiCode", args.selectioncls.uPICode)
+                    intent.putExtra("payment", pay)
+                    intent.putExtra("tableNo", "1")
+                    intent.putExtra("KOTPrintFromEDC", args.selectioncls.kotPrintFromEDC)
+                    intent.putExtra("TBL_VALUE", args.selectioncls.apk)
+                    startActivity(intent)
+                }
+            }
         }
     }
 
@@ -726,6 +795,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                         arrItem.clear()
                         initial()
                     }
+
                     is ApisResponse.Success -> {
                         it.data?.let { data ->
                             arrItem.clear()
@@ -1020,9 +1090,11 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
             GenericDataCls.Companion.Type.ADDINSTRUCTION -> {
                 updateFreeTxt(data)
             }
+
             GenericDataCls.Companion.Type.UPDTQTY -> {
                 updateQtyDialogBox(data)
             }
+
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
                 requireActivity(), data.crossSellingItems!!

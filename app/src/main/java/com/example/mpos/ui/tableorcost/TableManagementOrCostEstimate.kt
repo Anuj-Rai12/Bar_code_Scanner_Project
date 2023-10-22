@@ -206,7 +206,7 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                         SelectionDataClass.generateData(
                             SelectionDataClass.SHOWROOMBILLING,
                             R.drawable.ic_receipt_bill,
-                            SHOWROOMESTIMATE.name,
+                            SHOWROOMBILLING.name,
                             item.dynamicMenuEnable,
                             args?.itemScanWithBarcode!!,
                             item.uPICode,

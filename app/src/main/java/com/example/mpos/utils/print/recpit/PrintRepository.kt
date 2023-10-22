@@ -20,6 +20,7 @@ import com.example.mpos.payment.unit.trimBorders
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.Rs_Symbol
+import com.example.mpos.utils.createLogStatement
 import com.example.mpos.utils.getEmojiByUnicode
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -60,7 +61,7 @@ class PrintRepository {
     }" + "${createNewString("Price", 6)}${createNewString("Amount", 6)}"
 
 
-    private val headerKOTPine = createNewString("Description", 25)  + createNewString("QTY", 7)
+    private val headerKOTPine = createNewString("Description", 25) + createNewString("QTY", 7)
 
     private val headerGst = "${createNewString("GST %", 25)}${createNewString("CGST", 7)}" + "${
         createNewString(
@@ -176,11 +177,11 @@ class PrintRepository {
             arr.add(line())
             arr.add(setPineLabPrintData(responseBody.billType))
             arr.add(line())
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt1,isCenterAlign = false))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt2,isCenterAlign = false))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt3,isCenterAlign = false))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt4,isCenterAlign = false))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt5,isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt1, isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt2, isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt3, isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt4, isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt5, isCenterAlign = false))
             arr.add(line())
             arr.add(setPineLabPrintData(headerPine, false))
             arr.add(line())
@@ -296,11 +297,11 @@ class PrintRepository {
             arr.add(line())
             arr.add(setPineLabPrintData(responseBody.billType))
             arr.add(line())
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt1,isCenterAlign = false))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt2,isCenterAlign = false))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt3,isCenterAlign = false))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt4,isCenterAlign = false))
-            arr.add(setPineLabPrintData(responseBody.subHeaderTxt5,isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt1, isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt2, isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt3, isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt4, isCenterAlign = false))
+            arr.add(setPineLabPrintData(responseBody.subHeaderTxt5, isCenterAlign = false))
             arr.add(line())
             arr.add(setPineLabPrintData(headerKOTPine, false))
             arr.add(line())
@@ -521,7 +522,12 @@ class PrintRepository {
     ): String {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
-            val value = "${createNewString(getDigitOnlyValue(item.vatPer), percentage)}${createNewString(item.vatBaseAmt, baseAmt)}${createNewString(item.vatAmt, vatAmt)}${if (item!=list.last()) "\n" else ""}"
+            val value = "${createNewString(getDigitOnlyValue(item.vatPer), percentage)}${
+                createNewString(
+                    item.vatBaseAmt,
+                    baseAmt
+                )
+            }${createNewString(item.vatAmt, vatAmt)}${if (item != list.last()) "\n" else ""}"
             stringBuilder.append(value)
         }
         return stringBuilder.toString()
@@ -553,7 +559,8 @@ class PrintRepository {
     ): String {
         val stringBuilder = StringBuilder()
         childItemList.forEach {
-            val value = createNewString(it.description, descSize) + createNewString(it.qty.toString(), amt)
+            val value =
+                createNewString(it.description, descSize) + createNewString(it.qty.toString(), amt)
             stringBuilder.append(value)
         }
         return stringBuilder.toString()

@@ -38,7 +38,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
 
         menuItemSyncViewModel.events.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { msg ->
-                showDialogBox("Failed",msg){}
+                showDialogBox("Failed", msg) {}
             }
         }
 
@@ -72,12 +72,14 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                         icon = R.drawable.ic_error
                     ) {}
                 }
+
                 is ApisResponse.Loading -> {
                     binding.loginBtnId.showButtonProgress(
                         "${it.data}",
                         requireActivity().getColorInt(R.color.white)
                     )
                 }
+
                 is ApisResponse.Success -> {
                     hideProgress()
                     it.data?.let { res ->
@@ -127,7 +129,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
 
     @Suppress("UNCHECKED_CAST")
     private fun syncMenuResponse() {
-        menuItemSyncViewModel.fdInfo.observe(this) {
+        menuItemSyncViewModel.fdInfo.observe(viewLifecycleOwner) {
             when (it) {
                 is ApisResponse.Error -> {
                     hideProgress()
@@ -140,12 +142,14 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                         ) {}
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.loginBtnId.showButtonProgress(
                         "Syncing menu ${getEmojiByUnicode(0x1F4A1)}...",
                         requireActivity().getColorInt(R.color.white)
                     )
                 }
+
                 is ApisResponse.Success -> {
                     hideProgress()
                     jsonLoginResponse?.let { jsn ->

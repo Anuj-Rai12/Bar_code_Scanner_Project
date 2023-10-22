@@ -291,7 +291,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
     }
 
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
-        val dialog = CrossSellingDialog(activity!!)
+        val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
         dialog.showCrossSellingDialog(response)
     }
