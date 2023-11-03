@@ -107,7 +107,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             args!!,
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
-                            modernSearch = item.modernSearch
+                            modernSearch = item.modernSearch,
+                            estimatePrint = item.estimatePrint
                         )
                     )
                 }
@@ -125,7 +126,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             args!!,
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
-                            modernSearch = item.modernSearch
+                            modernSearch = item.modernSearch,
+                            estimatePrint = item.estimatePrint
                         )
                     )
                 }
@@ -143,7 +145,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             args!!,
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
-                            modernSearch = item.modernSearch
+                            modernSearch = item.modernSearch,
+                            estimatePrint = item.estimatePrint
                         )
                     )
                 }
@@ -161,7 +164,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             args!!,
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
-                            modernSearch = item.modernSearch
+                            modernSearch = item.modernSearch,
+                            estimatePrint = item.estimatePrint
                         )
                     )
                 }
@@ -179,7 +183,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             args!!,
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
-                            modernSearch = item.modernSearch
+                            modernSearch = item.modernSearch,
+                            estimatePrint = item.estimatePrint
                         )
                     )
                 }
@@ -197,7 +202,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             args!!,
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
-                            modernSearch = item.modernSearch
+                            modernSearch = item.modernSearch,
+                            estimatePrint = item.estimatePrint
                         )
                     )
                 }
@@ -215,7 +221,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             args!!,
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
-                            modernSearch = item.modernSearch
+                            modernSearch = item.modernSearch,
+                            estimatePrint = item.estimatePrint
                         )
                     )
                 }
@@ -233,7 +240,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             args!!,
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
-                            modernSearch = item.modernSearch
+                            modernSearch = item.modernSearch,
+                            estimatePrint = item.estimatePrint
                         )
                     )
                 }

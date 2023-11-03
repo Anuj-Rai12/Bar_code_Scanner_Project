@@ -100,6 +100,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                                     screenCaption = "0000",
                                     modernSearch = true,
                                     uPICode = "",
+                                    estimatePrint = false,
                                     enableCustDetail = false,
                                     screenList = "Billing",
                                     kotPrintFromEDC = true,
@@ -114,11 +115,13 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                                     enableCustDetail = false,
                                     screenList = "SHOWROOMBILLING",
                                     kotPrintFromEDC = true,
+                                    estimatePrint = false,
                                     paymentLs = listOf("Cash", "Card", "UPI")
                                 ),
                                 ScreenList(
                                     dynamicMenuEnable = false,
                                     billingFromEDC = true,
+                                    estimatePrint = false,
                                     screenCaption = "0000",
                                     modernSearch = true,
                                     uPICode = "",

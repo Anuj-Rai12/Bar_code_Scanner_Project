@@ -16,6 +16,7 @@ data class SelectionDataClass(
     val uPICode: String,
     val modernSearch: Boolean,
     val enableCustDetail: Boolean,
+    val estimatePrint: Boolean,
     val billingFromEDC: Boolean,
     val paymentLs: List<String>,
     val apk: ApkLoginJsonResponse
@@ -32,6 +33,7 @@ data class SelectionDataClass(
             paymentLs: List<String>,
             apk: ApkLoginJsonResponse,
             kotPrintFromEDC: Boolean,
+            estimatePrint: Boolean,
             modernSearch: Boolean,
             enableCustDetail: Boolean
         ): SelectionDataClass {
@@ -45,6 +47,7 @@ data class SelectionDataClass(
                 billingFromEDC = billingFromEDC,
                 paymentLs = paymentLs,
                 apk = apk,
+                estimatePrint = estimatePrint,
                 kotPrintFromEDC = kotPrintFromEDC,
                 modernSearch = modernSearch,
                 enableCustDetail = enableCustDetail

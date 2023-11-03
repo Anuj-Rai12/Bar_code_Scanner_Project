@@ -15,5 +15,6 @@ data class ScreenList(
     @SerializedName("EnableCustDetail") val enableCustDetail: Boolean,
     @SerializedName("screenlist") val screenList: String,
     @SerializedName("KOTPrintFromEDC") val kotPrintFromEDC: Boolean,
+    @SerializedName("Estimateprint") val estimatePrint: Boolean,
     @SerializedName("PaymentType") val paymentLs: List<String>
 ) : Parcelable
