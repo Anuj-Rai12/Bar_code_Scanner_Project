@@ -62,7 +62,7 @@ const val BLUE_ADIMS = 121
 const val BLUE_SCAN = 113
 const val BLUE_CONNECT = 231
 
-const val Url_barcode =0// Barcode.TYPE_URL
+const val Url_barcode = 0// Barcode.TYPE_URL
 const val Url_Text = 1//Barcode.TYPE_TEXT
 fun AppCompatActivity.hide() {
     this.supportActionBar!!.hide()
@@ -154,6 +154,8 @@ object AllStringConst {
 
         const val finalInvoiceSend =
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:FinalInvoiceSend"
+
+        const val printEstPos = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:PrintEstKOT"
 
     }
 
@@ -450,14 +452,14 @@ fun Activity.getCustomerInfoDialog(
             cancel.invoke()
             dialog.dismiss()
         }.create().show()
-    binding.customerNameTxt.text="Customer Name"
-    binding.customerNumTv.text="Customer PhoneNumber"
+    binding.customerNameTxt.text = "Customer Name"
+    binding.customerNumTv.text = "Customer PhoneNumber"
     binding.coverNumEdLayout.hide()
     binding.coverNumTxt.hide()
     binding.customerNumTv.updateLayoutParams<ConstraintLayout.LayoutParams> {
-        leftToLeft=binding.mainParent.id
-        marginStart=23
-        topToTop=binding.mainParent.id
+        leftToLeft = binding.mainParent.id
+        marginStart = 23
+        topToTop = binding.mainParent.id
     }
 }
 
@@ -723,6 +725,7 @@ fun Fragment.showQtyDialog(
 
                 res.invoke(itemMaster)
             }
+
             "Amount" -> {
                 var amt = binding.qtyEd.text.toString().toDoubleOrNull()
                 if (amt == null) {
@@ -740,6 +743,7 @@ fun Fragment.showQtyDialog(
                 itemMaster.foodAmt = amt
                 amount.invoke(itemMaster)
             }
+
             else -> {
                 instruction.invoke(txt)
             }

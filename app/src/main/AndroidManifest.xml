@@ -28,10 +28,10 @@
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security"
         android:theme="@style/Theme.OffiqlResturantApp">
-        <activity android:name=".payment.PaymentActivity"/>
+        <activity android:name=".MainActivity"/>
         <activity android:name=".TestingActivity"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".payment.PaymentActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">

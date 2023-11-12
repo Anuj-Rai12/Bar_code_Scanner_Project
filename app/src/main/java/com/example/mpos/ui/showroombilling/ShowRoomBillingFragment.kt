@@ -695,6 +695,8 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                     intent.putExtra("upiCode", args.selectioncls.uPICode)
                     intent.putExtra("payment", pay)
                     intent.putExtra("tableNo", "1")
+                    intent.putExtra("Estimateprint", args.selectioncls.estimatePrint)
+                    intent.putExtra("EstimatePrintcount", args.selectioncls.estimatePrintcount)
                     intent.putExtra("KOTPrintFromEDC", args.selectioncls.kotPrintFromEDC)
                     intent.putExtra("TBL_VALUE", args.selectioncls.apk)
                     startActivity(intent)

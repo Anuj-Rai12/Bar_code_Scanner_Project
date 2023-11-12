@@ -1,6 +1,5 @@
 package com.example.mpos.ui.oderconfirm.view_model
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -11,6 +10,7 @@ import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
 import com.example.mpos.data.occupied.OccupiedTableRequest
 import com.example.mpos.data.occupied.RequestBody
+import com.example.mpos.data.printEstKot.request.PrintEstKotRequest
 import com.example.mpos.data.printbIll.PrintBillRequest
 import com.example.mpos.data.table_info.model.json.TableDetail
 import com.example.mpos.dataStore.UserSoredData
@@ -79,6 +79,10 @@ class ConfirmOrderFragmentViewModel constructor(
     val printBill: LiveData<Events<ApisResponse<out String>>>
         get() = _printBill
 
+    private val _printEstKot = MutableLiveData<ApisResponse<out Any>>()
+    val printEstKot: LiveData<ApisResponse<out Any>>
+        get() = _printEstKot
+
     private val _listOfOrder = MutableLiveData<ApisResponse<out List<ItemMasterFoodItem>>?>()
     val listOfOrder: LiveData<ApisResponse<out List<ItemMasterFoodItem>>?>
         get() = _listOfOrder
@@ -92,7 +96,7 @@ class ConfirmOrderFragmentViewModel constructor(
     val grandTotal: LiveData<String?>
         get() = _grandTotal
 
-    fun init(){
+    fun init() {
         _postLine.postValue(null)
         _orderConfirm.postValue(null)
     }
@@ -118,14 +122,24 @@ class ConfirmOrderFragmentViewModel constructor(
             }
 
             userSoredData.read.collectLatest {
-                Log.i("CONFIRM_ORDER", "USERID_CONFIRM_ORDER: USER IS NULL OR EMPTY -> ${RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty()}")
-                Log.i("CONFIRM_ORDER", "USERID_CONFIRM_ORDER: STORE IS NULL OR EMPTY -> ${RestaurantSingletonCls.getInstance().getStoreId().isNullOrEmpty()}")
+                Log.i(
+                    "CONFIRM_ORDER",
+                    "USERID_CONFIRM_ORDER: USER IS NULL OR EMPTY -> ${
+                        RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty()
+                    }"
+                )
+                Log.i(
+                    "CONFIRM_ORDER",
+                    "USERID_CONFIRM_ORDER: STORE IS NULL OR EMPTY -> ${
+                        RestaurantSingletonCls.getInstance().getStoreId().isNullOrEmpty()
+                    }"
+                )
 
                 if (RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty())
-                RestaurantSingletonCls.getInstance().setUserID(it.userID!!)
+                    RestaurantSingletonCls.getInstance().setUserID(it.userID!!)
 
                 if (RestaurantSingletonCls.getInstance().getStoreId().isNullOrEmpty())
-                RestaurantSingletonCls.getInstance().setStoreId(it.storeNo!!)
+                    RestaurantSingletonCls.getInstance().setStoreId(it.storeNo!!)
             }
 
         }
@@ -135,7 +149,7 @@ class ConfirmOrderFragmentViewModel constructor(
 
 
     fun getOrderList(foodItemList: FoodItemList?) {
-        createLogStatement("TAG_RES","$foodItemList")
+        createLogStatement("TAG_RES", "$foodItemList")
         foodItemList?.let { foodItem ->
             if (foodItem.foodList.isNotEmpty())
                 _listOfOrder.postValue(ApisResponse.Success(foodItem.foodList))
@@ -160,6 +174,26 @@ class ConfirmOrderFragmentViewModel constructor(
             if (app.isNetworkAvailable()) {
                 printBillRepository.getPrintBillResponse(request).collectLatest {
                     _printBill.postValue(Events(it))
+                }
+            } else {
+                _event.postValue(Events(mapOf("No Internet Connection" to false)))
+            }
+        }
+    }
+
+
+    fun printEstKot(request: PrintEstKotRequest) {
+        createLogStatement("TAG_PRINT_EST_SUCCESS","PRINT STARTING 1")
+        if (!this::printBillRepository.isInitialized) {
+            _event.postValue(Events(mapOf("Unknown Error" to false)))
+            return
+        }
+
+        createLogStatement("TAG_PRINT_EST_SUCCESS","PRINT STARTING 1")
+        viewModelScope.launch {
+            if (app.isNetworkAvailable()) {
+                printBillRepository.printKotResponse(request).collectLatest {
+                    _printEstKot.postValue(it)
                 }
             } else {
                 _event.postValue(Events(mapOf("No Internet Connection" to false)))
@@ -210,23 +244,23 @@ class ConfirmOrderFragmentViewModel constructor(
     fun getTbl(tbl: TableDetail) = "${tbl.tableNo}:${tbl.guestNumber}P"
 
 
-/*    fun getOrderItem(foodItem: ItemMasterFoodItem, flag: Boolean = false) {
-        _viewDealsList.value?.let { myList ->
-            val item = myList.find { res -> res.itemMaster.id == foodItem.itemMaster.id }
-            if (item != null) {
-                myList.remove(foodItem)
-            } else {
-                if (!flag) {
-                    myList.add(foodItem)
-                    _event.postValue(Events(mapOf(("Item Selected" to true))))
+    /*    fun getOrderItem(foodItem: ItemMasterFoodItem, flag: Boolean = false) {
+            _viewDealsList.value?.let { myList ->
+                val item = myList.find { res -> res.itemMaster.id == foodItem.itemMaster.id }
+                if (item != null) {
+                    myList.remove(foodItem)
+                } else {
+                    if (!flag) {
+                        myList.add(foodItem)
+                        _event.postValue(Events(mapOf(("Item Selected" to true))))
+                    }
                 }
+                _viewDealsList.postValue(myList)
+                return@let
+            } ?: if (!flag) {
+                _viewDealsList.postValue(mutableListOf(foodItem))
             }
-            _viewDealsList.postValue(myList)
-            return@let
-        } ?: if (!flag) {
-            _viewDealsList.postValue(mutableListOf(foodItem))
-        }
-    }*/
+        }*/
 
 
     fun getGrandTotal(list: List<ItemMasterFoodItem>?) {

@@ -17,9 +17,11 @@ import com.example.mpos.data.printkot.PrintKotRequest
 import com.example.mpos.dataStore.UserSoredData
 import com.example.mpos.di.RetrofitInstance
 import com.example.mpos.ui.cost.repo.CostDashBoardRepository
+import com.example.mpos.utils.AllStringConst
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.Events
 import com.example.mpos.utils.RestaurantSingletonCls
+import com.example.mpos.utils.genToken
 import com.example.mpos.utils.isNetworkAvailable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
@@ -45,7 +47,7 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
     val sendBillingToEdc: LiveData<ApisResponse<out String?>?>
         get() = _sendBillingToEdc
 
-   private val _billingToEdc = MutableLiveData<ApisResponse<out String?>>()
+    private val _billingToEdc = MutableLiveData<ApisResponse<out String?>>()
     val billingToEdc: LiveData<ApisResponse<out String?>>
         get() = _billingToEdc
 
@@ -72,19 +74,32 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
 
     init {
 
-        repository =
-            CostDashBoardRepository(
-                RetrofitInstance.getInstance(
-                    "UseLess String..",
-                    "UseLess BaseUrl"
-                ).getRetrofit()
-            )
+        viewModelScope.launch {
+            userSoredData.readBase.collectLatest {
+                val auth = AllStringConst.getAuthHeader(genToken("${it.userId}:${it.passId}"))
+                val retrofit = RetrofitInstance.getInstance(auth = auth, baseUrl = it.baseUrl)
+                repository =
+                    CostDashBoardRepository(
+                        retrofit.getRetrofit()
+                    )
+            }
+        }
 
 
         viewModelScope.launch {
             userSoredData.read.collectLatest {
-                Log.i("CONFIRM_ORDER", " COST Dash Bord USERID_CONFIRM_ORDER: USER IS NULL OR EMPTY -> ${RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty()}")
-                Log.i("CONFIRM_ORDER", " COST Dash Bord  USERID_CONFIRM_ORDER: STORE IS NULL OR EMPTY -> ${RestaurantSingletonCls.getInstance().getStoreId().isNullOrEmpty()}")
+                Log.i(
+                    "CONFIRM_ORDER",
+                    " COST Dash Bord USERID_CONFIRM_ORDER: USER IS NULL OR EMPTY -> ${
+                        RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty()
+                    }"
+                )
+                Log.i(
+                    "CONFIRM_ORDER",
+                    " COST Dash Bord  USERID_CONFIRM_ORDER: STORE IS NULL OR EMPTY -> ${
+                        RestaurantSingletonCls.getInstance().getStoreId().isNullOrEmpty()
+                    }"
+                )
 
                 if (RestaurantSingletonCls.getInstance().getUserId().isNullOrEmpty())
                     RestaurantSingletonCls.getInstance().setUserID(it.userID!!)
@@ -144,6 +159,7 @@ class CostDashBoardViewModel(application: Application) : AndroidViewModel(applic
         }
 
     }
+
     // this is for pineLab
     fun sendBillingToEdcPaymentRequest(request: BillingFromEDCRequest) {
         if (!app.isNetworkAvailable()) {
