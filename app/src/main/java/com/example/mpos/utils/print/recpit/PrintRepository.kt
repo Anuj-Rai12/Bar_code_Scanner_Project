@@ -10,8 +10,11 @@ import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnection
 import com.example.mpos.data.billing.printInvoice.json.*
 import com.example.mpos.data.confirmOrder.response.json.ItemList
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
+import com.example.mpos.data.printEstKot.response.json.PrintEstKotItem
+import com.example.mpos.data.printEstKot.response.json.PrintJsonKotResponse
 import com.example.mpos.data.printkot.json.ChildItemList
 import com.example.mpos.data.printkot.json.PrintKotInvoice
+import com.example.mpos.payment.bracode.BarCodeGenerator
 import com.example.mpos.payment.pine.AppConfig
 import com.example.mpos.payment.pine.request.Datum
 import com.example.mpos.payment.qr.CreateQr
@@ -20,10 +23,12 @@ import com.example.mpos.payment.unit.trimBorders
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.utils.ApisResponse
 import com.example.mpos.utils.Rs_Symbol
-import com.example.mpos.utils.createLogStatement
 import com.example.mpos.utils.getEmojiByUnicode
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -48,40 +53,41 @@ class PrintRepository {
 
     private val header = "${createNewString("Description", 25)}${
         createNewString(
-            "Qty",
-            7
+            "Qty", 7
         )
     }" + "${createNewString("Price", 8)}${createNewString("Amount", 10)}\n"
 
     private val headerPine = "${createNewString("Description", 15)}${
         createNewString(
-            "Qty",
-            4
+            "Qty", 4
         )
     }" + "${createNewString("Price", 6)}${createNewString("Amount", 6)}"
 
+
+    private val headerEstKOT = "${createNewString("Description", 13)}${
+        createNewString(
+            "Qty", 4
+        )
+    }" + "${createNewString("Rate", 6)}${createNewString("GST", 4)}${createNewString("Amt", 3)}"
 
     private val headerKOTPine = createNewString("Description", 25) + createNewString("QTY", 7)
 
     private val headerGst = "${createNewString("GST %", 25)}${createNewString("CGST", 7)}" + "${
         createNewString(
-            "SGST",
-            8
+            "SGST", 8
         )
     }${createNewString("CESS", 10)}\n"
 
     private val headerGstPine = "${createNewString("GST %", 8)}${createNewString("CGST", 8)}" + "${
         createNewString(
-            "SGST",
-            8
+            "SGST", 8
         )
     }${createNewString("CESS", 8)}"
 
 
     private val headerVATPine = "${createNewString("VAT/ST", 10)}${
         createNewString(
-            "Base Amt",
-            10
+            "Base Amt", 10
         )
     }" + createNewString("VAT/ST AMT", 10)
 
@@ -126,8 +132,7 @@ class PrintRepository {
                         )
                     }${
                         createNewString(
-                            responseBody.itemList.size.toString(),
-                            10
+                            responseBody.itemList.size.toString(), 10
                         )
                     }\n" + "[C]$line" + "[L]" + "${
                         createNewString(
@@ -244,28 +249,30 @@ class PrintRepository {
             )
             arr.add(line())
 //Qr
-            val qr = CreateQr()
-            val bitmap = qr.createQr("${responseBody.qrPrint}")
-            bitmap?.let { bit ->
-                val buffer = qr.bitInputStream(bit.trimBorders(Color.WHITE))
-                val bitmap1 = BitmapFactory.decodeStream(buffer)
-                val resizedBitmap = Bitmap.createScaledBitmap(
-                    bitmap1, 150, 150, false
-                )
-                    .trimBorders(Color.WHITE) //else Bitmap1.createScaledBitmap(inputBitmap, 184, 35, false)*/
-                val output = ByteArrayOutputStream(resizedBitmap.byteCount)
-                resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
-                val imageBytes = output.toByteArray()
-                val imgData = ImageConvertor.bytesToHex(imageBytes)
-                val datum = Datum()
-                datum.printDataType = "2"
-                datum.printerWidth = AppConfig.PrinterWidth
-                datum.isCenterAligned = true
-                datum.dataToPrint = ""
-                datum.imagePath = ""
-                datum.imageData = imgData
-                arr.add(datum)
-                arr.add(line())
+            if (responseBody.qrPrint.isNotEmpty()) {
+                val qr = CreateQr()
+                val bitmap = qr.createQr("${responseBody.qrPrint}")
+                bitmap?.let { bit ->
+                    val buffer = qr.bitInputStream(bit.trimBorders(Color.WHITE))
+                    val bitmap1 = BitmapFactory.decodeStream(buffer)
+                    val resizedBitmap = Bitmap.createScaledBitmap(
+                        bitmap1, 150, 150, false
+                    )
+                        .trimBorders(Color.WHITE) //else Bitmap1.createScaledBitmap(inputBitmap, 184, 35, false)*/
+                    val output = ByteArrayOutputStream(resizedBitmap.byteCount)
+                    resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+                    val imageBytes = output.toByteArray()
+                    val imgData = ImageConvertor.bytesToHex(imageBytes)
+                    val datum = Datum()
+                    datum.printDataType = "2"
+                    datum.printerWidth = AppConfig.PrinterWidth
+                    datum.isCenterAligned = true
+                    datum.dataToPrint = ""
+                    datum.imagePath = ""
+                    datum.imageData = imgData
+                    arr.add(datum)
+                    arr.add(line())
+                }
             }
             arr.add(setPineLabPrintData(responseBody.footerTxt1))
             arr.add(setPineLabPrintData(responseBody.footerTxt2))
@@ -323,10 +330,89 @@ class PrintRepository {
     }.flowOn(IO)
 
 
+    fun doPineLabPrintEstKotInvoice(responseBody: PrintJsonKotResponse, espCount: Int) = flow {
+        MultiFormatWriter()
+        emit(ApisResponse.Loading("Please Wait Printing EST KOT Invoice ${getEmojiByUnicode(0x1F5A8)}"))
+        val data = try {
+            var count = espCount
+            val arr = ArrayList<Datum>()
+            while (count > 0) {
+                arr.add(setPineLabPrintData(responseBody.headerTxt, printWidth = 24))
+                arr.add(line())
+                arr.add(setPineLabPrintData(responseBody.headerTxt1))
+                arr.add(setPineLabPrintData(responseBody.headerTxt2))
+                arr.add(setPineLabPrintData(responseBody.headerTxt3))
+                arr.add(setPineLabPrintData(responseBody.headerTxt4))
+                arr.add(setPineLabPrintData(responseBody.headerTxt5))
+                arr.add(setPineLabPrintData(responseBody.headerTxt6))
+                arr.add(setPineLabPrintData(responseBody.headerTxt7))
+                arr.add(line())
+                arr.add(setPineLabPrintData(responseBody.billType))
+                arr.add(line())
+                arr.add(setPineLabPrintData(responseBody.subHeaderTxt1, isCenterAlign = false))
+                arr.add(setPineLabPrintData(responseBody.subHeaderTxt2, isCenterAlign = false))
+                arr.add(setPineLabPrintData(responseBody.subHeaderTxt3, isCenterAlign = false))
+                arr.add(setPineLabPrintData(responseBody.subHeaderTxt4, isCenterAlign = false))
+                arr.add(setPineLabPrintData(responseBody.subHeaderTxt5, isCenterAlign = false))
+                arr.add(line())
+                arr.add(setPineLabPrintData(headerEstKOT))
+                arr.add(line())
+                arr.add(
+                    setPineLabPrintData(
+                        setEstKOTInvoiceTable(
+                            PrintEstKotItem.printEstKotItem,
+                            descSize = 13,
+                            qty = 4,
+                            rate = 8,
+                            gst = 4,
+                            amt = 3
+                        ), false
+                    )
+                )
+                arr.add(line())
+                arr.add(
+                    setPineLabPrintData(
+                        "Amt Incl to Bill: $Rs_Symbol ${responseBody.baseAmount}",
+                        false
+                    )
+                )
+                arr.add(line())
+                val qr = BarCodeGenerator()
+                val bitmap =
+                    qr.encodeAsBitmap(responseBody.subHeaderTxt1, BarcodeFormat.CODE_128, 250, 150)
+                bitmap?.let { bit ->
+                    val buffer = bit.trimBorders(Color.WHITE)
+                    val resizedBitmap = Bitmap.createScaledBitmap(
+                        buffer, 200, 150, false
+                    )
+                        .trimBorders(Color.WHITE) //else Bitmap1.createScaledBitmap(inputBitmap, 184, 35, false)*/
+                    val output = ByteArrayOutputStream(resizedBitmap.byteCount)
+                    resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+                    val imageBytes = output.toByteArray()
+                    val imgData = ImageConvertor.bytesToHex(imageBytes)
+                    val datum = Datum()
+                    datum.printDataType = "2"
+                    datum.printerWidth = AppConfig.PrinterWidth
+                    datum.isCenterAligned = true
+                    datum.dataToPrint = ""
+                    datum.imagePath = ""
+                    datum.imageData = imgData
+                    arr.add(datum)
+                    arr.add(line())
+                }
+                arr.add(setPineLabPrintData("\n"))
+                count--
+            }
+            ApisResponse.Success(arr)
+        } catch (e: Exception) {
+            ApisResponse.Error(null, e)
+        }
+        emit(data)
+    }.flowOn(IO)
+
+
     private fun setPineLabPrintData(
-        msg: String,
-        isCenterAlign: Boolean = true,
-        printWidth: Int = AppConfig.PrinterWidth
+        msg: String, isCenterAlign: Boolean = true, printWidth: Int = AppConfig.PrinterWidth
     ): Datum {
         val datum = Datum()
         datum.imageData = "0"
@@ -361,30 +447,24 @@ class PrintRepository {
                     "[C]$underLine" + "[L][C]${responseBody.headerTxt1}\n" + "[L][C]" + "${responseBody.headerTxt2}\n" + "[L][C]" + "${responseBody.headerTxt3}\n" + "[L][C]" + "${responseBody.headerTxt4}\n" + "[L][C]" + "${responseBody.headerTxt5}\n" + "[L][C]" + "${responseBody.headerTxt6}\n" + "[L][C]" + "${responseBody.headerTxt7}\n" + "[C]$doubleLine" + "[L][C]" + "${responseBody.billTypeTxt}\n" + "[C]$doubleLine" + "[L][C]" + "${responseBody.billType}\n" + "[C]$doubleLine" + "[L] ${responseBody.subHeaderTxt1}" + "\n" + "[L] ${responseBody.subHeaderTxt2}" + "\n" + "[L] ${responseBody.subHeaderTxt3}" + "\n" + "[L] ${responseBody.subHeaderTxt4}" + "\n" + "[L] ${responseBody.subHeaderTxt5}" + "\n" + "[C]$doubleLine" + "[L]" + header + "[C]$doubleLine" + setBillInvoiceTable(
                         responseBody.childitemList
                     ) + "[C]$doubleLine" + "[L]" + createNewString(
-                        "Total",
-                        40
+                        "Total", 40
                     ) + "${
                         createNewString(
-                            responseBody.baseAmount,
-                            10
+                            responseBody.baseAmount, 10
                         )
                     }\n" + "[C]$doubleLine" + "[L]" + headerGst + "[C]$doubleLine" + setGstTable(
                         responseBody.gstDetails
                     ) + "[C]$doubleLine" + "[L]" + createNewString(
-                        "Amount Including GST",
-                        40
+                        "Amount Including GST", 40
                     ) + "${
                         createNewString(
-                            responseBody.amtIncGST,
-                            10
+                            responseBody.amtIncGST, 10
                         )
                     }\n" + "[C]$doubleLine" + "[L]" + createNewString(
-                        "Rounding Amt",
-                        40
+                        "Rounding Amt", 40
                     ) + "${
                         createNewString(
-                            responseBody.roundAmt,
-                            10
+                            responseBody.roundAmt, 10
                         )
                     }\n" + "[C]$doubleLine" + "[L]" + createNewString("Rounding Total", 40) + "${
                         createNewString(
@@ -455,8 +535,7 @@ class PrintRepository {
         val stringBuilder = StringBuilder()
         list.forEach { item ->
             val value = "[L]${createNewString(item.description, 25)}" + createNewString(
-                "${item.qty}",
-                7
+                "${item.qty}", 7
             ) + createNewString(
                 ListOfFoodItemToSearchAdaptor.setPrice(item.price).toString(), 8
             ) + "${
@@ -507,8 +586,7 @@ class PrintRepository {
                     )
                 }" + createNewString(item.sGSTAmt, price) + "${
                     createNewString(
-                        item.cessAmt,
-                        amt
+                        item.cessAmt, amt
                     )
                 }${if (descSize == 25) "\n" else ""}"
             stringBuilder.append(value)
@@ -524,8 +602,7 @@ class PrintRepository {
         list.forEach { item ->
             val value = "${createNewString(getDigitOnlyValue(item.vatPer), percentage)}${
                 createNewString(
-                    item.vatBaseAmt,
-                    baseAmt
+                    item.vatBaseAmt, baseAmt
                 )
             }${createNewString(item.vatAmt, vatAmt)}${if (item != list.last()) "\n" else ""}"
             stringBuilder.append(value)
@@ -553,15 +630,37 @@ class PrintRepository {
 
 
     private fun setBillKOTInvoiceTable(
-        childItemList: List<ChildItemList>,
-        descSize: Int = 25,
-        amt: Int = 7
+        childItemList: List<ChildItemList>, descSize: Int = 25, amt: Int = 7
     ): String {
         val stringBuilder = StringBuilder()
         childItemList.forEach {
             val value =
                 createNewString(it.description, descSize) + createNewString(it.qty.toString(), amt)
             stringBuilder.append(value)
+        }
+        return stringBuilder.toString()
+    }
+
+
+    private fun setEstKOTInvoiceTable(
+        childItemList: List<PrintEstKotItem>,
+        descSize: Int = 15,
+        amt: Int = 6,
+        rate: Int = 4,
+        qty: Int = 4,
+        gst: Int = 4
+    ): String {
+        val stringBuilder = StringBuilder()
+        childItemList.forEach {
+
+            val value = createNewString(it.desc, descSize) + createNewString(
+                it.qty.toString(), amt
+            ) + createNewString(it.rate.toString(), rate) + createNewString(
+                it.qty.toString(), qty
+            ) + createNewString(it.gst.toString(), gst)
+
+            stringBuilder.append(value)
+            stringBuilder.append("\n")
         }
         return stringBuilder.toString()
     }

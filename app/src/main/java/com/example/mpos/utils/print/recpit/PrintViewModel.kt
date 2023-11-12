@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
+import com.example.mpos.data.printEstKot.response.json.PrintJsonKotResponse
 import com.example.mpos.data.printkot.json.PrintKotInvoice
 import com.example.mpos.utils.ApisResponse
 import kotlinx.coroutines.cancel
@@ -37,6 +38,11 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
     private val _doPrintPineKOTInvoicePrinting = MutableLiveData<ApisResponse<out Serializable>>()
     val doPrintPineKOTInvoicePrinting: LiveData<ApisResponse<out Serializable>>
         get() = _doPrintPineKOTInvoicePrinting
+
+    private val _doPrintPineEstKOTInvoicePrinting =
+        MutableLiveData<ApisResponse<out Serializable>>()
+    val doPrintPineEstKOTInvoicePrinting: LiveData<ApisResponse<out Serializable>>
+        get() = _doPrintPineEstKOTInvoicePrinting
 
     private val repo = PrintRepository()
 
@@ -90,6 +96,15 @@ class PrintViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             repo.doPineLabPrintKOTInvoice(printInvoice).collectLatest {
                 _doPrintPineKOTInvoicePrinting.postValue(it)
+            }
+        }
+    }
+
+
+    fun doPrintEstKotInvoice(printInvoice: PrintJsonKotResponse,estCount:Int) {
+        viewModelScope.launch {
+            repo.doPineLabPrintEstKotInvoice(printInvoice,estCount).collectLatest {
+                _doPrintPineEstKOTInvoicePrinting.postValue(it)
             }
         }
     }

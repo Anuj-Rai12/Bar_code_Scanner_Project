@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.lifecycleScope
 import com.example.mpos.MainActivity
 import com.example.mpos.R
 import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
@@ -23,6 +24,9 @@ import com.example.mpos.data.feedback.invoice.FinalInvoiceSendBody
 import com.example.mpos.data.feedback.invoice.FinalInvoiceSendRequest
 import com.example.mpos.data.feedback.invoice.ResponseFinalInvoiceSend
 import com.example.mpos.data.login.model.api.json.ApkLoginJsonResponse
+import com.example.mpos.data.printEstKot.request.PrintEstKotRequest
+import com.example.mpos.data.printEstKot.request.PrintEstKotRequestBody
+import com.example.mpos.data.printEstKot.response.json.PrintJsonKotResponse
 import com.example.mpos.data.printkot.PrintKotForEDCBody
 import com.example.mpos.data.printkot.PrintKotRequest
 import com.example.mpos.data.printkot.json.PrintKotInvoice
@@ -45,6 +49,8 @@ import com.example.mpos.ui.searchfood.model.FoodItemList
 import com.example.mpos.utils.*
 import com.example.mpos.utils.print.recpit.PrintViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PaymentActivity : BasePineActivity() {
     private lateinit var binding: PrintTsetingLayoutBinding
@@ -59,7 +65,7 @@ class PaymentActivity : BasePineActivity() {
 
     private var transactionType = ""
     private val receipt by lazy {
-        intent.getStringExtra("Receipt")
+        intent.getStringExtra("Receipt") ?: "10101"
     }
 
     private val upiCode by lazy {
@@ -69,6 +75,15 @@ class PaymentActivity : BasePineActivity() {
     private val paymentLs by lazy {
         intent.getStringArrayListExtra("payment")
     }
+
+    private val isEstimatePrintEnable by lazy {
+        intent.getBooleanExtra("Estimateprint", false)
+    }
+
+    private val estimatePrintCount by lazy {
+        intent.getIntExtra("EstimatePrintcount", 1)
+    }
+
 
     private val tblNo by lazy {
         intent.getStringExtra("tableNo")
@@ -141,7 +156,12 @@ class PaymentActivity : BasePineActivity() {
 
         getAllOrder()
         getGrandTotal()
-
+        getPrintEstPrintResponse()
+        getPrintEstPrint()
+        lifecycleScope.launch {
+            delay(2000)
+            confirmOrderViewModel.printEstKot(PrintEstKotRequest(PrintEstKotRequestBody("10010")))
+        }
         //paymentResponse
         getPaymentResponse()
         getPrintKOTInvoiceResponse()
@@ -328,6 +348,85 @@ class PaymentActivity : BasePineActivity() {
 
     }
 
+    private fun getPrintEstPrint() {
+        printBillViewModel.doPrintPineEstKOTInvoicePrinting.observe(this) {
+            if (it != null) {
+                when (it) {
+                    is ApisResponse.Error -> {
+                        hidePb()
+                        if (it.data == null) {
+                            it.exception?.localizedMessage?.let { msg ->
+                                showErrorDialog(msg)
+                            }
+                        } else {
+                            showErrorDialog("${it.data}")
+                        }
+                    }
+
+                    is ApisResponse.Loading -> {
+                        showPb("${it.data}")
+                    }
+
+                    is ApisResponse.Success -> {
+                        hidePb()
+                        val res = it.data as ArrayList<Datum>
+                        val request = TransactionRequest()
+                        request.aPP_ID = AppConfig.APP_ID
+                        //Setting header ;
+                        val header = Header()
+                        header.applicationId = AppConfig.APP_ID
+                        header.methodId = "1002"//Print Format
+                        header.userId = "user_$receipt"
+                        header.versionNo = AppConfig.versionCode
+                        request.header = header
+
+                        val detail = Detail()
+                        detail.data = res
+                        detail.printRefNo = "0103REX"
+                        detail.savePrintData = true
+                        request.detail = detail
+                        if (this::psh.isInitialized) {
+                            kotPrintISDONE = true
+                            psh.callPineService(request)
+                        } else {
+                            showErrorDialog("Cannot Print Bill")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getPrintEstPrintResponse() {
+        confirmOrderViewModel.printEstKot.observe(this) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    createLogStatement("TAG_PRINT_EST_SUCCESS", "ERROR ${it.data}")
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+
+                is ApisResponse.Loading -> {
+                    createLogStatement("TAG_PRINT_EST_SUCCESS", "LOADING ${it.data}")
+                    showPb("${it.data}")
+                }
+
+                is ApisResponse.Success -> {
+                    hidePb()
+                    createLogStatement("TAG_PRINT_EST_SUCCESS", "SUCCESS ${it.data}")
+                    val data = it.data as PrintJsonKotResponse
+                    printBillViewModel.doPrintEstKotInvoice(data,estimatePrintCount)
+                }
+            }
+        }
+    }
+
     private fun getFeedBackResponse() {
         feedBackViewModel.isFeedBackSend.observe(this) { res ->
             res?.let {
@@ -340,9 +439,11 @@ class PaymentActivity : BasePineActivity() {
                             R.drawable.ic_success
                         )
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         createLogStatement(
@@ -388,10 +489,12 @@ class PaymentActivity : BasePineActivity() {
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                     psh.connect(this, this)
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     val res = it.data as ArrayList<Datum>
@@ -434,10 +537,12 @@ class PaymentActivity : BasePineActivity() {
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                     psh.connect(this, this)
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     val res = it.data as ArrayList<Datum>
@@ -480,9 +585,11 @@ class PaymentActivity : BasePineActivity() {
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     (it.data as PrintInvoice?)?.let { printInvoice ->
@@ -512,9 +619,11 @@ class PaymentActivity : BasePineActivity() {
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         (it.data as PrintKotInvoice?)?.let { printInvoice ->
@@ -558,6 +667,7 @@ class PaymentActivity : BasePineActivity() {
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
@@ -603,9 +713,11 @@ class PaymentActivity : BasePineActivity() {
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     binding.orderRecycleView.show()
