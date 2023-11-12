@@ -104,7 +104,8 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                                     enableCustDetail = false,
                                     screenList = "Billing",
                                     kotPrintFromEDC = true,
-                                    paymentLs = listOf("Cash", "Card", "UPI")
+                                    paymentLs = listOf("Cash", "Card", "UPI"),
+                                    estimatePrintCount = 0
                                 ),
                                 ScreenList(
                                     dynamicMenuEnable = false,
@@ -115,6 +116,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                                     enableCustDetail = false,
                                     screenList = "SHOWROOMBILLING",
                                     kotPrintFromEDC = true,
+                                    estimatePrintCount = 0,
                                     estimatePrint = false,
                                     paymentLs = listOf("Cash", "Card", "UPI")
                                 ),
@@ -128,7 +130,8 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                                     enableCustDetail = false,
                                     screenList = "RESTAURANTBILLING",
                                     kotPrintFromEDC = true,
-                                    paymentLs = listOf("Cash", "Card", "UPI")
+                                    paymentLs = listOf("Cash", "Card", "UPI"),
+                                    estimatePrintCount = 0
                                 )
                             ), status = true, storeName = "OAM Industries Ajni"
                         )

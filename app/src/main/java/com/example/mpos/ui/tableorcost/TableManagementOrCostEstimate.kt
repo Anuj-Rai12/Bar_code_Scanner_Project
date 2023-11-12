@@ -108,7 +108,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
-                            estimatePrint = item.estimatePrint
+                            estimatePrint = item.estimatePrint,
+                            estimatePrintcount = item.estimatePrintCount
                         )
                     )
                 }
@@ -127,7 +128,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
-                            estimatePrint = item.estimatePrint
+                            estimatePrint = item.estimatePrint,
+                            estimatePrintcount = item.estimatePrintCount
                         )
                     )
                 }
@@ -146,7 +148,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
-                            estimatePrint = item.estimatePrint
+                            estimatePrint = item.estimatePrint,
+                            estimatePrintcount = item.estimatePrintCount
                         )
                     )
                 }
@@ -165,7 +168,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
-                            estimatePrint = item.estimatePrint
+                            estimatePrint = item.estimatePrint,
+                            estimatePrintcount = item.estimatePrintCount
                         )
                     )
                 }
@@ -184,7 +188,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
-                            estimatePrint = item.estimatePrint
+                            estimatePrint = item.estimatePrint,
+                            estimatePrintcount = item.estimatePrintCount
                         )
                     )
                 }
@@ -203,7 +208,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
-                            estimatePrint = item.estimatePrint
+                            estimatePrint = item.estimatePrint,
+                            estimatePrintcount = item.estimatePrintCount
                         )
                     )
                 }
@@ -222,7 +228,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
-                            estimatePrint = item.estimatePrint
+                            estimatePrint = item.estimatePrint,
+                            estimatePrintcount = item.estimatePrintCount
                         )
                     )
                 }
@@ -241,7 +248,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             kotPrintFromEDC = item.kotPrintFromEDC,
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
-                            estimatePrint = item.estimatePrint
+                            estimatePrint = item.estimatePrint,
+                            estimatePrintcount = item.estimatePrintCount
                         )
                     )
                 }

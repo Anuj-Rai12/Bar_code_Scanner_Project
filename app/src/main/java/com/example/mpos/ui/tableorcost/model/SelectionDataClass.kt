@@ -17,6 +17,7 @@ data class SelectionDataClass(
     val modernSearch: Boolean,
     val enableCustDetail: Boolean,
     val estimatePrint: Boolean,
+    val estimatePrintcount:Int,
     val billingFromEDC: Boolean,
     val paymentLs: List<String>,
     val apk: ApkLoginJsonResponse
@@ -35,7 +36,8 @@ data class SelectionDataClass(
             kotPrintFromEDC: Boolean,
             estimatePrint: Boolean,
             modernSearch: Boolean,
-            enableCustDetail: Boolean
+            enableCustDetail: Boolean,
+            estimatePrintcount:Int
         ): SelectionDataClass {
             return SelectionDataClass(
                 image = img,
@@ -50,7 +52,8 @@ data class SelectionDataClass(
                 estimatePrint = estimatePrint,
                 kotPrintFromEDC = kotPrintFromEDC,
                 modernSearch = modernSearch,
-                enableCustDetail = enableCustDetail
+                enableCustDetail = enableCustDetail,
+                estimatePrintcount=estimatePrintcount
             )
         }
 
