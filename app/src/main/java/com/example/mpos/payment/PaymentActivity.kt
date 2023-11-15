@@ -376,7 +376,7 @@ class PaymentActivity : BasePineActivity() {
                         val header = Header()
                         header.applicationId = AppConfig.APP_ID
                         header.methodId = "1002"//Print Format
-                        header.userId = "user_$receipt"
+                        header.userId = "user_Print_EST_KOT"
                         header.versionNo = AppConfig.versionCode
                         request.header = header
 
@@ -421,7 +421,7 @@ class PaymentActivity : BasePineActivity() {
                     hidePb()
                     createLogStatement("TAG_PRINT_EST_SUCCESS", "SUCCESS ${it.data}")
                     val data = it.data as PrintJsonKotResponse
-                    printBillViewModel.doPrintEstKotInvoice(data,estimatePrintCount)
+                    printBillViewModel.doPrintEstKotInvoice(data, estimatePrintCount)
                 }
             }
         }
@@ -885,7 +885,9 @@ class PaymentActivity : BasePineActivity() {
                 if (transactionResponse.header.methodId != "1002") {
                     transactionDone = "$transactionResponse"
                     callPaymentApi(transactionDone!!)
-                } else {
+                } else if (transactionResponse.header.methodId == "1002" &&
+                    transactionResponse.header.userId != "user_Print_EST_KOT"
+                ) {
                     if (kotPrintISDONE) {
                         costDashBordViewModel.getPrintBillInvoiceResponse(
                             PrintInvoiceRequest(
