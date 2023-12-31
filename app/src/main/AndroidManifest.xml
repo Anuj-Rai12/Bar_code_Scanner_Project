@@ -6,12 +6,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera.any" />
 
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
     <uses-sdk tools:overrideLibrary="
       androidx.camera.camera2, androidx.camera.core,
@@ -23,31 +24,32 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:networkSecurityConfig="@xml/network_security"
-        android:theme="@style/Theme.OffiqlResturantApp">
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".TestingActivity"/>
+        android:theme="@style/Theme.OffiqlResturantApp"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".payment.PaymentActivity" />
+        <activity android:name=".TestingActivity" />
         <activity
-            android:name=".payment.PaymentActivity"
+            android:name=".MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-<!--        <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="barcode,model2,model3" />-->
+        <!--        <meta-data
+                    android:name="com.google.mlkit.vision.DEPENDENCIES"
+                    android:value="barcode,model2,model3" />-->
         <!-- To use multiple models: android:value="barcode,model2,model3" -->
 
     </application>

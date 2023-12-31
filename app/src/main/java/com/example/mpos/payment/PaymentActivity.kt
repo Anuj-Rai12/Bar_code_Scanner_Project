@@ -160,7 +160,9 @@ class PaymentActivity : BasePineActivity() {
         getPrintEstPrint()
         lifecycleScope.launch {
             delay(2000)
-            confirmOrderViewModel.printEstKot(PrintEstKotRequest(PrintEstKotRequestBody("10010")))
+            if (isEstimatePrintEnable) {
+                confirmOrderViewModel.printEstKot(PrintEstKotRequest(PrintEstKotRequestBody(receipt)))
+            }
         }
         //paymentResponse
         getPaymentResponse()

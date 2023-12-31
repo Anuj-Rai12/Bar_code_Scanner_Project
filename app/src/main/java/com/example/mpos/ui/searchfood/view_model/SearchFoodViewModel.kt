@@ -62,7 +62,7 @@ class SearchFoodViewModel constructor(
     }
 
 
-    fun fetchResponseApi() {
+    fun fetchResponseApi(isLoad:Boolean) {
         if (!this::repository.isInitialized) {
             _event.postValue(Events("Unknown Error"))
             return
@@ -72,7 +72,7 @@ class SearchFoodViewModel constructor(
                 if (checkFieldValue(it.storeNo.toString())) {
                     _event.postValue(Events("Internal Error \nTry Login Again"))
                 } else {
-                    repository.getItemMasterSync(it.storeNo!!).collectLatest { res ->
+                    repository.getItemMasterSync(it.storeNo!!, isLoad = isLoad).collectLatest { res ->
                         _fdInfo.postValue(res)
                     }
                 }
@@ -82,13 +82,13 @@ class SearchFoodViewModel constructor(
 
 
     //For Login Check In Response Type
-    fun fetchResponseApi(storeID:String) {
+    fun fetchResponseApi(storeID:String,isLoad: Boolean) {
         if (!this::repository.isInitialized) {
             _event.postValue(Events("Unknown Error"))
             return
         }
         viewModelScope.launch {
-            repository.getItemMasterSync(storeID,"Table Reservation").collectLatest { res ->
+            repository.getItemMasterSync(storeID,"Table Reservation", isLoad = isLoad).collectLatest { res ->
                 _fdInfo.postValue(res)
             }
         }

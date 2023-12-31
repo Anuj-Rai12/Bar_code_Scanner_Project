@@ -1,5 +1,6 @@
 package com.example.mpos.data.generic
 
+import android.util.Log
 import com.example.mpos.R
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import java.util.*
@@ -21,6 +22,10 @@ data class GenericDataCls(
             val decimal = foodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
                 .toBoolean()
             val deal = foodItem.isDeal
+            Log.i(
+                "TAG_INFO_ITEM",
+                "getBookingLs: Cross Selling $crossSellingFlag and Decimal $decimal and Deal $deal and $foodItem"
+            )
             if (!deal && !crossSellingFlag) {
                 //food name
                 ls.add(

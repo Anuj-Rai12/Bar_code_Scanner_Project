@@ -28,7 +28,11 @@ class SearchFoodRepositoryImpl constructor(
     private val crossSellingApi = buildApi<CrossSellingApi>(retrofit)
     private val dao = roomDataBaseInstance.itemDao()
 
-    override fun getItemMasterSync(stateNo: String, screenType: String?) =
+    override fun getItemMasterSync(
+        stateNo: String,
+        screenType: String?,
+        isLoad: Boolean
+    ): Flow<ApisResponse<out Any?>> =
         networkBoundResource(query = {
             dao.getAllItem()
         }, fetch = {
@@ -41,8 +45,7 @@ class SearchFoodRepositoryImpl constructor(
                     )
                 )
             )
-            //info.body()?.apkLoginResult?.value?.let { //for testing only
-            readFromFile(application, "jsonviewer.json")?.let {
+            info.body()?.apkLoginResult?.value?.let { //for testing only
                 return@let deserializeFromJson<ItemMethodSyncJsonResponse>(it)
             }!!.itemMaster
         }, saveFetchResult = { item ->
@@ -51,7 +54,7 @@ class SearchFoodRepositoryImpl constructor(
                 dao.insertAllItem(item)
             }
         }, shouldFetch = {
-            application.isNetworkAvailable()
+            isLoad
         }).flowOn(IO)
 
     override fun getSearchFoodItem(query: String) = channelFlow {

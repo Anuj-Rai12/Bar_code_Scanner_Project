@@ -206,8 +206,9 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
 
         if (!args.selectioncls.modernSearch) {
-            binding.searchBtnTxt.visibility=View.INVISIBLE
+            binding.searchBtnTxt.visibility = View.INVISIBLE
             binding.searchBoxTxt.show()
+            binding.menuRecycle.hide()
         }
 
 
@@ -233,9 +234,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     }
 
 
-
-
-
     private fun getCrossSellingResponse() {
         searchViewModel.crossSellingResponse.observe(viewLifecycleOwner) {
             when (it) {
@@ -249,10 +247,12 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         }
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.pbLayout.root.show()
                     binding.pbLayout.titleTxt.text = it.data as String
                 }
+
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
                     val res = it.data as CrossSellingJsonResponse
@@ -263,7 +263,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     }
 
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
-        val dialog = CrossSellingDialog(activity!!)
+        val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
         dialog.showCrossSellingDialog(response)
     }
@@ -283,9 +283,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         activity?.msg(e)
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.menuRecycle.show()
                 }
+
                 is ApisResponse.Success -> {
                     searchFoodAdaptor.notifyDataSetChanged()
                     createLogStatement("TAG_RES", "${it.data}")
@@ -319,9 +321,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             adapter = searchFoodAdaptor
         }
     }
-
-
-
 
 
     private fun setInitialValue() {
@@ -360,9 +359,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                             showErrorDialog(it.data)
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         if (it.data?.startsWith("01")!!) {
@@ -433,6 +434,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     arrItem.clear()
                     initial()
                 }
+
                 is ApisResponse.Success -> {
                     it.data?.let { data ->
                         arrItem.clear()
@@ -441,6 +443,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         setUpRecycleAdaptor(data)
                     }
                 }
+
                 else -> {}
             }
         }
@@ -464,10 +467,12 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     oopsSomeThingWentWrong()
                     hidePb()
                 }
+
                 is ApisResponse.Loading -> {
                     Log.i("Dinning", " Loading ${it.data}")
                     showPb(it.data.toString())
                 }
+
                 is ApisResponse.Success -> {
                     Log.i("Dinning", " Success ${it.data}")
                     hidePb()
@@ -495,7 +500,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     override fun onResume() {
         super.onResume()
         if (args.selectioncls.modernSearch)
-        showKeyBoard(binding.menuSearchEd)
+            showKeyBoard(binding.menuSearchEd)
 
         customDiningRequest = args.confirmreq
         receiptNo = if (customDiningRequest?.body?.rcptNo != null) {
@@ -527,9 +532,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
@@ -556,10 +563,12 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmOrderResponse", " Loading ${it.data}")
                     showPb(it.data.toString())
                 }
+
                 is ApisResponse.Success -> {
                     if (activity != null && isAdded) {
                         showDialogBox(
@@ -584,6 +593,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     }
                     hidePb()
                 }
+
                 else -> {}
             }
         }
@@ -848,9 +858,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             GenericDataCls.Companion.Type.ADDINSTRUCTION -> {
                 updateFreeTxt(data)
             }
+
             GenericDataCls.Companion.Type.UPDTQTY -> {
                 updateQtyDialogBox(data)
             }
+
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
                 requireActivity(), data.crossSellingItems!!

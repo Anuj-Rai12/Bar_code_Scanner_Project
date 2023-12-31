@@ -87,7 +87,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                         if (json.status) {
                             jsonLoginResponse = json
                             activity?.msg("LOGIN SUCCESS!!")
-                            menuItemSyncViewModel.fetchResponseApi(storeID = viewModel.storeId)
+                            menuItemSyncViewModel.fetchResponseApi(storeID = viewModel.storeId,true)
                         } else
                             showDialogBox(
                                 "Failed!!",

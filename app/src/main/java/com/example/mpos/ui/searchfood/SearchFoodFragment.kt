@@ -48,7 +48,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
         }
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = SearchFoodItemLayoutBinding.bind(view)
-        viewModel.fetchResponseApi()
+        viewModel.fetchResponseApi(false)
         viewModel.events.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { str ->
                 showSnackBar(str, color = R.color.color_red, length = Snackbar.LENGTH_INDEFINITE)
@@ -273,7 +273,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
 
 
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
-        val dialog = CrossSellingDialog(activity!!)
+        val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
         dialog.showCrossSellingDialog(response)
     }
