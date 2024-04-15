@@ -89,6 +89,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                             activity?.msg("LOGIN SUCCESS!!")
                             menuItemSyncViewModel.fetchResponseApi(storeID = viewModel.storeId,true)
                         } else
+                        {
                             showDialogBox(
                                 "Failed!!",
                                 "Cannot Login Unauthorized Access${getEmojiByUnicode(0x274C)}\n\nTip ${
@@ -106,6 +107,7 @@ class LoginScreenFragment : Fragment(R.layout.login_screen_fragment) {
                                 } Clear the storage of this App and reopen It.",
                                 icon = R.drawable.ic_error
                             ) {}
+                        }
                     } ?: run {
                         showDialogBox(
                             "Failed!!",

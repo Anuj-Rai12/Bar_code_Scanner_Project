@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
-class TestingConnectionViewModel constructor(
+class TestingConnectionViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
 
@@ -53,7 +53,8 @@ class TestingConnectionViewModel constructor(
                             "dfkds",
                             "https://www.google.com"
                         ).getRetrofit(),
-                        userSoredData = userSoredData
+                        userSoredData = userSoredData,
+                        app = app
                     )
                     _apkLogin.postValue(ApisResponse.Error("1", null))
                 } else {
@@ -61,7 +62,8 @@ class TestingConnectionViewModel constructor(
                     val retrofit = RetrofitInstance.getInstance(auth = auth, baseUrl = it.baseUrl)
                     repository = ApiRepository(
                         retrofit = retrofit.getRetrofit(),
-                        userSoredData = userSoredData
+                        userSoredData = userSoredData,
+                        app = app
                     )
                 }
             }

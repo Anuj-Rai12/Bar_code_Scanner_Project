@@ -109,7 +109,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
                             estimatePrint = item.estimatePrint,
-                            estimatePrintcount = item.estimatePrintCount
+                            estimatePrintcount = item.estimatePrintCount,
+                            enableBillingTableMgt = item.enableBillingTableMgt
                         )
                     )
                 }
@@ -129,7 +130,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
                             estimatePrint = item.estimatePrint,
-                            estimatePrintcount = item.estimatePrintCount
+                            estimatePrintcount = item.estimatePrintCount,
+                            enableBillingTableMgt = item.enableBillingTableMgt
                         )
                     )
                 }
@@ -149,7 +151,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
                             estimatePrint = item.estimatePrint,
-                            estimatePrintcount = item.estimatePrintCount
+                            estimatePrintcount = item.estimatePrintCount,
+                            enableBillingTableMgt = item.enableBillingTableMgt
                         )
                     )
                 }
@@ -169,7 +172,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
                             estimatePrint = item.estimatePrint,
-                            estimatePrintcount = item.estimatePrintCount
+                            estimatePrintcount = item.estimatePrintCount,
+                            enableBillingTableMgt = item.enableBillingTableMgt
                         )
                     )
                 }
@@ -189,7 +193,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
                             estimatePrint = item.estimatePrint,
-                            estimatePrintcount = item.estimatePrintCount
+                            estimatePrintcount = item.estimatePrintCount,
+                            enableBillingTableMgt = item.enableBillingTableMgt
                         )
                     )
                 }
@@ -209,7 +214,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
                             estimatePrint = item.estimatePrint,
-                            estimatePrintcount = item.estimatePrintCount
+                            estimatePrintcount = item.estimatePrintCount,
+                            enableBillingTableMgt = item.enableBillingTableMgt
                         )
                     )
                 }
@@ -229,7 +235,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
                             estimatePrint = item.estimatePrint,
-                            estimatePrintcount = item.estimatePrintCount
+                            estimatePrintcount = item.estimatePrintCount,
+                            enableBillingTableMgt = item.enableBillingTableMgt
                         )
                     )
                 }
@@ -249,7 +256,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             enableCustDetail = item.enableCustDetail,
                             modernSearch = item.modernSearch,
                             estimatePrint = item.estimatePrint,
-                            estimatePrintcount = item.estimatePrintCount
+                            estimatePrintcount = item.estimatePrintCount,
+                            enableBillingTableMgt = item.enableBillingTableMgt
                         )
                     )
                 }

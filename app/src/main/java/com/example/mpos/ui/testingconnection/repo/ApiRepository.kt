@@ -1,5 +1,6 @@
 package com.example.mpos.ui.testingconnection.repo
 
+import android.app.Application
 import android.util.Log
 import com.example.mpos.api.apkLogin.LoginApi
 import com.example.mpos.api.testconnection.TestConnectionApi
@@ -17,9 +18,10 @@ import kotlinx.coroutines.flow.flowOn
 import retrofit2.Retrofit
 import java.util.*
 
-class ApiRepository constructor(
+class ApiRepository(
     retrofit: Retrofit,
-    private val userSoredData: UserSoredData
+    private val userSoredData: UserSoredData,
+    private val app:Application
 ) {
 
     private val apkLoginApi = buildApi<LoginApi>(retrofit)

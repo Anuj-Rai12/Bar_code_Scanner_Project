@@ -1,5 +1,6 @@
 package com.example.mpos.ui.login.repo
 
+import android.app.Application
 import android.util.Log
 import com.example.mpos.api.apkLogin.LoginApi
 import com.example.mpos.data.login.model.api.ApKLoginPost
@@ -14,7 +15,8 @@ import retrofit2.Retrofit
 
 class LoginRepositoryImpl(
     retrofit: Retrofit,
-    private val userSoredData: UserSoredData
+    private val userSoredData: UserSoredData,
+    private val app:Application
 ) {
 
     private val apkLoginApi = buildApi<LoginApi>(retrofit)

@@ -90,7 +90,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                 is ApisResponse.Success -> {
                     it.data?.let { type ->
                         val json = type as ApkLoginJsonResponse
-                        val jsonTest = ApkLoginJsonResponse(
+                       /* val jsonTest = ApkLoginJsonResponse(
                             itemScanWithBarcode = false,
                             message = "Login Success",
                             screenList = listOf(
@@ -135,7 +135,7 @@ class SplashScreenFragment : Fragment(R.layout.splash_src_layout) {
                                 )
                             ), status = true, storeName = "OAM Industries Ajni"
                         )
-                        createLogStatement("LOGIN", "$json")
+                        createLogStatement("LOGIN", "$json")*/
                         if (json.status) {
                             nextFrag(json.storeName, json)
                         }

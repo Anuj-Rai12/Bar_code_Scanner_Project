@@ -17,9 +17,10 @@ data class SelectionDataClass(
     val modernSearch: Boolean,
     val enableCustDetail: Boolean,
     val estimatePrint: Boolean,
-    val estimatePrintcount:Int,
+    val estimatePrintcount: Int,
     val billingFromEDC: Boolean,
     val paymentLs: List<String>,
+    val enableBillingTableMgt: Boolean,
     val apk: ApkLoginJsonResponse
 ) : Parcelable {
     companion object {
@@ -37,8 +38,9 @@ data class SelectionDataClass(
             estimatePrint: Boolean,
             modernSearch: Boolean,
             enableCustDetail: Boolean,
-            estimatePrintcount:Int
-        ): SelectionDataClass {
+            estimatePrintcount: Int,
+            enableBillingTableMgt:Boolean
+            ): SelectionDataClass {
             return SelectionDataClass(
                 image = img,
                 title = title,
@@ -53,7 +55,8 @@ data class SelectionDataClass(
                 kotPrintFromEDC = kotPrintFromEDC,
                 modernSearch = modernSearch,
                 enableCustDetail = enableCustDetail,
-                estimatePrintcount=estimatePrintcount
+                estimatePrintcount = estimatePrintcount,
+                enableBillingTableMgt = enableBillingTableMgt
             )
         }
 

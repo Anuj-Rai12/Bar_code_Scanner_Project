@@ -33,7 +33,7 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
                 storeId = it.storeId
                 val auth = AllStringConst.getAuthHeader(genToken("${it.userId}:${it.passId}"))
                 val retrofit = RetrofitInstance.getInstance(auth = auth, baseUrl = it.baseUrl)
-                repository = LoginRepositoryImpl(retrofit.getRetrofit(), userSoredData)
+                repository = LoginRepositoryImpl(retrofit.getRetrofit(), userSoredData,app)
             }
         }
     }

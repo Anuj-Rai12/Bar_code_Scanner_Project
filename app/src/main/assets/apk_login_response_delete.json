@@ -1,0 +1,44 @@
+{
+  "Status": true,
+  "Message": "Login Success",
+  "StoreName": "PACIFIC MALL TAGORE GARDEN",
+  "itemScanWithBarcode": true,
+  "screenlist": [
+    {
+      "screenlist": "Table Mgt",
+      "screencaption": "MPOS",
+      "DynamicMenuEnable": true,
+      "BillingFromEDC": true,
+      "ModernSearch": false,
+      "EnableCustDetail": false,
+      "KOTPrintFromEDC": true,
+      "UPICode": "",
+      "PaymentType": [
+        "Cash",
+        "Card",
+        "UPI"
+      ],
+      "Estimateprint": false,
+      "EstimatePrintcount": 0,
+      "EnableBillingTableMgt": "No"
+    },
+    {
+      "screenlist": "Billing",
+      "screencaption": "MPOS",
+      "DynamicMenuEnable": true,
+      "BillingFromEDC": true,
+      "ModernSearch": false,
+      "EnableCustDetail": false,
+      "KOTPrintFromEDC": true,
+      "UPICode": "",
+      "PaymentType": [
+        "Cash",
+        "Card",
+        "UPI"
+      ],
+      "Estimateprint": false,
+      "EstimatePrintcount": 0,
+      "EnableBillingTableMgt": "No"
+    }
+  ]
+}

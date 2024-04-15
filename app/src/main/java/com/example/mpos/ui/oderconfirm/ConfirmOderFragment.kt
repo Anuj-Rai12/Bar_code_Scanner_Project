@@ -1,6 +1,8 @@
 package com.example.mpos.ui.oderconfirm
 
 import android.annotation.SuppressLint
+import android.app.VoiceInteractor.ConfirmationRequest
+import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Handler
@@ -21,6 +23,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.FoodAdaptor
 import com.example.mpos.R
 import com.example.mpos.data.barcode.response.json.BarcodeJsonResponse
+import com.example.mpos.data.billing.billingtoedc.BillingFromEDCRequest
+import com.example.mpos.data.billing.billingtoedc.BillingToEdcRequestBody
+import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequest
+import com.example.mpos.data.billing.conifrm_billing.ConfirmBillingRequestBody
+import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequest
+import com.example.mpos.data.billing.send_billing_to_edc.ScanBillingToEdcRequestBody
 import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.cofirmDining.response.ConfirmDiningSuccessResponse
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
@@ -31,6 +39,8 @@ import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.data.printbIll.PrintBillRequest
 import com.example.mpos.data.printbIll.PrintBillRequestBody
 import com.example.mpos.databinding.ConfirmOrderLayoutBinding
+import com.example.mpos.payment.PaymentActivity
+import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
 import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
@@ -55,7 +65,11 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
     private val viewModel: ConfirmOrderFragmentViewModel by viewModels()
 
+    private val costDashViewModel: CostDashBoardViewModel by viewModels()
     //private var flagForViewDeals: Boolean = false
+
+    private var confirmBillingRequest: ConfirmBillingRequest? = null
+
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ConfirmOderFragmentArgs by navArgs()
     private val arrItem = mutableListOf<ItemMasterFoodItem>()
@@ -79,6 +93,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = ConfirmOrderLayoutBinding.bind(view)
+        createLogStatement("CONFIRM_ORDER","ITEM CALLED ${args.selectioncls}")
         binding.tableId2.text = args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = ConfirmOderFragmentDirections.actionGlobalScanQrCodeFragment(
@@ -121,6 +136,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         getConfirmOrderResponse()
         getPosItemRequest()
         getConfirmDinningResponse()
+        getBillingToEdcResponse()
+        getSendBillToEdcResponse()
         getGrandTotal()
 
 
@@ -548,6 +565,70 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         }
     }
 
+    private fun getSendBillToEdcResponse() {
+        costDashViewModel.sendBillingToEdc.observe(viewLifecycleOwner) {
+            if (it != null) when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+                is ApisResponse.Loading -> showPb("${it.data}")
+                is ApisResponse.Success -> {
+                    hidePb()
+                    showDialogBox(
+                        "Success",
+                        "Completed the Billing for All Food Item Successfully",
+                        icon = R.drawable.ic_success,
+                        isCancel = true
+                    ) {
+                        //findNavController().popBackStack()
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun getBillingToEdcResponse() {
+        costDashViewModel.billingToEdc.observe(viewLifecycleOwner) {
+            if (it != null) when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { msg ->
+                            showErrorDialog(msg)
+                        }
+                    } else {
+                        showErrorDialog("${it.data}")
+                    }
+                }
+
+                is ApisResponse.Loading -> showPb("${it.data}")
+                is ApisResponse.Success -> {
+                    hidePb()
+                    val intent = Intent(requireActivity(), PaymentActivity::class.java)
+                    val pay = ArrayList<String>()
+                    pay.clear()
+                    pay.addAll(args.selectioncls.paymentLs)
+                    intent.putExtra("Receipt", receiptNo)
+                    intent.putExtra("upiCode", args.selectioncls.uPICode)
+                    intent.putExtra("payment", pay)
+                    intent.putExtra("tableNo", "1")
+                    intent.putExtra("Estimateprint", args.selectioncls.estimatePrint)
+                    intent.putExtra("EstimatePrintcount", args.selectioncls.estimatePrintcount)
+                    intent.putExtra("KOTPrintFromEDC", args.selectioncls.kotPrintFromEDC)
+                    intent.putExtra("TBL_VALUE", args.selectioncls.apk)
+                    startActivity(intent)
+                }
+            }
+        }
+    }
 
     private fun getConfirmOrderResponse() {
         viewModel.orderConfirm.observe(viewLifecycleOwner) {
@@ -570,33 +651,81 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 }
 
                 is ApisResponse.Success -> {
-                    if (activity != null && isAdded) {
-                        showDialogBox(
-                            "Successfully Inserted",
-                            "${it.data}",
-                            icon = R.drawable.ic_success,
-                            isCancel = false
-                        ) {
-                            var isTrue = true
-                            val handler = Handler(Looper.getMainLooper())
-                            handler.post {
-                                try {
-                                    if (isTrue) {
-                                        findNavController().popBackStack()
-                                        isTrue = false
+                    if (args.selectioncls.enableBillingTableMgt && args.selectioncls.billingFromEDC) {
+                        setUpCostEstimation()
+                        //BillingFromEDC
+                        costDashViewModel.sendBillingToEdcPaymentRequest(
+                            BillingFromEDCRequest(
+                                BillingToEdcRequestBody(
+                                    rcptNo = receiptNo!!,
+                                    transDate = confirmBillingRequest?.body?.transDate!!,
+                                    transTime = confirmBillingRequest!!.body?.transTime!!,
+                                    storeVar = confirmBillingRequest?.body?.storeVar!!,
+                                    staffID = confirmBillingRequest?.body?.staffID!!
+                                )
+                            )
+                        )
+                    } else if (args.selectioncls.enableBillingTableMgt && !args.selectioncls.billingFromEDC) {
+                        setUpCostEstimation()
+                        //SendBillingToEDC
+                        costDashViewModel.scanBillingRequest(
+                            ScanBillingToEdcRequest(
+                                ScanBillingToEdcRequestBody(
+                                    rcptNo = receiptNo!!,
+                                    transDate = confirmBillingRequest?.body?.transDate!!,
+                                    transTime = confirmBillingRequest!!.body?.transTime!!,
+                                    storeVar = confirmBillingRequest?.body?.storeVar!!,
+                                    staffID = confirmBillingRequest?.body?.staffID!!
+                                )
+                            )
+                        )
+                    } else {
+                        if (activity != null && isAdded) {
+                            showDialogBox(
+                                "Successfully Inserted",
+                                "${it.data}",
+                                icon = R.drawable.ic_success,
+                                isCancel = false
+                            ) {
+                                var isTrue = true
+                                val handler = Handler(Looper.getMainLooper())
+                                handler.post {
+                                    try {
+                                        if (isTrue) {
+                                            findNavController().popBackStack()
+                                            isTrue = false
+                                        }
+                                    } catch (e: Exception) {
+                                        PrintRepository.setCashAnalytics(e)
                                     }
-                                } catch (e: Exception) {
-                                    PrintRepository.setCashAnalytics(e)
                                 }
                             }
                         }
+                        hidePb()
                     }
-                    hidePb()
+
+
                 }
 
                 else -> {}
             }
         }
+    }
+
+    private fun setUpCostEstimation(): Boolean {
+        if (receiptNo.isNullOrEmpty()) {
+            receiptNo = args.tbl.receiptNo
+        }
+        confirmBillingRequest = ConfirmBillingRequest(
+            ConfirmBillingRequestBody(
+                rcptNo = receiptNo ?: return false,
+                transDate = getDate() ?: "2022-07-30",
+                transTime = viewModel.time.value ?: "10:59 AM",
+                storeVar = RestaurantSingletonCls.getInstance().getStoreId()!!,
+                staffID = RestaurantSingletonCls.getInstance().getUserId()!!
+            )
+        )
+        return true
     }
 
     private fun oopsSomeThingWentWrong() {
