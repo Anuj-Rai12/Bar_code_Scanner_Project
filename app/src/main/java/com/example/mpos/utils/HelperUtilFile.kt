@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.text.InputType
 import android.util.Base64
 import android.util.Log
@@ -659,6 +661,20 @@ fun Fragment.showDialogBox(
 }
 
 
+fun Activity.closeKeyboard(view: View) {
+    val imm = (this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+    imm.hideSoftInputFromWindow(view.windowToken, 0)
+    this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+}
+
+
+fun Activity.openKeyBoard(view: View) {
+    view.requestFocus()
+    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+}
+
+
 fun Fragment.showQtyDialog(
     isCancelable: Boolean = false,
     itemMaster: ItemMaster,
@@ -680,13 +696,20 @@ fun Fragment.showQtyDialog(
     if (!checkFieldValue(value)) binding.qtyEd.setText(value)
     if (type != "Quantity" && type != "Amount") {
         binding.qtyEd.inputType = InputType.TYPE_CLASS_TEXT
-    } else {
+    }
+    Handler(Looper.getMainLooper()).postDelayed({
+        activity?.openKeyBoard(binding.qtyEd)
+    }, 500)    /*else {
         if (isDecimal) {
             binding.qtyEd.inputType =
                 InputType.TYPE_NUMBER_FLAG_SIGNED or InputType.TYPE_NUMBER_FLAG_DECIMAL
+        } else {
+            Log.i(TAG, "showQtyDialog: $type  ${binding.qtyEd.inputType} with ${InputType.TYPE_CLASS_NUMBER}")
+            binding.qtyEd.inputType = InputType.TYPE_CLASS_NUMBER
         }
-    }
+    }*/
     binding.btnDone.setOnClickListener {
+        activity?.closeKeyboard(binding.qtyEdLayout)
         val txt = binding.qtyEd.text.toString()
         if (checkFieldValue(txt)) {
             activity?.msg("Please Enter $type")
@@ -752,6 +775,7 @@ fun Fragment.showQtyDialog(
     }
 
     binding.btnCancel.setOnClickListener {
+        activity?.closeKeyboard(binding.qtyEdLayout)
         cancel.invoke(false)
         dialog.dismiss()
     }

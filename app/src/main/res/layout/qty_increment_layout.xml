@@ -23,12 +23,12 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible">
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/qty_ed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/roboto_medium"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:padding="10dp"
             android:singleLine="true"
             android:textColor="@color/black" />
