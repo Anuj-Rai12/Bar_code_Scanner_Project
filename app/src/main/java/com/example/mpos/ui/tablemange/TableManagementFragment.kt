@@ -134,7 +134,7 @@ class TableManagementFragment : Fragment(R.layout.table_mangment_layout),
     override fun <T> onItemClicked(response: T) {
         val res = response as TableDetail
         Log.i(TAG, "setRecycleView: $res")
-        if (res.billPrinted.equals("No", true)) {
+        if (res.billPrinted.equals("No", true) || args.selectioncls.enableBillingTableMgt) {
             val action = TableManagementFragmentDirections
                 .actionTableManagementFragmentToConfirmOderFragment(null, res, null,args.selectioncls)
             //findNavController().navigate(action)

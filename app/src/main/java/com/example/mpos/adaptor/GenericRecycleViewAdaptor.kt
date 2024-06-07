@@ -3,6 +3,7 @@ package com.example.mpos.adaptor
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mpos.data.confirmOrder.SubmitOderButton
 import com.example.mpos.data.generic.GenericDataCls
 import com.example.mpos.databinding.ItemBottomSheetBinding
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
@@ -19,6 +20,11 @@ class GenericRecycleViewAdaptor<T>(private val list: List<T>) :
             if (data is GenericDataCls) {
                 binding.tvTitle.text = data.title
                 binding.imgIcon.setImageResource(data.img)
+            }
+
+            if (data is SubmitOderButton){
+                binding.tvTitle.text=data.title
+                binding.imgIcon.setImageResource(data.src)
             }
 
             binding.root.setOnClickListener {

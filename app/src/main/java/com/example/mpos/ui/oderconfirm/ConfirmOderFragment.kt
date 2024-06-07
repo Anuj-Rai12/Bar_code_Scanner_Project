@@ -33,6 +33,7 @@ import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.cofirmDining.response.ConfirmDiningSuccessResponse
 import com.example.mpos.data.confirmOrder.ConfirmOrderBody
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
+import com.example.mpos.data.confirmOrder.SubmitOderButton
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.data.generic.GenericDataCls
 import com.example.mpos.data.item_master_sync.json.ItemMaster
@@ -105,6 +106,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 args.selectioncls
             )
             findNavController().safeNavigate(action)
+        }
+
+        if (args.selectioncls.enableBillingTableMgt){
+            "Submit".also { binding.confirmOrderBtn.text = it }
         }
 
         viewModel.event.observe(viewLifecycleOwner) {
@@ -244,6 +249,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
 
         binding.confirmOrderBtn.setOnClickListener {
+            if (args.selectioncls.enableBillingTableMgt){
+                createBottomSheet("Submit Order",SubmitOderButton.list)
+                return@setOnClickListener
+            }
             if (!receiptNo.isNullOrEmpty()) viewModel.postLineUrl(receiptNo!!, arrItem)
             else activity?.msg("Oops Some thing Went Wrong Try Again?")
         }
@@ -651,35 +660,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 }
 
                 is ApisResponse.Success -> {
-                    if (args.selectioncls.enableBillingTableMgt && args.selectioncls.billingFromEDC) {
-                        setUpCostEstimation()
-                        //BillingFromEDC
-                        costDashViewModel.sendBillingToEdcPaymentRequest(
-                            BillingFromEDCRequest(
-                                BillingToEdcRequestBody(
-                                    rcptNo = receiptNo!!,
-                                    transDate = confirmBillingRequest?.body?.transDate!!,
-                                    transTime = confirmBillingRequest!!.body?.transTime!!,
-                                    storeVar = confirmBillingRequest?.body?.storeVar!!,
-                                    staffID = confirmBillingRequest?.body?.staffID!!
-                                )
-                            )
-                        )
-                    } else if (args.selectioncls.enableBillingTableMgt && !args.selectioncls.billingFromEDC) {
-                        setUpCostEstimation()
-                        //SendBillingToEDC
-                        costDashViewModel.scanBillingRequest(
-                            ScanBillingToEdcRequest(
-                                ScanBillingToEdcRequestBody(
-                                    rcptNo = receiptNo!!,
-                                    transDate = confirmBillingRequest?.body?.transDate!!,
-                                    transTime = confirmBillingRequest!!.body?.transTime!!,
-                                    storeVar = confirmBillingRequest?.body?.storeVar!!,
-                                    staffID = confirmBillingRequest?.body?.staffID!!
-                                )
-                            )
-                        )
-                    } else {
                         if (activity != null && isAdded) {
                             showDialogBox(
                                 "Successfully Inserted",
@@ -702,9 +682,6 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                             }
                         }
                         hidePb()
-                    }
-
-
                 }
 
                 else -> {}
@@ -899,6 +876,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             processCrossSellingItem(response as Pair<Double, CrossSellingJsonResponse>)
             return
         }
+        if (response is SubmitOderButton){
+            submitOrder(response)
+            return
+        }
         val barcode = (response as Pair<*, *>).first as BarcodeJsonResponse
         val crossSellingItems =
             (response as Pair<*, *>).second as Pair<Double, CrossSellingJsonResponse>?
@@ -935,6 +916,49 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         )
         viewModel.getOrderList(FoodItemList(mutableList))
         activity?.msg(itemMaster.itemName + "\n${getEmojiByUnicode(0x2705)}")
+    }
+
+    private fun submitOrder(response: SubmitOderButton) {
+        if (response.orderType=="CONFIRM_ORDER"){
+            if (!receiptNo.isNullOrEmpty()) viewModel.postLineUrl(receiptNo!!, arrItem)
+            else activity?.msg("Oops Some thing Went Wrong Try Again?")
+        }
+
+        if (response.orderType=="PAYMENT") {
+
+            if (args.selectioncls.enableBillingTableMgt && args.selectioncls.billingFromEDC) {
+                setUpCostEstimation()
+                //BillingFromEDC
+                costDashViewModel.sendBillingToEdcPaymentRequest(
+                    BillingFromEDCRequest(
+                        BillingToEdcRequestBody(
+                            rcptNo = receiptNo!!,
+                            transDate = confirmBillingRequest?.body?.transDate!!,
+                            transTime = confirmBillingRequest!!.body?.transTime!!,
+                            storeVar = confirmBillingRequest?.body?.storeVar!!,
+                            staffID = confirmBillingRequest?.body?.staffID!!
+                        )
+                    )
+                )
+            }
+
+            if (args.selectioncls.enableBillingTableMgt && !args.selectioncls.billingFromEDC) {
+                setUpCostEstimation()
+                //SendBillingToEDC
+                costDashViewModel.scanBillingRequest(
+                    ScanBillingToEdcRequest(
+                        ScanBillingToEdcRequestBody(
+                            rcptNo = receiptNo!!,
+                            transDate = confirmBillingRequest?.body?.transDate!!,
+                            transTime = confirmBillingRequest!!.body?.transTime!!,
+                            storeVar = confirmBillingRequest?.body?.storeVar!!,
+                            staffID = confirmBillingRequest?.body?.staffID!!
+                        )
+                    )
+                )
+            }
+        }
+
     }
 
     private fun processCrossSellingItem(res: Pair<Double, CrossSellingJsonResponse>) {
