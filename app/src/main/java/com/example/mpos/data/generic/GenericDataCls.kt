@@ -47,12 +47,12 @@ data class GenericDataCls(
             }
             if (decimal && !crossSellingFlag) {
                 //amt
-                ls.add(
+                /*ls.add(
                     GenericDataCls(
                         "Update Amount.",
                         img = R.drawable.ic_edit, Type.UPDTAMTM.name, foodItem
                     )
-                )
+                )*/
             }
             if (crossSellingFlag) {
                 //cross selling
