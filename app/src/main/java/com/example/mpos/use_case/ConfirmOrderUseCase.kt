@@ -5,6 +5,7 @@ import com.example.mpos.data.poslineitem.request.MenuItem
 import com.example.mpos.data.poslineitem.request.MunItemContainer
 import com.example.mpos.data.poslineitem.request.PosLineItemApiRequest
 import com.example.mpos.data.poslineitem.request.RequestBody
+import com.example.mpos.payment.unit.Utils
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.utils.AllStringConst
@@ -61,7 +62,10 @@ class ConfirmOrderUseCase {
     }
 
     private fun getCurrentDateTime(): Date {
-        return Calendar.getInstance().time
+         val calender=Calendar.getInstance()
+             calender.timeZone= TimeZone.getTimeZone("Asia/Kolkata")
+        Utils.createLogcat("TAG_ITEM_TIME_STAMP","TIME ITEM -> ${calender.time} and ${calender.timeZone}")
+        return calender.time
     }
 
 
