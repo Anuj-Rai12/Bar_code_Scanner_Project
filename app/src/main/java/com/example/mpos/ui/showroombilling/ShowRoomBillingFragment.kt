@@ -1022,7 +1022,8 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
             itemName = barcode.itemName,
             uOM = barcode.uOM,
             decimalAllowed = barcode.decimalAllowed,
-            crossSellingAllow = barcode.crossSellingAllow
+            crossSellingAllow = barcode.crossSellingAllow,
+            crossSellingCount = barcode.crossSellingCount
         )
         itemMaster.foodQty = barcode.qty.toDouble()
         val amt =

@@ -57,7 +57,8 @@ class OccupiedTableRepository(retrofit: Retrofit) {
                         itemCategory = it.itemMaster.itemCategory,
                         itemName = it.itemMaster.itemName,
                         decimalAllowed = false.toString(),
-                        crossSellingAllow = false.toString()
+                        crossSellingAllow = false.toString(),
+                        crossSellingCount = "0"
                     ), foodQty = it.foodQty
                 )
             )
