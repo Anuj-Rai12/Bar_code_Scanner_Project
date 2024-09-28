@@ -42,7 +42,7 @@ data class ChildItemList(
     val itemcode: String,
     val description: String,
     @SerializedName("Qty")
-    val qty: Long,
+    val qty: String,
     val price: String,
     @SerializedName("Amount")
     val amount: String,
