@@ -36,7 +36,7 @@ class CrossSellingDialog(private val activity: Activity) {
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     fun showCrossSellingDialog(response: CrossSellingJsonResponse, count: Int) {
-        var selectionCount=count
+        var selectionCount = count
         val mutableMainList = mutableListOf<ChilditemList>()
         val itemSelected = mutableListOf<CrossSellingItems>()
         val res = response
@@ -52,7 +52,7 @@ class CrossSellingDialog(private val activity: Activity) {
         binding.itemItemSelected.text =
             "Selection Max ${response.maxSelection}: Min ${response.minSelection}"
 
-        binding.totalCountOfSelectItem.text = "Total Size 0"
+        binding.totalCountOfSelectItem.text = "Total Item ${response.childItemList.size}"
         binding.cancelBtn.setOnClickListener {
             alertDialog?.dismiss()
         }
@@ -68,7 +68,7 @@ class CrossSellingDialog(private val activity: Activity) {
         }
 
         val crossAdaptorPart1 = CrossSellingMainUI {
-            if (selectionCount<=0){
+            if (selectionCount <= 0) {
                 binding.root.showSandbar("Item Selection Limit Exceed!!")
                 return@CrossSellingMainUI
             }
@@ -79,7 +79,8 @@ class CrossSellingDialog(private val activity: Activity) {
             itemSelected.clear()
             selected = it
             binding.itemItemSelected.text =
-                "Selection Max ${it.maxSelection}: Min ${it.minSelection}"
+                it.itemDesc +
+                        "\n Selection Max ${it.maxSelection}: Min ${it.minSelection}"
             crossAdaptor2.submitList(it.childList)
             crossAdaptor2.isFlagReset = false
             crossAdaptor2.isEnable = true
@@ -98,7 +99,7 @@ class CrossSellingDialog(private val activity: Activity) {
 
         binding.submitBtn.setOnClickListener {
             if (!binding.submitBtn.text.equals("Submit")) {
-                selectionCount=selectionCount-1
+                selectionCount -= 1
                 if (itemSelected.size > selected?.maxSelection?.toLong()!!) {
                     binding.root.showSandbar("Cannot select more then ${selected?.maxSelection?.toLong()!!} items")
                     return@setOnClickListener
@@ -124,7 +125,12 @@ class CrossSellingDialog(private val activity: Activity) {
                     "ITEM_SELECTED ${selected?.childList?.size}"
                 )
                 if (itemSelected.isNotEmpty()) {
-                    selected = selected?.copy(childList = itemSelected)
+                    val list = mutableListOf<CrossSellingItems>()
+                    itemSelected.forEach {
+                        list.add(it)
+                    }
+                    Utils.createLogcat("TAG_ITEM_COMPLETE", "ITEM IS ITEM $list")
+                    selected = selected?.copy(childList = list)
                     if (mutableMainList.contains(selected)) {
                         mutableMainList.remove(selected)
                     }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.data.crosssellingApi.response.json.ChilditemList
 import com.example.mpos.databinding.CrossSellingItemBinding
+import com.example.mpos.utils.hide
 import com.example.mpos.utils.show
 
 typealias crossSellingResponse = (data: ChilditemList) -> Unit
@@ -15,12 +16,13 @@ class CrossSellingMainUI(private val itemClicked: crossSellingResponse) :
     ListAdapter<ChilditemList, CrossSellingMainUI.CrossSellingMainUIViewHolder>(diffUtil) {
 
 
-
     inner class CrossSellingMainUIViewHolder(private val binding: CrossSellingItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun setData(data: ChilditemList, itemClicked: crossSellingResponse) {
-            binding.foodTitle.text = data.itemDesc
-            binding.qtyOfItemAndPrice.text = ""
+            binding.fooItem.show()
+            binding.fooItem.text = data.itemDesc
+            binding.foodTitle.hide()
+            binding.qtyOfItemAndPrice.hide()
             binding.root.setOnClickListener {
                 itemClicked.invoke(data)
             }
