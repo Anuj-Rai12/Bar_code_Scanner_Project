@@ -71,7 +71,7 @@ class SearchFoodRepositoryImpl constructor(
         }
     }
 
-    override fun getCrossSellingResponse(itemCode: String) = flow {
+    override fun getCrossSellingResponse(itemCode: String,count:Int) = flow {
         emit(ApisResponse.Loading("Checking CrossSelling Item.."))
         //U+1F615 😕
         val data = try {
@@ -91,7 +91,7 @@ class SearchFoodRepositoryImpl constructor(
                                     }", null
                                 )
                             } else {
-                                ApisResponse.Success(cross)
+                                ApisResponse.Success(Pair(cross,count))
                             }
                         } ?: ApisResponse.Error("Cannot Process CrossSelling Response", null)
                     } else {

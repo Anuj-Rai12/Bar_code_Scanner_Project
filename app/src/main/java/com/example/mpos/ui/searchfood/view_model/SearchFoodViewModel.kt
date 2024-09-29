@@ -96,7 +96,7 @@ class SearchFoodViewModel constructor(
 
 
 
-    fun getCrossSellingItem(itemCode: String) {
+    fun getCrossSellingItem(itemCode: String,count:Int) {
         if (!this::repository.isInitialized) {
             _event.postValue(Events("Unknown Error"))
             return
@@ -106,7 +106,7 @@ class SearchFoodViewModel constructor(
             return
         }
         viewModelScope.launch {
-            repository.getCrossSellingResponse(itemCode).collectLatest {
+            repository.getCrossSellingResponse(itemCode,count).collectLatest {
                 _crossSellingResponse.postValue(it)
             }
         }

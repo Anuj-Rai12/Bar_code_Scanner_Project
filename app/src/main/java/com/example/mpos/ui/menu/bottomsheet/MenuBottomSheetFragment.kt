@@ -128,8 +128,8 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
                 }
                 is ApisResponse.Success -> {
                     binding.pbLayoutInclude.root.hide()
-                    val res = it.data as CrossSellingJsonResponse
-                    openCrossSellingDialog(res)
+                    val res = it.data as Pair<*, *>
+                    openCrossSellingDialog(res.first as CrossSellingJsonResponse , res.second as Int)
                 }
             }
         }
@@ -222,7 +222,7 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
                             mnuCrossSellingJsonResponse = res
                             val flag = res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
                             if (flag) {
-                                searchViewModel.getCrossSellingItem(res.itemCode)
+                                searchViewModel.getCrossSellingItem(res.itemCode,res.crossSellingCount.toIntOrNull()?:0)
                             } else {
                                 onBottomSheetClickListener?.onItemClicked(Pair(res, null))
                             }
@@ -287,10 +287,10 @@ class MenuBottomSheetFragment(private val title: String) : BottomSheetDialogFrag
         viewModel.fetchMenuDetail()
     }
 
-    private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
-        val dialog = CrossSellingDialog(activity!!)
+    private fun openCrossSellingDialog(response: CrossSellingJsonResponse, i: Int) {
+        val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(response)
+        dialog.showCrossSellingDialog(response,i)
     }
 
     @Suppress("UNCHECKED_CAST")

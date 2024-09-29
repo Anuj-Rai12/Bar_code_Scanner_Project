@@ -140,7 +140,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
 
 
         if (!args.selectioncls.modernSearch) {
-            binding.searchBtnTxt.visibility=View.INVISIBLE
+            binding.searchBtnTxt.visibility = View.INVISIBLE
             binding.searchBoxTxt.show()
         }
 
@@ -239,23 +239,25 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         }
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.pbLayout.root.show()
                     binding.pbLayout.titleTxt.text = it.data as String
                 }
+
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
-                    val res = it.data as CrossSellingJsonResponse
-                    openCrossSellingDialog(res)
+                    val res = it.data as Pair<*, *>
+                    openCrossSellingDialog(res.first as CrossSellingJsonResponse, res.second as Int)
                 }
             }
         }
     }
 
-    private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
+    private fun openCrossSellingDialog(response: CrossSellingJsonResponse, i: Int) {
         val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(response)
+        dialog.showCrossSellingDialog(response, i)
     }
 
 
@@ -273,9 +275,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         activity?.msg(e)
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.menuRecycle.show()
                 }
+
                 is ApisResponse.Success -> {
                     searchFoodAdaptor.notifyDataSetChanged()
                     createLogStatement("TAG_RES", "${it.data}")
@@ -299,7 +303,10 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                 DealsStoreInstance.getInstance().setIsResetButtonClick(false)
                 if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
                     crossSellingItemMaster = it
-                    searchViewModel.getCrossSellingItem(it.itemMaster.itemCode)
+                    searchViewModel.getCrossSellingItem(
+                        it.itemMaster.itemCode,
+                        it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                    )
                 } else {
                     arrItem.add(it)
                     createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
@@ -325,9 +332,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         if (it.data is String) {
@@ -367,9 +376,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                             }
                         } else costEstimationViewModel.addError("Failed to Cost Estimated")
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         isPrinterConnected = true
@@ -396,9 +407,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         showErrorDialog(it.data)
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     confirmOrderViewModel.postLineUrl(receiptNo!!, arrItem)
@@ -422,9 +435,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
@@ -457,10 +472,12 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         Log.i("getConfirmOrderResponse", " Loading ${it.data}")
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         arrItem.clear()
@@ -543,6 +560,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         arrItem.clear()
                         initial()
                     }
+
                     is ApisResponse.Success -> {
                         it.data?.let { data ->
                             arrItem.clear()
@@ -843,9 +861,11 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             GenericDataCls.Companion.Type.ADDINSTRUCTION -> {
                 updateFreeTxt(data)
             }
+
             GenericDataCls.Companion.Type.UPDTQTY -> {
                 updateQtyDialogBox(data)
             }
+
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
                 requireActivity(),

@@ -99,8 +99,8 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
                 }
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
-                    val res = it.data as CrossSellingJsonResponse
-                    openCrossSellingDialog(res)
+                    val res = it.data as Pair<*, *>
+                    openCrossSellingDialog(res.first as CrossSellingJsonResponse , res.second as Int)
                 }
             }
         }
@@ -264,7 +264,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
                     Log.i(TAG, "setRecycleView: $listOfFoodItem")
                 }, itemClickListerCrossSelling = { itemMaster ->
                     crossSellingItemMaster = itemMaster
-                    viewModel.getCrossSellingItem(itemMaster.itemMaster.itemCode)
+                    viewModel.getCrossSellingItem(itemMaster.itemMaster.itemCode,itemMaster.itemMaster.crossSellingCount.toIntOrNull()?:0)
                 })
             flag = true
             adapter = listOfFoodItemToSearchAdaptor
@@ -272,10 +272,10 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
     }
 
 
-    private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
+    private fun openCrossSellingDialog(response: CrossSellingJsonResponse, i: Int) {
         val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(response)
+        dialog.showCrossSellingDialog(response,i)
     }
 
     @Suppress("UNCHECKED_CAST")

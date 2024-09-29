@@ -10,6 +10,6 @@ interface SearchFoodRepository {
     fun getSearchFoodItem(query: String): Flow<ApisResponse<out Any?>>
     fun getSearchFoodItem(): Flow<ApisResponse<out Any?>>
 
-    fun getCrossSellingResponse(itemCode: String): Flow<ApisResponse<out Any?>>
+    fun getCrossSellingResponse(itemCode: String,count:Int): Flow<ApisResponse<out Any?>>
 
 }

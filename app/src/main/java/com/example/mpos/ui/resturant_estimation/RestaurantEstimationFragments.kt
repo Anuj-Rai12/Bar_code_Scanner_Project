@@ -251,17 +251,17 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                 }
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
-                    val res = it.data as CrossSellingJsonResponse
-                    openCrossSellingDialog(res)
+                    val res = it.data as Pair<*, *>
+                    openCrossSellingDialog(res.first as CrossSellingJsonResponse , res.second as Int)
                 }
             }
         }
     }
 
-    private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
+    private fun openCrossSellingDialog(response: CrossSellingJsonResponse, i: Int) {
         val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(response)
+        dialog.showCrossSellingDialog(response,i)
     }
 
 
@@ -305,7 +305,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                 DealsStoreInstance.getInstance().setIsResetButtonClick(false)
                 if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
                     crossSellingItemMaster = it
-                    searchViewModel.getCrossSellingItem(it.itemMaster.itemCode)
+                    searchViewModel.getCrossSellingItem(it.itemMaster.itemCode,it.itemMaster.crossSellingCount.toIntOrNull()?:0)
                 } else {
                     arrItem.add(it)
                     createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")

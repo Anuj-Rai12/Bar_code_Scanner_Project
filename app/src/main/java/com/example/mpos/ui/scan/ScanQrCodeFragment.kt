@@ -144,8 +144,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
 
                 is ApisResponse.Success -> {
                     showLoadingSrc(false)
-                    val res = it.data as CrossSellingJsonResponse
-                    openCrossSellingDialog(res)
+                    val res = it.data as Pair<*, *>
+                    openCrossSellingDialog(res.first as CrossSellingJsonResponse , res.second as Int)
                 }
             }
         }
@@ -180,7 +180,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                             val flag =
                                 res.crossSellingAllow.lowercase(Locale.getDefault()).toBoolean()
                             if (flag) {
-                                searchViewModel.getCrossSellingItem(res.itemCode)
+                                searchViewModel.getCrossSellingItem(res.itemCode,res.crossSellingCount.toIntOrNull()?:0)
                             } else {
                                 goToNextScreenConfirmScr(res)
                             }
@@ -244,7 +244,7 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
         if (activity == null || !isAdded) {
             return
         }
-        codeScanner = CodeScanner(activity!!, binding.scannerView)
+        codeScanner = CodeScanner(requireActivity(), binding.scannerView)
         codeScanner?.decodeCallback = DecodeCallback {
             createLogStatement("SCAN_QR_LIST", "${it.text} and ${it.barcodeFormat.name}")
             activity?.runOnUiThread {
@@ -465,10 +465,10 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
         }
     }
 
-    private fun openCrossSellingDialog(response: CrossSellingJsonResponse) {
-        val dialog = CrossSellingDialog(activity!!)
+    private fun openCrossSellingDialog(response: CrossSellingJsonResponse, i: Int) {
+        val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(response)
+        dialog.showCrossSellingDialog(response,i)
     }
 
     @Suppress("UNCHECKED_CAST")

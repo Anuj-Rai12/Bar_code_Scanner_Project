@@ -40,12 +40,15 @@ class ConfirmOrderUseCase {
                 hrs == 12 -> {
                     "$hrs:${dateTime.last()}PM"
                 }
+
                 (hrs - 12) == 12 -> {
                     "00:${dateTime.last()}AM"
                 }
+
                 hrs > 12 -> {
                     "${hrs - 12}:${dateTime.last()}PM"
                 }
+
                 else -> {
                     "${hrs}:${dateTime.last()}AM"
                 }
@@ -62,9 +65,12 @@ class ConfirmOrderUseCase {
     }
 
     private fun getCurrentDateTime(): Date {
-         val calender=Calendar.getInstance()
-             calender.timeZone= TimeZone.getTimeZone("Asia/Kolkata")
-        Utils.createLogcat("TAG_ITEM_TIME_STAMP","TIME ITEM -> ${calender.time} and ${calender.timeZone}")
+        val calender = Calendar.getInstance()
+        calender.timeZone = TimeZone.getTimeZone("Asia/Kolkata")
+        Utils.createLogcat(
+            "TAG_ITEM_TIME_STAMP",
+            "TIME ITEM -> ${calender.time} and ${calender.timeZone}"
+        )
         return calender.time
     }
 
@@ -91,21 +97,29 @@ class ConfirmOrderUseCase {
                 ParentItemCrossSelling = itemMasterFoodItem.itemMaster.crossSellingAllow
             )
             list.add(menuItem)
-            itemMasterFoodItem.crossSellingItems?.childItemList?.forEach { crossSellingItems ->
-                val crossSellingItem = MenuItem(
-                    itemNo = crossSellingItems.itemCode,
-                    receiptNo = receipt,
-                    qty = "1.0",
-                    saleType = AllStringConst.API.RESTAURANT.name,
-                    date = getDate("MM/dd/yy") ?: "10/20/22",
-                    time = time,
-                    storeNo = storeNo,
-                    freeText = itemMasterFoodItem.free_txt,
-                    price = "%.4f".format(ListOfFoodItemToSearchAdaptor.setPrice(crossSellingItems.price)).toDouble().toString(),
-                    dealLine = false.toString().uppercase(Locale.getDefault()),
-                    ParentItemCrossSelling = itemMasterFoodItem.crossSellingItems.parentItem,
-                )
-                list.add(crossSellingItem)
+            itemMasterFoodItem.crossSellingItems?.childItemList?.forEach { crossSelling ->
+                crossSelling.childList.forEach { crossSellingItems ->
+                    val crossSellingItem = MenuItem(
+                        itemNo = crossSellingItems.itemCode,
+                        receiptNo = receipt,
+                        qty = "1.0",
+                        saleType = AllStringConst.API.RESTAURANT.name,
+                        date = getDate("MM/dd/yy") ?: "10/20/22",
+                        time = time,
+                        storeNo = storeNo,
+                        freeText = itemMasterFoodItem.free_txt,
+                        price = "%.4f".format(
+                            ListOfFoodItemToSearchAdaptor.setPrice(
+                                crossSellingItems.price
+                            )
+                        ).toDouble().toString(),
+                        dealLine = false.toString().uppercase(Locale.getDefault()),
+                        ParentItemCrossSelling = itemMasterFoodItem.crossSellingItems.parentItem,
+                    )
+                    list.add(crossSellingItem)
+                }
+
+
             }
 
         }
