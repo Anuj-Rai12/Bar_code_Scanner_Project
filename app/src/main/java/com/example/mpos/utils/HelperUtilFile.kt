@@ -263,10 +263,10 @@ fun View.hide() {
 fun View.show() {
     this.isVisible = true
 }
-
-/*fun View.invisible() {
+fun View.invisible() {
     this.visibility = View.INVISIBLE
 }
+/*
 
 fun View.visible() {
     this.visibility = View.VISIBLE
