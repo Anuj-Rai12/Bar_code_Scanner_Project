@@ -10,10 +10,12 @@ import androidx.core.text.isDigitsOnly
 import com.example.mpos.data.crosssellingApi.response.json.ChilditemList
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingItems
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
+import com.example.mpos.data.item_master_sync.json.UOMasterItem
 import com.example.mpos.databinding.CrossSellingDialogBoxBinding
 import com.example.mpos.payment.unit.Utils
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
+import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.utils.checkFieldValue
 import com.example.mpos.utils.hide
 import com.example.mpos.utils.show
@@ -31,6 +33,42 @@ class CrossSellingDialog(private val activity: Activity) {
                 dialog.displayCrossSellingItem(response)
             }
         }
+    }
+
+
+    fun showOptionToSelectUOM(item: ItemMasterFoodItem, responses: List<UOMasterItem>,onIsDone:(Boolean)->Unit) {
+        val binding = CrossSellingDialogBoxBinding.inflate(activity.layoutInflater)
+        var adaptor: UOMDialogAdaptor? = null
+        alertDialog =
+            AlertDialog.Builder(activity).setView(binding.root).setCancelable(false).show()
+        alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        var itemSelcted: UOMasterItem? = null
+        binding.itemTitle.text = "Select UOM Option"
+        adaptor=UOMDialogAdaptor {
+            itemSelcted = it
+            adaptor?.isItemSelected?.postValue(it.itemUom)
+            adaptor?.submitList(responses)
+            adaptor?.notifyDataSetChanged()
+        }
+
+        binding.submitBtn.setOnClickListener {
+            if (itemSelcted != null) {
+                item.itemMaster.uOM = itemSelcted?.itemUom.toString()
+                onIsDone.invoke(true)
+                alertDialog?.dismiss()
+            } else {
+                binding.root.showSandbar("Please choose any option")
+            }
+        }
+        binding.clearBtn.hide()
+        binding.cancelBtn.setOnClickListener {
+            onIsDone.invoke(false)
+            alertDialog?.dismiss()
+        }
+        binding.recycleViewItem.adapter = adaptor
+        adaptor.submitList(responses)
+        adaptor?.notifyDataSetChanged()
+        alertDialog?.show()
     }
 
 

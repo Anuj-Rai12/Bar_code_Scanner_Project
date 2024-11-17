@@ -94,7 +94,8 @@ class ConfirmOrderUseCase {
                 freeText = itemMasterFoodItem.free_txt,
                 price = itemMasterFoodItem.itemMaster.salePrice,
                 dealLine = itemMasterFoodItem.isDeal.toString().uppercase(Locale.getDefault()),
-                ParentItemCrossSelling = itemMasterFoodItem.itemMaster.crossSellingAllow
+                ParentItemCrossSelling = itemMasterFoodItem.itemMaster.crossSellingAllow,
+                UOM = itemMasterFoodItem.itemMaster.uOM
             )
             list.add(menuItem)
             itemMasterFoodItem.crossSellingItems?.childItemList?.forEach { crossSelling ->
@@ -115,6 +116,7 @@ class ConfirmOrderUseCase {
                         ).toDouble().toString(),
                         dealLine = false.toString().uppercase(Locale.getDefault()),
                         ParentItemCrossSelling = itemMasterFoodItem.crossSellingItems.parentItem,
+                        UOM = itemMasterFoodItem.itemMaster.uOM
                     )
                     list.add(crossSellingItem)
                 }

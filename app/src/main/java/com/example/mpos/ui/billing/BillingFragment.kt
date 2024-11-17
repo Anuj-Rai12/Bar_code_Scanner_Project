@@ -45,6 +45,7 @@ import com.example.mpos.data.generic.GenericDataCls.Companion.Type.*
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.BillingFragmentLayoutBinding
 import com.example.mpos.payment.PaymentActivity
+import com.example.mpos.payment.unit.Utils
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
 import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
@@ -316,9 +317,20 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         it.itemMaster.itemCode, it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
                     )
                 } else {
-                    arrItem.add(it)
-                    createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
-                    setInitialValue()
+                    if (it.itemMaster.uOMArray.isNotEmpty()) {
+                        CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
+                            it,
+                            it.itemMaster.uOMArray
+                        ) { flg ->
+                            arrItem.add(it)
+                            createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                            setInitialValue()
+                        }
+                    } else {
+                        arrItem.add(it)
+                        createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                        setInitialValue()
+                    }
                 }
             }
             adapter = searchFoodAdaptor
@@ -545,6 +557,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
+                    Utils.createLogcat("ITEM_LIST_SIZE", "${arrItem.size}")
                     confirmOrderViewModel.postLineUrl(receiptNo!!, arrItem)
                 }
             }

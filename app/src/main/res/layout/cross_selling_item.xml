@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto"
         tools:text="It"
+        tools:visibility="visible"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:visibility="gone"

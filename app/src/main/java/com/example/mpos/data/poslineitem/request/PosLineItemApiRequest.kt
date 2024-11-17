@@ -45,7 +45,7 @@ data class MunItemContainer @JvmOverloads constructor(
 @Root(name = "MPOSLineInsert", strict = true)
 @Order(
     elements = ["ItemNo", "RcptNo",
-        "Qty", "SalesType", "TransDate", "TransTime", "StoreNo", "P_FreeText", "P_Price","DealLine","ParentItemCrossSelling"]
+        "Qty", "SalesType", "TransDate", "TransTime", "StoreNo", "P_FreeText", "P_Price","DealLine","ParentItemCrossSelling","UOM"]
 )
 data class MenuItem @JvmOverloads constructor(
 
@@ -90,6 +90,9 @@ data class MenuItem @JvmOverloads constructor(
     @param:Element(name = "DealLine")
     val dealLine: String? = null,
 
+    @field:Element(name = "UOM")
+    @param:Element(name = "UOM")
+    val UOM: String?=null,
 
     @field:Element(name = "ParentItemCrossSelling")
     @param:Element(name = "ParentItemCrossSelling")

@@ -362,9 +362,20 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                     crossSellingItemMaster = it
                     searchViewModel.getCrossSellingItem(it.itemMaster.itemCode,it.itemMaster.crossSellingCount.toIntOrNull()?:0)
                 } else {
-                    arrItem.add(it)
-                    createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
-                    setInitialValue()
+                    if (it.itemMaster.uOMArray.isNotEmpty()) {
+                        CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
+                            it,
+                            it.itemMaster.uOMArray
+                        ) { flg ->
+                            arrItem.add(it)
+                            createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                            setInitialValue()
+                        }
+                    } else {
+                        arrItem.add(it)
+                        createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                        setInitialValue()
+                    }
                 }
             }
             adapter = searchFoodAdaptor

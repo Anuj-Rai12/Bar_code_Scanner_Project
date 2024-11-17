@@ -308,9 +308,20 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
                     )
                 } else {
-                    arrItem.add(it)
-                    createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
-                    setInitialValue()
+                    if (it.itemMaster.uOMArray.isNotEmpty()) {
+                        CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
+                            it,
+                            it.itemMaster.uOMArray
+                        ) { flg ->
+                            arrItem.add(it)
+                            createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                            setInitialValue()
+                        }
+                    } else {
+                        arrItem.add(it)
+                        createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                        setInitialValue()
+                    }
                 }
             }
             adapter = searchFoodAdaptor

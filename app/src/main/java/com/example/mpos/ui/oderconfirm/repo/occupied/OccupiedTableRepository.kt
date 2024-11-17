@@ -59,7 +59,7 @@ class OccupiedTableRepository(retrofit: Retrofit) {
                         decimalAllowed = false.toString(),
                         crossSellingAllow = false.toString(),
                         crossSellingCount = "0",
-                        uOMArray = it.itemMaster.uOMArray
+                        uOMArray = it.itemMaster.uOMArray?: emptyList()
                     ), foodQty = it.foodQty
                 )
             )

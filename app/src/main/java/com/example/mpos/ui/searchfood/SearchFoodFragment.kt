@@ -15,6 +15,7 @@ import com.example.mpos.R
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.SearchFoodItemLayoutBinding
+import com.example.mpos.payment.unit.Utils
 import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
@@ -38,13 +39,15 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean("flag", flag)
-        outState.putString("REST_INS",RestaurantSingletonCls.getInstance().getScreenType())
+        outState.putString("REST_INS", RestaurantSingletonCls.getInstance().getScreenType())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        savedInstanceState?.let { flag = it.getBoolean("flag")
-            it.getString("REST_INS")?.let {type-> RestaurantSingletonCls.getInstance().setScreenType(type) }
+        savedInstanceState?.let {
+            flag = it.getBoolean("flag")
+            it.getString("REST_INS")
+                ?.let { type -> RestaurantSingletonCls.getInstance().setScreenType(type) }
         }
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = SearchFoodItemLayoutBinding.bind(view)
@@ -93,14 +96,16 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
                         }
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.pbLayout.root.show()
                     binding.pbLayout.titleTxt.text = it.data as String
                 }
+
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
                     val res = it.data as Pair<*, *>
-                    openCrossSellingDialog(res.first as CrossSellingJsonResponse , res.second as Int)
+                    openCrossSellingDialog(res.first as CrossSellingJsonResponse, res.second as Int)
                 }
             }
         }
@@ -211,6 +216,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
                         showSnackBar(e, R.color.color_red, Snackbar.LENGTH_INDEFINITE)
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     val res = it.data as List<*>?
                     if (res.isNullOrEmpty()) {
@@ -220,6 +226,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
                     }
 
                 }
+
                 is ApisResponse.Success -> {
                     hideOrShow(null)
                     displayData(it.data)
@@ -251,20 +258,52 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
             layoutManager = LinearLayoutManager(requireContext())
             listOfFoodItemToSearchAdaptor =
                 ListOfFoodItemToSearchAdaptor(itemClickListerForListOfFood = {
-                    val msg = if (!checkFieldValue(it.itemMaster.itemName)) it.itemMaster.itemName
-                    else it.itemMaster.itemDescription
+                    if (it.itemMaster.uOMArray.isNotEmpty()) {
+                        CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
+                            it,
+                            it.itemMaster.uOMArray
+                        ) { flg ->
 
-                    showSnackBar(msg, R.color.green_color, Snackbar.LENGTH_SHORT)
-                    val item = listOfFoodItem.find { res -> res.itemMaster.id == it.itemMaster.id }
-                    if (item != null) {
-                        listOfFoodItem.remove(item)
+                            Utils.createLogcat("TAG_INFO_UOM","uom ${it.itemMaster.uOM}")
+                            val msg =
+                                if (!checkFieldValue(it.itemMaster.itemName)) it.itemMaster.itemName
+                                else it.itemMaster.itemDescription
+
+                            showSnackBar(msg, R.color.green_color, Snackbar.LENGTH_SHORT)
+                            val item =
+                                listOfFoodItem.find { res -> res.itemMaster.id == it.itemMaster.id }
+                            if (item != null) {
+                                listOfFoodItem.remove(item)
+                            }
+                            listOfFoodItem.add(it)
+
+                            Log.i(TAG, "setRecycleView: $listOfFoodItem")
+
+
+                        }
+                        return@ListOfFoodItemToSearchAdaptor
+                    } else {
+                        val msg =
+                            if (!checkFieldValue(it.itemMaster.itemName)) it.itemMaster.itemName
+                            else it.itemMaster.itemDescription
+
+                        showSnackBar(msg, R.color.green_color, Snackbar.LENGTH_SHORT)
+                        val item =
+                            listOfFoodItem.find { res -> res.itemMaster.id == it.itemMaster.id }
+                        if (item != null) {
+                            listOfFoodItem.remove(item)
+                        }
+                        listOfFoodItem.add(it)
+
+                        Log.i(TAG, "setRecycleView: $listOfFoodItem")
                     }
-                    listOfFoodItem.add(it)
 
-                    Log.i(TAG, "setRecycleView: $listOfFoodItem")
                 }, itemClickListerCrossSelling = { itemMaster ->
                     crossSellingItemMaster = itemMaster
-                    viewModel.getCrossSellingItem(itemMaster.itemMaster.itemCode,itemMaster.itemMaster.crossSellingCount.toIntOrNull()?:0)
+                    viewModel.getCrossSellingItem(
+                        itemMaster.itemMaster.itemCode,
+                        itemMaster.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                    )
                 })
             flag = true
             adapter = listOfFoodItemToSearchAdaptor
@@ -275,7 +314,7 @@ class SearchFoodFragment : Fragment(R.layout.search_food_item_layout), OnBottomS
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse, i: Int) {
         val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(response,i)
+        dialog.showCrossSellingDialog(response, i)
     }
 
     @Suppress("UNCHECKED_CAST")
