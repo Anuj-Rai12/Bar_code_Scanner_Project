@@ -848,7 +848,8 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
             uOM = barcode.uOM,
             decimalAllowed = barcode.decimalAllowed,
             crossSellingAllow = barcode.crossSellingAllow,
-            crossSellingCount = barcode.crossSellingCount
+            crossSellingCount = barcode.crossSellingCount,
+            uOMArray = barcode.uOmArray
         )
         itemMaster.foodQty = barcode.qty.toDouble()
         val amt =

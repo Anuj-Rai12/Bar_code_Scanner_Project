@@ -1079,7 +1079,8 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             uOM = barcode.uOM,
             decimalAllowed = barcode.decimalAllowed,
             crossSellingAllow = barcode.crossSellingAllow,
-            crossSellingCount = barcode.crossSellingCount
+            crossSellingCount = barcode.crossSellingCount,
+            uOMArray = barcode.uOmArray
         )
         itemMaster.foodQty = barcode.qty.toDouble()
         val amt =

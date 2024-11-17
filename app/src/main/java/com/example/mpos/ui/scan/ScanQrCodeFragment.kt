@@ -377,7 +377,8 @@ class ScanQrCodeFragment : Fragment(R.layout.scan_qr_layout), OnBottomSheetClick
                     uOM = barcode.uOM,
                     decimalAllowed = barcode.decimalAllowed,
                     crossSellingAllow = barcode.crossSellingAllow,
-                    crossSellingCount = barcode.crossSellingCount
+                    crossSellingCount = barcode.crossSellingCount,
+                    uOMArray = barcode.uOmArray
                 )
                 itemMaster.foodQty = barcode.qty.toDouble()
                 val amt =

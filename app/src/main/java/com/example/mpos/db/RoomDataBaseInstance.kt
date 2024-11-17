@@ -4,14 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.data.table_info.model.json.TableDetail
 
 @Database(
     entities = [ItemMaster::class, TableDetail::class],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
+@TypeConverters(TypeConvertor::class)
 abstract class RoomDataBaseInstance : RoomDatabase() {
 
     abstract fun itemDao(): ItemMasterDao

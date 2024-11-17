@@ -25,7 +25,8 @@ data class ItemMaster(
     @SerializedName("decimalAllowed") val decimalAllowed: String,
     @SerializedName("CrossSellingAllow") val crossSellingAllow: String,
     @SerializedName("CrossSellingcount") val crossSellingCount: String,
-    ) : Parcelable {
+    @SerializedName("UOMArray") val uOMArray: List<UOMasterItem>,
+) : Parcelable {
     @IgnoredOnParcel
     var foodQty: Double = 1.0
 

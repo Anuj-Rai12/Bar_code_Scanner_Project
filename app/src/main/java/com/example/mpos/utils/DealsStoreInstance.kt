@@ -39,7 +39,8 @@ class DealsStoreInstance {
                 deals.price.toString(),
                 decimalAllowed = false.toString(),
                 crossSellingAllow = false.toString(),
-                crossSellingCount = "0"
+                crossSellingCount = "0",
+                uOMArray = emptyList()
             ),
             foodQty = 1.0,
             foodAmt = deals.price,

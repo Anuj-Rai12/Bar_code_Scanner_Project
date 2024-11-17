@@ -1,6 +1,7 @@
 package com.example.mpos.data.occupied.json
 
 
+import com.example.mpos.data.item_master_sync.json.UOMasterItem
 import com.google.gson.annotations.SerializedName
 
 data class ItemMaster(
@@ -13,5 +14,6 @@ data class ItemMaster(
     @SerializedName("ItemDescription") val itemDescription: String,
     @SerializedName("ItemName") val itemName: String,
     @SerializedName("SalePrice") val salePrice: String,
-    @SerializedName("UOM") val uOM: String
+    @SerializedName("UOM") val uOM: String,
+    @SerializedName("UOMArray") val uOMArray: List<UOMasterItem>
 )

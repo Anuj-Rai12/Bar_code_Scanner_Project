@@ -1,5 +1,6 @@
 package com.example.mpos.data.barcode.response.json
 
+import com.example.mpos.data.item_master_sync.json.UOMasterItem
 import com.google.gson.annotations.SerializedName
 
 data class BarcodeJsonResponse(
@@ -11,6 +12,7 @@ data class BarcodeJsonResponse(
     @SerializedName("Qty") val qty: Int,
     @SerializedName("SalePrice") val salePrice: String,
     @SerializedName("UOM") val uOM: String,
+    @SerializedName("UOMArray") val uOmArray:List<UOMasterItem> = emptyList(),
     @SerializedName("decimalAllowed") val decimalAllowed: String,
     @SerializedName("CrossSellingAllow") val crossSellingAllow: String,
     @SerializedName("CrossSellingcount") val crossSellingCount: String,
