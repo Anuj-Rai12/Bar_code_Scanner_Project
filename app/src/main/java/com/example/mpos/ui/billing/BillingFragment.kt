@@ -312,7 +312,9 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 DealsStoreInstance.getInstance().setIsResetButtonClick(false)
                 if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
                     crossSellingItemMaster = it
-                    searchViewModel.getCrossSellingItem(it.itemMaster.itemCode,it.itemMaster.crossSellingCount.toIntOrNull()?:0)
+                    searchViewModel.getCrossSellingItem(
+                        it.itemMaster.itemCode, it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                    )
                 } else {
                     arrItem.add(it)
                     createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
@@ -337,14 +339,16 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         }
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.pbLayout.root.show()
                     binding.pbLayout.titleTxt.text = it.data as String
                 }
+
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
                     val res = it.data as Pair<*, *>
-                    openCrossSellingDialog(res.first as CrossSellingJsonResponse , res.second as Int)
+                    openCrossSellingDialog(res.first as CrossSellingJsonResponse, res.second as Int)
                 }
             }
         }
@@ -353,7 +357,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse, i: Int) {
         val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(response,i)
+        dialog.showCrossSellingDialog(response, i)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -370,9 +374,11 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         activity?.msg(e)
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.menuRecycle.show()
                 }
+
                 is ApisResponse.Success -> {
                     searchFoodAdaptor.notifyDataSetChanged()
                     createLogStatement("TAG_RES", "${it.data}")
@@ -426,9 +432,11 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     showDialogBox(
@@ -454,13 +462,14 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
-                    binding.restItemBtn.performClick()
-                    /*arrItem.clear()
+                    binding.restItemBtn.performClick()/*arrItem.clear()
                     confirmOrderViewModel.getOrderList(null)*/
                     (it.data as PrintInvoice?)?.let { printInvoice ->
                         Log.i("PRINT_INVOICE", "getPrintInvoiceResponse: $printInvoice")
@@ -498,9 +507,11 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         )
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     isPrinterConnected = true
@@ -530,6 +541,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
@@ -553,9 +565,11 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
@@ -589,10 +603,12 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmOrderResponse", " Loading ${it.data}")
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     val billObj = confirmBillingRequest?.body!!
@@ -640,6 +656,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
@@ -667,6 +684,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
@@ -702,6 +720,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
@@ -745,8 +764,15 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             instruction = {},
             amount = {
                 confirmOrderViewModel.addUpdateQty(
-                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
-                    itemRemoved = itemMasterFoodItem
+                    food = ItemMasterFoodItem(
+                        itemMaster = it,
+                        foodQty = it.foodQty,
+                        foodAmt = it.foodAmt,
+                        bg = itemMasterFoodItem.bg,
+                        isDeal = itemMasterFoodItem.isDeal,
+                        free_txt = itemMasterFoodItem.free_txt,
+                        crossSellingItems = itemMasterFoodItem.crossSellingItems
+                    ), itemRemoved = itemMasterFoodItem
                 )
             })
     }
@@ -760,7 +786,15 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             cancel = {},
             res = {
                 confirmOrderViewModel.addUpdateQty(
-                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                    food = ItemMasterFoodItem(
+                        itemMaster = it,
+                        foodQty = it.foodQty,
+                        foodAmt = it.foodAmt,
+                        isDeal = itemMasterFoodItem.isDeal,
+                        bg = itemMasterFoodItem.bg,
+                        free_txt = itemMasterFoodItem.free_txt,
+                        crossSellingItems = itemMasterFoodItem.crossSellingItems
+                    ),
                     itemRemoved = itemMasterFoodItem
                 )
             },
@@ -778,7 +812,15 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             res = {},
             instruction = { free_txt ->
                 val it = itemMasterFoodItem.itemMaster
-                val food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt)
+                val food = ItemMasterFoodItem(
+                    itemMaster = it,
+                    foodQty = it.foodQty,
+                    foodAmt = it.foodAmt,
+                    free_txt = free_txt,
+                    bg = itemMasterFoodItem.bg,
+                    isDeal = itemMasterFoodItem.isDeal,
+                    crossSellingItems = itemMasterFoodItem.crossSellingItems
+                )
                 Log.i(TAG, "updateQtyDialogBox: $food")
                 confirmOrderViewModel.addUpdateQty(
                     food = food, itemRemoved = itemMasterFoodItem
@@ -796,26 +838,28 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             else {
                 confirmOrderViewModel.getGrandTotal(null)
             }
-        it?.let {
-            when (it) {
-                is ApisResponse.Error -> Log.i(TAG, "getData: Error")
-                is ApisResponse.Loading -> if (it.data == null) {
-                    arrItem.clear()
-                    initial()
-                }
-                is ApisResponse.Success -> {
-                    it.data?.let { data ->
+            it?.let {
+                when (it) {
+                    is ApisResponse.Error -> Log.i(TAG, "getData: Error")
+                    is ApisResponse.Loading -> if (it.data == null) {
                         arrItem.clear()
-                        arrItem.addAll(data)
-                        confirmOderFragmentAdaptor.setQtyBoxType(true)
-                        createLogStatement(
-                            "TAG_LOG", "the Search Info ${data.isEmpty()} and ${arrItem.isEmpty()}"
-                        )
-                        setUpRecycleAdaptor(data)
+                        initial()
+                    }
+
+                    is ApisResponse.Success -> {
+                        it.data?.let { data ->
+                            arrItem.clear()
+                            arrItem.addAll(data)
+                            confirmOderFragmentAdaptor.setQtyBoxType(true)
+                            createLogStatement(
+                                "TAG_LOG",
+                                "the Search Info ${data.isEmpty()} and ${arrItem.isEmpty()}"
+                            )
+                            setUpRecycleAdaptor(data)
+                        }
                     }
                 }
             }
-        }
         }
     }
 
@@ -1094,9 +1138,11 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             ADDINSTRUCTION -> {
                 updateFreeTxt(data)
             }
+
             UPDTQTY -> {
                 updateQtyDialogBox(data)
             }
+
             UPDTAMTM -> updateAmount(data)
             VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
                 requireActivity(), data.crossSellingItems!!

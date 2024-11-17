@@ -93,7 +93,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         super.onViewCreated(view, savedInstanceState)
         requireActivity().changeStatusBarColor(R.color.semi_white_color_two)
         binding = ConfirmOrderLayoutBinding.bind(view)
-        createLogStatement("CONFIRM_ORDER","ITEM CALLED ${args.selectioncls}")
+        createLogStatement("CONFIRM_ORDER", "ITEM CALLED ${args.selectioncls}")
         binding.tableId2.text = args.selectioncls.title
         binding.qrCodeScan.setOnClickListener {
             val action = ConfirmOderFragmentDirections.actionGlobalScanQrCodeFragment(
@@ -107,7 +107,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             findNavController().safeNavigate(action)
         }
 
-        if (args.selectioncls.enableBillingTableMgt){
+        if (args.selectioncls.enableBillingTableMgt) {
             "Submit".also { binding.confirmOrderBtn.text = it }
         }
 
@@ -248,8 +248,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
 
         binding.confirmOrderBtn.setOnClickListener {
-            if (args.selectioncls.enableBillingTableMgt){
-                createBottomSheet("Submit Order",SubmitOderButton.list)
+            if (args.selectioncls.enableBillingTableMgt) {
+                createBottomSheet("Submit Order", SubmitOderButton.list)
                 return@setOnClickListener
             }
             if (!receiptNo.isNullOrEmpty()) viewModel.postLineUrl(receiptNo!!, arrItem)
@@ -281,7 +281,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
                     val res = it.data as Pair<*, *>
-                    openCrossSellingDialog(res.first as CrossSellingJsonResponse , res.second as Int)
+                    openCrossSellingDialog(res.first as CrossSellingJsonResponse, res.second as Int)
                 }
             }
         }
@@ -290,7 +290,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse, i: Int) {
         val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(response,i)
+        dialog.showCrossSellingDialog(response, i)
     }
 
 
@@ -336,7 +336,9 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 DealsStoreInstance.getInstance().setIsResetButtonClick(false)
                 if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
                     crossSellingItemMaster = it
-                    searchViewModel.getCrossSellingItem(it.itemMaster.itemCode,it.itemMaster.crossSellingCount.toIntOrNull()?:0)
+                    searchViewModel.getCrossSellingItem(
+                        it.itemMaster.itemCode, it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                    )
                 } else {
                     arrItem.add(it)
                     createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
@@ -524,8 +526,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
     override fun onResume() {
         super.onResume()
-        if (args.selectioncls.modernSearch)
-            showKeyBoard(binding.menuSearchEd)
+        if (args.selectioncls.modernSearch) showKeyBoard(binding.menuSearchEd)
 
         customDiningRequest = args.confirmreq
         receiptNo = if (customDiningRequest?.body?.rcptNo != null) {
@@ -586,6 +587,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> showPb("${it.data}")
                 is ApisResponse.Success -> {
                     hidePb()
@@ -659,28 +661,28 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                 }
 
                 is ApisResponse.Success -> {
-                        if (activity != null && isAdded) {
-                            showDialogBox(
-                                "Successfully Inserted",
-                                "${it.data}",
-                                icon = R.drawable.ic_success,
-                                isCancel = false
-                            ) {
-                                var isTrue = true
-                                val handler = Handler(Looper.getMainLooper())
-                                handler.post {
-                                    try {
-                                        if (isTrue) {
-                                            findNavController().popBackStack()
-                                            isTrue = false
-                                        }
-                                    } catch (e: Exception) {
-                                        PrintRepository.setCashAnalytics(e)
+                    if (activity != null && isAdded) {
+                        showDialogBox(
+                            "Successfully Inserted",
+                            "${it.data}",
+                            icon = R.drawable.ic_success,
+                            isCancel = false
+                        ) {
+                            var isTrue = true
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                try {
+                                    if (isTrue) {
+                                        findNavController().popBackStack()
+                                        isTrue = false
                                     }
+                                } catch (e: Exception) {
+                                    PrintRepository.setCashAnalytics(e)
                                 }
                             }
                         }
-                        hidePb()
+                    }
+                    hidePb()
                 }
 
                 else -> {}
@@ -816,8 +818,15 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             instruction = { free_txt ->
                 val it = itemMasterFoodItem.itemMaster
                 viewModel.addUpdateQty(
-                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt),
-                    itemRemoved = itemMasterFoodItem
+                    food = ItemMasterFoodItem(
+                        itemMaster = it,
+                        foodQty = it.foodQty,
+                        foodAmt = it.foodAmt,
+                        free_txt = free_txt,
+                        crossSellingItems = itemMasterFoodItem.crossSellingItems,
+                        isDeal = itemMasterFoodItem.isDeal,
+                        bg = itemMasterFoodItem.bg
+                    ), itemRemoved = itemMasterFoodItem
                 )
             },
             isDecimal = false,
@@ -834,8 +843,15 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             instruction = {},
             amount = {
                 viewModel.addUpdateQty(
-                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
-                    itemRemoved = itemMasterFoodItem
+                    food = ItemMasterFoodItem(
+                        itemMaster = it,
+                        foodQty = it.foodQty,
+                        foodAmt = it.foodAmt,
+                        bg = itemMasterFoodItem.bg,
+                        isDeal = itemMasterFoodItem.isDeal,
+                        free_txt = itemMasterFoodItem.free_txt,
+                        crossSellingItems = itemMasterFoodItem.crossSellingItems
+                    ), itemRemoved = itemMasterFoodItem
                 )
             })
     }
@@ -846,8 +862,15 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             cancel = {},
             res = {
                 viewModel.addUpdateQty(
-                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
-                    itemRemoved = itemMasterFoodItem
+                    food = ItemMasterFoodItem(
+                        it,
+                        it.foodQty,
+                        it.foodAmt,
+                        bg = itemMasterFoodItem.bg,
+                        isDeal = itemMasterFoodItem.isDeal,
+                        free_txt = itemMasterFoodItem.free_txt,
+                        crossSellingItems = itemMasterFoodItem.crossSellingItems
+                    ), itemRemoved = itemMasterFoodItem
                 )
             },
             instruction = { },
@@ -875,7 +898,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             processCrossSellingItem(response as Pair<Double, CrossSellingJsonResponse>)
             return
         }
-        if (response is SubmitOderButton){
+        if (response is SubmitOderButton) {
             submitOrder(response)
             return
         }
@@ -919,12 +942,12 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     }
 
     private fun submitOrder(response: SubmitOderButton) {
-        if (response.orderType=="CONFIRM_ORDER"){
+        if (response.orderType == "CONFIRM_ORDER") {
             if (!receiptNo.isNullOrEmpty()) viewModel.postLineUrl(receiptNo!!, arrItem)
             else activity?.msg("Oops Some thing Went Wrong Try Again?")
         }
 
-        if (response.orderType=="PAYMENT") {
+        if (response.orderType == "PAYMENT") {
 
             if (args.selectioncls.enableBillingTableMgt && args.selectioncls.billingFromEDC) {
                 setUpCostEstimation()
@@ -978,8 +1001,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             arrItem.add(it)
             //createLogStatement("TAG_ARR_txt", "Item Size ${arrItem.size} and $arrItem")
             val item = arrItem.filter { res ->
-                res.itemMaster.id == it.itemMaster.id && res.crossSellingItems == null
-                        && res.itemMaster.crossSellingAllow.lowercase().toBoolean()
+                res.itemMaster.id == it.itemMaster.id && res.crossSellingItems == null && res.itemMaster.crossSellingAllow.lowercase()
+                    .toBoolean()
             }
             //createLogStatement("TAG_ARR_txt","FILTER ARR IS ${item.size} $item")
             if (item.isNotEmpty()) {

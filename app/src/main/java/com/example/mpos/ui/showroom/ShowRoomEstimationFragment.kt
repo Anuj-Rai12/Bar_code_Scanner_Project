@@ -236,9 +236,11 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     if (it.data is String) {
@@ -258,6 +260,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                         )
                     }
                 }
+
                 else -> {}
             }
         }
@@ -277,14 +280,16 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                         }
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.pbLayout.root.show()
                     binding.pbLayout.titleTxt.text = it.data as String
                 }
+
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
                     val res = it.data as Pair<*, *>
-                    openCrossSellingDialog(res.first as CrossSellingJsonResponse , res.second as Int)
+                    openCrossSellingDialog(res.first as CrossSellingJsonResponse, res.second as Int)
                 }
             }
         }
@@ -293,7 +298,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse, i: Int) {
         val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(response,i)
+        dialog.showCrossSellingDialog(response, i)
     }
 
 
@@ -311,9 +316,11 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                         activity?.msg(e)
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.menuRecycle.show()
                 }
+
                 is ApisResponse.Success -> {
                     searchFoodAdaptor.notifyDataSetChanged()
                     createLogStatement("TAG_RES", "${it.data}")
@@ -337,7 +344,10 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                 DealsStoreInstance.getInstance().setIsResetButtonClick(false)
                 if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
                     crossSellingItemMaster = it
-                    searchViewModel.getCrossSellingItem(it.itemMaster.itemCode,it.itemMaster.crossSellingCount.toIntOrNull()?:0)
+                    searchViewModel.getCrossSellingItem(
+                        it.itemMaster.itemCode,
+                        it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                    )
                 } else {
                     arrItem.add(it)
                     createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
@@ -367,9 +377,11 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                     } else
                         costEstimationViewModel.addError("Failed to Cost Estimated")
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     isPrinterConnected = true
@@ -378,6 +390,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                     } else
                         costEstimationViewModel.addError("Failed to Cost Estimated")
                 }
+
                 else -> {}
             }
         }
@@ -397,9 +410,11 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                         showErrorDialog(it.data)
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     confirmOrderViewModel.postLineUrl(receiptNo!!, arrItem)
@@ -423,9 +438,11 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
@@ -458,10 +475,12 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                         showErrorDialog("${it.data}")
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     Log.i("getConfirmOrderResponse", " Loading ${it.data}")
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     arrItem.clear()
@@ -490,6 +509,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                             }
                     } ?: showErrorDialog("Cannot Print Bill")
                 }
+
                 else -> {}
             }
         }
@@ -546,6 +566,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                     arrItem.clear()
                     initial()
                 }
+
                 is ApisResponse.Success -> {
                     it.data?.let { data ->
                         arrItem.clear()
@@ -554,6 +575,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                         setUpRecycleAdaptor(data)
                     }
                 }
+
                 else -> {}
             }
         }
@@ -630,7 +652,15 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
             res = {},
             instruction = {}, amount = {
                 confirmOrderViewModel.addUpdateQty(
-                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                    food = ItemMasterFoodItem(
+                        itemMaster = it,
+                        foodQty = it.foodQty,
+                        foodAmt = it.foodAmt,
+                        isDeal = itemMasterFoodItem.isDeal,
+                        bg = itemMasterFoodItem.bg,
+                        free_txt = itemMasterFoodItem.free_txt,
+                        crossSellingItems = itemMasterFoodItem.crossSellingItems
+                    ),
                     itemRemoved = itemMasterFoodItem
                 )
             })
@@ -647,7 +677,15 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
             res = {},
             instruction = { free_txt ->
                 val it = itemMasterFoodItem.itemMaster
-                val food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt)
+                val food = ItemMasterFoodItem(
+                    itemMaster = it,
+                    foodQty = it.foodQty,
+                    foodAmt = it.foodAmt,
+                    free_txt = free_txt,
+                    bg = itemMasterFoodItem.bg,
+                    isDeal = itemMasterFoodItem.isDeal,
+                    crossSellingItems = itemMasterFoodItem.crossSellingItems
+                )
                 Log.i(TAG, "updateQtyDialogBox: $food")
                 confirmOrderViewModel.addUpdateQty(
                     food = food,
@@ -772,7 +810,15 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
         itemMasterFoodItem.itemMaster.decimalAllowed.lowercase(Locale.getDefault())
             .toBoolean(), cancel = {}, res = {
             confirmOrderViewModel.addUpdateQty(
-                food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                food = ItemMasterFoodItem(
+                    itemMaster = it,
+                    foodQty = it.foodQty,
+                    foodAmt = it.foodAmt,
+                    isDeal = itemMasterFoodItem.isDeal,
+                    bg = itemMasterFoodItem.bg,
+                    free_txt = itemMasterFoodItem.free_txt,
+                    crossSellingItems = itemMasterFoodItem.crossSellingItems
+                ),
                 itemRemoved = itemMasterFoodItem
             )
         }, instruction = {}, amount = {})
@@ -872,9 +918,11 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
             GenericDataCls.Companion.Type.ADDINSTRUCTION -> {
                 updateFreeTxt(data)
             }
+
             GenericDataCls.Companion.Type.UPDTQTY -> {
                 updateQtyDialogBox(data)
             }
+
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
                 requireActivity(), data.crossSellingItems!!

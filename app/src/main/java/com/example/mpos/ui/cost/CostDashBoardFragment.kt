@@ -644,8 +644,15 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             instruction = {},
             amount = {
                 confirmOrderViewModel.addUpdateQty(
-                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
-                    itemRemoved = itemMasterFoodItem
+                    food = ItemMasterFoodItem(
+                        itemMaster = it,
+                        foodQty = it.foodQty,
+                        foodAmt = it.foodAmt,
+                        bg = itemMasterFoodItem.bg,
+                        isDeal = itemMasterFoodItem.isDeal,
+                        free_txt = itemMasterFoodItem.free_txt,
+                        crossSellingItems = itemMasterFoodItem.crossSellingItems
+                    ), itemRemoved = itemMasterFoodItem
                 )
             })
     }
@@ -660,7 +667,15 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             res = {},
             instruction = { free_txt ->
                 val it = itemMasterFoodItem.itemMaster
-                val food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt, free_txt = free_txt)
+                val food = ItemMasterFoodItem(
+                    itemMaster = it,
+                    foodQty = it.foodQty,
+                    foodAmt = it.foodAmt,
+                    free_txt = free_txt,
+                    bg = itemMasterFoodItem.bg,
+                    isDeal = itemMasterFoodItem.isDeal,
+                    crossSellingItems = itemMasterFoodItem.crossSellingItems
+                )
                 Log.i(TAG, "updateQtyDialogBox: $food")
                 confirmOrderViewModel.addUpdateQty(
                     food = food, itemRemoved = itemMasterFoodItem
@@ -754,7 +769,15 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             cancel = {},
             res = {
                 confirmOrderViewModel.addUpdateQty(
-                    food = ItemMasterFoodItem(it, it.foodQty, it.foodAmt),
+                    food = ItemMasterFoodItem(
+                        itemMaster = it,
+                        foodQty = it.foodQty,
+                        foodAmt = it.foodAmt,
+                        isDeal = itemMasterFoodItem.isDeal,
+                        bg = itemMasterFoodItem.bg,
+                        free_txt = itemMasterFoodItem.free_txt,
+                        crossSellingItems = itemMasterFoodItem.crossSellingItems
+                    ),
                     itemRemoved = itemMasterFoodItem
                 )
             },

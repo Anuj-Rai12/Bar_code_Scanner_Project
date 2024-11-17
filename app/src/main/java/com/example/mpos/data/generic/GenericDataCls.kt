@@ -26,7 +26,7 @@ data class GenericDataCls(
                 "TAG_INFO_ITEM",
                 "getBookingLs: Cross Selling $crossSellingFlag and Decimal $decimal and Deal $deal and $foodItem"
             )
-            if (!deal && !crossSellingFlag) {
+            if (!deal) {
                 //food name
                 ls.add(
                     GenericDataCls(
@@ -36,7 +36,7 @@ data class GenericDataCls(
                     )
                 )
             }
-            if (!deal && !crossSellingFlag && decimal) {
+            if (!deal &&  decimal) {
                 //qty
                 ls.add(
                     GenericDataCls(
