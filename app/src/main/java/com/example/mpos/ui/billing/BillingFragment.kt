@@ -1159,7 +1159,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
 
             UPDTAMTM -> updateAmount(data)
             VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
-                requireActivity(), data.crossSellingItems!!
+                requireActivity(), data.crossSellingItems!!,data.foodQty
             )
         }
     }

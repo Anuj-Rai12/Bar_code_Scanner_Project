@@ -20,7 +20,7 @@ data class ItemMaster(
     @SerializedName("ItemCode") val itemCode: String,
     @SerializedName("ItemDescription") val itemDescription: String,
     @SerializedName("ItemName") val itemName: String,
-    @SerializedName("SalePrice") val salePrice: String,
+    @SerializedName("SalePrice") var salePrice: String,
     @SerializedName("UOM") var uOM: String,
     @SerializedName("decimalAllowed") val decimalAllowed: String,
     @SerializedName("CrossSellingAllow") val crossSellingAllow: String,

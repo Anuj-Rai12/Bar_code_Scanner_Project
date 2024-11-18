@@ -904,7 +904,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
                 requireActivity(),
-                data.crossSellingItems!!
+                data.crossSellingItems!!,
+                data.foodQty
             )
         }
     }

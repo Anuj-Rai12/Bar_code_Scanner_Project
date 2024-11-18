@@ -1053,7 +1053,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
-                requireActivity(), data.crossSellingItems!!
+                requireActivity(), data.crossSellingItems!!,data.foodQty
             )
         }
     }

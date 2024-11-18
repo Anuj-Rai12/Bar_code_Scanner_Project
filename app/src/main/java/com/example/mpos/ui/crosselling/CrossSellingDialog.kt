@@ -15,6 +15,7 @@ import com.example.mpos.databinding.CrossSellingDialogBoxBinding
 import com.example.mpos.payment.unit.Utils
 import com.example.mpos.ui.menu.repo.OnBottomSheetClickListener
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
+import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor.Companion.setPrice
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.utils.checkFieldValue
 import com.example.mpos.utils.hide
@@ -27,10 +28,10 @@ class CrossSellingDialog(private val activity: Activity) {
     var itemClicked: OnBottomSheetClickListener? = null
 
     companion object {
-        fun showCrossSellingItem(context: Context?, response: CrossSellingJsonResponse) {
+        fun showCrossSellingItem(context: Context?, response: CrossSellingJsonResponse,foodQty:Double) {
             context?.let {
                 val dialog = CrossSellingDialog(context as Activity)
-                dialog.displayCrossSellingItem(response)
+                dialog.displayCrossSellingItem(response,foodQty)
             }
         }
     }
@@ -54,6 +55,11 @@ class CrossSellingDialog(private val activity: Activity) {
         binding.submitBtn.setOnClickListener {
             if (itemSelcted != null) {
                 item.itemMaster.uOM = itemSelcted?.itemUom.toString()
+                item.itemMaster.salePrice=itemSelcted?.itemSalePrice?:item.itemMaster.salePrice
+                item.foodQty=itemSelcted?.uomqty?.toDoubleOrNull()?:item.foodQty
+                val amt = (setPrice(itemSelcted?.itemSalePrice?:item.itemMaster.salePrice) * item.foodQty)
+                item.foodAmt = "%.4f".format(amt).toDouble()
+
                 onIsDone.invoke(true)
                 alertDialog?.dismiss()
             } else {
@@ -199,7 +205,7 @@ class CrossSellingDialog(private val activity: Activity) {
 
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
-    fun displayCrossSellingItem(response: CrossSellingJsonResponse) {
+    fun displayCrossSellingItem(response: CrossSellingJsonResponse,foodQty: Double) {
         val binding = CrossSellingDialogBoxBinding.inflate(activity.layoutInflater)
 
         alertDialog =
@@ -213,7 +219,10 @@ class CrossSellingDialog(private val activity: Activity) {
         response.childItemList.forEach {
             mainLs.addAll(it.childList)
         }
-        val crossAdaptor = CrossSellingAdaptor {}
+        val crossAdaptor = CrossSellingAdaptor {
+
+        }
+        crossAdaptor.fooQty=foodQty
         binding.recycleViewItem.adapter = crossAdaptor
         crossAdaptor.submitList(mainLs)
         crossAdaptor.isFlagReset = true

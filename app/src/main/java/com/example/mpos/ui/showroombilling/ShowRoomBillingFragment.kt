@@ -1136,7 +1136,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
 
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
-                requireActivity(), data.crossSellingItems!!
+                requireActivity(), data.crossSellingItems!!,data.foodQty
             )
         }
     }
