@@ -103,7 +103,7 @@ class ConfirmOrderUseCase {
                     val crossSellingItem = MenuItem(
                         itemNo = crossSellingItems.itemCode,
                         receiptNo = receipt,
-                        qty = itemMasterFoodItem.foodQty.toString(),
+                        qty = crossSellingItems.qty.toString(),
                         saleType = AllStringConst.API.RESTAURANT.name,
                         date = getDate("MM/dd/yy") ?: "10/20/22",
                         time = time,

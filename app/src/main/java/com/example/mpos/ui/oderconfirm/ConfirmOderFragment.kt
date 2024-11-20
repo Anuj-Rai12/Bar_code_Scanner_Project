@@ -880,7 +880,10 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                         bg = itemMasterFoodItem.bg,
                         isDeal = itemMasterFoodItem.isDeal,
                         free_txt = itemMasterFoodItem.free_txt,
-                        crossSellingItems = itemMasterFoodItem.crossSellingItems
+                        crossSellingItems = viewModel.updateCrossSellingOrder(
+                            itemMasterFoodItem.crossSellingItems,
+                            it.foodQty
+                        )
                     ), itemRemoved = itemMasterFoodItem
                 )
             },
@@ -1053,7 +1056,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
-                requireActivity(), data.crossSellingItems!!,data.foodQty
+                requireActivity(), data.crossSellingItems!!
             )
         }
     }

@@ -10,5 +10,6 @@ import kotlinx.parcelize.Parcelize
 data class CrossSellingItems(
     @SerializedName("childTxt") val childTxt: String,
     @SerializedName("itemcode") val itemCode: String,
-    @SerializedName("price") val price: String
+    @SerializedName("price") val price: String,
+    @SerializedName("qty") var qty: Double
 ) : Parcelable

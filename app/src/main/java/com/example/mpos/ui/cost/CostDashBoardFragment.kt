@@ -787,7 +787,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                         isDeal = itemMasterFoodItem.isDeal,
                         bg = itemMasterFoodItem.bg,
                         free_txt = itemMasterFoodItem.free_txt,
-                        crossSellingItems = itemMasterFoodItem.crossSellingItems
+                        crossSellingItems = confirmOrderViewModel.updateCrossSellingOrder(itemMasterFoodItem.crossSellingItems,it.foodQty)
                     ),
                     itemRemoved = itemMasterFoodItem
                 )
@@ -904,8 +904,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
                 requireActivity(),
-                data.crossSellingItems!!,
-                data.foodQty
+                data.crossSellingItems!!
             )
         }
     }

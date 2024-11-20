@@ -828,7 +828,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                     isDeal = itemMasterFoodItem.isDeal,
                     bg = itemMasterFoodItem.bg,
                     free_txt = itemMasterFoodItem.free_txt,
-                    crossSellingItems = itemMasterFoodItem.crossSellingItems
+                    crossSellingItems = confirmOrderViewModel.updateCrossSellingOrder(itemMasterFoodItem.crossSellingItems,it.foodQty)
                 ),
                 itemRemoved = itemMasterFoodItem
             )
@@ -937,7 +937,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
 
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
-                requireActivity(), data.crossSellingItems!!,data.foodQty
+                requireActivity(), data.crossSellingItems!!
             )
         }
     }

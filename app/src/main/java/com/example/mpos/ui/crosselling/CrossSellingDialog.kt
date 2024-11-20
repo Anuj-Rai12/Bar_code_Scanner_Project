@@ -28,10 +28,10 @@ class CrossSellingDialog(private val activity: Activity) {
     var itemClicked: OnBottomSheetClickListener? = null
 
     companion object {
-        fun showCrossSellingItem(context: Context?, response: CrossSellingJsonResponse,foodQty:Double) {
+        fun showCrossSellingItem(context: Context?, response: CrossSellingJsonResponse) {
             context?.let {
                 val dialog = CrossSellingDialog(context as Activity)
-                dialog.displayCrossSellingItem(response,foodQty)
+                dialog.displayCrossSellingItem(response)
             }
         }
     }
@@ -205,7 +205,7 @@ class CrossSellingDialog(private val activity: Activity) {
 
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
-    fun displayCrossSellingItem(response: CrossSellingJsonResponse,foodQty: Double) {
+    fun displayCrossSellingItem(response: CrossSellingJsonResponse) {
         val binding = CrossSellingDialogBoxBinding.inflate(activity.layoutInflater)
 
         alertDialog =
@@ -222,7 +222,6 @@ class CrossSellingDialog(private val activity: Activity) {
         val crossAdaptor = CrossSellingAdaptor {
 
         }
-        crossAdaptor.fooQty=foodQty
         binding.recycleViewItem.adapter = crossAdaptor
         crossAdaptor.submitList(mainLs)
         crossAdaptor.isFlagReset = true

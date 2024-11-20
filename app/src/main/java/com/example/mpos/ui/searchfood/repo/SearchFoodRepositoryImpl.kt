@@ -12,6 +12,7 @@ import com.example.mpos.data.item_master_sync.ItemMasterSyncRequest
 import com.example.mpos.data.item_master_sync.TableInformation
 import com.example.mpos.data.item_master_sync.json.ItemMethodSyncJsonResponse
 import com.example.mpos.db.RoomDataBaseInstance
+import com.example.mpos.payment.unit.Utils
 import com.example.mpos.utils.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
@@ -81,7 +82,9 @@ class SearchFoodRepositoryImpl constructor(
             if (api.isSuccessful) {
                 if (response != null) {
                     if (response.body?.returnValue != null) {
+                        Utils.createLogcat("TAG_BODY_RETURN_VALUE","TIME_WITH_RETURN ${response.body.returnValue}")
                         deserializeFromJson<CrossSellingJsonResponse>(response.body.returnValue)?.let { cross ->
+                            Utils.createLogcat("tag_cross_selling_json_response","${cross}")
                             return@let if (cross.childItemList.isEmpty()) {
                                 ApisResponse.Error(
                                     "CrossSelling item is Empty ${

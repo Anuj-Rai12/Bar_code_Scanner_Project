@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mpos.data.cofirmDining.ConfirmDiningRequest
 import com.example.mpos.data.confirmOrder.ConfirmOrderRequest
+import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
+import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.data.occupied.OccupiedTableRequest
 import com.example.mpos.data.occupied.RequestBody
 import com.example.mpos.data.printEstKot.request.PrintEstKotRequest
@@ -183,13 +185,13 @@ class ConfirmOrderFragmentViewModel constructor(
 
 
     fun printEstKot(request: PrintEstKotRequest) {
-        createLogStatement("TAG_PRINT_EST_SUCCESS","PRINT STARTING 1")
+        createLogStatement("TAG_PRINT_EST_SUCCESS", "PRINT STARTING 1")
         if (!this::printBillRepository.isInitialized) {
             _event.postValue(Events(mapOf("Unknown Error" to false)))
             return
         }
 
-        createLogStatement("TAG_PRINT_EST_SUCCESS","PRINT STARTING 1")
+        createLogStatement("TAG_PRINT_EST_SUCCESS", "PRINT STARTING 1")
         viewModelScope.launch {
             if (app.isNetworkAvailable()) {
                 printBillRepository.printKotResponse(request).collectLatest {
@@ -379,6 +381,21 @@ class ConfirmOrderFragmentViewModel constructor(
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
+    }
+
+    fun updateCrossSellingOrder(
+        crossSellingItems: CrossSellingJsonResponse?,
+        foodQty: Double
+    ): CrossSellingJsonResponse? {
+        if (crossSellingItems == null)
+            return null
+
+        crossSellingItems?.childItemList?.forEach {
+            it.childList?.forEach {
+                it.qty *= foodQty
+            }
+        }
+        return crossSellingItems
     }
 
 }

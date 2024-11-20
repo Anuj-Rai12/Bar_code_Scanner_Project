@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingItems
 import com.example.mpos.databinding.CrossSellingItemBinding
+import com.example.mpos.payment.unit.Utils
 import com.example.mpos.utils.Rs_Symbol
 import com.example.mpos.utils.hide
 import com.example.mpos.utils.show
@@ -18,7 +19,6 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
 
     var isFlagReset: Boolean = false
     var isEnable = true
-    var fooQty: Double = 1.0
 
     inner class CrossSellingItemViewHolder(private val binding: CrossSellingItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -26,8 +26,9 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
         val tick = binding.itemSuccessClick
         val root = binding.root
         fun setData(data: CrossSellingItems, itemClicked: itemClicked) {
+            Utils.createLogcat("TAG_CROSS_SELLING", "ITEM CROSS SELLING -> ${data}")
             binding.foodTitle.text = data.childTxt
-            binding.qtyOfItemAndPrice.text = "Qty : ${fooQty} and Price : $Rs_Symbol ${data.price}"
+            binding.qtyOfItemAndPrice.text = "Qty : ${data.qty} and Price : $Rs_Symbol ${data.price}"
             binding.root.setOnClickListener {
                 if (!isClicked) {
                     binding.itemSuccessClick.show()
