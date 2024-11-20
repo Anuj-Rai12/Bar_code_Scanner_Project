@@ -732,6 +732,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
             isDecimal = true,
             cancel = {},
             res = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             instruction = {},
             amount = {
                 confirmOrderViewModel.addUpdateQty(
@@ -756,6 +757,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
                 Locale.getDefault()
             ).toBoolean(),
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {
                 confirmOrderViewModel.addUpdateQty(
                     food = ItemMasterFoodItem(
@@ -782,6 +784,7 @@ class RestaurantBillingFragment : Fragment(R.layout.restaurant_billing_fragment)
             value = itemMasterFoodItem.free_txt,
             cancel = {},
             res = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             instruction = { free_txt ->
                 val it = itemMasterFoodItem.itemMaster
                 val food = ItemMasterFoodItem(

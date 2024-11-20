@@ -747,6 +747,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
             isDecimal = true,
             cancel = {},
             res = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             instruction = {},
             amount = {
                 confirmOrderViewModel.addUpdateQty(
@@ -771,6 +772,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                 Locale.getDefault()
             ).toBoolean(),
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {
                 confirmOrderViewModel.addUpdateQty(
                     food = ItemMasterFoodItem(
@@ -796,6 +798,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
             type = "Instruction",
             value = itemMasterFoodItem.free_txt,
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {},
             instruction = { free_txt ->
                 val it = itemMasterFoodItem.itemMaster

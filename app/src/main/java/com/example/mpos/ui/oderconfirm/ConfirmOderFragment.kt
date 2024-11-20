@@ -825,6 +825,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             value = itemMasterFoodItem.free_txt,
             type = "Instruction",
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {},
             instruction = { free_txt ->
                 val it = itemMasterFoodItem.itemMaster
@@ -850,6 +851,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
             type = "Amount",
             isDecimal = true,
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {},
             instruction = {},
             amount = {
@@ -871,6 +873,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         showQtyDialog(true,
             itemMasterFoodItem.itemMaster,
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {
                 viewModel.addUpdateQty(
                     food = ItemMasterFoodItem(

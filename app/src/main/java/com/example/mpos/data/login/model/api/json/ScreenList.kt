@@ -12,6 +12,7 @@ data class ScreenList(
     @SerializedName("screencaption") val screenCaption: String,
     @SerializedName("UPICode") val uPICode: String,
     @SerializedName("ModernSearch") val modernSearch: Boolean,
+    @SerializedName("QtyIncreaseonly") val isToQtyIncrease: Boolean,
     @SerializedName("EnableCustDetail") val enableCustDetail: Boolean,
     @SerializedName("screenlist") val screenList: String,
     @SerializedName("KOTPrintFromEDC") val kotPrintFromEDC: Boolean,

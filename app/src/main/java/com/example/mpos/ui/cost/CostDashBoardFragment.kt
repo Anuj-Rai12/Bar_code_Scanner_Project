@@ -651,6 +651,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             type = "Amount",
             isDecimal = true,
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {},
             instruction = {},
             amount = {
@@ -675,6 +676,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             value = itemMasterFoodItem.free_txt,
             isDecimal = false,
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {},
             instruction = { free_txt ->
                 val it = itemMasterFoodItem.itemMaster
@@ -792,6 +794,7 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
                     itemRemoved = itemMasterFoodItem
                 )
             },
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             instruction = {},
             amount = {})
     }

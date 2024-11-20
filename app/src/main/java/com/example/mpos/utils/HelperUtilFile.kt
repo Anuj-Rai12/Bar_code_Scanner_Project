@@ -263,6 +263,7 @@ fun View.hide() {
 fun View.show() {
     this.isVisible = true
 }
+
 fun View.invisible() {
     this.visibility = View.INVISIBLE
 }
@@ -681,6 +682,7 @@ fun Fragment.showQtyDialog(
     value: String = "",
     type: String = "Quantity",
     isDecimal: Boolean,
+    isUpdateQty: Boolean,
     cancel: (Boolean) -> Unit,
     res: (ItemMaster) -> Unit,
     instruction: (String) -> Unit,
@@ -738,9 +740,15 @@ fun Fragment.showQtyDialog(
                 }
 
                 if (!isDecimal && qty.toInt() <= 0) {
-                    activity?.msg("$type should not be Zero")
+                    activity?.msg("$type should not be ${if (qty.toInt() == 0) "Zero" else "Less then One"}")
                     return@setOnClickListener
                 }
+
+                if (isUpdateQty && itemMaster.foodQty >= qty.toDouble()) {
+                    activity?.msg("Qty Cannot be less then previous Quantity")
+                    return@setOnClickListener
+                }
+
                 itemMaster.foodQty = "%.2f".format(qty.toDouble()).toDouble()
                 val amt =
                     (ListOfFoodItemToSearchAdaptor.setPrice(itemMaster.salePrice) * itemMaster.foodQty)

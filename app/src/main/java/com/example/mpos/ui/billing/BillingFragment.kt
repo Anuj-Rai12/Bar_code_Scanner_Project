@@ -774,6 +774,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
             isDecimal = true,
             cancel = {},
             res = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             instruction = {},
             amount = {
                 confirmOrderViewModel.addUpdateQty(
@@ -797,6 +798,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
                 Locale.getDefault()
             ).toBoolean(),
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {
                 confirmOrderViewModel.addUpdateQty(
                     food = ItemMasterFoodItem(
@@ -820,6 +822,7 @@ class BillingFragment : Fragment(R.layout.billing_fragment_layout), OnBottomShee
         showQtyDialog(true,
             itemMasterFoodItem.itemMaster,
             type = "Instruction",
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             value = itemMasterFoodItem.free_txt,
             cancel = {},
             res = {},

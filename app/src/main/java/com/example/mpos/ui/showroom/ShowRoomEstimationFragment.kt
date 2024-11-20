@@ -660,6 +660,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
             type = "Amount",
             isDecimal = true,
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {},
             instruction = {}, amount = {
                 confirmOrderViewModel.addUpdateQty(
@@ -685,6 +686,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
             value = itemMasterFoodItem.free_txt,
             isDecimal = false,
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {},
             instruction = { free_txt ->
                 val it = itemMasterFoodItem.itemMaster
@@ -832,7 +834,7 @@ class ShowRoomEstimationFragment : Fragment(R.layout.show_room_fragment),
                 ),
                 itemRemoved = itemMasterFoodItem
             )
-        }, instruction = {}, amount = {})
+        }, instruction = {}, amount = {}, isUpdateQty = args.selectioncls.IsUpdateQty)
     }
 
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {

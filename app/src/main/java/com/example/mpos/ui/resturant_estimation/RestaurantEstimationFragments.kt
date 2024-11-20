@@ -245,14 +245,16 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                         }
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.pbLayout.root.show()
                     binding.pbLayout.titleTxt.text = it.data as String
                 }
+
                 is ApisResponse.Success -> {
                     binding.pbLayout.root.hide()
                     val res = it.data as Pair<*, *>
-                    openCrossSellingDialog(res.first as CrossSellingJsonResponse , res.second as Int)
+                    openCrossSellingDialog(res.first as CrossSellingJsonResponse, res.second as Int)
                 }
             }
         }
@@ -261,7 +263,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
     private fun openCrossSellingDialog(response: CrossSellingJsonResponse, i: Int) {
         val dialog = CrossSellingDialog(requireActivity())
         dialog.itemClicked = this
-        dialog.showCrossSellingDialog(response,i)
+        dialog.showCrossSellingDialog(response, i)
     }
 
 
@@ -279,9 +281,11 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                         activity?.msg(e)
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     binding.menuRecycle.show()
                 }
+
                 is ApisResponse.Success -> {
                     searchFoodAdaptor.notifyDataSetChanged()
                     createLogStatement("TAG_RES", "${it.data}")
@@ -305,7 +309,10 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                 DealsStoreInstance.getInstance().setIsResetButtonClick(false)
                 if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
                     crossSellingItemMaster = it
-                    searchViewModel.getCrossSellingItem(it.itemMaster.itemCode,it.itemMaster.crossSellingCount.toIntOrNull()?:0)
+                    searchViewModel.getCrossSellingItem(
+                        it.itemMaster.itemCode,
+                        it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                    )
                 } else {
                     if (it.itemMaster.uOMArray.isNotEmpty()) {
                         CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
@@ -342,9 +349,11 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         if (it.data is String) {
@@ -388,9 +397,11 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                         } else
                             costEstimationViewModel.addError("Failed to Cost Estimated")
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         isPrinterConnected = true
@@ -418,9 +429,11 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                         showErrorDialog(it.data)
                     }
                 }
+
                 is ApisResponse.Loading -> {
                     showPb("${it.data}")
                 }
+
                 is ApisResponse.Success -> {
                     hidePb()
                     confirmOrderViewModel.postLineUrl(receiptNo!!, arrItem)
@@ -444,9 +457,11 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         Log.i(TAG, "getPosItemRequest: PosItem Response ${it.data}")
@@ -480,10 +495,12 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                             showErrorDialog("${it.data}")
                         }
                     }
+
                     is ApisResponse.Loading -> {
                         Log.i("getConfirmOrderResponse", " Loading ${it.data}")
                         showPb("${it.data}")
                     }
+
                     is ApisResponse.Success -> {
                         hidePb()
                         arrItem.clear()
@@ -569,6 +586,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                         arrItem.clear()
                         initial()
                     }
+
                     is ApisResponse.Success -> {
                         it.data?.let { data ->
                             arrItem.clear()
@@ -650,6 +668,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
             type = "Amount",
             isDecimal = true,
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {},
             instruction = {}, amount = {
                 confirmOrderViewModel.addUpdateQty(
@@ -675,6 +694,7 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
             value = itemMasterFoodItem.free_txt,
             isDecimal = false,
             cancel = {},
+            isUpdateQty = args.selectioncls.IsUpdateQty,
             res = {},
             instruction = { free_txt ->
                 val it = itemMasterFoodItem.itemMaster
@@ -809,11 +829,14 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
                     isDeal = itemMasterFoodItem.isDeal,
                     bg = itemMasterFoodItem.bg,
                     free_txt = itemMasterFoodItem.free_txt,
-                    crossSellingItems = confirmOrderViewModel.updateCrossSellingOrder(itemMasterFoodItem.crossSellingItems,it.foodQty)
+                    crossSellingItems = confirmOrderViewModel.updateCrossSellingOrder(
+                        itemMasterFoodItem.crossSellingItems,
+                        it.foodQty
+                    )
                 ),
                 itemRemoved = itemMasterFoodItem
             )
-        }, instruction = {}, amount = {})
+        }, instruction = {}, amount = {}, isUpdateQty = args.selectioncls.IsUpdateQty)
     }
 
     private fun showSnackBar(msg: String, color: Int, length: Int = Snackbar.LENGTH_SHORT) {
@@ -919,9 +942,11 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
             GenericDataCls.Companion.Type.ADDINSTRUCTION -> {
                 updateFreeTxt(data)
             }
+
             GenericDataCls.Companion.Type.UPDTQTY -> {
                 updateQtyDialogBox(data)
             }
+
             GenericDataCls.Companion.Type.UPDTAMTM -> updateAmount(data)
             GenericDataCls.Companion.Type.VIEWORDER -> CrossSellingDialog.showCrossSellingItem(
                 requireActivity(), data.crossSellingItems!!
