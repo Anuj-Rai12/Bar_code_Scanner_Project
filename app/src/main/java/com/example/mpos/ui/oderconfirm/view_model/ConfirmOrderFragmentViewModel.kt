@@ -391,8 +391,11 @@ class ConfirmOrderFragmentViewModel constructor(
             return null
 
         crossSellingItems?.childItemList?.forEach {
-            it.childList?.forEach {
-                it.qty *= foodQty
+            val flg = it.skipqtylinking.toBooleanStrictOrNull() ?: false
+            if (flg) {
+                it.childList?.forEach {
+                    it.qty *= foodQty
+                }
             }
         }
         return crossSellingItems

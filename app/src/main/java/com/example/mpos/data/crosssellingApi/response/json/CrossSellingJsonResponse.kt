@@ -25,6 +25,8 @@ data class ChilditemList(
     val minSelection: String,
     @SerializedName("MaxSelection")
     val maxSelection: String,
+    @SerializedName("skipqtylinking")
+    val skipqtylinking: String,
     @SerializedName("ChildList")
     val childList: List<CrossSellingItems>,
 ) : Parcelable
