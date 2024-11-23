@@ -111,7 +111,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrint = item.estimatePrint,
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
-                            IsUpdateQty = item.isToQtyIncrease
+                            IsUpdateQty = item.isToQtyIncrease,
+                            freezePaymentwindow = item.FreezePaymentwindow
                         )
                     )
                 }
@@ -133,7 +134,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrint = item.estimatePrint,
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
-                            IsUpdateQty = item.isToQtyIncrease
+                            IsUpdateQty = item.isToQtyIncrease,
+                            freezePaymentwindow = item.FreezePaymentwindow
                         )
                     )
                 }
@@ -155,7 +157,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrint = item.estimatePrint,
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
-                            IsUpdateQty = item.isToQtyIncrease
+                            IsUpdateQty = item.isToQtyIncrease,
+                            freezePaymentwindow = item.FreezePaymentwindow
                         )
                     )
                 }
@@ -177,7 +180,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrint = item.estimatePrint,
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
-                            IsUpdateQty = item.isToQtyIncrease
+                            IsUpdateQty = item.isToQtyIncrease,
+                            freezePaymentwindow = item.FreezePaymentwindow
                         )
                     )
                 }
@@ -199,7 +203,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrint = item.estimatePrint,
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
-                            IsUpdateQty = item.isToQtyIncrease
+                            IsUpdateQty = item.isToQtyIncrease,
+                            freezePaymentwindow = item.FreezePaymentwindow
                         )
                     )
                 }
@@ -221,7 +226,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrint = item.estimatePrint,
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
-                            IsUpdateQty = item.isToQtyIncrease
+                            IsUpdateQty = item.isToQtyIncrease,
+                            freezePaymentwindow = item.FreezePaymentwindow
                         )
                     )
                 }
@@ -243,7 +249,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrint = item.estimatePrint,
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
-                            IsUpdateQty = item.isToQtyIncrease
+                            IsUpdateQty = item.isToQtyIncrease,
+                            freezePaymentwindow = item.FreezePaymentwindow
                         )
                     )
                 }
@@ -265,7 +272,8 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrint = item.estimatePrint,
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
-                            IsUpdateQty = item.isToQtyIncrease
+                            IsUpdateQty = item.isToQtyIncrease,
+                            freezePaymentwindow = item.FreezePaymentwindow
                         )
                     )
                 }

@@ -11,5 +11,6 @@ data class CrossSellingItems(
     @SerializedName("childTxt") val childTxt: String,
     @SerializedName("itemcode") val itemCode: String,
     @SerializedName("price") val price: String,
+    @SerializedName("UOM") val uom: String,
     @SerializedName("qty") var qty: Double
 ) : Parcelable

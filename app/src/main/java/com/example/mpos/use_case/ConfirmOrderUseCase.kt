@@ -116,7 +116,7 @@ class ConfirmOrderUseCase {
                         ).toDouble().toString(),
                         dealLine = false.toString().uppercase(Locale.getDefault()),
                         ParentItemCrossSelling = itemMasterFoodItem.crossSellingItems.parentItem,
-                        UOM = itemMasterFoodItem.itemMaster.uOM
+                        UOM = crossSellingItems.uom
                     )
                     list.add(crossSellingItem)
                 }

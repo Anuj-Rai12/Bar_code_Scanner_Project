@@ -20,6 +20,7 @@ data class SelectionDataClass(
     val estimatePrintcount: Int,
     val billingFromEDC: Boolean,
     val IsUpdateQty: Boolean,
+    val freezePaymentwindow :Boolean,
     val paymentLs: List<String>,
     val enableBillingTableMgt: Boolean,
     val apk: ApkLoginJsonResponse
@@ -42,6 +43,7 @@ data class SelectionDataClass(
             estimatePrintcount: Int,
             enableBillingTableMgt:Boolean,
             IsUpdateQty: Boolean,
+            freezePaymentwindow:Boolean
             ): SelectionDataClass {
             return SelectionDataClass(
                 image = img,
@@ -59,7 +61,8 @@ data class SelectionDataClass(
                 enableCustDetail = enableCustDetail,
                 estimatePrintcount = estimatePrintcount,
                 enableBillingTableMgt = enableBillingTableMgt,
-                IsUpdateQty = IsUpdateQty
+                IsUpdateQty = IsUpdateQty,
+                freezePaymentwindow = freezePaymentwindow
             )
         }
 

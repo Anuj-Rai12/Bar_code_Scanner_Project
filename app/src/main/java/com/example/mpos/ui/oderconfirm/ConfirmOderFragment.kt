@@ -638,6 +638,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
                     pay.clear()
                     pay.addAll(args.selectioncls.paymentLs)
                     intent.putExtra("Receipt", receiptNo)
+                    intent.putExtra("isFrezzBacKButton", args.selectioncls.freezePaymentwindow)
                     intent.putExtra("upiCode", args.selectioncls.uPICode)
                     intent.putExtra("payment", pay)
                     intent.putExtra("tableNo", "1")

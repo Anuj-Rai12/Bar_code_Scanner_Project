@@ -702,6 +702,7 @@ class ShowRoomBillingFragment : Fragment(R.layout.show_room_billing_fragment),
                     val pay = ArrayList<String>()
                     pay.clear()
                     pay.addAll(args.selectioncls.paymentLs)
+                    intent.putExtra("isFrezzBacKButton", args.selectioncls.freezePaymentwindow)
                     intent.putExtra("Receipt", receiptNo)
                     intent.putExtra("upiCode", args.selectioncls.uPICode)
                     intent.putExtra("payment", pay)

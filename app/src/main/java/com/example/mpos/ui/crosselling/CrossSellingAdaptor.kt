@@ -28,7 +28,7 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
         fun setData(data: CrossSellingItems, itemClicked: itemClicked) {
             Utils.createLogcat("TAG_CROSS_SELLING", "ITEM CROSS SELLING -> ${data}")
             binding.foodTitle.text = data.childTxt
-            binding.qtyOfItemAndPrice.text = "Qty : ${data.qty} and Price : $Rs_Symbol ${data.price}"
+            binding.qtyOfItemAndPrice.text = "Qty : ${data.qty} , Price : $Rs_Symbol ${data.price} and UOM : ${data.uom}"
             binding.root.setOnClickListener {
                 if (!isClicked) {
                     binding.itemSuccessClick.show()

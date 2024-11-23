@@ -68,6 +68,11 @@ class PaymentActivity : BasePineActivity() {
         intent.getStringExtra("Receipt") ?: "10101"
     }
 
+    private val isFrezzeBacKButton by lazy {
+        intent.getBooleanExtra("isFrezzBacKButton", true)
+    }
+
+
     private val upiCode by lazy {
         intent.getStringExtra("upiCode")
     }
@@ -736,6 +741,10 @@ class PaymentActivity : BasePineActivity() {
     }
 
     override fun onBackPressed() {
+        if(!isFrezzeBacKButton){
+            super.onBackPressed()
+            return
+        }
         if (isPaymentCompleted) {
             super.onBackPressed()
             val intent = Intent(this, MainActivity::class.java)
