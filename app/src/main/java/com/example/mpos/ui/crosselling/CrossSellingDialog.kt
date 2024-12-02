@@ -103,6 +103,9 @@ class CrossSellingDialog(private val activity: Activity) {
         val crossAdaptor2 = CrossSellingAdaptor {
             if (itemSelected.contains(it)) {
                 itemSelected.remove(it)
+                totalItem -= if (checkFieldValue(it.price) || !it.price.isDigitsOnly()) 0.0
+                else "%.4f".format(ListOfFoodItemToSearchAdaptor.setPrice(it.price)).toDouble()
+                if (totalItem<0.0) totalItem=0.0
             } else {
                 itemSelected.add(it)
                 totalItem += if (checkFieldValue(it.price) || !it.price.isDigitsOnly()) 0.0

@@ -1005,11 +1005,12 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
     private fun processCrossSellingItem(res: Pair<Double, CrossSellingJsonResponse>) {
         crossSellingItemMaster?.let {
+            val foodItemAmt= if (res.first<=0.0) it.foodAmt else res.first
             arrItem.add(
                 ItemMasterFoodItem(
                     itemMaster = it.itemMaster,
                     foodQty = it.foodQty,
-                    foodAmt = it.foodAmt + res.first,
+                    foodAmt = foodItemAmt,
                     bg = listOfBg[2],
                     free_txt = it.free_txt,
                     isDeal = it.isDeal,
