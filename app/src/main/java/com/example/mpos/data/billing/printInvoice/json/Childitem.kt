@@ -8,5 +8,5 @@ data class Childitem(
     @SerializedName("description") val description: String,
     @SerializedName("itemcode") val itemcode: String,
     @SerializedName("price") val price: String,
-    @SerializedName("Qty") val qty: Int
+    @SerializedName("Qty") val qty: Double
 )
