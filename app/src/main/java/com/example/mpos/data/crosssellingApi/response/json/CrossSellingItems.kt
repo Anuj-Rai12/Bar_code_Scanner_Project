@@ -13,4 +13,6 @@ data class CrossSellingItems(
     @SerializedName("price") val price: String,
     @SerializedName("UOM") val uom: String,
     @SerializedName("qty") var qty: Double
-) : Parcelable
+) : Parcelable{
+    var isClicked:Boolean=false
+}

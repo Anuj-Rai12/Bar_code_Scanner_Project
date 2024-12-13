@@ -22,7 +22,6 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
 
     inner class CrossSellingItemViewHolder(private val binding: CrossSellingItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        var isClicked: Boolean = false
         val tick = binding.itemSuccessClick
         val root = binding.root
         fun setData(data: CrossSellingItems, itemClicked: itemClicked) {
@@ -30,13 +29,13 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
             binding.foodTitle.text = data.childTxt
             binding.qtyOfItemAndPrice.text = "Qty : ${data.qty} , Price : $Rs_Symbol ${data.price} and UOM : ${data.uom}"
             binding.root.setOnClickListener {
-                if (!isClicked) {
+                if (!data.isClicked) {
                     binding.itemSuccessClick.show()
                 } else {
                     binding.itemSuccessClick.hide()
                 }
                 itemClicked.invoke(data)
-                isClicked = !isClicked
+                data.isClicked = !data.isClicked
             }
         }
     }
@@ -68,11 +67,16 @@ class CrossSellingAdaptor(private val itemClicked: itemClicked) :
 
             if (isFlagReset) {
                 holder.tick.hide()
-                holder.isClicked = false
+                it.isClicked = false
             }
 
             if (!isEnable && isFlagReset) {
                 holder.tick.show()
+            }
+            if(it.isClicked){
+                holder.tick.show()
+            }else{
+                holder.tick.hide()
             }
 
             holder.setData(it, itemClicked)
