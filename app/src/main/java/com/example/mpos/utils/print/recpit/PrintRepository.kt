@@ -7,7 +7,12 @@ import android.util.Log
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
-import com.example.mpos.data.billing.printInvoice.json.*
+import com.example.mpos.data.billing.printInvoice.json.Childitem
+import com.example.mpos.data.billing.printInvoice.json.GstDetail
+import com.example.mpos.data.billing.printInvoice.json.PaymentDetail
+import com.example.mpos.data.billing.printInvoice.json.PrintInvoice
+import com.example.mpos.data.billing.printInvoice.json.QrPrint
+import com.example.mpos.data.billing.printInvoice.json.VatDetail
 import com.example.mpos.data.confirmOrder.response.json.ItemList
 import com.example.mpos.data.confirmOrder.response.json.PrintReceiptInfo
 import com.example.mpos.data.printEstKot.response.json.PrintEstKotItem
@@ -19,6 +24,7 @@ import com.example.mpos.payment.pine.AppConfig
 import com.example.mpos.payment.pine.request.Datum
 import com.example.mpos.payment.qr.CreateQr
 import com.example.mpos.payment.unit.ImageConvertor
+import com.example.mpos.payment.unit.Utils
 import com.example.mpos.payment.unit.trimBorders
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.utils.ApisResponse
@@ -28,7 +34,6 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -40,6 +45,11 @@ class PrintRepository {
         fun setCashAnalytics(e: Exception) {
             Firebase.crashlytics.recordException(e)
         }
+
+        val colwidthForDescription = 15
+        val colwidthForQty = 5
+        val colwidthForPrice = 6
+        val colwidthForRate = 6
     }
 
     private val printNotConnectedToProceed =
@@ -188,13 +198,11 @@ class PrintRepository {
             arr.add(setPineLabPrintData(responseBody.subHeaderTxt4, isCenterAlign = false))
             arr.add(setPineLabPrintData(responseBody.subHeaderTxt5, isCenterAlign = false))
             arr.add(line())
-            arr.add(setPineLabPrintData(headerPine, false))
+            arr.add(setPineLabPrintData(setPrinterDescription(), false))
             arr.add(line())
             arr.add(
                 setPineLabPrintData(
-                    setBillInvoiceTable(
-                        responseBody.childitemList, descSize = 14, qty = 2, price = 8, amt = 8
-                    ), false
+                    setBillNewItype(responseBody.childitemList), false
                 )
             )
             arr.add(line())
@@ -287,6 +295,47 @@ class PrintRepository {
         }
         emit(data)
     }.flowOn(IO)
+
+    private fun setBillNewItype(childitemList: List<Childitem>): String {
+        val stringBuilder = StringBuilder()
+        childitemList.forEach {
+            val item = padRight(it.description, colwidthForDescription) +
+                    padRight(it.qty.toString(), colwidthForQty) +
+                    padRight(it.price, colwidthForPrice) +
+                    padRight(it.amount, colwidthForRate)
+            stringBuilder.append(item)
+            stringBuilder.append("\n")
+        }
+        /*  childitemList.forEach {
+              val item = String.format(
+                  "%-" + colwidthForDescription + "s%-" + colwidthForQty + "s%-" + colwidthForPrice + "s%-" + colwidthForRate + "s",
+                  it.description, it.qty, it.price, it.amount
+              )
+              stringBuilder.append(item)
+              stringBuilder.append("\n")
+          }*/
+        return stringBuilder.toString()
+    }
+
+    private fun setPrinterDescription(): String {
+
+        return padRight("Description", colwidthForDescription) +
+                padRight("Qty", colwidthForQty) +
+                padRight("Price", colwidthForPrice) +
+                padRight("Rate", colwidthForRate)
+        /*return String.format(
+            "%-" + colwidthForDescription + "s%-" + colwidthForQty + "s%-" + colwidthForPrice + "s%-" + colwidthForRate + "s",
+            "Description", "Qty", "Price", "Rate"
+        )*/
+    }
+
+
+    private fun padRight(text: String, width: Int): String {
+        if (text.length >= width) {
+            return text.substring(0, width - 1) + " " // Truncate if too long
+        }
+        return text + " ".repeat(width - text.length)
+    }
 
     fun doPineLabPrintKOTInvoice(responseBody: PrintKotInvoice) = flow {
         emit(ApisResponse.Loading("Please Wait Printing KOT Invoice ${getEmojiByUnicode(0x1F5A8)}"))
