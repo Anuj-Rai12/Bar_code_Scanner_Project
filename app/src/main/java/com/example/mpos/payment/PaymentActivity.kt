@@ -293,7 +293,7 @@ class PaymentActivity : BasePineActivity() {
             //Detail Obj
             detail.billingRefNo = "receipt_$receipt"
             detail.paymentAmount = (amt * 100.0).toString()
-            detail.transactionType = "5123"//UPI
+            detail.transactionType = "5120"//UPI
             detail.mobileNumberForEChargeSlip = "9219141756"
             request.detail = detail
             transactionType = "UPI"
