@@ -93,7 +93,6 @@ class SearchFoodViewModel constructor(
             return
         }
         viewModelScope.launch {
-            delay(3000)
             userSoredData.read.collectLatest {
                 if (checkFieldValue(it.storeNo.toString())) {
                     _event.postValue(Events("Internal Error \nTry Login Again"))

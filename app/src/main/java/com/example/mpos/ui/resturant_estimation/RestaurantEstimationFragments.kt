@@ -31,6 +31,7 @@ import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonRespo
 import com.example.mpos.data.generic.GenericDataCls
 import com.example.mpos.data.item_master_sync.json.ItemMaster
 import com.example.mpos.databinding.RestaurantEstimationFragmentBinding
+import com.example.mpos.payment.unit.Utils
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
 import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
@@ -53,6 +54,8 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
     OnBottomSheetClickListener {
     private lateinit var binding: RestaurantEstimationFragmentBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
+
+    private var updateLiveQtyitemMasterFoodItem: ItemMasterFoodItem? = null
 
     private val printBillViewModel: PrintViewModel by viewModels()
 
@@ -143,6 +146,9 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
 
         //Get Cross Selling Item
         getCrossSellingResponse()
+
+        //Get Live Qty
+        getLiveInventoryCountResponse()
 
 
 
@@ -302,31 +308,98 @@ class RestaurantEstimationFragments : Fragment(R.layout.restaurant_estimation_fr
     }
 
 
+    private fun getLiveInventoryCountResponse() {
+        searchViewModel.liveInventoryCheckResponse.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { res ->
+                            showErrorDialog(res)
+                        }
+                    } else {
+                        showErrorDialog(it.data.toString())
+                    }
+                }
+
+                is ApisResponse.Loading -> {
+                    showPb("${it.data}")
+                }
+
+                is ApisResponse.Success -> {
+                    hidePb()
+                    if (updateLiveQtyitemMasterFoodItem != null) {
+                        Utils.createLogcat("TAG_RESPONSE", "Live Inventory Count ${it.data}")
+                        val data = (it.data as Double?) ?: updateLiveQtyitemMasterFoodItem?.foodQty
+                        DealsStoreInstance.getInstance().setIsResetButtonClick(false)
+                        if (data != null) {
+                            updateLiveQtyitemMasterFoodItem!!.itemMaster.maxQtyToChange = data
+                        }
+                        if (updateLiveQtyitemMasterFoodItem!!.itemMaster.crossSellingAllow.lowercase()
+                                .toBoolean()
+                        ) {
+                            crossSellingItemMaster = updateLiveQtyitemMasterFoodItem
+                            searchViewModel.getCrossSellingItem(
+                                updateLiveQtyitemMasterFoodItem!!.itemMaster.itemCode,
+                                updateLiveQtyitemMasterFoodItem!!.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                            )
+                        } else {
+                            if (updateLiveQtyitemMasterFoodItem!!.itemMaster.uOMArray.isNotEmpty()) {
+                                CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
+                                    updateLiveQtyitemMasterFoodItem!!,
+                                    updateLiveQtyitemMasterFoodItem!!.itemMaster.uOMArray
+                                ) { flg ->
+                                    arrItem.add(updateLiveQtyitemMasterFoodItem!!)
+                                    createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                                    setInitialValue()
+                                }
+                            } else {
+                                arrItem.add(updateLiveQtyitemMasterFoodItem!!)
+                                createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                                setInitialValue()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun setSearchAdaptorView() {
         binding.menuRecycle.apply {
             searchFoodAdaptor = FoodAdaptor {
                 binding.menuSearchEd.setText("")
-                DealsStoreInstance.getInstance().setIsResetButtonClick(false)
-                if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
-                    crossSellingItemMaster = it
-                    searchViewModel.getCrossSellingItem(
-                        it.itemMaster.itemCode,
-                        it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                if (args.selectioncls.stockCheck && it.itemMaster.itemstockcheck) {
+                    updateLiveQtyitemMasterFoodItem = it
+                    searchViewModel.fetchLiveQty(
+                        itemCode = updateLiveQtyitemMasterFoodItem!!.itemMaster.itemCode,
+                        password = args.selectioncls.stockCheckPassword,
+                        url = args.selectioncls.stockCheckUrl,
+                        userId = args.selectioncls.stockCheckUser
                     )
                 } else {
-                    if (it.itemMaster.uOMArray.isNotEmpty()) {
-                        CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
-                            it,
-                            it.itemMaster.uOMArray
-                        ) { flg ->
+                    DealsStoreInstance.getInstance().setIsResetButtonClick(false)
+                    if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
+                        crossSellingItemMaster = it
+                        searchViewModel.getCrossSellingItem(
+                            it.itemMaster.itemCode,
+                            it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                        )
+                    } else {
+                        if (it.itemMaster.uOMArray.isNotEmpty()) {
+                            CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
+                                it,
+                                it.itemMaster.uOMArray
+                            ) { flg ->
+                                arrItem.add(it)
+                                createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                                setInitialValue()
+                            }
+                        } else {
                             arrItem.add(it)
                             createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
                             setInitialValue()
                         }
-                    } else {
-                        arrItem.add(it)
-                        createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
-                        setInitialValue()
                     }
                 }
             }

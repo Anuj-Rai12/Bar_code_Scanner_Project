@@ -34,6 +34,7 @@ import com.example.mpos.data.reservation.request.AddReservationBody
 import com.example.mpos.data.reservation.request.AddTableReservationRequest
 import com.example.mpos.databinding.ConfirmOrderDialogLayoutBinding
 import com.example.mpos.databinding.QtyIncrementLayoutBinding
+import com.example.mpos.payment.unit.Utils
 import com.example.mpos.ui.searchfood.adaptor.ListOfFoodItemToSearchAdaptor
 import com.example.mpos.ui.searchfood.model.ItemMasterFoodItem
 import com.example.mpos.ui.tableorcost.model.SelectionDataClass
@@ -749,6 +750,13 @@ fun Fragment.showQtyDialog(
 
                 if (isUpdateQty && itemMaster.foodQty >= qty.toDouble()) {
                     activity?.msg("Qty Cannot be less then previous Quantity")
+                    return@setOnClickListener
+                }
+
+                Utils.createLogcat("TAG_ITEM_SELECTED"," $isUpdateQty ${itemMaster.itemCode} and max Qtry is ${itemMaster.maxQtyToChange}  is greate ${qty} -> ${itemMaster.maxQtyToChange!! > qty.toDouble()}")
+
+                if (isUpdateQty && itemMaster.maxQtyToChange!=null && itemMaster.maxQtyToChange!! < qty.toDouble()){
+                    activity?.msg("Qty Cannot be more then ${itemMaster.maxQtyToChange!!.toInt()}")
                     return@setOnClickListener
                 }
 

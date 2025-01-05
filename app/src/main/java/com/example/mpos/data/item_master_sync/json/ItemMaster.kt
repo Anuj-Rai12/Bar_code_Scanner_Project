@@ -38,4 +38,7 @@ data class ItemMaster(
         Log.i("ItemMaster", "error: ${e.localizedMessage}")
         0.0
     }
+
+    var maxQtyToChange:Double?= null
+
 }

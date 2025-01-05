@@ -61,15 +61,6 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
 
 
-//delete me
-val listOfItem = listOf(
-    "FG0481",
-    "FG0484",
-    "FG0236",
-    "FG0260",
-    "FG0262"
-)
-
 class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomSheetClickListener {
     private lateinit var binding: ConfirmOrderLayoutBinding
     private lateinit var confirmOderFragmentAdaptor: ConfirmOderFragmentAdaptor
@@ -79,6 +70,8 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
     //private var flagForViewDeals: Boolean = false
 
     private var confirmBillingRequest: ConfirmBillingRequest? = null
+
+    private var updateLiveQtyitemMasterFoodItem: ItemMasterFoodItem? = null
 
     private lateinit var callback: ItemTouchHelper.SimpleCallback
     private val args: ConfirmOderFragmentArgs by navArgs()
@@ -205,6 +198,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         }
 
         showPrintResponse()
+        //UpdateLiveQty
         getLiveInventoryCountResponse()
 
         binding.foodItem.setOnClickListener {
@@ -344,26 +338,37 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         binding.menuRecycle.apply {
             searchFoodAdaptor = FoodAdaptor {
                 binding.menuSearchEd.setText("")
-                DealsStoreInstance.getInstance().setIsResetButtonClick(false)
-                if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
-                    crossSellingItemMaster = it
-                    searchViewModel.getCrossSellingItem(
-                        it.itemMaster.itemCode, it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                if (args.selectioncls.stockCheck && it.itemMaster.itemstockcheck) {
+                    updateLiveQtyitemMasterFoodItem = it
+                    searchViewModel.fetchLiveQty(
+                        itemCode = updateLiveQtyitemMasterFoodItem!!.itemMaster.itemCode,
+                        password = args.selectioncls.stockCheckPassword,
+                        url = args.selectioncls.stockCheckUrl,
+                        userId = args.selectioncls.stockCheckUser
                     )
                 } else {
-                    if (it.itemMaster.uOMArray.isNotEmpty()) {
-                        CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
-                            it,
-                            it.itemMaster.uOMArray
-                        ) { flg ->
+                    DealsStoreInstance.getInstance().setIsResetButtonClick(false)
+                    if (it.itemMaster.crossSellingAllow.lowercase().toBoolean()) {
+                        crossSellingItemMaster = it
+                        searchViewModel.getCrossSellingItem(
+                            it.itemMaster.itemCode,
+                            it.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                        )
+                    } else {
+                        if (it.itemMaster.uOMArray.isNotEmpty()) {
+                            CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
+                                it,
+                                it.itemMaster.uOMArray
+                            ) { flg ->
+                                arrItem.add(it)
+                                createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                                setInitialValue()
+                            }
+                        } else {
                             arrItem.add(it)
                             createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
                             setInitialValue()
                         }
-                    } else {
-                        arrItem.add(it)
-                        createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
-                        setInitialValue()
                     }
                 }
             }
@@ -450,8 +455,38 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
                 is ApisResponse.Success -> {
                     hidePb()
-                    Utils.createLogcat("TAG_RESPONSE","Live Inventory Count ${it.data}")
-                    activity?.msg("Live Inventory Count ${it.data}")
+                    if (updateLiveQtyitemMasterFoodItem != null) {
+                        Utils.createLogcat("TAG_RESPONSE", "Live Inventory Count ${it.data}")
+                        val data = (it.data as Double?) ?: updateLiveQtyitemMasterFoodItem?.foodQty
+                        DealsStoreInstance.getInstance().setIsResetButtonClick(false)
+                        if (data != null) {
+                            updateLiveQtyitemMasterFoodItem!!.itemMaster.maxQtyToChange = data
+                        }
+                        if (updateLiveQtyitemMasterFoodItem!!.itemMaster.crossSellingAllow.lowercase()
+                                .toBoolean()
+                        ) {
+                            crossSellingItemMaster = updateLiveQtyitemMasterFoodItem
+                            searchViewModel.getCrossSellingItem(
+                                updateLiveQtyitemMasterFoodItem!!.itemMaster.itemCode,
+                                updateLiveQtyitemMasterFoodItem!!.itemMaster.crossSellingCount.toIntOrNull() ?: 0
+                            )
+                        } else {
+                            if (updateLiveQtyitemMasterFoodItem!!.itemMaster.uOMArray.isNotEmpty()) {
+                                CrossSellingDialog(requireActivity()).showOptionToSelectUOM(
+                                    updateLiveQtyitemMasterFoodItem!!,
+                                    updateLiveQtyitemMasterFoodItem!!.itemMaster.uOMArray
+                                ) { flg ->
+                                    arrItem.add(updateLiveQtyitemMasterFoodItem!!)
+                                    createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                                    setInitialValue()
+                                }
+                            } else {
+                                arrItem.add(updateLiveQtyitemMasterFoodItem!!)
+                                createLogStatement("TAG_ARR", "Item Size ${arrItem.size}")
+                                setInitialValue()
+                            }
+                        }
+                    }
                 }
             }
         }
