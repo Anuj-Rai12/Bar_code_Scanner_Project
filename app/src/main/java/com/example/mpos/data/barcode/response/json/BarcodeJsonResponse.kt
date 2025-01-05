@@ -12,6 +12,7 @@ data class BarcodeJsonResponse(
     @SerializedName("Qty") val qty: Int,
     @SerializedName("SalePrice") val salePrice: String,
     @SerializedName("UOM") val uOM: String,
+    @SerializedName("Itemstockcheck") val itemstockcheck: Boolean=false,
     @SerializedName("UOMArray") val uOmArray:List<UOMasterItem> = emptyList(),
     @SerializedName("decimalAllowed") val decimalAllowed: String,
     @SerializedName("CrossSellingAllow") val crossSellingAllow: String,

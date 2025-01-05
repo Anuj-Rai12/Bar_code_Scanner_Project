@@ -40,7 +40,8 @@ class DealsStoreInstance {
                 decimalAllowed = false.toString(),
                 crossSellingAllow = false.toString(),
                 crossSellingCount = "0",
-                uOMArray = emptyList()
+                uOMArray = emptyList(),
+                itemstockcheck = deals.itemstockcheck
             ),
             foodQty = 1.0,
             foodAmt = deals.price,

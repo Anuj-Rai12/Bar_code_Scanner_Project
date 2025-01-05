@@ -23,6 +23,7 @@ data class ItemMaster(
     @SerializedName("SalePrice") var salePrice: String,
     @SerializedName("UOM") var uOM: String,
     @SerializedName("decimalAllowed") val decimalAllowed: String,
+    @SerializedName("Itemstockcheck") val itemstockcheck: Boolean,
     @SerializedName("CrossSellingAllow") val crossSellingAllow: String,
     @SerializedName("CrossSellingcount") val crossSellingCount: String,
     @SerializedName("UOMArray") val uOMArray: List<UOMasterItem>,

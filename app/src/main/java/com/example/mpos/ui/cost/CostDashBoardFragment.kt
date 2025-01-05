@@ -833,7 +833,8 @@ class CostDashBoardFragment : Fragment(R.layout.cost_cal_dashbord_layout),
             decimalAllowed = barcode.decimalAllowed,
             crossSellingAllow = barcode.crossSellingAllow,
             crossSellingCount = barcode.crossSellingCount,
-            uOMArray = barcode.uOmArray
+            uOMArray = barcode.uOmArray,
+            itemstockcheck = barcode.itemstockcheck
         )
         itemMaster.foodQty = barcode.qty.toDouble()
         val amt =

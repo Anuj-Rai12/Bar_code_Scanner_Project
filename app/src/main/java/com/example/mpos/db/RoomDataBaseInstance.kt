@@ -10,7 +10,7 @@ import com.example.mpos.data.table_info.model.json.TableDetail
 
 @Database(
     entities = [ItemMaster::class, TableDetail::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 @TypeConverters(TypeConvertor::class)

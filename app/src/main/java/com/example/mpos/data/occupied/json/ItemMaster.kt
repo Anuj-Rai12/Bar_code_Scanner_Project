@@ -15,5 +15,6 @@ data class ItemMaster(
     @SerializedName("ItemName") val itemName: String,
     @SerializedName("SalePrice") val salePrice: String,
     @SerializedName("UOM") val uOM: String,
+    @SerializedName("Itemstockcheck") val itemstockcheck: Boolean,
     @SerializedName("UOMArray") val uOMArray: List<UOMasterItem>? = emptyList()
 )

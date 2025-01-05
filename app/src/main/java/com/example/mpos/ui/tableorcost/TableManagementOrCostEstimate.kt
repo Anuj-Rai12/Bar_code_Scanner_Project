@@ -112,7 +112,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
                             IsUpdateQty = item.isToQtyIncrease,
-                            freezePaymentwindow = item.FreezePaymentwindow
+                            freezePaymentwindow = item.FreezePaymentwindow,
+                            stockCheck = item.stockcheck,
+                            stockCheckUrl = item.stockcheckURL,
+                            stockCheckUser = item.stockcheckUser,
+                            stockCheckPassword = item.stockcheckPasscode
                         )
                     )
                 }
@@ -135,7 +139,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
                             IsUpdateQty = item.isToQtyIncrease,
-                            freezePaymentwindow = item.FreezePaymentwindow
+                            freezePaymentwindow = item.FreezePaymentwindow,
+                            stockCheck = item.stockcheck,
+                            stockCheckUrl = item.stockcheckURL,
+                            stockCheckUser = item.stockcheckUser,
+                            stockCheckPassword = item.stockcheckPasscode
                         )
                     )
                 }
@@ -158,7 +166,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
                             IsUpdateQty = item.isToQtyIncrease,
-                            freezePaymentwindow = item.FreezePaymentwindow
+                            freezePaymentwindow = item.FreezePaymentwindow,
+                            stockCheck = item.stockcheck,
+                            stockCheckUrl = item.stockcheckURL,
+                            stockCheckUser = item.stockcheckUser,
+                            stockCheckPassword = item.stockcheckPasscode
                         )
                     )
                 }
@@ -181,7 +193,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
                             IsUpdateQty = item.isToQtyIncrease,
-                            freezePaymentwindow = item.FreezePaymentwindow
+                            freezePaymentwindow = item.FreezePaymentwindow,
+                            stockCheck = item.stockcheck,
+                            stockCheckUrl = item.stockcheckURL,
+                            stockCheckUser = item.stockcheckUser,
+                            stockCheckPassword = item.stockcheckPasscode
                         )
                     )
                 }
@@ -204,7 +220,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
                             IsUpdateQty = item.isToQtyIncrease,
-                            freezePaymentwindow = item.FreezePaymentwindow
+                            freezePaymentwindow = item.FreezePaymentwindow,
+                            stockCheck = item.stockcheck,
+                            stockCheckUrl = item.stockcheckURL,
+                            stockCheckUser = item.stockcheckUser,
+                            stockCheckPassword = item.stockcheckPasscode
                         )
                     )
                 }
@@ -227,7 +247,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
                             IsUpdateQty = item.isToQtyIncrease,
-                            freezePaymentwindow = item.FreezePaymentwindow
+                            freezePaymentwindow = item.FreezePaymentwindow,
+                            stockCheck = item.stockcheck,
+                            stockCheckUrl = item.stockcheckURL,
+                            stockCheckUser = item.stockcheckUser,
+                            stockCheckPassword = item.stockcheckPasscode
                         )
                     )
                 }
@@ -250,7 +274,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
                             IsUpdateQty = item.isToQtyIncrease,
-                            freezePaymentwindow = item.FreezePaymentwindow
+                            freezePaymentwindow = item.FreezePaymentwindow,
+                            stockCheck = item.stockcheck,
+                            stockCheckUrl = item.stockcheckURL,
+                            stockCheckUser = item.stockcheckUser,
+                            stockCheckPassword = item.stockcheckPasscode
                         )
                     )
                 }
@@ -273,7 +301,11 @@ class TableManagementOrCostEstimate : Fragment(R.layout.table_or_cost_layout) {
                             estimatePrintcount = item.estimatePrintCount,
                             enableBillingTableMgt = item.enableBillingTableMgt,
                             IsUpdateQty = item.isToQtyIncrease,
-                            freezePaymentwindow = item.FreezePaymentwindow
+                            freezePaymentwindow = item.FreezePaymentwindow,
+                            stockCheck = item.stockcheck,
+                            stockCheckUrl = item.stockcheckURL,
+                            stockCheckUser = item.stockcheckUser,
+                            stockCheckPassword = item.stockcheckPasscode
                         )
                     )
                 }

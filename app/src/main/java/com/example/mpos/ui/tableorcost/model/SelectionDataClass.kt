@@ -23,7 +23,11 @@ data class SelectionDataClass(
     val freezePaymentwindow :Boolean,
     val paymentLs: List<String>,
     val enableBillingTableMgt: Boolean,
-    val apk: ApkLoginJsonResponse
+    val stockCheck: Boolean,
+    val apk: ApkLoginJsonResponse,
+    val stockCheckUrl:String,
+    val stockCheckUser:String,
+    val stockCheckPassword:String
 ) : Parcelable {
     companion object {
         fun generateData(
@@ -43,7 +47,11 @@ data class SelectionDataClass(
             estimatePrintcount: Int,
             enableBillingTableMgt:Boolean,
             IsUpdateQty: Boolean,
-            freezePaymentwindow:Boolean
+            freezePaymentwindow:Boolean,
+            stockCheck:Boolean,
+            stockCheckUrl:String,
+            stockCheckUser:String,
+            stockCheckPassword:String,
             ): SelectionDataClass {
             return SelectionDataClass(
                 image = img,
@@ -62,7 +70,11 @@ data class SelectionDataClass(
                 estimatePrintcount = estimatePrintcount,
                 enableBillingTableMgt = enableBillingTableMgt,
                 IsUpdateQty = IsUpdateQty,
-                freezePaymentwindow = freezePaymentwindow
+                freezePaymentwindow = freezePaymentwindow,
+                stockCheck = stockCheck,
+                stockCheckUser = stockCheckUser,
+                stockCheckPassword = stockCheckPassword,
+                stockCheckUrl = stockCheckUrl
             )
         }
 

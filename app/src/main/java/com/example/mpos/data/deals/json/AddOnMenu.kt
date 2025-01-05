@@ -8,5 +8,6 @@ data class AddOnMenu(
     @SerializedName("itemlist") val itemList: List<ItemList>,
     @SerializedName("MenuCode") val menuCode: String,
     @SerializedName("Price") val price: Double,
-    @SerializedName("Type") val type: String
+    @SerializedName("Type") val type: String,
+    @SerializedName("Itemstockcheck") val itemstockcheck: Boolean=false
 )
