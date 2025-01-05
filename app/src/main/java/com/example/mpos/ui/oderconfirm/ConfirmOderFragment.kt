@@ -40,6 +40,7 @@ import com.example.mpos.data.printbIll.PrintBillRequest
 import com.example.mpos.data.printbIll.PrintBillRequestBody
 import com.example.mpos.databinding.ConfirmOrderLayoutBinding
 import com.example.mpos.payment.PaymentActivity
+import com.example.mpos.payment.unit.Utils
 import com.example.mpos.ui.cost.viewmodel.CostDashBoardViewModel
 import com.example.mpos.ui.crosselling.CrossSellingDialog
 import com.example.mpos.ui.menu.bottomsheet.MenuBottomSheetFragment
@@ -59,6 +60,15 @@ import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
 
+
+//delete me
+val listOfItem = listOf(
+    "FG0481",
+    "FG0484",
+    "FG0236",
+    "FG0260",
+    "FG0262"
+)
 
 class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomSheetClickListener {
     private lateinit var binding: ConfirmOrderLayoutBinding
@@ -195,6 +205,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         }
 
         showPrintResponse()
+        getLiveInventoryCountResponse()
 
         binding.foodItem.setOnClickListener {
             //Get Dialog
@@ -418,6 +429,33 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
         }
     }
 
+
+    private fun getLiveInventoryCountResponse() {
+        searchViewModel.liveInventoryCheckResponse.observe(viewLifecycleOwner) {
+            when (it) {
+                is ApisResponse.Error -> {
+                    hidePb()
+                    if (it.data == null) {
+                        it.exception?.localizedMessage?.let { res ->
+                            showErrorDialog(res)
+                        }
+                    } else {
+                        showErrorDialog(it.data.toString())
+                    }
+                }
+
+                is ApisResponse.Loading -> {
+                    showPb("${it.data}")
+                }
+
+                is ApisResponse.Success -> {
+                    hidePb()
+                    Utils.createLogcat("TAG_RESPONSE","Live Inventory Count ${it.data}")
+                    activity?.msg("Live Inventory Count ${it.data}")
+                }
+            }
+        }
+    }
 
     private fun showErrorDialog(msg: String) {
         showDialogBox("Failed", msg, icon = R.drawable.ic_error) {}
@@ -1006,7 +1044,7 @@ class ConfirmOderFragment : Fragment(R.layout.confirm_order_layout), OnBottomShe
 
     private fun processCrossSellingItem(res: Pair<Double, CrossSellingJsonResponse>) {
         crossSellingItemMaster?.let {
-            val foodItemAmt= if (res.first<=0.0) it.foodAmt else res.first
+            val foodItemAmt = if (res.first <= 0.0) it.foodAmt else res.first
             arrItem.add(
                 ItemMasterFoodItem(
                     itemMaster = it.itemMaster,

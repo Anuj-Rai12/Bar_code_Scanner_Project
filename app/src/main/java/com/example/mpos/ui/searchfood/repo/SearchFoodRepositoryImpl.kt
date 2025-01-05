@@ -4,25 +4,34 @@ import android.app.Application
 import android.util.Log
 import androidx.room.withTransaction
 import com.example.mpos.api.crosselling.CrossSellingApi
+import com.example.mpos.api.itemliveinventory.ItemInventoryCheckApi
 import com.example.mpos.api.master_sync.ItemMasterSyncApi
 import com.example.mpos.data.crosssellingApi.request.CrossSellingRequest
 import com.example.mpos.data.crosssellingApi.request.CrossSellingRequestBody
 import com.example.mpos.data.crosssellingApi.response.json.CrossSellingJsonResponse
+import com.example.mpos.data.inventorycheck.InventoryCheck
+import com.example.mpos.data.inventorycheck.ItemInventoryCheckRequest
 import com.example.mpos.data.item_master_sync.ItemMasterSyncRequest
 import com.example.mpos.data.item_master_sync.TableInformation
 import com.example.mpos.data.item_master_sync.json.ItemMethodSyncJsonResponse
 import com.example.mpos.db.RoomDataBaseInstance
+import com.example.mpos.di.RetrofitInstance
 import com.example.mpos.payment.unit.Utils
 import com.example.mpos.utils.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
 
 
 class SearchFoodRepositoryImpl constructor(
     private val roomDataBaseInstance: RoomDataBaseInstance,
     private val application: Application,
-    retrofit: Retrofit
+    retrofit: Retrofit,
+    private val retrofitInstance: RetrofitInstance
 ) : SearchFoodRepository {
 
     private val api = buildApi<ItemMasterSyncApi>(retrofit)
@@ -111,6 +120,43 @@ class SearchFoodRepositoryImpl constructor(
         } catch (e: Exception) {
             ApisResponse.Error(null, e)
         }
+        emit(data)
+    }.flowOn(IO)
+
+    override fun getItemQtySize(
+        url: String,
+        auth: String,
+        storeId: String,
+        itemCode: String
+    )= flow {
+        emit(ApisResponse.Loading("Checking Qty Item.."))
+        val data =try {
+            val client = retrofitInstance.client2(auth)
+            val retrofit=retrofitInstance.getRetrofit(url.replace(AllStringConst.End_Point_ItemInventory,""),client)
+            val api= buildApi<ItemInventoryCheckApi>(retrofit)
+            val response=api.getItemLiveInventorySync(
+                ItemInventoryCheckRequest(
+                    InventoryCheck(
+                        storeInfo = "$storeId;$itemCode"
+                    )
+                )
+            )
+
+            if (response.isSuccessful && response.body()!=null){
+                val qty=response.body()!!.apkLoginResult!!.value?.toDoubleOrNull()
+                if (qty==null){
+                    ApisResponse.Error("Unable to get LiveInventory Qty", null)
+                }else {
+                    ApisResponse.Success(qty)
+                }
+            }else {
+                ApisResponse.Error("Unable to get LiveInventory Response", null)
+            }
+
+        }catch (e:Exception){
+            ApisResponse.Error(null,e)
+        }
+
         emit(data)
     }.flowOn(IO)
 

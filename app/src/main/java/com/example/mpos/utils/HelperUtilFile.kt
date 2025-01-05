@@ -75,6 +75,8 @@ object AllStringConst {
 
     //http://223.31.53.229:28360/NAVUSER/WS/HLDGRP/Codeunit/
     const val _xmlns = "http://schemas.xmlsoap.org/soap/envelope/"
+    const val _xmlnsInventroy="urn:microsoft-dynamics-schemas/codeunit/ItemLiveInventory"
+
     const val _xmls = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI"
     const val _xmlsList = "urn:microsoft-dynamics-nav/xmlports/x50006"
 
@@ -85,7 +87,7 @@ object AllStringConst {
     //const val base = "$userName:$PASSWORD"
     const val End_point = "MPOSWSAPI"
     const val Envelope = "Envelope"
-
+    const val End_Point_ItemInventory = "ItemLiveInventory"
     //const val No_Error = "No Error"
     const val Soap_Envelope = "Soap:Envelope"
     //var authHeader = "Basic ${genToken(base)}"
@@ -158,6 +160,7 @@ object AllStringConst {
             "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:FinalInvoiceSend"
 
         const val printEstPos = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:PrintEstKOT"
+        const val itemLiveInventory = "urn:microsoft-dynamics-schemas/codeunit/MPOSWSAPI:ItemLiveInventory"
 
     }
 

@@ -11,6 +11,7 @@ import com.example.mpos.di.RetrofitInstance
 import com.example.mpos.ui.searchfood.repo.SearchFoodRepositoryImpl
 import com.example.mpos.utils.*
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -36,6 +37,10 @@ class SearchFoodViewModel constructor(
     val crossSellingResponse: LiveData<ApisResponse<out Any?>>
         get() = _crossSellingResponse
 
+    private val _liveInventoryCheckResponse = MutableLiveData<ApisResponse<out Any?>>()
+    val liveInventoryCheckResponse: LiveData<ApisResponse<out Any?>>
+        get() = _liveInventoryCheckResponse
+
 
     init {
         if (!application.isNetworkAvailable()) {
@@ -55,7 +60,8 @@ class SearchFoodViewModel constructor(
                 repository = SearchFoodRepositoryImpl(
                     application = application,
                     retrofit = retrofit.getRetrofit(),
-                    roomDataBaseInstance = db
+                    roomDataBaseInstance = db,
+                    retrofitInstance = retrofit
                 )
             }
         }
@@ -80,6 +86,31 @@ class SearchFoodViewModel constructor(
         }
     }
 
+
+    fun fetchLiveQty(itemCode: String,url:String,userId:String,password:String) {
+        if (!this::repository.isInitialized) {
+            _event.postValue(Events("Unknown Error"))
+            return
+        }
+        viewModelScope.launch {
+            delay(3000)
+            userSoredData.read.collectLatest {
+                if (checkFieldValue(it.storeNo.toString())) {
+                    _event.postValue(Events("Internal Error \nTry Login Again"))
+                } else {
+                    val auth = AllStringConst.getAuthHeader(genToken("${userId}:${password}"))
+                    repository.getItemQtySize(
+                        url = url,
+                        auth = auth,
+                        storeId = it.storeNo?:"",
+                        itemCode = itemCode
+                    ).collectLatest { res ->
+                        _liveInventoryCheckResponse.postValue(res)
+                    }
+                }
+            }
+        }
+    }
 
     //For Login Check In Response Type
     fun fetchResponseApi(storeID:String,isLoad: Boolean) {

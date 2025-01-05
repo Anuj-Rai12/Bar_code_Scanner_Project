@@ -54,4 +54,33 @@ class RetrofitInstance(
             .build()
     }
 
+
+    fun client2(auth:String): OkHttpClient {
+        return OkHttpClient.Builder().apply {
+            connectTimeout(70, TimeUnit.SECONDS)
+            readTimeout(70, TimeUnit.SECONDS)
+            writeTimeout(70, TimeUnit.SECONDS)
+                .addInterceptor {
+                    val operation = it.request().newBuilder()
+                        .addHeader("Authorization", auth)
+                        .addHeader("Content-Type", "application/xml")
+                        .build()
+                    it.proceed(operation)
+                }
+                .addInterceptor(httpInterceptor)
+        }.build()
+    }
+
+
+    fun getRetrofit(url:String,client: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .client(client)
+            .baseUrl(url)
+            .build()
+    }
+
+
+
+
 }

@@ -12,4 +12,6 @@ interface SearchFoodRepository {
 
     fun getCrossSellingResponse(itemCode: String,count:Int): Flow<ApisResponse<out Any?>>
 
+    fun getItemQtySize(url:String,auth:String,storeId:String,itemCode: String): Flow<ApisResponse<out Any?>>
+
 }
